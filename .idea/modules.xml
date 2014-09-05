@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/tigon.iml" filepath="$PROJECT_DIR$/tigon.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tigon-api/tigon-api.iml" filepath="$PROJECT_DIR$/tigon-api/tigon-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tigon-client/tigon-client.iml" filepath="$PROJECT_DIR$/tigon-client/tigon-client.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tigon-core/tigon-core.iml" filepath="$PROJECT_DIR$/tigon-core/tigon-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tigon-sql/tigon-sql.iml" filepath="$PROJECT_DIR$/tigon-sql/tigon-sql.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tigon-yarn/tigon-yarn.iml" filepath="$PROJECT_DIR$/tigon-yarn/tigon-yarn.iml" />
+    </modules>
+  </component>
+</project>
+
