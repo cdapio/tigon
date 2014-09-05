@@ -1,0 +1,8 @@
+# Ignore everything in this directory
+build/
+.gradle/
+*.iml
+*.credential
+*.DS_Store
+# Except this file
+!.gitignore
