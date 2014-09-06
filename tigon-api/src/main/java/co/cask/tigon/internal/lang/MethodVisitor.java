@@ -13,30 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package co.cask.tigon.internal.lang;
 
-package co.cask.tigon.api;
+import com.google.common.reflect.TypeToken;
+
+import java.lang.reflect.Field;
 
 /**
- * This interface represents the Flowlet context.
+ * Visitor for visiting class method.
  */
-public interface FlowletContext extends RuntimeContext, DataSetContext {
-  /**
-   * @return Number of instances of this flowlet.
-   */
-  int getInstanceCount();
+public abstract class MethodVisitor implements Visitor {
 
-  /**
-   * @return The instance id of this flowlet.
-   */
-  int getInstanceId();
-
-  /**
-   * @return Name of this flowlet.
-   */
-  String getName();
-
-  /**
-   * @return The specification used to configure this {@link co.cask.cdap.api.flow.flowlet.Flowlet} instance.
-   */
-  FlowletSpecification getSpecification();
+  @Override
+  public final void visit(Object instance, TypeToken<?> inspectType,
+                          TypeToken<?> declareType, Field field) throws Exception {
+    // no-op
+  }
 }

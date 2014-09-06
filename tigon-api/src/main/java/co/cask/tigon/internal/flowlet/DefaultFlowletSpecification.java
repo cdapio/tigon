@@ -14,19 +14,17 @@
  * the License.
  */
 
-package co.cask.tigon.internal;
+package co.cask.tigon.internal.flowlet;
 
-import co.cask.tigon.api.FlowletSpecification;
 import co.cask.tigon.api.ResourceSpecification;
 import co.cask.tigon.api.flow.flowlet.FailurePolicy;
+import co.cask.tigon.api.flow.flowlet.FlowletSpecification;
 import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableSet;
 
 import java.util.Map;
-import java.util.Set;
 
 /**
- *
+ * DefaultFlowletSpecification.
  */
 public final class DefaultFlowletSpecification implements FlowletSpecification {
 
@@ -34,25 +32,22 @@ public final class DefaultFlowletSpecification implements FlowletSpecification {
   private final String name;
   private final String description;
   private final FailurePolicy failurePolicy;
-  private final Set<String> dataSets;
   private final Map<String, String> properties;
   private final ResourceSpecification resources;
 
   public DefaultFlowletSpecification(String name, String description,
-                                     FailurePolicy failurePolicy, Set<String> dataSets,
-                                     Map<String, String> properties, ResourceSpecification resources) {
-    this(null, name, description, failurePolicy, dataSets, properties, resources);
+                                     FailurePolicy failurePolicy, Map<String, String> properties,
+                                     ResourceSpecification resources) {
+    this(null, name, description, failurePolicy, properties, resources);
   }
 
   public DefaultFlowletSpecification(String className, String name,
                                      String description, FailurePolicy failurePolicy,
-                                     Set<String> dataSets, Map<String, String> properties,
-                                     ResourceSpecification resources) {
+                                     Map<String, String> properties, ResourceSpecification resources) {
     this.className = className;
     this.name = name;
     this.description = description;
     this.failurePolicy = failurePolicy;
-    this.dataSets = ImmutableSet.copyOf(dataSets);
     this.properties = properties == null ? ImmutableMap.<String, String>of() : ImmutableMap.copyOf(properties);
     this.resources = resources;
   }
@@ -75,11 +70,6 @@ public final class DefaultFlowletSpecification implements FlowletSpecification {
   @Override
   public FailurePolicy getFailurePolicy() {
     return failurePolicy;
-  }
-
-  @Override
-  public Set<String> getDataSets() {
-    return dataSets;
   }
 
   @Override

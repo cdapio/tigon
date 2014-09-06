@@ -14,19 +14,20 @@
  * the License.
  */
 
-package co.cask.tigon.api;
+package co.cask.tigon.api.flow.flowlet;
 
 /**
- * This exception is thrown if - for whatever reason - a data set cannot be
- * instantiated at runtime.
+ * Represents the context of the input data that is passed
+ * to {@link Flowlet} for processing.
  */
-public class DataSetInstantiationException extends RuntimeException {
+public interface InputContext {
+  /**
+   * @return Name of the output the event was read from.
+   */
+  String getOrigin();
 
-  public DataSetInstantiationException(String msg, Throwable e) {
-    super(msg, e);
-  }
-
-  public DataSetInstantiationException(String msg) {
-    super(msg);
-  }
+  /**
+   * @return Number of attempts made to process the event, if {@link FailurePolicy} is set to RETRY else zero.
+   */
+  int getRetryCount();
 }

@@ -14,17 +14,16 @@
  * the License.
  */
 
-package co.cask.tigon.api;
+package co.cask.tigon.api.flow.flowlet;
 
+import co.cask.tigon.api.ResourceSpecification;
 import co.cask.tigon.api.common.PropertyProvider;
-import co.cask.tigon.api.flow.flowlet.FailurePolicy;
-import co.cask.tigon.internal.DefaultFlowletSpecification;
+import co.cask.tigon.internal.flowlet.DefaultFlowletSpecification;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
 
 import java.util.Map;
-import java.util.Set;
 
 /**
  * This class provides specification of a Flowlet. Instance of this class should be created through
@@ -45,7 +44,7 @@ import java.util.Set;
 public interface FlowletSpecification extends PropertyProvider {
 
   /**
-   * @return Class name of the {@link Flowlet} class.
+   * @return Class name of the {@link co.cask.tigon.api.flow.flowlet.Flowlet} class.
    */
   String getClassName();
 
@@ -65,13 +64,7 @@ public interface FlowletSpecification extends PropertyProvider {
   FailurePolicy getFailurePolicy();
 
   /**
-   * @return An immutable set of {@link co.cask.cdap.api.dataset.Dataset DataSets} name that
-   *         used by the {@link Flowlet}.
-   */
-  Set<String> getDataSets();
-
-  /**
-   * @return The {@link ResourceSpecification} for the flowlet.
+   * @return The {@link co.cask.tigon.api.ResourceSpecification} for the flowlet.
    */
   ResourceSpecification getResources();
 
@@ -144,19 +137,8 @@ public interface FlowletSpecification extends PropertyProvider {
       }
 
       /**
-       * Adds the names of {@link co.cask.cdap.api.dataset.Dataset DataSets} used by the flowlet.
-       *
-       * @param dataSet DataSet name.
-       * @param moreDataSets More DataSet names.
-       * @return An instance of {@link AfterDescription}.
-       */
-      public AfterDescription useDataSet(String dataSet, String...moreDataSets) {
-        dataSets.add(dataSet).add(moreDataSets);
-        return this;
-      }
-
-      /**
-       * Adds a map of arguments that would be available to the flowlet through the {@link FlowletContext} at runtime.
+       * Adds a map of arguments that would be available to the flowlet through
+       * the {@link co.cask.tigon.api.flow.flowlet.FlowletContext} at runtime.
        *
        * @param args The map of arguments.
        * @return An instance of {@link AfterDescription}.
@@ -177,8 +159,7 @@ public interface FlowletSpecification extends PropertyProvider {
        * @return An instance of {@link FlowletSpecification}.
        */
       public FlowletSpecification build() {
-        return new DefaultFlowletSpecification(name, description, failurePolicy,
-                                               dataSets.build(), arguments, resources);
+        return new DefaultFlowletSpecification(name, description, failurePolicy, arguments, resources);
       }
     }
 

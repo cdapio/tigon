@@ -14,7 +14,10 @@
  * the License.
  */
 
-package co.cask.tigon.api;
+package co.cask.tigon.api.flow.flowlet;
+
+
+import co.cask.tigon.api.ProgramLifecycle;
 
 /**
  * Defines the Flowlet interface. A Flowlet should provide the
@@ -42,7 +45,7 @@ public interface Flowlet extends ProgramLifecycle<FlowletContext> {
   /**
    *  Initializes a Flowlet.
    *  <p>
-   *    This method will be called only once per {@link co.cask.tigon.api.Flowlet} instance..
+   *    This method will be called only once per {@link Flowlet} instance..
    *  </p>
    *  @param context An instance of {@link FlowletContext}
    *  @throws Exception If there is any error during initialization.
