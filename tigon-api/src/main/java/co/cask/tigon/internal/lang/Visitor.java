@@ -13,6 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package co.cask.tigon.internal.lang;
 
 import com.google.common.reflect.TypeToken;
