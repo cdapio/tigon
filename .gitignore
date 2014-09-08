@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 *.class
 
 # Mobile Tools for Java (J2ME)
@@ -19,3 +20,14 @@ hs_err_pid*
 
 # Maven build directory
 target
+=======
+# Ignore everything in this directory
+build/
+.gradle/
+.idea/
+*.iml
+*.credential
+*.DS_Store
+# Except this file
+!.gitignore
+>>>>>>> origin/develop

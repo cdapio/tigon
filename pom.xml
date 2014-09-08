@@ -30,6 +30,9 @@
     <module>tigon-api</module>
     <module>tigon-core</module>
     <module>tigon-common</module>
+    <module>tigon-yarn</module>
+    <module>tigon-client</module>
+    <module>tigon-sql</module>
   </modules>
 
   <repositories>
@@ -505,5 +508,4 @@
       </build>
     </profile>
   </profiles>
-
 </project>
