@@ -1,0 +1,1 @@
+This directory contains the configurations required by the SQL compiler

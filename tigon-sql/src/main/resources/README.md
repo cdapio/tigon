@@ -1,0 +1,1 @@
+This directory contains resources required by the java code for running the Flowlet

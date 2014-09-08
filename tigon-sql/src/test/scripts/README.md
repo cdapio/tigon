@@ -1,0 +1,1 @@
+This directory contains the scripts that test the SQL compiler
