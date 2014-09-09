@@ -24,14 +24,10 @@ the License.
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>tigon-common</artifactId>
+  <artifactId>hbase-compat-0.94</artifactId>
+  <packaging>jar</packaging>
 
   <dependencies>
-    <dependency>
-      <groupId>co.cask.tigon</groupId>
-      <artifactId>tigon-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-common</artifactId>
@@ -41,21 +37,57 @@ the License.
       <artifactId>hbase</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.continuuity.tephra</groupId>
+      <artifactId>tephra-core</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.continuuity.tephra</groupId>
+      <artifactId>tephra-hbase-compat-0.94</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>co.cask.tigon</groupId>
+      <artifactId>tigon-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>co.cask.tigon</groupId>
+      <artifactId>tigon-core</artifactId>
+      <version>${project.version}</version>
+      <type>test-jar</type>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-mapreduce-client-core</artifactId>
+      <artifactId>hadoop-minicluster</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.twill</groupId>
-      <artifactId>twill-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.twill</groupId>
-      <artifactId>twill-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.httpcomponents</groupId>
-      <artifactId>httpclient</artifactId>
+      <groupId>org.apache.hbase</groupId>
+      <artifactId>hbase</artifactId>
+      <classifier>tests</classifier>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
+        <version>2.4</version>
+        <executions>
+          <execution>
+            <id>test-jar</id>
+            <goals>
+              <goal>test-jar</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 
 </project>

@@ -14,19 +14,22 @@
  * the License.
  */
 
-package co.cask.tigon.data.util.hbase;
+package co.cask.tigon.data.hbase;
+
+import co.cask.tigon.data.util.hbase.HBaseVersionSpecificFactory;
 
 /**
- * Factory for HBase version-specific {@link HBaseTableUtil} instances.
+ * Factory class to provide instances of the correct {@link HBaseTestBase} implementation, dependent on the version
+ * of HBase that is being used.
  */
-public class HBaseTableUtilFactory extends HBaseVersionSpecificFactory<HBaseTableUtil> {
+public class HBaseTestFactory extends HBaseVersionSpecificFactory<HBaseTestBase> {
   @Override
   protected String getHBase94Classname() {
-    return "co.cask.tigon.data.util.hbase.HBase94TableUtil";
+    return "co.cask.tigon.data.hbase.HBase94Test";
   }
 
   @Override
   protected String getHBase96Classname() {
-    return "co.cask.tigon.data.util.hbase.HBase96TableUtil";
+    return "co.cask.tigon.data.hbase.HBase96Test";
   }
 }

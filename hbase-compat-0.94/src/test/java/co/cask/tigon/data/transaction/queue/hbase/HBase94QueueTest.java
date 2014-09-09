@@ -14,19 +14,11 @@
  * the License.
  */
 
-package co.cask.tigon.data.util.hbase;
+package co.cask.tigon.data.transaction.queue.hbase;
 
 /**
- * Factory for HBase version-specific {@link HBaseTableUtil} instances.
+ * Queue test implementation running on HBase 0.94.
  */
-public class HBaseTableUtilFactory extends HBaseVersionSpecificFactory<HBaseTableUtil> {
-  @Override
-  protected String getHBase94Classname() {
-    return "co.cask.tigon.data.util.hbase.HBase94TableUtil";
-  }
-
-  @Override
-  protected String getHBase96Classname() {
-    return "co.cask.tigon.data.util.hbase.HBase96TableUtil";
-  }
+public class HBase94QueueTest extends HBaseQueueTest {
+  // nothing to override
 }

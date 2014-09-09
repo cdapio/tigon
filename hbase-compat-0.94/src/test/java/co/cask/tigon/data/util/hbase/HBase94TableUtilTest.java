@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Cask Data, Inc.
+ * Copyright 2014 Cask, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -17,16 +17,12 @@
 package co.cask.tigon.data.util.hbase;
 
 /**
- * Factory for HBase version-specific {@link HBaseTableUtil} instances.
+ *
  */
-public class HBaseTableUtilFactory extends HBaseVersionSpecificFactory<HBaseTableUtil> {
-  @Override
-  protected String getHBase94Classname() {
-    return "co.cask.tigon.data.util.hbase.HBase94TableUtil";
-  }
+public class HBase94TableUtilTest extends AbstractHBaseTableUtilTest {
 
   @Override
-  protected String getHBase96Classname() {
-    return "co.cask.tigon.data.util.hbase.HBase96TableUtil";
+  protected HBaseTableUtil getTableUtil() {
+    return new HBase94TableUtil();
   }
 }

@@ -13,20 +13,20 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package co.cask.tigon.metrics;
 
-package co.cask.tigon.data.util.hbase;
+import com.google.common.util.concurrent.Service;
 
 /**
- * Factory for HBase version-specific {@link HBaseTableUtil} instances.
+ * Service for collects and publishes metrics.
  */
-public class HBaseTableUtilFactory extends HBaseVersionSpecificFactory<HBaseTableUtil> {
-  @Override
-  protected String getHBase94Classname() {
-    return "co.cask.tigon.data.util.hbase.HBase94TableUtil";
-  }
+public interface MetricsCollectionService extends Service {
 
-  @Override
-  protected String getHBase96Classname() {
-    return "co.cask.tigon.data.util.hbase.HBase96TableUtil";
-  }
+  /**
+   * Returns the metric collector for the given context.
+   * @param context Name of the context that generating the metric.
+   * @param runId The Id fo the given run that generating the metric.
+   * @return A {@link MetricsCollector} for emitting metrics.
+   */
+  MetricsCollector getCollector(MetricsScope scope, String context, String runId);
 }

@@ -13,20 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
-package co.cask.tigon.data.util.hbase;
+package co.cask.tigon.metrics;
 
 /**
- * Factory for HBase version-specific {@link HBaseTableUtil} instances.
+ * A MetricCollector allows client publish counter metrics.
  */
-public class HBaseTableUtilFactory extends HBaseVersionSpecificFactory<HBaseTableUtil> {
-  @Override
-  protected String getHBase94Classname() {
-    return "co.cask.tigon.data.util.hbase.HBase94TableUtil";
-  }
+public interface MetricsCollector {
 
-  @Override
-  protected String getHBase96Classname() {
-    return "co.cask.tigon.data.util.hbase.HBase96TableUtil";
-  }
+  /**
+   * Log a metric value at the current time.
+   * @param metricName Name of the metric.
+   * @param value value of the metric.
+   * @param tags Tags associated with the metric.
+   */
+  void gauge(String metricName, int value, String... tags);
 }

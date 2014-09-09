@@ -14,19 +14,20 @@
  * the License.
  */
 
-package co.cask.tigon.data.util.hbase;
+package co.cask.tigon.data.runtime;
+
+import co.cask.tigon.metrics.MetricsCollectionService;
+import co.cask.tigon.metrics.NoOpMetricsCollectionService;
+import com.google.inject.AbstractModule;
+import com.google.inject.Singleton;
 
 /**
- * Factory for HBase version-specific {@link HBaseTableUtil} instances.
+ * Binds the {@link co.cask.tigon.metrics.MetricsCollectionService} to a no-op implementation.
  */
-public class HBaseTableUtilFactory extends HBaseVersionSpecificFactory<HBaseTableUtil> {
+// TODO: replace the common MetricsCollectionService interface with a transactions specific one
+public class TransactionMetricsModule extends AbstractModule {
   @Override
-  protected String getHBase94Classname() {
-    return "co.cask.tigon.data.util.hbase.HBase94TableUtil";
-  }
-
-  @Override
-  protected String getHBase96Classname() {
-    return "co.cask.tigon.data.util.hbase.HBase96TableUtil";
+  protected void configure() {
+    bind(MetricsCollectionService.class).to(NoOpMetricsCollectionService.class).in(Singleton.class);
   }
 }

@@ -16,19 +16,18 @@
 
 package co.cask.tigon.data.transaction.queue.hbase;
 
-import co.cask.tigon.data.util.hbase.HBaseVersionSpecificFactory;
+
+import co.cask.tigon.data.queue.ConsumerConfig;
+import co.cask.tigon.data.queue.QueueName;
+import org.apache.hadoop.hbase.client.HTable;
 
 /**
- * Factory for HBase version-specific instances of {@link HBaseQueueUtil}.
+ * HBase 0.94 implementation of {@link HBaseQueueUtil}.
  */
-public class HBaseQueueUtilFactory extends HBaseVersionSpecificFactory<HBaseQueueUtil> {
+public class HBase94QueueUtil extends HBaseQueueUtil {
   @Override
-  protected String getHBase94Classname() {
-    return "co.cask.tigon.data.transaction.queue.hbase.HBase94QueueUtil";
-  }
-
-  @Override
-  protected String getHBase96Classname() {
-    return "co.cask.tigon.data.transaction.queue.hbase.HBase96QueueUtil";
+  public HBase94QueueConsumer getQueueConsumer(ConsumerConfig consumerConfig, HTable hTable, QueueName queueName,
+                                              HBaseConsumerState consumerState, HBaseConsumerStateStore stateStore) {
+    return new HBase94QueueConsumer(consumerConfig, hTable, queueName, consumerState, stateStore);
   }
 }

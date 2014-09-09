@@ -581,4 +581,6 @@ public final class Constants {
    * NOTE: value should be in sync with the one used by UI.
    */
   public static final String DEVELOPER_ACCOUNT_ID = "developer";
+
+  public static final String DELTA_WRITE = "d";
 }

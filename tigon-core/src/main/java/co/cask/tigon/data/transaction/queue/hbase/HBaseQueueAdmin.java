@@ -350,7 +350,7 @@ public class HBaseQueueAdmin implements QueueAdmin {
     createConfigTable();
 
     String hBaseTableName = getActualTableName(queueName);
-    DatasetAdmin dsAdmin = new DatasetAdmin(hBaseTableName, hConf, tableUtil);
+    AbstractHBaseDataSetAdmin dsAdmin = new DatasetAdmin(hBaseTableName, hConf, tableUtil);
     try {
       dsAdmin.create();
     } finally {

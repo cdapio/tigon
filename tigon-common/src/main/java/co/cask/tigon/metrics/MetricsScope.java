@@ -14,19 +14,13 @@
  * the License.
  */
 
-package co.cask.tigon.data.util.hbase;
+package co.cask.tigon.metrics;
 
 /**
- * Factory for HBase version-specific {@link HBaseTableUtil} instances.
+ * Define scopes of metrics.
  */
-public class HBaseTableUtilFactory extends HBaseVersionSpecificFactory<HBaseTableUtil> {
-  @Override
-  protected String getHBase94Classname() {
-    return "co.cask.tigon.data.util.hbase.HBase94TableUtil";
-  }
-
-  @Override
-  protected String getHBase96Classname() {
-    return "co.cask.tigon.data.util.hbase.HBase96TableUtil";
-  }
+public enum MetricsScope {
+  //  todo: should not be called "REACTOR": REACTOR-852
+  REACTOR,
+  USER
 }

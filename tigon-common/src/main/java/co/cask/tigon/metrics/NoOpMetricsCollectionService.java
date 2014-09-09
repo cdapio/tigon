@@ -14,19 +14,32 @@
  * the License.
  */
 
-package co.cask.tigon.data.util.hbase;
+package co.cask.tigon.metrics;
+
+import com.google.common.util.concurrent.AbstractIdleService;
 
 /**
- * Factory for HBase version-specific {@link HBaseTableUtil} instances.
+ * No-op, to be used in unit-tests
  */
-public class HBaseTableUtilFactory extends HBaseVersionSpecificFactory<HBaseTableUtil> {
+public class NoOpMetricsCollectionService extends AbstractIdleService implements MetricsCollectionService {
+
   @Override
-  protected String getHBase94Classname() {
-    return "co.cask.tigon.data.util.hbase.HBase94TableUtil";
+  protected void startUp() throws Exception {
+    // no-op
   }
 
   @Override
-  protected String getHBase96Classname() {
-    return "co.cask.tigon.data.util.hbase.HBase96TableUtil";
+  protected void shutDown() throws Exception {
+    // no-op
+  }
+
+  @Override
+  public MetricsCollector getCollector(MetricsScope scope, String context, String runId) {
+    return new MetricsCollector() {
+      @Override
+      public void gauge(String metricName, int value, String... tags) {
+        // no-op
+      }
+    };
   }
 }
