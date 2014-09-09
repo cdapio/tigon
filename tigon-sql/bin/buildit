@@ -1,0 +1,3 @@
+#!/bin/sh
+ ../../bin/translate_fta -h localhost -c -M -C ../../cfg -l ../../qlib packet_schema.txt *.gsql
+make

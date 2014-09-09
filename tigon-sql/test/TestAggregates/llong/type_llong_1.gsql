@@ -1,0 +1,6 @@
+DEFINE {
+query_name 'type_llong_1';
+}
+select systemTime, llongKey, count(*), sum(llongValue), min(llongValue), max(llongValue), And_Aggr(llongValue), Or_Aggr(llongValue), Xor_Aggr(llongValue)
+from [csv].CSV_EXAMPLE_llong
+group by systemTime, llongKey

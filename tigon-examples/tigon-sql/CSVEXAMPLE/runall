@@ -1,0 +1,6 @@
+#!/bin/sh
+./killexample
+sleep 1
+./runit
+sleep 10
+./gen_feed &

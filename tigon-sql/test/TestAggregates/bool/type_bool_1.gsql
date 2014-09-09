@@ -1,0 +1,6 @@
+DEFINE {
+query_name 'type_bool_1';
+}
+select systemTime, boolKey, count(*), sum(boolValue), min(boolValue), max(boolValue), And_Aggr(boolValue), Or_Aggr(boolValue), Xor_Aggr(boolValue)
+from [csv].CSV_EXAMPLE_bool
+group by systemTime, boolKey

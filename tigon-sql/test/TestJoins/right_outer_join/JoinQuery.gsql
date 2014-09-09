@@ -1,0 +1,7 @@
+DEFINE {
+query_name 'complex';
+}
+select A.systemTime, A.strField1, A.strField2, A.intField, B.strField1, B.strField2, B.intField
+RIGHT_OUTER_JOIN from complex_A A, complex_B B
+where A.intField = B.intField
+and A.systemTime = B.systemTime

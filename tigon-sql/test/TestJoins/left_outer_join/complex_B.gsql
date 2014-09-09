@@ -1,0 +1,8 @@
+DEFINE {
+query_name 'complex_B';
+}
+select systemTime, strField1, strField2, intField
+from [csv].CSV_COMPLEX_1
+where strField2 = 'DEF'
+
+

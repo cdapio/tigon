@@ -1,0 +1,5 @@
+DEFINE {
+query_name 'type_IP';
+}
+select timestamp, IPKey, IPValue
+from [csv].CSV_TIMESTAMP_IP

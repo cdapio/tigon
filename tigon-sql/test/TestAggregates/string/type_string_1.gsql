@@ -1,0 +1,7 @@
+DEFINE {
+query_name 'type_string_1';
+}
+select systemTime, stringKey, count(*), min(stringValue), max(stringValue)
+from [csv].CSV_EXAMPLE_string
+group by systemTime, stringKey
+

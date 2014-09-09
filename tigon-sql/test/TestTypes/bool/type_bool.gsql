@@ -1,0 +1,5 @@
+DEFINE {
+query_name 'type_bool';
+}
+select timestamp, boolKey, boolValue
+from [csv].CSV_TIMESTAMP_bool

@@ -1,0 +1,273 @@
+Grammar
+
+    0 $accept: parse_result $end
+
+    1 parse_result: resource
+
+    2 resource: start_tag res_list end_tag
+    3         | start_tag end_tag
+    4         | '<' NAME opt_val_list '/' '>'
+
+    5 start_tag: '<' NAME opt_val_list '>'
+
+    6 end_tag: '<' '/' NAME '>'
+
+    7 res_list: resource
+    8         | res_list resource
+
+    9 opt_val_list: val_list
+   10             | /* empty */
+
+   11 val_list: val
+   12         | val_list val
+
+   13 val: NAME '=' STRING_TOKEN
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'/' (47) 4 6
+'<' (60) 4 5 6
+'=' (61) 13
+'>' (62) 4 5 6
+error (256)
+NAME (258) 4 5 6 13
+STRING_TOKEN (259) 13
+
+
+Nonterminals, with rules where they appear
+
+$accept (9)
+    on left: 0
+parse_result (10)
+    on left: 1, on right: 0
+resource (11)
+    on left: 2 3 4, on right: 1 7 8
+start_tag (12)
+    on left: 5, on right: 2 3
+end_tag (13)
+    on left: 6, on right: 2 3
+res_list (14)
+    on left: 7 8, on right: 2 8
+opt_val_list (15)
+    on left: 9 10, on right: 4 5
+val_list (16)
+    on left: 11 12, on right: 9 12
+val (17)
+    on left: 13, on right: 11 12
+
+
+state 0
+
+    0 $accept: . parse_result $end
+
+    '<'  shift, and go to state 1
+
+    parse_result  go to state 2
+    resource      go to state 3
+    start_tag     go to state 4
+
+
+state 1
+
+    4 resource: '<' . NAME opt_val_list '/' '>'
+    5 start_tag: '<' . NAME opt_val_list '>'
+
+    NAME  shift, and go to state 5
+
+
+state 2
+
+    0 $accept: parse_result . $end
+
+    $end  shift, and go to state 6
+
+
+state 3
+
+    1 parse_result: resource .
+
+    $default  reduce using rule 1 (parse_result)
+
+
+state 4
+
+    2 resource: start_tag . res_list end_tag
+    3         | start_tag . end_tag
+
+    '<'  shift, and go to state 7
+
+    resource   go to state 8
+    start_tag  go to state 4
+    end_tag    go to state 9
+    res_list   go to state 10
+
+
+state 5
+
+    4 resource: '<' NAME . opt_val_list '/' '>'
+    5 start_tag: '<' NAME . opt_val_list '>'
+
+    NAME  shift, and go to state 11
+
+    $default  reduce using rule 10 (opt_val_list)
+
+    opt_val_list  go to state 12
+    val_list      go to state 13
+    val           go to state 14
+
+
+state 6
+
+    0 $accept: parse_result $end .
+
+    $default  accept
+
+
+state 7
+
+    4 resource: '<' . NAME opt_val_list '/' '>'
+    5 start_tag: '<' . NAME opt_val_list '>'
+    6 end_tag: '<' . '/' NAME '>'
+
+    NAME  shift, and go to state 5
+    '/'   shift, and go to state 15
+
+
+state 8
+
+    7 res_list: resource .
+
+    $default  reduce using rule 7 (res_list)
+
+
+state 9
+
+    3 resource: start_tag end_tag .
+
+    $default  reduce using rule 3 (resource)
+
+
+state 10
+
+    2 resource: start_tag res_list . end_tag
+    8 res_list: res_list . resource
+
+    '<'  shift, and go to state 7
+
+    resource   go to state 16
+    start_tag  go to state 4
+    end_tag    go to state 17
+
+
+state 11
+
+   13 val: NAME . '=' STRING_TOKEN
+
+    '='  shift, and go to state 18
+
+
+state 12
+
+    4 resource: '<' NAME opt_val_list . '/' '>'
+    5 start_tag: '<' NAME opt_val_list . '>'
+
+    '/'  shift, and go to state 19
+    '>'  shift, and go to state 20
+
+
+state 13
+
+    9 opt_val_list: val_list .
+   12 val_list: val_list . val
+
+    NAME  shift, and go to state 11
+
+    $default  reduce using rule 9 (opt_val_list)
+
+    val  go to state 21
+
+
+state 14
+
+   11 val_list: val .
+
+    $default  reduce using rule 11 (val_list)
+
+
+state 15
+
+    6 end_tag: '<' '/' . NAME '>'
+
+    NAME  shift, and go to state 22
+
+
+state 16
+
+    8 res_list: res_list resource .
+
+    $default  reduce using rule 8 (res_list)
+
+
+state 17
+
+    2 resource: start_tag res_list end_tag .
+
+    $default  reduce using rule 2 (resource)
+
+
+state 18
+
+   13 val: NAME '=' . STRING_TOKEN
+
+    STRING_TOKEN  shift, and go to state 23
+
+
+state 19
+
+    4 resource: '<' NAME opt_val_list '/' . '>'
+
+    '>'  shift, and go to state 24
+
+
+state 20
+
+    5 start_tag: '<' NAME opt_val_list '>' .
+
+    $default  reduce using rule 5 (start_tag)
+
+
+state 21
+
+   12 val_list: val_list val .
+
+    $default  reduce using rule 12 (val_list)
+
+
+state 22
+
+    6 end_tag: '<' '/' NAME . '>'
+
+    '>'  shift, and go to state 25
+
+
+state 23
+
+   13 val: NAME '=' STRING_TOKEN .
+
+    $default  reduce using rule 13 (val)
+
+
+state 24
+
+    4 resource: '<' NAME opt_val_list '/' '>' .
+
+    $default  reduce using rule 4 (resource)
+
+
+state 25
+
+    6 end_tag: '<' '/' NAME '>' .
+
+    $default  reduce using rule 6 (end_tag)

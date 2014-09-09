@@ -1,0 +1,6 @@
+DEFINE {
+query_name 'in_enumeration_query1';
+}
+select systemTime, intField, boolField, strField1, strField2
+from [csv].CSV_TEST_PREDICATES
+where strField1 in [ 'String1', 'xyz']

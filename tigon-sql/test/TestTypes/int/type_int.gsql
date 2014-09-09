@@ -1,0 +1,5 @@
+DEFINE {
+query_name 'type_int';
+}
+select timestamp, intKey, intValue
+from [csv].CSV_TIMESTAMP_int

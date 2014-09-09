@@ -1,0 +1,5 @@
+DEFINE {
+query_name 'type_string';
+}
+select timestamp, stringKey, stringValue
+from [csv].CSV_TIMESTAMP_string

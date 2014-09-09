@@ -1,0 +1,5 @@
+DEFINE {
+query_name 'type_IPV6';
+}
+select timestamp, IPV6Key, IPV6Value
+from [csv].CSV_TIMESTAMP_IPV6

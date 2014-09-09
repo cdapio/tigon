@@ -1,0 +1,6 @@
+DEFINE {
+query_name 'not_equal_query2';
+}
+select systemTime, intField, boolField, strField1, strField2
+from [csv].CSV_TEST_PREDICATES
+where intField <> 1

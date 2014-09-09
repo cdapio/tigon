@@ -1,0 +1,5 @@
+DEFINE {
+query_name 'type_ullong';
+}
+select timestamp, ullongKey, ullongValue
+from [csv].CSV_TIMESTAMP_ullong

@@ -1,0 +1,3 @@
+select systemTime,uintInPosition1,ullongInPosition2,ipInPosition3,count(*) as Cnt
+from [csv].CSV_EXAMPLE
+group by systemTime,uintInPosition1,ullongInPosition2,ipInPosition3

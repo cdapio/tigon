@@ -1,0 +1,6 @@
+DEFINE {
+query_name 'greater_than_query2';
+}
+select systemTime, intField, boolField, strField1, strField2
+from [csv].CSV_TEST_PREDICATES
+where intField > 123

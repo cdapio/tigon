@@ -1,0 +1,5 @@
+DEFINE {
+query_name 'type_float';
+}
+select timestamp, floatKey, floatValue
+from [csv].CSV_TIMESTAMP_float

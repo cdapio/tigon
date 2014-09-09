@@ -1,0 +1,7 @@
+DEFINE {
+query_name 'type_IPV6_1';
+}
+select systemTime, IPV6Key, count(*), min(IPV6Value), max(IPV6Value)
+from [csv].CSV_EXAMPLE_IPV6
+group by systemTime, IPV6Key
+

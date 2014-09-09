@@ -1,0 +1,6 @@
+DEFINE {
+query_name 'greater_or_equal_query1';
+}
+select systemTime, intField, boolField, strField1, strField2
+from [csv].CSV_TEST_PREDICATES
+where strField2 >= strField1

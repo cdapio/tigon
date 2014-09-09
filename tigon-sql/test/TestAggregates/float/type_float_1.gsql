@@ -1,0 +1,7 @@
+DEFINE {
+query_name 'type_float_1';
+}
+select systemTime, floatKey, count(*), sum(floatValue), min(floatValue), max(floatValue)
+from [csv].CSV_EXAMPLE_float
+group by systemTime, floatKey
+

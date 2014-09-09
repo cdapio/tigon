@@ -1,0 +1,7 @@
+DEFINE {
+query_name 'type_uint_1';
+}
+select systemTime, uintKey, count(*), sum(uintValue), min(uintValue), max(uintValue), And_Aggr(uintValue), Or_Aggr(uintValue), Xor_Aggr(uintValue)
+from [csv].CSV_EXAMPLE_uint
+group by systemTime, uintKey
+
