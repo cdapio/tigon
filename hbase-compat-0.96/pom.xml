@@ -24,7 +24,7 @@ the License.
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>hbase-compat-0.94</artifactId>
+  <artifactId>hbase-compat-0.96</artifactId>
   <packaging>jar</packaging>
 
   <dependencies>
@@ -34,16 +34,30 @@ the License.
     </dependency>
     <dependency>
       <groupId>org.apache.hbase</groupId>
-      <artifactId>hbase</artifactId>
+      <artifactId>hbase-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hbase</groupId>
+      <artifactId>hbase-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hbase</groupId>
+      <artifactId>hbase-server</artifactId>
     </dependency>
     <dependency>
       <groupId>com.continuuity.tephra</groupId>
-      <artifactId>tephra-hbase-compat-0.94</artifactId>
+      <artifactId>tephra-hbase-compat-0.96</artifactId>
     </dependency>
     <dependency>
       <groupId>co.cask.tigon</groupId>
       <artifactId>tigon-core</artifactId>
       <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.hbase</groupId>
+          <artifactId>hbase</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
 
     <dependency>
@@ -56,6 +70,12 @@ the License.
       <version>${project.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.hbase</groupId>
+          <artifactId>hbase</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.apache.hadoop</groupId>
@@ -63,8 +83,12 @@ the License.
     </dependency>
     <dependency>
       <groupId>org.apache.hbase</groupId>
-      <artifactId>hbase</artifactId>
-      <classifier>tests</classifier>
+      <artifactId>hbase-testing-util</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-hdfs</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 

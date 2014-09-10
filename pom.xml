@@ -34,6 +34,8 @@
     <module>tigon-client</module>
     <module>tigon-sql</module>
     <module>hbase-compat-0.94</module>
+    <module>hbase-compat-0.96</module>
+    <module>tigon-flow</module>
   </modules>
 
   <repositories>
@@ -99,6 +101,11 @@
       <dependency>
         <groupId>com.continuuity.tephra</groupId>
         <artifactId>tephra-hbase-compat-0.94</artifactId>
+        <version>${tephra.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.continuuity.tephra</groupId>
+        <artifactId>tephra-hbase-compat-0.96</artifactId>
         <version>${tephra.version}</version>
       </dependency>
       <dependency>

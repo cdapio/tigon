@@ -16,18 +16,17 @@
 
 package co.cask.tigon.data.transaction.queue.hbase;
 
-
 import co.cask.tigon.data.queue.ConsumerConfig;
 import co.cask.tigon.data.queue.QueueName;
 import org.apache.hadoop.hbase.client.HTable;
 
 /**
- * HBase 0.94 implementation of {@link HBaseQueueUtil}.
+ * HBase 0.96 implementation of {@link HBaseQueueUtil}.
  */
-public class HBase94QueueUtil extends HBaseQueueUtil {
+public class HBase96QueueUtil extends HBaseQueueUtil {
   @Override
   public HBaseQueueConsumer getQueueConsumer(ConsumerConfig consumerConfig, HTable hTable, QueueName queueName,
                                               HBaseConsumerState consumerState, HBaseConsumerStateStore stateStore) {
-    return new HBase94QueueConsumer(consumerConfig, hTable, queueName, consumerState, stateStore);
+    return new HBase96QueueConsumer(consumerConfig, hTable, queueName, consumerState, stateStore);
   }
 }

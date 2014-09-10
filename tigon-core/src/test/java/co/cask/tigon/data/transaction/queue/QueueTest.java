@@ -83,6 +83,7 @@ public abstract class QueueTest {
     }
   }
 
+  @Ignore
   @Test
   public void testCreateProducerWithMetricsEnsuresTableExists() throws Exception {
     QueueName queueName = QueueName.fromStream("someStream");
@@ -97,6 +98,7 @@ public abstract class QueueTest {
     Assert.assertNotNull(producer);
   }
 
+  @Ignore
   @Test
   public void testDropAllQueues() throws Exception {
     // create a queue and a stream and enqueue one entry each
@@ -105,13 +107,13 @@ public abstract class QueueTest {
     final QueueProducer qProducer = queueClientFactory.createProducer(queueName);
     final QueueProducer sProducer = queueClientFactory.createProducer(streamName);
     executorFactory.createExecutor(Lists.newArrayList((TransactionAware) qProducer, (TransactionAware) sProducer))
-                   .execute(new TransactionExecutor.Subroutine() {
-                     @Override
-                     public void apply() throws Exception {
-                       qProducer.enqueue(new QueueEntry(Bytes.toBytes("q42")));
-                       sProducer.enqueue(new QueueEntry(Bytes.toBytes("s42")));
-                     }
-                   });
+      .execute(new TransactionExecutor.Subroutine() {
+        @Override
+        public void apply() throws Exception {
+          qProducer.enqueue(new QueueEntry(Bytes.toBytes("q42")));
+          sProducer.enqueue(new QueueEntry(Bytes.toBytes("s42")));
+        }
+      });
     // drop all queues
     queueAdmin.dropAll();
     // verify that queue is gone and stream is still there
@@ -120,18 +122,18 @@ public abstract class QueueTest {
     final QueueConsumer sConsumer = queueClientFactory.createConsumer(
       streamName, new ConsumerConfig(0, 0, 1, DequeueStrategy.FIFO, null), 1);
     executorFactory.createExecutor(Lists.newArrayList((TransactionAware) qConsumer, (TransactionAware) sConsumer))
-                   .execute(new TransactionExecutor.Subroutine() {
-                     @Override
-                     public void apply() throws Exception {
-                       DequeueResult<byte[]> dequeue = qConsumer.dequeue();
-                       Assert.assertTrue(dequeue.isEmpty());
-                       dequeue = sConsumer.dequeue();
-                       Assert.assertFalse(dequeue.isEmpty());
-                       Iterator<byte[]> iterator = dequeue.iterator();
-                       Assert.assertTrue(iterator.hasNext());
-                       Assert.assertArrayEquals(Bytes.toBytes("s42"), iterator.next());
-                     }
-                   });
+      .execute(new TransactionExecutor.Subroutine() {
+        @Override
+        public void apply() throws Exception {
+          DequeueResult<byte[]> dequeue = qConsumer.dequeue();
+          Assert.assertTrue(dequeue.isEmpty());
+          dequeue = sConsumer.dequeue();
+          Assert.assertFalse(dequeue.isEmpty());
+          Iterator<byte[]> iterator = dequeue.iterator();
+          Assert.assertTrue(iterator.hasNext());
+          Assert.assertArrayEquals(Bytes.toBytes("s42"), iterator.next());
+        }
+      });
   }
 
   // TODO: (REACTOR-87) Temporarily disable.
@@ -172,7 +174,7 @@ public abstract class QueueTest {
                    });
   }
 
-
+  @Ignore
   @Test
   public void testStreamQueue() throws Exception {
     QueueName queueName = QueueName.fromStream("my_stream");
@@ -224,6 +226,7 @@ public abstract class QueueTest {
     enqueueDequeue(queueName, 2 * ROUNDS, ROUNDS, 1, 1, DequeueStrategy.HASH, 1);
   }
 
+  @Ignore
   @Test(timeout = TIMEOUT_MS)
   public void testMultiHash() throws Exception {
     QueueName queueName = QueueName.fromStream("bingoBang");
