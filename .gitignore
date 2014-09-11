@@ -1,9 +1,20 @@
 # Ignore everything in this directory
 build/
 .gradle/
-.idea/
-*.iml
 *.credential
 *.DS_Store
+
+# IntelliJ Files
+.idea/
+*.iml
+*.iws
+*.ipr
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# Maven Build Folder
+target/
 # Except this file
 !.gitignore
