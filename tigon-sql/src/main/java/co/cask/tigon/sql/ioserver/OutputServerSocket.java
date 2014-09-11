@@ -17,10 +17,10 @@
 package co.cask.tigon.sql.ioserver;
 
 import com.continuuity.api.common.Bytes;
+import co.cask.tigon.sql.conf.Constants;
 import co.cask.tigon.sql.flowlet.GDATRecordQueue;
 import co.cask.tigon.sql.flowlet.GDATRecordType;
 import co.cask.tigon.sql.flowlet.StreamSchema;
-import co.cask.tigon.sql.conf.Constants;
 import co.cask.tigon.sql.internal.StreamSchemaCodec;
 import co.cask.tigon.sql.io.GDATDecoder;
 import co.cask.tigon.sql.util.GDATFormatUtil;

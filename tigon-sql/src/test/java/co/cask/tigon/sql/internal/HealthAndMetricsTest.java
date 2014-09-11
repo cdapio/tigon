@@ -125,7 +125,7 @@ public class HealthAndMetricsTest {
       @Override
       public void run() {
         HttpClient httpClient = new DefaultHttpClient();
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 5; i++) {
           try {
             Thread.sleep(1000);
           } catch (InterruptedException e) {
@@ -159,25 +159,25 @@ public class HealthAndMetricsTest {
     inspector.startAndWait();
     LOG.info("Started monitoring...");
 
-    TimeUnit.SECONDS.sleep(Constants.INITIALIZATION_TIMEOUT - 1);
+    TimeUnit.SECONDS.sleep(Constants.INITIALIZATION_TIMEOUT - 2);
     register("IronMan", "RobertDowneyJr", pingURL);
     LOG.info("IronMan Registered");
-    Assert.assertTrue(!latch.await(1, TimeUnit.SECONDS));
+    Assert.assertTrue(!latch.await(0, TimeUnit.SECONDS));
     LOG.info("No failure detected");
 
-    //Initiate 3 mock pings. 1 per second
+    //Initiate 5 mock pings. 1 per second
     new Thread(new MockPing()).start();
 
-    LOG.info("Initiated 3 mock pings");
+    LOG.info("Initiated 5 mock pings");
     //Check state a second after the last mock ping
-    Assert.assertTrue(!latch.await(4, TimeUnit.SECONDS));
-    LOG.info("No failure Detected after 4 seconds");
+    Assert.assertTrue(!latch.await(2, TimeUnit.SECONDS));
+    LOG.info("No failure Detected");
 
     LOG.info("Expecting heartbeat detection failure");
-    //Check state 4 seconds after the last mock ping
-    Assert.assertTrue(latch.await(3, TimeUnit.SECONDS));
+    //Check state >2 seconds after the last mock ping
+    Assert.assertTrue(latch.await(10, TimeUnit.SECONDS));
 
     //Check value of awesomeCounter at the end
-    Assert.assertTrue(SharedMetrics.getCounter("RobertDowneyJr.awesomeCounter").equals(3));
+    Assert.assertTrue(SharedMetrics.getCounter("RobertDowneyJr.awesomeCounter").equals(10));
   }
 }

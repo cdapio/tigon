@@ -16,10 +16,10 @@
 
 package co.cask.tigon.sql.internal;
 
+import co.cask.tigon.sql.conf.Constants;
 import co.cask.tigon.sql.flowlet.GDATField;
 import co.cask.tigon.sql.flowlet.GDATFieldType;
 import co.cask.tigon.sql.flowlet.StreamSchema;
-import co.cask.tigon.sql.conf.Constants;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;

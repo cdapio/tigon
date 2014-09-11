@@ -16,8 +16,8 @@
 
 package co.cask.tigon.sql.internal;
 
-import co.cask.tigon.sql.flowlet.GDATRecordQueue;
 import co.cask.tigon.sql.conf.Constants;
+import co.cask.tigon.sql.flowlet.GDATRecordQueue;
 import co.cask.tigon.sql.flowlet.InputFlowletSpecification;
 import co.cask.tigon.sql.ioserver.StreamEngineIO;
 import co.cask.tigon.sql.manager.DiscoveryServer;

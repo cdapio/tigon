@@ -16,10 +16,10 @@
 
 package co.cask.tigon.sql.util;
 
+import co.cask.tigon.sql.conf.Constants;
 import co.cask.tigon.sql.flowlet.GDATFieldType;
 import co.cask.tigon.sql.flowlet.GDATSlidingWindowAttribute;
 import co.cask.tigon.sql.flowlet.StreamSchema;
-import co.cask.tigon.sql.conf.Constants;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.w3c.dom.Document;

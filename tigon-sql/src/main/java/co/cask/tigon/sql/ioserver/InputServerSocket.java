@@ -16,8 +16,8 @@
 
 package co.cask.tigon.sql.ioserver;
 
-import co.cask.tigon.sql.flowlet.StreamSchema;
 import co.cask.tigon.sql.conf.Constants;
+import co.cask.tigon.sql.flowlet.StreamSchema;
 import co.cask.tigon.sql.internal.StreamInputHeader;
 import co.cask.tigon.sql.util.GDATFormatUtil;
 import org.jboss.netty.bootstrap.ServerBootstrap;

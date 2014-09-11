@@ -16,10 +16,10 @@
 
 package co.cask.tigon.sql.internal;
 
-import co.cask.tigon.sql.flowlet.InputStreamFormat;
-import co.cask.tigon.sql.flowlet.StreamSchema;
 import co.cask.tigon.sql.conf.Constants;
 import co.cask.tigon.sql.flowlet.InputFlowletSpecification;
+import co.cask.tigon.sql.flowlet.InputStreamFormat;
+import co.cask.tigon.sql.flowlet.StreamSchema;
 import com.google.common.collect.Maps;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

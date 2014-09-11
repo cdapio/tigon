@@ -16,9 +16,9 @@
 
 package co.cask.tigon.sql.internal;
 
+import co.cask.tigon.sql.flowlet.InputFlowletSpecification;
 import co.cask.tigon.sql.flowlet.InputStreamFormat;
 import co.cask.tigon.sql.flowlet.StreamSchema;
-import co.cask.tigon.sql.flowlet.InputFlowletSpecification;
 import com.google.common.collect.ImmutableMap;
 
 import java.util.Map;
