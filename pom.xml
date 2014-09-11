@@ -28,7 +28,7 @@
 
   <modules>
     <module>tigon-api</module>
-    <module>tigon-core</module>
+    <module>tigon-queue</module>
     <module>tigon-common</module>
     <module>tigon-yarn</module>
     <module>tigon-client</module>
@@ -161,6 +161,11 @@
       <dependency>
         <groupId>org.apache.twill</groupId>
         <artifactId>twill-common</artifactId>
+        <version>${twill.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.twill</groupId>
+        <artifactId>twill-yarn</artifactId>
         <version>${twill.version}</version>
       </dependency>
       <dependency>

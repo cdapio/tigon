@@ -18,77 +18,47 @@ the License.
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>tigon</artifactId>
     <groupId>co.cask.tigon</groupId>
+    <artifactId>tigon</artifactId>
     <version>0.1.0-SNAPSHOT</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>hbase-compat-0.96</artifactId>
-  <packaging>jar</packaging>
+  <artifactId>tigon-queue</artifactId>
 
   <dependencies>
+    <dependency>
+      <groupId>co.cask.tigon</groupId>
+      <artifactId>tigon-common</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.continuuity.tephra</groupId>
+      <artifactId>tephra-core</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-common</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.hbase</groupId>
-      <artifactId>hbase-common</artifactId>
+      <artifactId>hbase</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.hbase</groupId>
-      <artifactId>hbase-client</artifactId>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-mapreduce-client-core</artifactId>
     </dependency>
     <dependency>
-      <groupId>org.apache.hbase</groupId>
-      <artifactId>hbase-server</artifactId>
+      <groupId>org.apache.twill</groupId>
+      <artifactId>twill-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.continuuity.tephra</groupId>
-      <artifactId>tephra-hbase-compat-0.96</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>co.cask.tigon</groupId>
-      <artifactId>tigon-queue</artifactId>
-      <version>${project.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.hbase</groupId>
-          <artifactId>hbase</artifactId>
-        </exclusion>
-      </exclusions>
-    </dependency>
-
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>co.cask.tigon</groupId>
-      <artifactId>tigon-queue</artifactId>
-      <version>${project.version}</version>
-      <type>test-jar</type>
-      <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.hbase</groupId>
-          <artifactId>hbase</artifactId>
-        </exclusion>
-      </exclusions>
+      <groupId>org.apache.twill</groupId>
+      <artifactId>twill-core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-minicluster</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.hbase</groupId>
-      <artifactId>hbase-testing-util</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-hdfs</artifactId>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 
