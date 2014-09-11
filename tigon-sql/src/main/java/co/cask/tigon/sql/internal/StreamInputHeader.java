@@ -16,7 +16,7 @@
 
 package co.cask.tigon.sql.internal;
 
-import co.cask.tigon.sql.api.StreamSchema;
+import co.cask.tigon.sql.flowlet.StreamSchema;
 import co.cask.tigon.sql.conf.Constants;
 import com.google.common.annotations.VisibleForTesting;
 

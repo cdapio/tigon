@@ -14,12 +14,27 @@
  * the License.
  */
 
-package co.cask.tigon.sql.api;
+package co.cask.tigon.sql.flowlet;
 
 /**
- * Format of the Input Data Stream.
+ * Defines a GDAT Field.
  */
-public enum InputStreamFormat {
-  GDAT,
-  JSON
+public interface GDATField {
+  /**
+   * Get the Field Name.
+   * @return Field Name.
+   */
+  String getName();
+
+  /**
+   * Get the Field Type.
+   * @return Field Type.
+   */
+  GDATFieldType getType();
+
+  /**
+   * Sliding Window Type.
+   * @return the Sliding Window Type.
+   */
+  GDATSlidingWindowAttribute getSlidingWindowType();
 }

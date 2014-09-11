@@ -16,9 +16,9 @@
 
 package co.cask.tigon.sql.internal;
 
-import co.cask.tigon.sql.api.GDATFieldType;
-import co.cask.tigon.sql.api.GDATSlidingWindowAttribute;
-import co.cask.tigon.sql.api.StreamSchema;
+import co.cask.tigon.sql.flowlet.GDATFieldType;
+import co.cask.tigon.sql.flowlet.GDATSlidingWindowAttribute;
+import co.cask.tigon.sql.flowlet.StreamSchema;
 import org.junit.Assert;
 import org.junit.Test;
 

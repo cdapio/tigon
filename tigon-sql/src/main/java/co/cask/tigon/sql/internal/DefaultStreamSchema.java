@@ -16,8 +16,8 @@
 
 package co.cask.tigon.sql.internal;
 
-import co.cask.tigon.sql.api.GDATField;
-import co.cask.tigon.sql.api.StreamSchema;
+import co.cask.tigon.sql.flowlet.GDATField;
+import co.cask.tigon.sql.flowlet.StreamSchema;
 
 import java.util.List;
 

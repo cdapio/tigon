@@ -14,11 +14,8 @@
  * the License.
  */
 
-package co.cask.tigon.sql.api;
+package co.cask.tigon.sql.flowlet;
 
-import co.cask.tigon.sql.flowlet.AllFieldTypeFlowlet;
-import co.cask.tigon.sql.flowlet.InputFlowletSpecification;
-import co.cask.tigon.sql.flowlet.InvalidInputFlowlet;
 import co.cask.tigon.sql.internal.DefaultInputFlowletConfigurer;
 import org.junit.Assert;
 import org.junit.Test;

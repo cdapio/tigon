@@ -16,9 +16,9 @@
 
 package co.cask.tigon.sql.internal;
 
-import co.cask.tigon.sql.api.GDATField;
-import co.cask.tigon.sql.api.GDATFieldType;
-import co.cask.tigon.sql.api.GDATSlidingWindowAttribute;
+import co.cask.tigon.sql.flowlet.GDATField;
+import co.cask.tigon.sql.flowlet.GDATFieldType;
+import co.cask.tigon.sql.flowlet.GDATSlidingWindowAttribute;
 
 /**
  * Default GDATField implementation.

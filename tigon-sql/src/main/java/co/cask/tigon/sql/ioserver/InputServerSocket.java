@@ -16,7 +16,7 @@
 
 package co.cask.tigon.sql.ioserver;
 
-import co.cask.tigon.sql.api.StreamSchema;
+import co.cask.tigon.sql.flowlet.StreamSchema;
 import co.cask.tigon.sql.conf.Constants;
 import co.cask.tigon.sql.internal.StreamInputHeader;
 import co.cask.tigon.sql.util.GDATFormatUtil;
@@ -52,7 +52,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * Starts two Netty Servers - ingestionServer, dataSourceServer.
  *
  * IngestionServer - TCP endpoint for users to connect (or DataIngestionRouter clients to connect) to write data
- * for the given input stream (the stream has a fixed {@link co.cask.tigon.sql.api.StreamSchema}).
+ * for the given input stream (the stream has a fixed {@link co.cask.tigon.sql.flowlet.StreamSchema}).
  *
  * DataSourceServer - TCP endpoint for StreamEngine Process (RTS) process to connect and receive data.
  *

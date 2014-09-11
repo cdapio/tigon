@@ -16,9 +16,9 @@
 
 package co.cask.tigon.sql.internal;
 
-import co.cask.tigon.sql.api.GDATField;
-import co.cask.tigon.sql.api.GDATFieldType;
-import co.cask.tigon.sql.api.StreamSchema;
+import co.cask.tigon.sql.flowlet.GDATField;
+import co.cask.tigon.sql.flowlet.GDATFieldType;
+import co.cask.tigon.sql.flowlet.StreamSchema;
 import co.cask.tigon.sql.conf.Constants;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
@@ -27,7 +27,7 @@ import com.google.common.collect.Lists;
 import java.util.List;
 
 /**
- * Create Schema String from {@link co.cask.tigon.sql.api.StreamSchema} and vice versa.
+ * Create Schema String from {@link co.cask.tigon.sql.flowlet.StreamSchema} and vice versa.
  */
 public class StreamSchemaCodec {
 
@@ -50,7 +50,7 @@ public class StreamSchemaCodec {
   }
 
   /**
-   * Generate {@link co.cask.tigon.sql.api.StreamSchema} from serialized Schema String.
+   * Generate {@link co.cask.tigon.sql.flowlet.StreamSchema} from serialized Schema String.
    */
   public static StreamSchema deserialize(String schemaString) {
     Iterable<String> fieldArray = Splitter.on(';').trimResults().omitEmptyStrings().split(schemaString);

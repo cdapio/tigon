@@ -16,9 +16,9 @@
 
 package co.cask.tigon.sql.ioserver;
 
-import co.cask.tigon.sql.api.GDATRecordQueue;
-import co.cask.tigon.sql.api.InputStreamFormat;
-import co.cask.tigon.sql.api.StreamSchema;
+import co.cask.tigon.sql.flowlet.GDATRecordQueue;
+import co.cask.tigon.sql.flowlet.InputStreamFormat;
+import co.cask.tigon.sql.flowlet.StreamSchema;
 import co.cask.tigon.sql.conf.Constants;
 import co.cask.tigon.sql.flowlet.InputFlowletSpecification;
 import co.cask.tigon.sql.io.DataIngestionRouter;

@@ -16,9 +16,9 @@
 
 package co.cask.tigon.sql.util;
 
-import co.cask.tigon.sql.api.GDATFieldType;
-import co.cask.tigon.sql.api.GDATSlidingWindowAttribute;
-import co.cask.tigon.sql.api.StreamSchema;
+import co.cask.tigon.sql.flowlet.GDATFieldType;
+import co.cask.tigon.sql.flowlet.GDATSlidingWindowAttribute;
+import co.cask.tigon.sql.flowlet.StreamSchema;
 import co.cask.tigon.sql.conf.Constants;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -120,9 +120,9 @@ public class MetaInformationParser {
   }
 
   /**
-   * This function generates the {@link co.cask.tigon.sql.api.StreamSchema} for each query specified by the user
+   * This function generates the {@link co.cask.tigon.sql.flowlet.StreamSchema} for each query specified by the user
    * @param fileLocation Directory that contains the qtree.xml file & the output_spec.cfg
-   * @return A map of query names and the associated {@link co.cask.tigon.sql.api.StreamSchema}
+   * @return A map of query names and the associated {@link co.cask.tigon.sql.flowlet.StreamSchema}
    * @throws IOException
    */
   public static Map<String, StreamSchema> getSchemaMap(File fileLocation) throws IOException {

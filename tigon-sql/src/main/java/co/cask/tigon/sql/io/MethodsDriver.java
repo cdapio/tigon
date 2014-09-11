@@ -20,10 +20,10 @@ import com.continuuity.internal.io.Schema;
 import com.continuuity.internal.io.UnsupportedTypeException;
 import com.continuuity.internal.lang.MethodVisitor;
 import com.continuuity.internal.lang.Reflections;
-import co.cask.tigon.sql.api.AbstractInputFlowlet;
-import co.cask.tigon.sql.api.GDATField;
-import co.cask.tigon.sql.api.StreamSchema;
-import co.cask.tigon.sql.api.annotation.QueryOutput;
+import co.cask.tigon.sql.flowlet.AbstractInputFlowlet;
+import co.cask.tigon.sql.flowlet.GDATField;
+import co.cask.tigon.sql.flowlet.StreamSchema;
+import co.cask.tigon.sql.flowlet.annotation.QueryOutput;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
@@ -38,7 +38,7 @@ import java.util.Map;
  * MethodsDriver
  * This class is responsible for managing all the methods in the flowlet. It creates an instance of class
  * {@link co.cask.tigon.sql.io.MethodInvoker} for each method  annotated by
- * {@link co.cask.tigon.sql.api.annotation.QueryOutput} in this flowlet class
+ * {@link co.cask.tigon.sql.flowlet.annotation.QueryOutput} in this flowlet class
  *
  */
 public class MethodsDriver {
@@ -48,7 +48,7 @@ public class MethodsDriver {
 
   /**
    * Constructor for MethodsDriver
-   * @param flowlet An instance of the {@link co.cask.tigon.sql.api.AbstractInputFlowlet} to be used for
+   * @param flowlet An instance of the {@link co.cask.tigon.sql.flowlet.AbstractInputFlowlet} to be used for
    *                invoking the method calls
    */
   public MethodsDriver(AbstractInputFlowlet flowlet, Map<String, StreamSchema> schemaMap) {

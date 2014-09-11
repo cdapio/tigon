@@ -16,9 +16,9 @@
 
 package co.cask.tigon.sql.util;
 
-import co.cask.tigon.sql.api.GDATField;
-import co.cask.tigon.sql.api.GDATFieldType;
-import co.cask.tigon.sql.api.StreamSchema;
+import co.cask.tigon.sql.flowlet.GDATField;
+import co.cask.tigon.sql.flowlet.GDATFieldType;
+import co.cask.tigon.sql.flowlet.StreamSchema;
 import co.cask.tigon.sql.io.GDATEncoder;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.Lists;

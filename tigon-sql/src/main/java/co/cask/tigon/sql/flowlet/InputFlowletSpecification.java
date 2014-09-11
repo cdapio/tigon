@@ -16,9 +16,6 @@
 
 package co.cask.tigon.sql.flowlet;
 
-import co.cask.tigon.sql.api.InputStreamFormat;
-import co.cask.tigon.sql.api.StreamSchema;
-
 import java.util.Map;
 
 /**
@@ -40,7 +37,7 @@ public interface InputFlowletSpecification {
 
   /**
    * Get Input Schemas.
-   * @return Map of Input Name and the associated {@link co.cask.tigon.sql.api.StreamSchema}
+   * @return Map of Input Name and the associated {@link StreamSchema}
    */
   Map<String, Map.Entry<InputStreamFormat, StreamSchema>> getInputSchemas();
 

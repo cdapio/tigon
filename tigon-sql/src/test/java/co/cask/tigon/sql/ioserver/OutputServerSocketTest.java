@@ -16,10 +16,10 @@
 
 package co.cask.tigon.sql.ioserver;
 
-import co.cask.tigon.sql.api.GDATFieldType;
-import co.cask.tigon.sql.api.GDATRecordQueue;
-import co.cask.tigon.sql.api.GDATSlidingWindowAttribute;
-import co.cask.tigon.sql.api.StreamSchema;
+import co.cask.tigon.sql.flowlet.GDATFieldType;
+import co.cask.tigon.sql.flowlet.GDATRecordQueue;
+import co.cask.tigon.sql.flowlet.GDATSlidingWindowAttribute;
+import co.cask.tigon.sql.flowlet.StreamSchema;
 import co.cask.tigon.sql.conf.Constants;
 import co.cask.tigon.sql.internal.StreamInputHeader;
 import co.cask.tigon.sql.io.GDATEncoder;

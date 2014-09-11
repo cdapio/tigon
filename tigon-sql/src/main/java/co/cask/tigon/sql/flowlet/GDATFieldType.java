@@ -14,7 +14,7 @@
  * the License.
  */
 
-package co.cask.tigon.sql.api;
+package co.cask.tigon.sql.flowlet;
 
 import com.continuuity.internal.io.Schema;
 import com.google.common.primitives.Doubles;
@@ -67,9 +67,9 @@ public enum GDATFieldType {
   }
 
   /**
-   * Return the {@link co.cask.tigon.sql.api.GDATFieldType} given a stream engine field type name.
+   * Return the {@link GDATFieldType} given a stream engine field type name.
    * @param typeName Field Type Name used in Stream Engine.
-   * @return {@link co.cask.tigon.sql.api.GDATFieldType}
+   * @return {@link GDATFieldType}
    */
   public static GDATFieldType getGDATFieldType(String typeName) {
     for (GDATFieldType gdatFieldType : GDATFieldType.values()) {

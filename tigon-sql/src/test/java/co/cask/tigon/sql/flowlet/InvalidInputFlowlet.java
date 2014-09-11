@@ -16,10 +16,6 @@
 
 package co.cask.tigon.sql.flowlet;
 
-import co.cask.tigon.sql.api.AbstractInputFlowlet;
-import co.cask.tigon.sql.api.GDATFieldType;
-import co.cask.tigon.sql.api.StreamSchema;
-
 /**
  * Invalid Flowlet since the Schema has two fields with the same name.
  */

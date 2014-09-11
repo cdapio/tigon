@@ -14,7 +14,7 @@
  * the License.
  */
 
-package co.cask.tigon.sql.api;
+package co.cask.tigon.sql.flowlet;
 
 /**
  * GDAT Record Type.
@@ -32,7 +32,7 @@ public enum GDATRecordType {
   }
 
   /**
-   * Return the Record Marker Byte value for the {@link co.cask.tigon.sql.api.GDATRecordType}.
+   * Return the Record Marker Byte value for the {@link GDATRecordType}.
    * @return Record Marker Byte.
    */
   public byte getRecordMarker() {
@@ -40,9 +40,9 @@ public enum GDATRecordType {
   }
 
   /**
-   * Return the {@link co.cask.tigon.sql.api.GDATRecordType} given a Record Marker Byte.
+   * Return the {@link GDATRecordType} given a Record Marker Byte.
    * @param recordMarker Record Marker Byte
-   * @return {@link co.cask.tigon.sql.api.GDATRecordType}
+   * @return {@link GDATRecordType}
    */
   public static GDATRecordType getGDATRecordType(byte recordMarker) {
     for (GDATRecordType gdatRecordType : GDATRecordType.values()) {

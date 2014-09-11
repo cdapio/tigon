@@ -16,11 +16,6 @@
 
 package co.cask.tigon.sql.flowlet;
 
-import co.cask.tigon.sql.api.AbstractInputFlowlet;
-import co.cask.tigon.sql.api.GDATFieldType;
-import co.cask.tigon.sql.api.GDATSlidingWindowAttribute;
-import co.cask.tigon.sql.api.StreamSchema;
-
 /**
  * Input Flowlet with two Streams.
  */

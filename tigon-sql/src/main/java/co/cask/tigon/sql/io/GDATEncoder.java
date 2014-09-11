@@ -17,7 +17,7 @@
 package co.cask.tigon.sql.io;
 
 import com.continuuity.common.io.Encoder;
-import co.cask.tigon.sql.api.GDATRecordType;
+import co.cask.tigon.sql.flowlet.GDATRecordType;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;

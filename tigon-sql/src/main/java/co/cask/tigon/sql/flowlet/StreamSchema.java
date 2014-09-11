@@ -14,7 +14,7 @@
  * the License.
  */
 
-package co.cask.tigon.sql.api;
+package co.cask.tigon.sql.flowlet;
 
 import co.cask.tigon.sql.internal.DefaultGDATField;
 import co.cask.tigon.sql.internal.DefaultStreamSchema;

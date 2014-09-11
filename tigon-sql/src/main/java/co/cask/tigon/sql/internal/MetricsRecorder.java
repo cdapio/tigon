@@ -24,7 +24,7 @@ import java.util.Map;
 
 /**
  * This class is a wrapper on the {@link Metrics} object to be used by
- * {@link co.cask.tigon.sql.api.AbstractInputFlowlet}. It parses the incoming metrics and adds that data to the
+ * {@link co.cask.tigon.sql.flowlet.AbstractInputFlowlet}. It parses the incoming metrics and adds that data to the
  * underlying {@link Metrics} object.
  */
 public class MetricsRecorder {

@@ -14,7 +14,7 @@
  * the License.
  */
 
-package co.cask.tigon.sql.api;
+package co.cask.tigon.sql.flowlet;
 
 import com.continuuity.api.annotation.Tick;
 import com.continuuity.api.flow.flowlet.AbstractFlowlet;
@@ -24,8 +24,6 @@ import com.continuuity.api.flow.flowlet.FlowletContext;
 import com.continuuity.api.flow.flowlet.InputContext;
 import com.continuuity.api.metrics.Metrics;
 import co.cask.tigon.sql.conf.Constants;
-import co.cask.tigon.sql.flowlet.InputFlowletConfiguration;
-import co.cask.tigon.sql.flowlet.InputFlowletSpecification;
 import co.cask.tigon.sql.internal.DefaultInputFlowletConfigurer;
 import co.cask.tigon.sql.internal.HealthInspector;
 import co.cask.tigon.sql.internal.InputFlowletService;

@@ -16,7 +16,7 @@
 
 package co.cask.tigon.sql.ioserver;
 
-import co.cask.tigon.sql.api.StreamSchema;
+import co.cask.tigon.sql.flowlet.StreamSchema;
 import co.cask.tigon.sql.util.GDATFormatUtil;
 import com.google.common.collect.Maps;
 import com.google.common.reflect.TypeToken;

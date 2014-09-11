@@ -1,5 +1,5 @@
-/*
- * Copyright 2014 Cask, Inc.
+/**
+ * Copyright 2012-2014 Cask, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,24 +14,21 @@
  * the License.
  */
 
-package co.cask.tigon.sql.api;
+package co.cask.tigon.sql.flowlet.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Sliding Window Attribute used in GDAT.
+ * QueryOutput
  */
-@SuppressWarnings("unused")
-public enum GDATSlidingWindowAttribute {
-  INCREASING(" (increasing) "),
-  DECREASING(" (decreasing) "),
-  NONE("");
-
-  private String attribute;
-
-  private GDATSlidingWindowAttribute(String attribute) {
-    this.attribute = attribute;
-  }
-
-  public String getAttribute() {
-    return attribute;
-  }
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface QueryOutput {
+  /**
+   * The Query Name
+   */
+  String value();
 }

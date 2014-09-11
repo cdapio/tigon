@@ -16,8 +16,8 @@
 
 package co.cask.tigon.sql.io;
 
-import co.cask.tigon.sql.api.AbstractInputFlowlet;
-import co.cask.tigon.sql.api.annotation.QueryOutput;
+import co.cask.tigon.sql.flowlet.AbstractInputFlowlet;
+import co.cask.tigon.sql.flowlet.annotation.QueryOutput;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
