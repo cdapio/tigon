@@ -5,8 +5,8 @@
 
 CXX=g++
 
-INCLUDES = -I../../include -I../../include/hfta
-LDLIBS = -L../../lib -lm # -lgscphostaux 
+INCLUDES = -I../../../../include -I../../../../include/hfta
+LDLIBS = -L../../../../lib -lm # -lgscphostaux 
 C++OPTS = -ggdb -O3  -D_BSD_SIGNALS $(INCLUDES) -DPREFILTER_OK  
 C++LDOPTS = -ggdb 
 
@@ -32,7 +32,7 @@ ifeq ($(OS),Linux)
 endif
 
 all: translate_fta gen_tuple_access interfacelib.a
-	cp interfacelib.a ../../lib/libgscpinterface.a ; ranlib ../../lib/libgscpinterface.a
+	cp interfacelib.a ../../../../lib/libgscpinterface.a ; ranlib ../../../../lib/libgscpinterface.a
 
 default_targets: $(TARGETS)
 
@@ -86,7 +86,7 @@ ftalexer.cc : parse_fta.h parse_schema.h fta.tab.cc.h
 
 generate_lfta_code.cc : parse_fta.h parse_schema.h analyze_fta.h generate_utils.h query_plan.h generate_lfta_code.h generate_nic_code.h
 
-generate_utils.cc : generate_utils.h ../../include/lapp.h
+generate_utils.cc : generate_utils.h ../../../../include/lapp.h
 
 parse_schema.cc : parse_fta.h parse_schema.h type_objects.h
 
@@ -129,7 +129,7 @@ xml.tab.cc : xml_t.h
 field_list.cc : xml_t.h field_list.h
 
 # gen_tuple_access source files
-schemaparser.cc : schemaparser_impl.h ../../include/schemaparser.h parse_fta.h parse_schema.h generate_utils.h ../../include/hfta/host_tuple.h ../../include/lapp.h
+schemaparser.cc : schemaparser_impl.h ../../../../include/schemaparser.h parse_fta.h parse_schema.h generate_utils.h ../../../../include/hfta/host_tuple.h ../../../../include/lapp.h
 
 clean:
 	rm -f *.o core $(TARGETS) ./ii_files/*.ii
@@ -141,7 +141,7 @@ cleandrive:
 	rm -f *.o *.a core driver ./ii_files/*.ii
 
 install: all
-	cp translate_fta ../../bin/ ; cp gen_tuple_access ../../bin/ ; cp interfacelib.a ../../lib/libgscpinterface.a ; ranlib ../../lib/libgscpinterface.a
+	cp translate_fta ../../../../bin/ ; cp gen_tuple_access ../../../../bin/ ; cp interfacelib.a ../../../../lib/libgscpinterface.a ; ranlib ../../../../lib/libgscpinterface.a
 
 # DO NOT DELETE THIS LINE -- make depend depends on it.
 

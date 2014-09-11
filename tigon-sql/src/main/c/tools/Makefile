@@ -1,6 +1,6 @@
-CC= gcc -O4 -g   -I ../../include -D_FILE_OFFSET_BITS=64 
+CC= gcc -O4 -g   -I ../../../../include -D_FILE_OFFSET_BITS=64 
 
-INCDIR=../../include
+INCDIR=../../../../include
 
 # we need to suppress writable strings warnings on Mac for flex/bison generated C++ code
 OS= $(shell uname -s)
@@ -14,42 +14,42 @@ endif
 all:   gdatcat gsprintconsole gsgdatprint  gdat2ascii gsexit gssinksim process_logs
 
 install: all
-	cp gsprintconsole  gsgdatprint  gdat2ascii  process_logs gsexit ../../bin/ 
+	cp gsprintconsole  gsgdatprint  gdat2ascii  process_logs gsexit ../../../../bin/ 
 
-gsgdatprint: gsgdatprint.o ../../lib/libgscphostaux.a ../../lib/libgscphost.a ../../lib/libgscpinterface.a ../../lib/libgscpapp.a
-	g++ -g -o gsgdatprint gsgdatprint.o -L../../lib  -lgscpapp  -lgscphostaux -lgscphost -lgscpinterface -lgscplftaaux -lclearinghouse -lgscpaux  -lcurl
+gsgdatprint: gsgdatprint.o ../../../../lib/libgscphostaux.a ../../../../lib/libgscphost.a ../../../../lib/libgscpinterface.a ../../../../lib/libgscpapp.a
+	g++ -g -o gsgdatprint gsgdatprint.o -L../../../../lib  -lgscpapp  -lgscphostaux -lgscphost -lgscpinterface -lgscplftaaux -lclearinghouse -lgscpaux  -lcurl
 
 gsgdatprint.o: gsgdatprint.c
 
-gsexit: gsexit.o ../../lib/libgscphostaux.a ../../lib/libgscphost.a ../../lib/libgscpinterface.a ../../lib/libgscpapp.a
-	g++ -g -o gsexit gsexit.o -L../../lib  -lgscpapp  -lgscphostaux -lgscphost -lgscpinterface -lgscplftaaux -lclearinghouse -lgscpaux  -lcurl
+gsexit: gsexit.o ../../../../lib/libgscphostaux.a ../../../../lib/libgscphost.a ../../../../lib/libgscpinterface.a ../../../../lib/libgscpapp.a
+	g++ -g -o gsexit gsexit.o -L../../../../lib  -lgscpapp  -lgscphostaux -lgscphost -lgscpinterface -lgscplftaaux -lclearinghouse -lgscpaux  -lcurl
 
 gsexit.o: gsexit.c
 
 
 gsgdatprint.c: $(INCDIR/gsconfig.h) $(INCDIR/gstypes.h)
 
-gdat2ascii: gdat2ascii.o ../../lib/libgscphostaux.a  ../../lib/libgscpinterface.a 
-	g++ -g -o gdat2ascii gdat2ascii.o -L../../lib   -lgscphostaux  -lgscpinterface -lgscpaux  -lcurl
+gdat2ascii: gdat2ascii.o ../../../../lib/libgscphostaux.a  ../../../../lib/libgscpinterface.a 
+	g++ -g -o gdat2ascii gdat2ascii.o -L../../../../lib   -lgscphostaux  -lgscpinterface -lgscpaux  -lcurl
 
 gdat2ascii.o: gdat2ascii.c
 
 gdat2ascii.c : $(INCDIR/gsconfig.h) $(INCDIR/gstypes.h)
 
-gsprintconsole: gsprintconsole.o ../../lib/libgscphostaux.a ../../lib/libgscphost.a ../../lib/libgscpinterface.a ../../lib/libgscpapp.a
-	g++ -g -o gsprintconsole gsprintconsole.o -L../../lib -lgscpapp  -lgscphostaux -lgscphost -lgscpinterface -lgscplftaaux -lclearinghouse -lgscpaux  -lcurl 
+gsprintconsole: gsprintconsole.o ../../../../lib/libgscphostaux.a ../../../../lib/libgscphost.a ../../../../lib/libgscpinterface.a ../../../../lib/libgscpapp.a
+	g++ -g -o gsprintconsole gsprintconsole.o -L../../../../lib -lgscpapp  -lgscphostaux -lgscphost -lgscpinterface -lgscplftaaux -lclearinghouse -lgscpaux  -lcurl 
 
 gsprintconsole.o: gsprintconsole.c
 
 gsprintconsole.c : $(INCDIR/gsconfig.h) $(INCDIR/gstypes.h)
 
-gssinksim: gssinksim.o ../../lib/libgscphostaux.a ../../lib/libgscphost.a ../../lib/libgscpinterface.a ../../lib/libgscpapp.a
-	g++ -g -o gssinksim gssinksim.o -L../../lib -lgscpapp  -lgscphostaux -lgscphost -lgscpinterface -lgscplftaaux -lclearinghouse -lgscpaux  -lcurl
+gssinksim: gssinksim.o ../../../../lib/libgscphostaux.a ../../../../lib/libgscphost.a ../../../../lib/libgscpinterface.a ../../../../lib/libgscpapp.a
+	g++ -g -o gssinksim gssinksim.o -L../../../../lib -lgscpapp  -lgscphostaux -lgscphost -lgscpinterface -lgscplftaaux -lclearinghouse -lgscpaux  -lcurl
 
 gssinksim.o: gssinksim.c
 
 gssource: gssource.o
-	g++ -g -o gssource gssource.o -L../../lib   -lgscpaux  -lcurl
+	g++ -g -o gssource gssource.o -L../../../../lib   -lgscpaux  -lcurl
 
 gssource.o: gssource.c
 

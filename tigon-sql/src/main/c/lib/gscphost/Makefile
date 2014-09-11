@@ -1,4 +1,4 @@
-CC=gcc   -O3  -fexpensive-optimizations  -g -I ./include/ -I ../../../include/ -DCLEARINGHOUSE_HEARTBEAT
+CC=gcc   -O3  -fexpensive-optimizations  -g -I ./include/ -I ../../../../../include/ -DCLEARINGHOUSE_HEARTBEAT
 
 SOURCE = callbackinterface.c callbackregistries.c lappinterface.c lappregistries.c  lfta.c gscpipc.c 
 
@@ -6,7 +6,7 @@ OBJECTS = $(SOURCE:.c=.o)
 
 all: install
 
-INCDIR=../../include
+INCDIR=../../../../include
 
 libgscphost.a: $(OBJECTS) Makefile 
 	ar  rc libgscphost.a $(OBJECTS) 
@@ -31,7 +31,7 @@ gscpipc.c : $(INCDIR/gsconfig.h) $(INCDIR/gstypes.h)
 clearinghouseregistries.c : $(INCDIR/gsconfig.h) $(INCDIR/gstypes.h) include/gscpipc.h
 
 install: libgscphost.a libclearinghouse.a
-	cp libgscphost.a libclearinghouse.a ../../../lib/ ; ranlib   ../../../lib/libclearinghouse.a ; ranlib  ../../../lib/libgscphost.a
+	cp libgscphost.a libclearinghouse.a ../../../../../lib/ ; ranlib   ../../../../../lib/libclearinghouse.a ; ranlib  ../../../../../lib/libgscphost.a
 
 clean:
 	rm -f *.o *.a core

@@ -1,4 +1,4 @@
-CC=gcc -g -O3  -fexpensive-optimizations -I ../gscpaux/acl/ -I ../gscpaux/ -I ../../../include/lfta/ -I ../../../include/
+CC=gcc -g -O3  -fexpensive-optimizations -I ../gscpaux/acl/ -I ../gscpaux/ -I ../../../../../include/lfta/ -I ../../../../../include/
 
 SOURCE =  rts_string.c rts_byteswap.c rts_sample.c rts_udaf.c 
 
@@ -9,7 +9,7 @@ HFTA_DIR=$(INCDIR/hfta)
 LFTA_DIR=$(INCDIR/lfta)
 
 all: libgscplftaaux.a
-	cp libgscplftaaux.a ../../../lib/ ; ranlib ../../../lib/libgscplftaaux.a
+	cp libgscplftaaux.a ../../../../../lib/ ; ranlib ../../../../../lib/libgscplftaaux.a
 
 libgscplftaaux.a: $(OBJECTS) Makefile 
 	ar  rc libgscplftaaux.a $(OBJECTS) 

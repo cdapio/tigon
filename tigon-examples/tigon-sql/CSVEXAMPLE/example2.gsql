@@ -2,5 +2,5 @@ DEFINE {
 query_name 'example2';
 }
 select systemTime,uintInPosition1,sum(Cnt)
-from csv_example/ex2_src
+from CSVEXAMPLELIB/ex2_src
 group by systemTime,uintInPosition1

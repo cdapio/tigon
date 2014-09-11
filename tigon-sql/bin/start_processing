@@ -1,0 +1,8 @@
+if [ ! -f gshub.log ]
+then
+        echo "Unable to find gshub.log in current directory. Make sure bin/gshub.py is running"
+        exit -1
+fi
+ADDR=`cat gshub.log`
+curl -H 'Content-Type: application/json' -d '{"name": "default"}' $ADDR/v1/announce-start-processing
+

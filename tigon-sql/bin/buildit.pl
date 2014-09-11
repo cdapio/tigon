@@ -1,12 +1,12 @@
 #! /usr/bin/perl
 use Cwd;
 
-$rootdir_name = "STREAMING";
+$rootdir_name = "tigon";
 $curr_path = getcwd();
 
 
-if($curr_path =~ /^(.*\/STREAMING)\//){
-	$prefix = $1;
+if($curr_path =~ /^(.*\/tigon)\//){
+	$prefix = "$1/tigon-sql";
 }else{
 	print "didn't find prefix.\n";
 	exit(1);
