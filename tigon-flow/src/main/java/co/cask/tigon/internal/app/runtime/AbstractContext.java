@@ -52,18 +52,15 @@ public abstract class AbstractContext implements RuntimeContext {
   private final RunId runId;
 
   private final MetricsCollector programMetrics;
-  private final ProgramServiceDiscovery serviceDiscovery;
   private final DiscoveryServiceClient discoveryServiceClient;
 
   public AbstractContext(Program program, RunId runId,
                          String metricsContext,
                          MetricsCollectionService metricsCollectionService,
                          CConfiguration conf,
-                         ProgramServiceDiscovery serviceDiscovery,
                          DiscoveryServiceClient discoveryServiceClient) {
     this.program = program;
     this.runId = runId;
-    this.serviceDiscovery = serviceDiscovery;
     this.discoveryServiceClient = discoveryServiceClient;
 
     if (metricsCollectionService != null) {
@@ -104,11 +101,6 @@ public abstract class AbstractContext implements RuntimeContext {
 
   public RunId getRunId() {
     return runId;
-  }
-
-  @Override
-  public ServiceDiscovered discover(String appId, String serviceId, String serviceName) {
-    return serviceDiscovery.discover(getAccountId(), appId, serviceId, serviceName);
   }
 
   @Override

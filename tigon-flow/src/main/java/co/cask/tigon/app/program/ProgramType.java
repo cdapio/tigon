@@ -26,10 +26,7 @@ public enum ProgramType {
   // @SerializedName to maintain backwards-compatibility
 
   @SerializedName("Flow")
-  FLOW(1, "flows", "Flow", true),
-
-  @SerializedName("Service")
-  SERVICE(6, "services", "Service", false);
+  FLOW(1, "flows", "Flow", true);
 
   private final int programType;
   private final String prettyName;

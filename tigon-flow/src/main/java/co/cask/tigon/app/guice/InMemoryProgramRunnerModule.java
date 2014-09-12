@@ -20,10 +20,8 @@ import co.cask.tigon.conf.CConfiguration;
 import co.cask.tigon.internal.app.queue.QueueReaderFactory;
 import co.cask.tigon.internal.app.runtime.ProgramRunner;
 import co.cask.tigon.internal.app.runtime.ProgramRunnerFactory;
-import co.cask.tigon.internal.app.runtime.ProgramServiceDiscovery;
 import co.cask.tigon.internal.app.runtime.flow.FlowProgramRunner;
 import co.cask.tigon.internal.app.runtime.flow.FlowletProgramRunner;
-import co.cask.tigon.internal.app.runtime.service.InMemoryProgramServiceDiscovery;
 import co.cask.tigon.logging.common.LocalLogWriter;
 import co.cask.tigon.logging.common.LogWriter;
 import com.google.common.base.Preconditions;
@@ -75,10 +73,6 @@ final class InMemoryProgramRunnerModule extends PrivateModule {
 
     // For binding DataSet transaction stuff
     install(new DataFabricFacadeModule());
-
-    //install discovery service modules
-    bind(ProgramServiceDiscovery.class).to(InMemoryProgramServiceDiscovery.class).in(Scopes.SINGLETON);
-    expose(ProgramServiceDiscovery.class);
   }
 
   @Singleton

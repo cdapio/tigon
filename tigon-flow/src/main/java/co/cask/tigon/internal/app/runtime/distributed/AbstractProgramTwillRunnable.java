@@ -36,7 +36,6 @@ import co.cask.tigon.internal.app.runtime.ProgramOptionConstants;
 import co.cask.tigon.internal.app.runtime.ProgramOptions;
 import co.cask.tigon.internal.app.runtime.ProgramResourceReporter;
 import co.cask.tigon.internal.app.runtime.ProgramRunner;
-import co.cask.tigon.internal.app.runtime.ProgramServiceDiscovery;
 import co.cask.tigon.internal.app.runtime.SimpleProgramOptions;
 import co.cask.tigon.logging.LogAppenderInitializer;
 import co.cask.tigon.metrics.MetricsCollectionService;
@@ -327,9 +326,6 @@ public abstract class AbstractProgramTwillRunnable<T extends ProgramRunner> impl
               return context.announce(serviceName, port);
             }
           });
-
-          //install discovery service modules
-          bind(ProgramServiceDiscovery.class).to(DistributedProgramServiceDiscovery.class).in(Scopes.SINGLETON);
         }
       }
     );

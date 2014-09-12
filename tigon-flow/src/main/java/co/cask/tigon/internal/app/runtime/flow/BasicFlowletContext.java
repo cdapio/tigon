@@ -24,7 +24,6 @@ import co.cask.tigon.app.program.Program;
 import co.cask.tigon.conf.CConfiguration;
 import co.cask.tigon.internal.app.runtime.AbstractContext;
 import co.cask.tigon.internal.app.runtime.Arguments;
-import co.cask.tigon.internal.app.runtime.ProgramServiceDiscovery;
 import co.cask.tigon.logging.FlowletLoggingContext;
 import co.cask.tigon.logging.LoggingContext;
 import co.cask.tigon.metrics.MetricsCollectionService;
@@ -39,7 +38,6 @@ import java.util.Map;
  */
 final class BasicFlowletContext extends AbstractContext implements FlowletContext {
 
-  private final String accountId;
   private final String flowId;
   private final String flowletId;
   private final long groupId;
@@ -55,14 +53,11 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
                       int instanceCount,
                       Arguments runtimeArguments, FlowletSpecification flowletSpec,
                       MetricsCollectionService metricsCollectionService,
-                      ProgramServiceDiscovery serviceDiscovery,
                       DiscoveryServiceClient discoveryServiceClient,
                       CConfiguration conf) {
     super(program, runId,
           getMetricContext(program, flowletId, instanceId),
-          metricsCollectionService,
-          conf, serviceDiscovery, discoveryServiceClient);
-    this.accountId = program.getAccountId();
+          metricsCollectionService, conf, discoveryServiceClient);
     this.flowId = program.getName();
     this.flowletId = flowletId;
     this.groupId = FlowUtils.generateConsumerGroupId(program, flowletId);

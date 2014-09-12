@@ -55,7 +55,6 @@ import co.cask.tigon.internal.app.runtime.ProgramController;
 import co.cask.tigon.internal.app.runtime.ProgramOptionConstants;
 import co.cask.tigon.internal.app.runtime.ProgramOptions;
 import co.cask.tigon.internal.app.runtime.ProgramRunner;
-import co.cask.tigon.internal.app.runtime.ProgramServiceDiscovery;
 import co.cask.tigon.internal.io.ByteBufferInputStream;
 import co.cask.tigon.internal.io.DatumWriterFactory;
 import co.cask.tigon.internal.io.ReflectionDatumReader;
@@ -119,7 +118,6 @@ public final class FlowletProgramRunner implements ProgramRunner {
   private final DataFabricFacadeFactory dataFabricFacadeFactory;
   private final QueueReaderFactory queueReaderFactory;
   private final MetricsCollectionService metricsCollectionService;
-  private final ProgramServiceDiscovery serviceDiscovery;
   private final DiscoveryServiceClient discoveryServiceClient;
   private final CConfiguration configuration;
 
@@ -129,7 +127,6 @@ public final class FlowletProgramRunner implements ProgramRunner {
                               DataFabricFacadeFactory dataFabricFacadeFactory,
                               QueueReaderFactory queueReaderFactory,
                               MetricsCollectionService metricsCollectionService,
-                              ProgramServiceDiscovery serviceDiscovery,
                               DiscoveryServiceClient discoveryServiceClient,
                               CConfiguration configuration) {
     this.schemaGenerator = schemaGenerator;
@@ -137,7 +134,6 @@ public final class FlowletProgramRunner implements ProgramRunner {
     this.dataFabricFacadeFactory = dataFabricFacadeFactory;
     this.queueReaderFactory = queueReaderFactory;
     this.metricsCollectionService = metricsCollectionService;
-    this.serviceDiscovery = serviceDiscovery;
     this.discoveryServiceClient = discoveryServiceClient;
     this.configuration = configuration;
   }
@@ -187,8 +183,7 @@ public final class FlowletProgramRunner implements ProgramRunner {
       flowletContext = new BasicFlowletContext(program, flowletName, instanceId,
                                                runId, instanceCount,
                                                options.getUserArguments(), flowletDef.getFlowletSpec(),
-                                               metricsCollectionService, serviceDiscovery, discoveryServiceClient,
-                                               configuration);
+                                               metricsCollectionService, discoveryServiceClient, configuration);
 
       // Creates tx related objects
       DataFabricFacade dataFabricFacade = dataFabricFacadeFactory.create(program);

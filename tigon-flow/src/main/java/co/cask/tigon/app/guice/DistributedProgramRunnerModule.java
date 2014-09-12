@@ -17,14 +17,11 @@ package co.cask.tigon.app.guice;
 
 import co.cask.tigon.internal.app.runtime.ProgramRunner;
 import co.cask.tigon.internal.app.runtime.ProgramRunnerFactory;
-import co.cask.tigon.internal.app.runtime.ProgramServiceDiscovery;
 import co.cask.tigon.internal.app.runtime.distributed.DistributedFlowProgramRunner;
-import co.cask.tigon.internal.app.runtime.distributed.DistributedProgramServiceDiscovery;
 import com.google.common.base.Preconditions;
 import com.google.inject.PrivateModule;
 import com.google.inject.Provider;
 import com.google.inject.Provides;
-import com.google.inject.Scopes;
 import com.google.inject.Singleton;
 import com.google.inject.multibindings.MapBinder;
 
@@ -41,10 +38,6 @@ final class DistributedProgramRunnerModule extends PrivateModule {
     MapBinder<ProgramRunnerFactory.Type, ProgramRunner> runnerFactoryBinder =
       MapBinder.newMapBinder(binder(), ProgramRunnerFactory.Type.class, ProgramRunner.class);
     runnerFactoryBinder.addBinding(ProgramRunnerFactory.Type.FLOW).to(DistributedFlowProgramRunner.class);
-
-    // Bind and expose ProgramServiceDiscovery.
-    bind(ProgramServiceDiscovery.class).to(DistributedProgramServiceDiscovery.class).in(Scopes.SINGLETON);
-    expose(ProgramServiceDiscovery.class);
   }
 
   @Singleton
