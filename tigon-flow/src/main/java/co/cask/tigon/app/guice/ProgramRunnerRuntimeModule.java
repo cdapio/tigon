@@ -13,25 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package co.cask.tigon.app.guice;
 
-package co.cask.tigon.app.program;
+import co.cask.tigon.runtime.RuntimeModule;
+import com.google.inject.Module;
 
 /**
- * Helper class for getting the program type id to use when emitting metrics.
+ *
  */
-public final class TypeId {
-  /**
-   * Metric contexts are of the form {applicationId}.{programType}.{programId}.{optionalComponentId},
-   * where programType is some string.
-   *
-   * @return id of the program type for use in metrics contexts.
-   */
-  public static String getMetricContextId(ProgramType programType) {
-    switch (programType) {
-      case FLOW:
-        return "f";
-      default:
-        return "unknown";
-    }
+public final class ProgramRunnerRuntimeModule extends RuntimeModule {
+
+  @Override
+  public Module getInMemoryModules() {
+    return new InMemoryProgramRunnerModule();
+  }
+
+  @Override
+  public Module getSingleNodeModules() {
+    return new InMemoryProgramRunnerModule();
+  }
+
+  @Override
+  public Module getDistributedModules() {
+    return new DistributedProgramRunnerModule();
   }
 }

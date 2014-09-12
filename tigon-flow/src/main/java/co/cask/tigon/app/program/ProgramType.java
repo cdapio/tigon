@@ -28,23 +28,8 @@ public enum ProgramType {
   @SerializedName("Flow")
   FLOW(1, "flows", "Flow", true),
 
-  @SerializedName("Procedure")
-  PROCEDURE(2, "procedures", "Procedure", true),
-
-  @SerializedName("Mapreduce")
-  MAPREDUCE(3, "mapreduce", "Mapreduce", true),
-
-  @SerializedName("Workflow")
-  WORKFLOW(4, "workflows", "Workflow", true),
-
-  @SerializedName("Webapp")
-  WEBAPP(5, "webapp", "Webapp", false),
-
   @SerializedName("Service")
-  SERVICE(6, "services", "Service", false),
-
-  @SerializedName("Spark")
-  SPARK(7, "spark", "Spark", true);
+  SERVICE(6, "services", "Service", false);
 
   private final int programType;
   private final String prettyName;

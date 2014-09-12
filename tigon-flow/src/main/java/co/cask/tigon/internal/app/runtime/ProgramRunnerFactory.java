@@ -26,13 +26,7 @@ public interface ProgramRunnerFactory {
    */
   public enum Type {
     FLOW,
-    FLOWLET,
-    PROCEDURE,
-    MAPREDUCE,
-    WORKFLOW,
-    WEBAPP,
-    SERVICE,
-    RUNNABLE
+    FLOWLET
   }
 
   ProgramRunner create(Type programType);

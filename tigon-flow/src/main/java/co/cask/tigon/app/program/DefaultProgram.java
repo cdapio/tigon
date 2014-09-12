@@ -72,8 +72,8 @@ public final class DefaultProgram implements Program {
     }
 
     mainClassName = getAttribute(manifest, ManifestFields.MAIN_CLASS);
-    id = Id.Program.from(getAttribute(manifest, ManifestFields.ACCOUNT_ID),
-                         getAttribute(manifest, ManifestFields.APPLICATION_ID),
+    id = Id.Program.from("developer",
+                         "placeholder",
                          getAttribute(manifest, ManifestFields.PROGRAM_NAME));
 
     this.processorType = ProgramType.valueOfPrettyName(getAttribute(manifest, ManifestFields.PROCESSOR_TYPE));

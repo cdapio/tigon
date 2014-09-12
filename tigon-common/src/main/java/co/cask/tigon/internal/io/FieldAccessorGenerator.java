@@ -56,7 +56,7 @@ final class FieldAccessorGenerator {
                                      classType.getRawType().getName(),
                                      field.getName());
     if (name.startsWith("java.") || name.startsWith("javax.")) {
-      name = "co.cask.cdap." + name;
+      name = "co.cask.tigon." + name;
       publicOnly = true;
     }
     this.className = name.replace('.', '/');

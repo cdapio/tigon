@@ -14,24 +14,36 @@
  * the License.
  */
 
-package co.cask.tigon.app.program;
+package co.cask.tigon.logging;
 
 /**
- * Helper class for getting the program type id to use when emitting metrics.
+ * Represents a logging event.
  */
-public final class TypeId {
-  /**
-   * Metric contexts are of the form {applicationId}.{programType}.{programId}.{optionalComponentId},
-   * where programType is some string.
-   *
-   * @return id of the program type for use in metrics contexts.
-   */
-  public static String getMetricContextId(ProgramType programType) {
-    switch (programType) {
-      case FLOW:
-        return "f";
-      default:
-        return "unknown";
-    }
+public class LogEvent {
+
+  public static final String FIELD_NAME_LOGTAG = "logtag";
+  public static final String FIELD_NAME_LOGLEVEL = "level";
+
+  private final String tag;
+  private final String level;
+  private final String message;
+
+  public LogEvent(String logtag, String level, String message) {
+    this.tag = logtag;
+    this.level = level;
+    this.message = message;
   }
+
+  public String getTag() {
+    return tag;
+  }
+
+  public String getLevel() {
+    return level;
+  }
+
+  public String getMessage() {
+    return message;
+  }
+
 }

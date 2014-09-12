@@ -83,9 +83,8 @@ public final class DataFabricFacadeModule extends PrivateModule {
     @Inject
     public TransactionDataFabricFacade(TransactionSystemClient txSystemClient,
                                        TransactionExecutorFactory txExecutorFactory,
-                                       QueueClientFactory queueClientFactory,
-                                       @Assisted Program program) {
-      super(txSystemClient, txExecutorFactory, queueClientFactory, program);
+                                       QueueClientFactory queueClientFactory) {
+      super(txSystemClient, txExecutorFactory, queueClientFactory);
     }
   }
 
@@ -99,7 +98,7 @@ public final class DataFabricFacadeModule extends PrivateModule {
                                     @Named("transaction.off") TransactionExecutorFactory txExecutorFactory,
                                     QueueClientFactory queueClientFactory,
                                     @Assisted Program program) {
-      super(txSystemClient, txExecutorFactory, queueClientFactory, program);
+      super(txSystemClient, txExecutorFactory, queueClientFactory);
     }
   }
 }

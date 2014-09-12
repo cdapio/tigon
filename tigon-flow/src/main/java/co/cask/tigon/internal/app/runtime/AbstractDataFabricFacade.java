@@ -21,8 +21,6 @@ import com.continuuity.tephra.TransactionContext;
 import com.continuuity.tephra.TransactionExecutor;
 import com.continuuity.tephra.TransactionExecutorFactory;
 import com.continuuity.tephra.TransactionSystemClient;
-import co.cask.tigon.app.program.Id;
-import co.cask.tigon.app.program.Program;
 import co.cask.tigon.data.queue.ConsumerConfig;
 import co.cask.tigon.data.queue.QueueClientFactory;
 import co.cask.tigon.data.queue.QueueConsumer;
@@ -44,14 +42,12 @@ public abstract class AbstractDataFabricFacade implements DataFabricFacade {
   private final TransactionExecutorFactory txExecutorFactory;
   private final TransactionSystemClient txSystemClient;
   private final Set<TransactionAware> txAware = Sets.newIdentityHashSet();
-  private final Id.Program programId;
 
   public AbstractDataFabricFacade(TransactionSystemClient txSystemClient, TransactionExecutorFactory txExecutorFactory,
-                                  QueueClientFactory queueClientFactory, Program program) {
+                                  QueueClientFactory queueClientFactory) {
     this.txSystemClient = txSystemClient;
     this.queueClientFactory = queueClientFactory;
     this.txExecutorFactory = txExecutorFactory;
-    this.programId = program.getId();
   }
 
   @Override

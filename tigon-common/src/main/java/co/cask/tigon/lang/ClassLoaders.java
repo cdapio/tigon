@@ -51,7 +51,7 @@ import javax.annotation.Nullable;
 public final class ClassLoaders {
 
   private static final List<String> HADOOP_PACKAGES = Lists.newArrayList("org.apache.hadoop");
-  private static final List<String> CONTINUUITY_API_PACKAGES = Lists.newArrayList("co.cask.cdap.api");
+  private static final List<String> CONTINUUITY_API_PACKAGES = Lists.newArrayList("co.cask.tigon.api");
   private static final Predicate<URI> JAR_ONLY_URI = new Predicate<URI>() {
     @Override
     public boolean apply(URI input) {

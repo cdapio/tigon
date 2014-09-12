@@ -28,6 +28,18 @@ the License.
 
   <dependencies>
     <dependency>
+      <groupId>com.google.inject</groupId>
+      <artifactId>guice</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.inject.extensions</groupId>
+      <artifactId>guice-multibindings</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.inject.extensions</groupId>
+      <artifactId>guice-assistedinject</artifactId>
+    </dependency>
+    <dependency>
       <groupId>co.cask.tigon</groupId>
       <artifactId>tigon-queue</artifactId>
       <version>${project.version}</version>
@@ -35,6 +47,15 @@ the License.
     <dependency>
       <groupId>org.apache.twill</groupId>
       <artifactId>twill-yarn</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
 

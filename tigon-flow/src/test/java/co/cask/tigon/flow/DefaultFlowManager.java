@@ -14,24 +14,20 @@
  * the License.
  */
 
-package co.cask.tigon.app.program;
+package co.cask.tigon.flow;
 
 /**
- * Helper class for getting the program type id to use when emitting metrics.
+ *
  */
-public final class TypeId {
-  /**
-   * Metric contexts are of the form {applicationId}.{programType}.{programId}.{optionalComponentId},
-   * where programType is some string.
-   *
-   * @return id of the program type for use in metrics contexts.
-   */
-  public static String getMetricContextId(ProgramType programType) {
-    switch (programType) {
-      case FLOW:
-        return "f";
-      default:
-        return "unknown";
-    }
+public class DefaultFlowManager implements FlowManager {
+
+  @Override
+  public void setFlowletInstances(String flowletName, int instances) {
+
+  }
+
+  @Override
+  public void stop() {
+
   }
 }
