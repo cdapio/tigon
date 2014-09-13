@@ -17,12 +17,9 @@ package co.cask.tigon.app.program;
 
 import com.google.common.base.Objects;
 import org.apache.twill.filesystem.Location;
-import org.apache.twill.filesystem.LocationFactory;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.Locale;
 
 /**
  * Factory helper to create {@link Program}.
@@ -50,34 +47,34 @@ public final class Programs {
     return new DefaultProgram(location, getClassLoader());
   }
 
-  /**
-   * Get program location
-   *
-   * @param factory  location factory
-   * @param filePath app fabric output directory path
-   * @param id       program id
-   * @param type     type of the program
-   * @return         Location corresponding to the program id
-   * @throws java.io.IOException incase of errors
-   */
-  public static Location programLocation(LocationFactory factory, String filePath, Id.Program id, ProgramType type)
-                                         throws IOException {
-    Location allAppsLocation = factory.create(filePath);
-
-    Location accountAppsLocation = allAppsLocation.append(id.getAccountId());
-    String name = String.format(Locale.ENGLISH, "%s/%s", type.toString(), id.getApplicationId());
-    Location applicationProgramsLocation = accountAppsLocation.append(name);
-    if (!applicationProgramsLocation.exists()) {
-      throw new FileNotFoundException("Unable to locate the Program,  location doesn't exist: "
-                                   + applicationProgramsLocation.toURI().getPath());
-    }
-    Location programLocation = applicationProgramsLocation.append(String.format("%s.jar", id.getId()));
-    if (!programLocation.exists()) {
-      throw new FileNotFoundException(String.format("Program %s.%s of type %s does not exists.",
-                                               id.getApplication(), id.getId(), type));
-    }
-    return programLocation;
-  }
+//  /**
+//   * Get program location
+//   *
+//   * @param factory  location factory
+//   * @param filePath app fabric output directory path
+//   * @param id       program id
+//   * @param type     type of the program
+//   * @return         Location corresponding to the program id
+//   * @throws java.io.IOException incase of errors
+//   */
+//  public static Location programLocation(LocationFactory factory, String filePath, Id.Program id, ProgramType type)
+//                                         throws IOException {
+//    Location allAppsLocation = factory.create(filePath);
+//
+//    Location accountAppsLocation = allAppsLocation.append(id.getAccountId());
+//    String name = String.format(Locale.ENGLISH, "%s/%s", type.toString(), id.getApplicationId());
+//    Location applicationProgramsLocation = accountAppsLocation.append(name);
+//    if (!applicationProgramsLocation.exists()) {
+//      throw new FileNotFoundException("Unable to locate the Program,  location doesn't exist: "
+//                                   + applicationProgramsLocation.toURI().getPath());
+//    }
+//    Location programLocation = applicationProgramsLocation.append(String.format("%s.jar", id.getId()));
+//    if (!programLocation.exists()) {
+//      throw new FileNotFoundException(String.format("Program %s.%s of type %s does not exists.",
+//                                               id.getApplication(), id.getId(), type));
+//    }
+//    return programLocation;
+//  }
 
   private static ClassLoader getClassLoader() {
     return Objects.firstNonNull(Thread.currentThread().getContextClassLoader(), Programs.class.getClassLoader());

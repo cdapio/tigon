@@ -16,18 +16,38 @@
 
 package co.cask.tigon.flow;
 
+import co.cask.tigon.internal.app.runtime.ProgramController;
+import co.cask.tigon.internal.app.runtime.ProgramOptionConstants;
+import com.google.common.collect.Maps;
+
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 /**
  *
  */
 public class DefaultFlowManager implements FlowManager {
+  private final ProgramController controller;
+
+  public DefaultFlowManager(ProgramController controller) {
+    this.controller = controller;
+  }
 
   @Override
   public void setFlowletInstances(String flowletName, int instances) {
-
+    Map<String, String> instanceOptions = Maps.newHashMap();
+    instanceOptions.put("flowlet", flowletName);
+    instanceOptions.put("newInstances", String.valueOf(instances));
+    controller.command(ProgramOptionConstants.FLOWLET_INSTANCES, instanceOptions);
   }
 
   @Override
   public void stop() {
+    controller.stop();
+    try {
+      TimeUnit.SECONDS.sleep(5);
+    } catch (Exception e) {
 
+    }
   }
 }

@@ -20,8 +20,8 @@ import com.continuuity.tephra.TransactionSystemClient;
 import co.cask.tigon.api.flow.Flow;
 import co.cask.tigon.api.flow.FlowSpecification;
 import co.cask.tigon.app.guice.ProgramRunnerRuntimeModule;
-import co.cask.tigon.app.program.DefaultProgram;
 import co.cask.tigon.app.program.Program;
+import co.cask.tigon.app.program.Programs;
 import co.cask.tigon.conf.CConfiguration;
 import co.cask.tigon.conf.Constants;
 import co.cask.tigon.data.runtime.DataFabricInMemoryModule;
@@ -29,6 +29,7 @@ import co.cask.tigon.guice.ConfigModule;
 import co.cask.tigon.guice.DiscoveryRuntimeModule;
 import co.cask.tigon.guice.IOModule;
 import co.cask.tigon.guice.LocationRuntimeModule;
+import co.cask.tigon.internal.app.runtime.BasicArguments;
 import co.cask.tigon.internal.app.runtime.ProgramController;
 import co.cask.tigon.internal.app.runtime.ProgramRunnerFactory;
 import co.cask.tigon.internal.app.runtime.SimpleProgramOptions;
@@ -43,7 +44,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
-import com.google.inject.assistedinject.FactoryModuleBuilder;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.twill.discovery.DiscoveryServiceClient;
 import org.apache.twill.filesystem.Location;
@@ -54,12 +54,12 @@ import org.junit.ClassRule;
 import org.junit.rules.TemporaryFolder;
 
 import java.io.File;
-import java.util.concurrent.TimeUnit;
+import java.util.Map;
 
 /**
  *
  */
-public class EndtoEndFlowTest {
+public class TestBase {
 
   @ClassRule
   public static TemporaryFolder tmpFolder = new TemporaryFolder();
@@ -70,10 +70,11 @@ public class EndtoEndFlowTest {
   private static TransactionSystemClient txSystemClient;
   private static DiscoveryServiceClient discoveryServiceClient;
   private static TransactionManager txService;
-  private static AppFabricClient appFabricClient;
+  private static DeployClient deployClient;
   private static ProgramRunnerFactory programRunnerFactory;
 
-  protected void deployFlow(Class<? extends Flow> flowClz, File...bundleEmbeddedJars) {
+  protected FlowManager deployFlow(Class<? extends Flow> flowClz, Map<String, String> runtimeArgs,
+                                   File...bundleEmbeddedJars) {
     Preconditions.checkNotNull(flowClz, "Flow class cannot be null");
     try {
       Object flowInstance = flowClz.newInstance();
@@ -86,12 +87,11 @@ public class EndtoEndFlowTest {
         throw new IllegalArgumentException("Flow class does not represent flow: " + flowClz.getName());
       }
 
-      Location deployedJar = appFabricClient.deployFlow(flowSpec.getName(), flowClz, bundleEmbeddedJars);
-      Program program = new DefaultProgram(deployedJar, null);
-      ProgramController controller = programRunnerFactory.create(ProgramRunnerFactory.Type.FLOW).run(program, new
-        SimpleProgramOptions(program));
-      TimeUnit.SECONDS.sleep(5);
-      controller.stop();
+      Location deployedJar = deployClient.deployFlow(flowSpec.getName(), flowClz, bundleEmbeddedJars);
+      Program program = Programs.createWithUnpack(deployedJar, tmpFolder.newFolder());
+      ProgramController controller = programRunnerFactory.create(ProgramRunnerFactory.Type.FLOW).run(
+        program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments(runtimeArgs)));
+      return new DefaultFlowManager(controller);
     } catch (Exception e) {
       throw Throwables.propagate(e);
     }
@@ -123,9 +123,6 @@ public class EndtoEndFlowTest {
       new AbstractModule() {
         @Override
         protected void configure() {
-          install(new FactoryModuleBuilder()
-                    .implement(FlowManager.class, DefaultFlowManager.class)
-                    .build(FlowManagerFactory.class));
           bind(TemporaryFolder.class).toInstance(tmpFolder);
         }
       }
@@ -136,7 +133,7 @@ public class EndtoEndFlowTest {
     metricsCollectionService = injector.getInstance(MetricsCollectionService.class);
     metricsCollectionService.startAndWait();
     LocationFactory locationFactory = injector.getInstance(LocationFactory.class);
-    appFabricClient = new AppFabricClient(locationFactory);
+    deployClient = new DeployClient(locationFactory);
     discoveryServiceClient = injector.getInstance(DiscoveryServiceClient.class);
     txSystemClient = injector.getInstance(TransactionSystemClient.class);
     programRunnerFactory = injector.getInstance(ProgramRunnerFactory.class);

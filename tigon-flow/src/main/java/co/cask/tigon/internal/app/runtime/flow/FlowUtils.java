@@ -18,7 +18,6 @@ package co.cask.tigon.internal.app.runtime.flow;
 
 import co.cask.tigon.api.flow.FlowSpecification;
 import co.cask.tigon.api.flow.FlowletDefinition;
-import co.cask.tigon.app.program.Id;
 import co.cask.tigon.app.program.Program;
 import co.cask.tigon.app.queue.QueueSpecification;
 import co.cask.tigon.app.queue.QueueSpecificationGenerator;
@@ -55,11 +54,9 @@ public final class FlowUtils {
   /**
    * Generates a queue consumer groupId for the given flowlet in the given program id.
    */
-  public static long generateConsumerGroupId(Id.Program program, String flowletId) {
+  public static long generateConsumerGroupId(String flowId, String flowletId) {
     return Hashing.md5().newHasher()
-                  .putString(program.getAccountId())
-                  .putString(program.getApplicationId())
-                  .putString(program.getId())
+                  .putString(flowId)
                   .putString(flowletId).hash().asLong();
   }
 
@@ -71,9 +68,8 @@ public final class FlowUtils {
   public static Multimap<String, QueueName> configureQueue(Program program, FlowSpecification flowSpec,
                                                            QueueAdmin queueAdmin) {
     // Generate all queues specifications
-    Id.Application appId = Id.Application.from(program.getAccountId(), program.getApplicationId());
     Table<QueueSpecificationGenerator.Node, String, Set<QueueSpecification>> queueSpecs
-      = new SimpleQueueSpecificationGenerator(appId).create(flowSpec);
+      = new SimpleQueueSpecificationGenerator().create(flowSpec);
 
     // For each queue in the flow, gather a map of consumer groupId to number of instances
     Table<QueueName, Long, Integer> queueConfigs = HashBasedTable.create();

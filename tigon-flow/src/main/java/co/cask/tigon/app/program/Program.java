@@ -42,22 +42,12 @@ public interface Program {
   /**
    * Returns the program ID.
    */
-  Id.Program getId();
+  String getId();
 
   /**
    * Returns name of the program.
    */
   String getName();
-
-  /**
-   * Returns the account ID that this program belongs to.
-   */
-  String getAccountId();
-
-  /**
-   * Returns the application ID that this program belongs to.
-   */
-  String getApplicationId();
 
   /**
    * Returns the flow specification.

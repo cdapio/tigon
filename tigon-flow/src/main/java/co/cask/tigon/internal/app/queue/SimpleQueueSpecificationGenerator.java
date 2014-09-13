@@ -19,7 +19,6 @@ package co.cask.tigon.internal.app.queue;
 import co.cask.tigon.api.flow.FlowSpecification;
 import co.cask.tigon.api.flow.FlowletConnection;
 import co.cask.tigon.api.flow.FlowletDefinition;
-import co.cask.tigon.app.program.Id;
 import co.cask.tigon.app.queue.QueueSpecification;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Sets;
@@ -33,20 +32,6 @@ import java.util.Set;
  * names.
  */
 public final class SimpleQueueSpecificationGenerator extends AbstractQueueSpecificationGenerator {
-
-  /**
-   * Account Name under which the stream names to generated.
-   */
-  private final Id.Application appId;
-
-  /**
-   * Constructor that takes an appId.
-   *
-   * @param appId under which the stream is represented.
-   */
-  public SimpleQueueSpecificationGenerator(Id.Application appId) {
-    this.appId = appId;
-  }
 
   /**
    * Given a {@link FlowSpecification}.
@@ -67,8 +52,8 @@ public final class SimpleQueueSpecificationGenerator extends AbstractQueueSpecif
       final String target = connection.getTargetName();
       final Node sourceNode = new Node(connection.getSourceType(), source);
 
-      Set<QueueSpecification> queueSpec = generateQueueSpecification(
-        appId, flow, connection, flowlets.get(target).getInputs(), flowlets.get(source).getOutputs());
+      Set<QueueSpecification> queueSpec = generateQueueSpecification(flow, connection, flowlets.get(target).getInputs(),
+                                                                     flowlets.get(source).getOutputs());
 
       Set<QueueSpecification> queueSpecifications = table.get(sourceNode, target);
       if (queueSpecifications == null) {

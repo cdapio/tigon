@@ -30,7 +30,6 @@ import co.cask.tigon.api.flow.flowlet.Flowlet;
 import co.cask.tigon.api.flow.flowlet.FlowletSpecification;
 import co.cask.tigon.api.flow.flowlet.InputContext;
 import co.cask.tigon.api.flow.flowlet.OutputEmitter;
-import co.cask.tigon.app.program.Id;
 import co.cask.tigon.app.program.Program;
 import co.cask.tigon.app.program.ProgramType;
 import co.cask.tigon.app.queue.QueueReader;
@@ -180,18 +179,16 @@ public final class FlowletProgramRunner implements ProgramRunner {
       Class<? extends Flowlet> flowletClass = (Class<? extends Flowlet>) clz;
 
       // Creates flowlet context
-      flowletContext = new BasicFlowletContext(program, flowletName, instanceId,
-                                               runId, instanceCount,
+      flowletContext = new BasicFlowletContext(program, flowletName, instanceId, runId, instanceCount,
                                                options.getUserArguments(), flowletDef.getFlowletSpec(),
-                                               metricsCollectionService, discoveryServiceClient, configuration);
+                                               metricsCollectionService);
 
       // Creates tx related objects
       DataFabricFacade dataFabricFacade = dataFabricFacadeFactory.create(program);
 
       // Creates QueueSpecification
-      Table<Node, String, Set<QueueSpecification>> queueSpecs =
-        new SimpleQueueSpecificationGenerator(Id.Application.from(program.getAccountId(), program.getApplicationId()))
-          .create(flowSpec);
+      Table<Node, String, Set<QueueSpecification>> queueSpecs = new SimpleQueueSpecificationGenerator().create(
+        flowSpec);
 
       Flowlet flowlet = new InstantiatorFactory(false).get(TypeToken.of(flowletClass)).create();
       TypeToken<? extends Flowlet> flowletType = TypeToken.of(flowletClass);

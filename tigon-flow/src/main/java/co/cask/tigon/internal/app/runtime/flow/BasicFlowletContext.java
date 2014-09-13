@@ -21,7 +21,6 @@ import co.cask.tigon.api.flow.flowlet.FlowletSpecification;
 import co.cask.tigon.api.metrics.Metrics;
 import co.cask.tigon.app.metrics.FlowletMetrics;
 import co.cask.tigon.app.program.Program;
-import co.cask.tigon.conf.CConfiguration;
 import co.cask.tigon.internal.app.runtime.AbstractContext;
 import co.cask.tigon.internal.app.runtime.Arguments;
 import co.cask.tigon.logging.FlowletLoggingContext;
@@ -29,7 +28,6 @@ import co.cask.tigon.logging.LoggingContext;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import com.google.common.collect.ImmutableMap;
 import org.apache.twill.api.RunId;
-import org.apache.twill.discovery.DiscoveryServiceClient;
 
 import java.util.Map;
 
@@ -52,12 +50,8 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
                       int instanceId, RunId runId,
                       int instanceCount,
                       Arguments runtimeArguments, FlowletSpecification flowletSpec,
-                      MetricsCollectionService metricsCollectionService,
-                      DiscoveryServiceClient discoveryServiceClient,
-                      CConfiguration conf) {
-    super(program, runId,
-          getMetricContext(program, flowletId, instanceId),
-          metricsCollectionService, conf, discoveryServiceClient);
+                      MetricsCollectionService metricsCollectionService) {
+    super(program, runId, getMetricContext(program, flowletId, instanceId), metricsCollectionService);
     this.flowId = program.getName();
     this.flowletId = flowletId;
     this.groupId = FlowUtils.generateConsumerGroupId(program, flowletId);
@@ -65,7 +59,7 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
     this.instanceCount = instanceCount;
     this.runtimeArguments = runtimeArguments;
     this.flowletSpec = flowletSpec;
-    this.flowletMetrics = new FlowletMetrics(metricsCollectionService, getApplicationId(), flowId, flowletId);
+    this.flowletMetrics = new FlowletMetrics(metricsCollectionService, flowId, flowletId);
   }
 
   @Override
@@ -119,7 +113,7 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
   }
 
   public LoggingContext getLoggingContext() {
-    return new FlowletLoggingContext(getAccountId(), getApplicationId(), getFlowId(), getFlowletId());
+    return new FlowletLoggingContext(getFlowId(), getFlowletId());
   }
 
   @Override
@@ -132,11 +126,6 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
   }
 
   private static String getMetricContext(Program program, String flowletId, int instanceId) {
-    return String.format("%s.f.%s.%s.%d",
-                         program.getApplicationId(),
-                         // flow name
-                         program.getName(),
-                         flowletId,
-                         instanceId);
+    return String.format("%s.%s.%d", program.getName(), flowletId, instanceId);
   }
 }

@@ -42,8 +42,6 @@ public final class DefaultProgram implements Program {
   private final String mainClassName;
   private final ProgramType processorType;
 
-  private final Id.Program id;
-
   private final Location programJarLocation;
   private final File expandFolder;
   private final ClassLoader parentClassLoader;
@@ -65,6 +63,7 @@ public final class DefaultProgram implements Program {
     this.programJarLocation = programJarLocation;
     this.expandFolder = expandFolder;
     this.parentClassLoader = parentClassLoader;
+    this.processorType = ProgramType.FLOW;
 
     Manifest manifest = BundleJarUtil.getManifest(programJarLocation);
     if (manifest == null) {
@@ -72,11 +71,6 @@ public final class DefaultProgram implements Program {
     }
 
     mainClassName = getAttribute(manifest, ManifestFields.MAIN_CLASS);
-    id = Id.Program.from("developer",
-                         "placeholder",
-                         getAttribute(manifest, ManifestFields.PROGRAM_NAME));
-
-    this.processorType = ProgramType.valueOfPrettyName(getAttribute(manifest, ManifestFields.PROCESSOR_TYPE));
 
     // Load the app spec from the jar file if no expand folder is provided. Otherwise do lazy loading after the jar
     // is expanded.
@@ -112,23 +106,13 @@ public final class DefaultProgram implements Program {
   }
 
   @Override
-  public Id.Program getId() {
-    return id;
+  public String getId() {
+    return getMainClassName();
   }
 
   @Override
   public String getName() {
-    return id.getId();
-  }
-
-  @Override
-  public String getAccountId() {
-    return id.getAccountId();
-  }
-
-  @Override
-  public String getApplicationId() {
-    return id.getApplicationId();
+    return getId();
   }
 
   @Override
@@ -182,7 +166,6 @@ public final class DefaultProgram implements Program {
     }
 
     Preconditions.checkState(expandFolder != null, "Directory for jar expansion is not defined.");
-
     try {
       BundleJarUtil.unpackProgramJar(programJarLocation, expandFolder);
       expanded = true;

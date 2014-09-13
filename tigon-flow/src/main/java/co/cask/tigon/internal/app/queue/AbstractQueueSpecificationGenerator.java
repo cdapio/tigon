@@ -18,7 +18,6 @@ package co.cask.tigon.internal.app.queue;
 
 import co.cask.tigon.api.flow.FlowletConnection;
 import co.cask.tigon.api.flow.FlowletDefinition;
-import co.cask.tigon.app.program.Id;
 import co.cask.tigon.app.queue.QueueSpecification;
 import co.cask.tigon.app.queue.QueueSpecificationGenerator;
 import co.cask.tigon.data.queue.QueueName;
@@ -41,8 +40,7 @@ public abstract class AbstractQueueSpecificationGenerator implements QueueSpecif
    * Finds a equal or compatible schema connection between <code>source</code> and <code>target</code>
    * flowlet.
    */
-  protected Set<QueueSpecification> generateQueueSpecification(Id.Application app,
-                                                               String flow,
+  protected Set<QueueSpecification> generateQueueSpecification(String flow,
                                                                FlowletConnection connection,
                                                                Map<String, Set<Schema>> inputSchemas,
                                                                Map<String, Set<Schema>> outputSchemas) {
@@ -75,7 +73,7 @@ public abstract class AbstractQueueSpecificationGenerator implements QueueSpecif
         builder.add(createSpec(QueueName.fromStream(outputName),
                                schemas.getFirst(), schemas.getSecond()));
       } else {
-        builder.add(createSpec(QueueName.fromFlowlet(app.getId(), flow,
+        builder.add(createSpec(QueueName.fromFlowlet(flow, flow,
                                                      connection.getSourceName(), outputName),
                                schemas.getFirst(), schemas.getSecond()));
       }

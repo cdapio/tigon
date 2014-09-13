@@ -17,8 +17,6 @@
 package co.cask.tigon.internal.app.runtime.distributed;
 
 import co.cask.tigon.app.program.Program;
-import co.cask.tigon.app.program.ProgramType;
-import co.cask.tigon.app.program.TypeId;
 import co.cask.tigon.internal.app.runtime.AbstractResourceReporter;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import org.apache.twill.api.TwillContext;
@@ -46,15 +44,10 @@ public class ProgramRunnableResourceReporter extends AbstractResourceReporter {
   }
 
   /**
-   * Returns the metric context.  A metric context is of the form
-   * {applicationId}.{programTypeId}.{programId}.{componentId}.  So for flows, it will look like
-   * appX.f.flowY.flowletZ.  For procedures, appX.p.procedureY.  For mapreduce jobs, appX.b.mapredY.{optional m|r}.
+   * Returns the metric context.  A metric context is of the form {flowY}.{flowletZ}.
    */
   private String getMetricContext(Program program, TwillContext context) {
-    String metricContext = program.getApplicationId() + "." + TypeId.getMetricContextId(program.getType());
-    if (program.getType() == ProgramType.FLOW) {
-      metricContext += "." + program.getName();
-    }
+    String metricContext = program.getName();
     metricContext += "." + context.getSpecification().getName() + "." + context.getInstanceId();
     return metricContext;
   }

@@ -25,10 +25,9 @@ import co.cask.tigon.metrics.MetricsScope;
  */
 public class FlowletMetrics extends AbstractProgramMetrics {
 
-  public FlowletMetrics(MetricsCollectionService collectionService,
-                        String applicationId, String flowId, String flowletId) {
-    // Not support runID for now.
+  public FlowletMetrics(MetricsCollectionService collectionService, String flowId, String flowletId) {
+    // No support runID for now.
     super(collectionService.getCollector(
-      MetricsScope.USER, String.format("%s.f.%s.%s", applicationId, flowId, flowletId), "0"));
+      MetricsScope.USER, String.format("%s.%s", flowId, flowletId), "0"));
   }
 }

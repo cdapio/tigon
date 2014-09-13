@@ -53,9 +53,8 @@ public final class FlowTwillApplication implements TwillApplication {
   @Override
   public TwillSpecification configure() {
     TwillSpecification.Builder.MoreRunnable moreRunnable = TwillSpecification.Builder.with()
-      .setName(String.format("%s.%s.%s.%s",
-                             ProgramType.FLOW.name().toLowerCase(),
-                             program.getAccountId(), program.getApplicationId(), spec.getName()))
+      .setName(String.format("%s.%s",
+                             ProgramType.FLOW.name().toLowerCase(), spec.getName()))
       .withRunnable();
 
     Location programLocation = program.getJarLocation();
