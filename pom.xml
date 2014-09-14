@@ -204,6 +204,11 @@
       </dependency>
       <dependency>
         <groupId>org.apache.twill</groupId>
+        <artifactId>twill-discovery-api</artifactId>
+        <version>${twill.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.twill</groupId>
         <artifactId>twill-discovery-core</artifactId>
         <version>${twill.version}</version>
       </dependency>
@@ -212,6 +217,7 @@
         <artifactId>twill-zookeeper</artifactId>
         <version>${twill.version}</version>
       </dependency>
+
 
       <!-- Hadoop dependencies -->
       <dependency>
@@ -287,12 +293,6 @@
       </dependency>
       <dependency>
         <groupId>org.apache.hadoop</groupId>
-        <artifactId>hadoop-hdfs</artifactId>
-        <version>${hadoop.version}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-mapreduce-client-core</artifactId>
         <version>${hadoop.version}</version>
         <exclusions>
@@ -327,6 +327,7 @@
         </exclusions>
       </dependency>
 
+      <!-- HBase 0.94 dependencies -->
       <dependency>
         <groupId>org.apache.hbase</groupId>
         <artifactId>hbase</artifactId>
@@ -406,6 +407,8 @@
           </exclusion>
         </exclusions>
       </dependency>
+
+      <!-- HBase 0.96 dependencies -->
       <dependency>
         <groupId>org.apache.hbase</groupId>
         <artifactId>hbase-common</artifactId>
@@ -494,6 +497,8 @@
           </exclusion>
         </exclusions>
       </dependency>
+
+
 
       <!-- Tests dependencies -->
       <dependency>
@@ -638,7 +643,10 @@
               <configuration>
                 <excludes>
                   <exclude>build-number.txt</exclude>
-                  <exclude>README.md</exclude>
+                  <exclude>**/README.md</exclude>
+                  <exclude>**/pom.xml</exclude>
+                  <exclude>**/tigon-docs/**</exclude>
+                  <exclude>**/tigon-examples/**</exclude>
                 </excludes>
               </configuration>
             </execution>
