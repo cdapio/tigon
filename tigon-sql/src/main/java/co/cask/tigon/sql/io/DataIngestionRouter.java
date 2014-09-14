@@ -16,9 +16,9 @@
 
 package co.cask.tigon.sql.io;
 
-import com.continuuity.http.AbstractHttpHandler;
-import com.continuuity.http.HttpResponder;
-import com.continuuity.http.NettyHttpService;
+import co.cask.http.AbstractHttpHandler;
+import co.cask.http.HttpResponder;
+import co.cask.http.NettyHttpService;
 import co.cask.tigon.sql.conf.Constants;
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.AbstractIdleService;

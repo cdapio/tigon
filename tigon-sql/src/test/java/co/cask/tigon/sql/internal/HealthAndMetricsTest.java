@@ -16,7 +16,7 @@
 
 package co.cask.tigon.sql.internal;
 
-import com.continuuity.api.metrics.Metrics;
+import co.cask.tigon.api.metrics.Metrics;
 import co.cask.tigon.sql.conf.Constants;
 import co.cask.tigon.sql.manager.DiscoveryServer;
 import co.cask.tigon.sql.manager.HubDataStore;

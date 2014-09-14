@@ -16,7 +16,7 @@
 
 package co.cask.tigon.sql.manager;
 
-import com.continuuity.api.metrics.Metrics;
+import co.cask.tigon.api.metrics.Metrics;
 import co.cask.tigon.sql.internal.HealthInspector;
 import co.cask.tigon.sql.internal.MetricsRecorder;
 import co.cask.tigon.sql.internal.ProcessMonitor;

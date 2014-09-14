@@ -16,7 +16,7 @@
 
 package co.cask.tigon.sql.manager;
 
-import com.continuuity.http.NettyHttpService;
+import co.cask.http.NettyHttpService;
 import co.cask.tigon.sql.internal.HealthInspector;
 import co.cask.tigon.sql.internal.MetricsRecorder;
 import com.google.common.collect.ImmutableList;

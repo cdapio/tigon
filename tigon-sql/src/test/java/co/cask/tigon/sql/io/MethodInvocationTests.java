@@ -16,10 +16,10 @@
 
 package co.cask.tigon.sql.io;
 
-import com.continuuity.internal.io.Schema;
-import com.continuuity.internal.io.UnsupportedTypeException;
-import com.continuuity.internal.lang.MethodVisitor;
-import com.continuuity.internal.lang.Reflections;
+import co.cask.tigon.internal.io.Schema;
+import co.cask.tigon.internal.io.UnsupportedTypeException;
+import co.cask.tigon.internal.lang.MethodVisitor;
+import co.cask.tigon.internal.lang.Reflections;
 import co.cask.tigon.sql.flowlet.AbstractInputFlowlet;
 import co.cask.tigon.sql.flowlet.GDATFieldType;
 import co.cask.tigon.sql.flowlet.StreamSchema;
@@ -159,6 +159,7 @@ public class MethodInvocationTests {
                           MethodInvoker methodInvoker = new MethodInvoker(o, method, inspectType, schema);
                           methodInvoker.invoke(new GDATDecoder(ByteBuffer.wrap(bytes)));
                         }
-                      });
+                      }
+    );
   }
 }

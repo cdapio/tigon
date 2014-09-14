@@ -28,16 +28,17 @@ the License.
 
   <dependencies>
     <dependency>
-      <groupId>com.continuuity</groupId>
-      <artifactId>http</artifactId>
+      <groupId>co.cask.tigon</groupId>
+      <artifactId>tigon-flow</artifactId>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>com.continuuity</groupId>
-      <artifactId>continuuity-api</artifactId>
+      <groupId>co.cask.http</groupId>
+      <artifactId>netty-http</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.continuuity</groupId>
-      <artifactId>common</artifactId>
+      <groupId>org.apache.httpcomponents</groupId>
+      <artifactId>httpcore</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.code.gson</groupId>
@@ -116,21 +117,6 @@ the License.
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-minicluster</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.continuuity</groupId>
-      <artifactId>app-fabric</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.continuuity</groupId>
-      <artifactId>continuuity-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.continuuity</groupId>
-      <artifactId>watchdog</artifactId>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 

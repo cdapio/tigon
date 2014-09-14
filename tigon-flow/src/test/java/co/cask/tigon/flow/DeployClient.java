@@ -73,7 +73,8 @@ public class DeployClient {
   public Location deployFlow(final String applicationId, Class<?> flowClz, File... bundleEmbeddedJars)
     throws Exception {
     Preconditions.checkNotNull(flowClz, "Flow cannot be null.");
-    Location deployedJar = locationFactory.create(createDeploymentJar(locationFactory, flowClz, bundleEmbeddedJars).toURI());
+    Location deployedJar = locationFactory.create(createDeploymentJar(
+      locationFactory, flowClz, bundleEmbeddedJars).toURI());
     LOG.info("Created deployedJar at {}", deployedJar.toURI().toASCIIString());
     return deployedJar;
   }

@@ -16,7 +16,7 @@
 
 package co.cask.tigon.sql.io;
 
-import com.continuuity.common.io.Decoder;
+import co.cask.tigon.io.Decoder;
 import com.google.common.base.Charsets;
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Ints;

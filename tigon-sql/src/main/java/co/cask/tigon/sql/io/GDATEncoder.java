@@ -16,7 +16,7 @@
 
 package co.cask.tigon.sql.io;
 
-import com.continuuity.common.io.Encoder;
+import co.cask.tigon.io.Encoder;
 import co.cask.tigon.sql.flowlet.GDATRecordType;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Lists;

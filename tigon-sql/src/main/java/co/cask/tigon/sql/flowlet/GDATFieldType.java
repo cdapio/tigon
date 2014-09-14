@@ -16,7 +16,7 @@
 
 package co.cask.tigon.sql.flowlet;
 
-import com.continuuity.internal.io.Schema;
+import co.cask.tigon.internal.io.Schema;
 import com.google.common.primitives.Doubles;
 import com.google.common.primitives.Ints;
 import com.google.common.primitives.Longs;
@@ -59,8 +59,8 @@ public enum GDATFieldType {
   }
 
   /**
-   * Return the {@link com.continuuity.internal.io.Schema} of this GDAT field
-   * @return {@link com.continuuity.internal.io.Schema}
+   * Return the {@link co.cask.tigon.internal.io.Schema} of this GDAT field
+   * @return {@link co.cask.tigon.internal.io.Schema}
    */
   public Schema getSchema() {
     return schema;

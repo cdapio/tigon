@@ -16,9 +16,9 @@
 
 package co.cask.tigon.sql.io;
 
-import com.continuuity.common.io.Decoder;
-import com.continuuity.internal.io.Schema;
-import com.continuuity.internal.io.UnsupportedTypeException;
+import co.cask.tigon.internal.io.Schema;
+import co.cask.tigon.internal.io.UnsupportedTypeException;
+import co.cask.tigon.io.Decoder;
 import com.google.common.reflect.TypeToken;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,7 +69,7 @@ public class MethodInvoker {
   /**
    * This method instantiates an object of the method parameter type using the incoming decoder object and then invokes
    * the associated method.
-   * @param decoder The {@link com.continuuity.common.io.Decoder} object for the incoming data record
+   * @param decoder The {@link co.cask.tigon.io.Decoder} object for the incoming data record
    * @throws InvocationTargetException thrown by {@link java.lang.reflect.Method}.invoke()
    * @throws IllegalAccessException thrown by {@link java.lang.reflect.Method}.invoke()
    */

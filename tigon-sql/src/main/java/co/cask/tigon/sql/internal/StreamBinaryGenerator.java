@@ -16,7 +16,7 @@
 
 package co.cask.tigon.sql.internal;
 
-import com.continuuity.common.io.Locations;
+import co.cask.tigon.io.Locations;
 import co.cask.tigon.sql.flowlet.InputFlowletSpecification;
 import co.cask.tigon.sql.util.Platform;
 import com.google.common.base.Charsets;

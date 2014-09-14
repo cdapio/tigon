@@ -16,7 +16,7 @@
 
 package co.cask.tigon.sql.internal;
 
-import com.continuuity.common.io.Locations;
+import co.cask.tigon.io.Locations;
 import co.cask.tigon.sql.manager.ExternalProgramExecutor;
 import org.apache.twill.common.Services;
 import org.apache.twill.filesystem.Location;

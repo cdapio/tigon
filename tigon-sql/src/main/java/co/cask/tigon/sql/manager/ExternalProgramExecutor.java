@@ -16,7 +16,7 @@
 
 package co.cask.tigon.sql.manager;
 
-import com.continuuity.common.io.Locations;
+import co.cask.tigon.io.Locations;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Closeables;
