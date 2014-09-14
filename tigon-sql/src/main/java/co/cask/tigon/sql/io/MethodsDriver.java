@@ -16,10 +16,10 @@
 
 package co.cask.tigon.sql.io;
 
-import com.continuuity.internal.io.Schema;
-import com.continuuity.internal.io.UnsupportedTypeException;
-import com.continuuity.internal.lang.MethodVisitor;
-import com.continuuity.internal.lang.Reflections;
+import co.cask.tigon.internal.io.Schema;
+import co.cask.tigon.internal.io.UnsupportedTypeException;
+import co.cask.tigon.internal.lang.MethodVisitor;
+import co.cask.tigon.internal.lang.Reflections;
 import co.cask.tigon.sql.flowlet.AbstractInputFlowlet;
 import co.cask.tigon.sql.flowlet.GDATField;
 import co.cask.tigon.sql.flowlet.StreamSchema;
@@ -72,12 +72,14 @@ public class MethodsDriver {
                           try {
                             methodListMap.put(annotation.value(),
                                               new MethodInvoker(o, method, inspectType
-                                                , getSchema(schemaMap.get(annotation.value()))));
+                                                , getSchema(schemaMap.get(annotation.value())))
+                            );
                           } catch (UnsupportedTypeException e) {
                             throw new RuntimeException(e);
                           }
                         }
-                      });
+                      }
+    );
   }
 
   public Schema getSchema(StreamSchema streamSchema) {

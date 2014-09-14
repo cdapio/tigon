@@ -16,13 +16,13 @@
 
 package co.cask.tigon.sql.flowlet;
 
-import com.continuuity.api.annotation.Tick;
-import com.continuuity.api.flow.flowlet.AbstractFlowlet;
-import com.continuuity.api.flow.flowlet.FailurePolicy;
-import com.continuuity.api.flow.flowlet.FailureReason;
-import com.continuuity.api.flow.flowlet.FlowletContext;
-import com.continuuity.api.flow.flowlet.InputContext;
-import com.continuuity.api.metrics.Metrics;
+import co.cask.tigon.api.annotation.Tick;
+import co.cask.tigon.api.flow.flowlet.AbstractFlowlet;
+import co.cask.tigon.api.flow.flowlet.FailurePolicy;
+import co.cask.tigon.api.flow.flowlet.FailureReason;
+import co.cask.tigon.api.flow.flowlet.FlowletContext;
+import co.cask.tigon.api.flow.flowlet.InputContext;
+import co.cask.tigon.api.metrics.Metrics;
 import co.cask.tigon.sql.conf.Constants;
 import co.cask.tigon.sql.internal.DefaultInputFlowletConfigurer;
 import co.cask.tigon.sql.internal.HealthInspector;
@@ -40,7 +40,6 @@ import org.apache.twill.common.Services;
 import org.apache.twill.filesystem.LocalLocationFactory;
 import org.apache.twill.filesystem.Location;
 import org.apache.twill.filesystem.LocationFactory;
-import org.mortbay.log.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -223,11 +222,11 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
     }
     retryCounter++;
     if (retryCounter >= Constants.MAX_RETRY) {
-      Log.info("Transaction failure exceeded maximum number of retries. Dropping uncommitted data records");
+      LOG.info("Transaction failure exceeded maximum number of retries. Dropping uncommitted data records");
       recordQueue.commit();
       return FailurePolicy.IGNORE;
     }
-    Log.info("Transaction Failed. Retrying operation");
+    LOG.info("Transaction Failed. Retrying operation");
     recordQueue.rollback();
     return FailurePolicy.RETRY;
   }

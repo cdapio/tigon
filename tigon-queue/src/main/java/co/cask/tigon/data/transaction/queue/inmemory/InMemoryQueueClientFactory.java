@@ -1,0 +1,56 @@
+/*
+ * Copyright 2014 Cask Data, Inc.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
+package co.cask.tigon.data.transaction.queue.inmemory;
+
+import co.cask.tigon.data.queue.ConsumerConfig;
+import co.cask.tigon.data.queue.QueueClientFactory;
+import co.cask.tigon.data.queue.QueueConsumer;
+import co.cask.tigon.data.queue.QueueName;
+import co.cask.tigon.data.queue.QueueProducer;
+import co.cask.tigon.data.transaction.queue.QueueMetrics;
+import com.google.inject.Inject;
+
+import java.io.IOException;
+
+/**
+ *
+ */
+public class InMemoryQueueClientFactory implements QueueClientFactory {
+
+  private final InMemoryQueueService queueService;
+
+  @Inject
+  public InMemoryQueueClientFactory(InMemoryQueueService queueService) {
+    this.queueService = queueService;
+  }
+
+  @Override
+  public QueueProducer createProducer(QueueName queueName) throws IOException {
+    return createProducer(queueName, QueueMetrics.NOOP_QUEUE_METRICS);
+  }
+
+  @Override
+  public QueueConsumer createConsumer(QueueName queueName,
+                                       ConsumerConfig consumerConfig, int numGroups) throws IOException {
+    return new InMemoryQueueConsumer(queueName, consumerConfig, numGroups, queueService);
+  }
+
+  @Override
+  public QueueProducer createProducer(QueueName queueName, QueueMetrics queueMetrics) throws IOException {
+    return new InMemoryQueueProducer(queueName, queueService, queueMetrics);
+  }
+}

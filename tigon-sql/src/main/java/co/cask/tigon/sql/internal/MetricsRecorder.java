@@ -16,7 +16,7 @@
 
 package co.cask.tigon.sql.internal;
 
-import com.continuuity.api.metrics.Metrics;
+import co.cask.tigon.api.metrics.Metrics;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 

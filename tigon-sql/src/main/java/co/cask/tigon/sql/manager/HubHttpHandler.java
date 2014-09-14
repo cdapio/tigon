@@ -16,8 +16,8 @@
 
 package co.cask.tigon.sql.manager;
 
-import com.continuuity.http.AbstractHttpHandler;
-import com.continuuity.http.HttpResponder;
+import co.cask.http.AbstractHttpHandler;
+import co.cask.http.HttpResponder;
 import co.cask.tigon.sql.internal.HealthInspector;
 import co.cask.tigon.sql.internal.MetricsRecorder;
 import com.google.common.base.Charsets;

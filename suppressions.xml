@@ -1,5 +1,4 @@
 <?xml version="1.0"?>
-
 <!--
   Copyright 2012-2014 Continuuity, Inc.
 
@@ -15,7 +14,6 @@
   License for the specific language governing permissions and limitations under
   the License.
   -->
-
 <!DOCTYPE suppressions PUBLIC
         "-//Puppy Crawl//DTD Suppressions 1.1//EN"
         "http://www.puppycrawl.com/dtds/suppressions_1_1.dtd">
@@ -36,7 +34,4 @@
 
   <!-- do not check thrift generated files -->
   <suppress checks=".*" files=".*/transaction/distributed/thrift/.*" />
-
-
-
 </suppressions>

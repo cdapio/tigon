@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+*.class
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+=======
 # Ignore everything in this directory
 build/
 .gradle/
@@ -9,12 +16,27 @@ build/
 *.iml
 *.iws
 *.ipr
+>>>>>>> origin/develop
 # Package Files #
 *.jar
 *.war
 *.ear
 
+<<<<<<< HEAD
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+# IntelliJ Files
+*.iws
+*.iml
+*.ipr
+.idea
+
+# Maven build directory
+target
+=======
 # Maven Build Folder
 target/
 # Except this file
 !.gitignore
+>>>>>>> origin/develop

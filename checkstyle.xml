@@ -388,5 +388,4 @@ page at http://checkstyle.sourceforge.net/config.html -->
     <property name="checkFormat" value="Javadoc.*"/>
     <property name="messageFormat" value="$1"/>
   </module>
-
 </module>
