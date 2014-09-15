@@ -321,7 +321,6 @@ static gs_retval_t csv_read_socket()
             } else {
                 csv_read_tuple();
             }
-            rts_fta_process_packet(&cur_packet);
             cnt++;
         }
         totalcnt=totalcnt+cnt;
