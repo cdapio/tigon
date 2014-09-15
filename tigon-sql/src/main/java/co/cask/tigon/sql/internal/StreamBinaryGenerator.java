@@ -24,8 +24,6 @@ import com.google.common.base.Throwables;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CharStreams;
 import com.google.common.io.Files;
-import com.google.common.io.InputSupplier;
-import com.google.common.io.Resources;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
@@ -117,8 +115,9 @@ public class StreamBinaryGenerator {
   }
 
   private void copyResourceFileToDir(String fileName, Location libZip) throws IOException {
-    InputSupplier<InputStream> ifres = Resources.newInputStreamSupplier(Resources.getResource(fileName));
+    InputStream ifres = getClass().getResourceAsStream("/" + fileName);
     ByteStreams.copy(ifres, Locations.newOutputSupplier(libZip));
+    ifres.close();
   }
 
   private void unzipFile(Location libZip) throws IOException, ArchiveException {
