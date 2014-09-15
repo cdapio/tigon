@@ -117,6 +117,7 @@ public class StreamBinaryGenerator {
   private void copyResourceFileToDir(String fileName, Location libZip) throws IOException {
     InputStream ifres = getClass().getResourceAsStream("/" + fileName);
     ByteStreams.copy(ifres, Locations.newOutputSupplier(libZip));
+    ifres.close();
   }
 
   private void unzipFile(Location libZip) throws IOException, ArchiveException {
