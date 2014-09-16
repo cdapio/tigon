@@ -14,7 +14,7 @@ Copyright 2014 AT&T Intellectual Property
  ------------------------------------------- */
 
 /*
- * gslog.h: syslog wrappers for Gigascope
+ * gslog.h: syslog wrappers for Tigon-SQL
  */
 #ifndef GSLOG_H
 #define GSLOG_H

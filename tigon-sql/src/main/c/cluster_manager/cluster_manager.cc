@@ -45,7 +45,7 @@ extern "C" {
 string config_dir;
 // list of .gsql files
 vector<string> input_file_names;
-// root directory of gigascope distribution on all the machines
+// root directory of Tigon distribution on all the machines
 string gscp_dir;
 // directory into which all the source files and binaries will be placed
 string build_dir;
@@ -120,11 +120,11 @@ int main(int argc, char* argv[])
   // Handling of Input Arguments
   // -------------------------------
 	const char *optstr = "B:C:G:A:";
-	const char *usage_str = "Usage: %s [-B <build directory>] [-C <config directory>] [-G <gigascope directory>] query_file [query_file ...]\n"
+	const char *usage_str = "Usage: %s [-B <build directory>] [-C <config directory>] [-G <tigon directory>] query_file [query_file ...]\n"
 		"\t[-A] : just run remote clearinghouse\n"
 		"\t[-B] : all generated code and executables will be placed in <build directory> on cluster nodes\n"
 		"\t[-C] : use <config directory> for definition files\n"
-		"\t[-G] : <gigascope directory> specifies the root of the gigascope distribution on all cluster nodes and cluster manager\n\n"
+		"\t[-G] : <tigon directory> specifies the root of the tigon distribution on all cluster nodes and cluster manager\n\n"
 		"NOTE: all directories must be relative to $HOME";
 
 
@@ -132,7 +132,7 @@ int main(int argc, char* argv[])
 	string ierr;
 	char* home = getenv("HOME");
 	if (!home) {
-		fprintf(stderr,"CLUSTER_MANAGER ERROR: $HOME is not set - unable to find root directory of gigascope distribution\n");
+		fprintf(stderr,"CLUSTER_MANAGER ERROR: $HOME is not set - unable to find root directory of tigon distribution\n");
 		exit(1);
 	}
 
