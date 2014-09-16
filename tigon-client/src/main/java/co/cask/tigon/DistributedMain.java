@@ -13,21 +13,22 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package co.cask.tigon;
 
-import com.continuuity.tephra.TransactionManager;
 import co.cask.tigon.api.flow.Flow;
 import co.cask.tigon.app.guice.ProgramRunnerRuntimeModule;
 import co.cask.tigon.app.program.Program;
 import co.cask.tigon.app.program.Programs;
 import co.cask.tigon.conf.CConfiguration;
-import co.cask.tigon.conf.Constants;
-import co.cask.tigon.data.runtime.DataFabricInMemoryModule;
+import co.cask.tigon.data.runtime.DataFabricDistributedModule;
 import co.cask.tigon.flow.DeployClient;
 import co.cask.tigon.guice.ConfigModule;
 import co.cask.tigon.guice.DiscoveryRuntimeModule;
 import co.cask.tigon.guice.IOModule;
 import co.cask.tigon.guice.LocationRuntimeModule;
+import co.cask.tigon.guice.TwillModule;
+import co.cask.tigon.guice.ZKClientModule;
 import co.cask.tigon.internal.app.runtime.BasicArguments;
 import co.cask.tigon.internal.app.runtime.ProgramController;
 import co.cask.tigon.internal.app.runtime.ProgramRunnerFactory;
@@ -40,8 +41,12 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Scopes;
 import org.apache.hadoop.conf.Configuration;
+import org.apache.hadoop.hbase.HBaseConfiguration;
+import org.apache.twill.api.TwillController;
+import org.apache.twill.api.TwillRunnerService;
 import org.apache.twill.filesystem.Location;
 import org.apache.twill.filesystem.LocationFactory;
+import org.apache.twill.zookeeper.ZKClientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,15 +61,18 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
- * Tigon Standalone Main.
+ * Tigon Distributed Main.
  */
-public class StandaloneMain {
-  private static final Logger LOG = LoggerFactory.getLogger(StandaloneMain.class);
+public class DistributedMain {
+  private static final Logger LOG = LoggerFactory.getLogger(DistributedMain.class);
   private static final File localDataDir = Files.createTempDir();
   private static final File jarUnpackDir = Files.createTempDir();
+
   private static Injector injector;
+  private ZKClientService zkClientService;
+  private volatile TwillRunnerService twillRunnerService;
+  private volatile TwillController twillController;
   private static MetricsCollectionService metricsCollectionService;
-  private static TransactionManager txService;
   private static LocationFactory locationFactory;
   private static DeployClient deployClient;
   private static ProgramRunnerFactory programRunnerFactory;
@@ -116,10 +124,7 @@ public class StandaloneMain {
       program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments()));
   }
 
-  //Args expected : Path to the Main class;
-  //TODO: Add Runtime args to the list
   public static void main(String[] args) {
-    System.out.println("Welcome to Tigon Standalone");
     String jarPath;
     String mainClassName;
     if (args.length > 0) {
@@ -145,29 +150,20 @@ public class StandaloneMain {
 
   public static void init() throws Exception {
     CConfiguration cConf = CConfiguration.create();
-    cConf.set(Constants.Dataset.Manager.ADDRESS, "localhost");
-    cConf.set(Constants.CFG_LOCAL_DATA_DIR, localDataDir.getAbsolutePath());
-    cConf.setBoolean(Constants.Dangerous.UNRECOVERABLE_RESET, true);
-
-    Configuration hConf = new Configuration();
-    hConf.addResource("mapred-site-local.xml");
-    hConf.reloadConfiguration();
-    hConf.set(Constants.CFG_LOCAL_DATA_DIR, localDataDir.getAbsolutePath());
-    hConf.set(Constants.AppFabric.OUTPUT_DIR, cConf.get(Constants.AppFabric.OUTPUT_DIR));
-    hConf.set("hadoop.tmp.dir", new File(localDataDir, cConf.get(Constants.AppFabric.TEMP_DIR)).getAbsolutePath());
+    Configuration hConf = HBaseConfiguration.create();
 
     injector = Guice.createInjector(
-      new DataFabricInMemoryModule(),
+      new DataFabricDistributedModule(),
       new ConfigModule(cConf, hConf),
       new IOModule(),
-      new LocationRuntimeModule().getInMemoryModules(),
-      new DiscoveryRuntimeModule().getInMemoryModules(),
-      new ProgramRunnerRuntimeModule().getInMemoryModules(),
+      new ZKClientModule(),
+      new TwillModule(),
+      new LocationRuntimeModule().getDistributedModules(),
+      new DiscoveryRuntimeModule().getDistributedModules(),
+      new ProgramRunnerRuntimeModule().getDistributedModules(),
       new TestMetricsClientModule()
     );
 
-    txService = injector.getInstance(TransactionManager.class);
-    txService.startAndWait();
     metricsCollectionService = injector.getInstance(MetricsCollectionService.class);
     metricsCollectionService.startAndWait();
     locationFactory = injector.getInstance(LocationFactory.class);
@@ -190,7 +186,6 @@ public class StandaloneMain {
       controller.stop();
     }
     metricsCollectionService.stopAndWait();
-    txService.stopAndWait();
   }
 
   private static final class TestMetricsClientModule extends AbstractModule {

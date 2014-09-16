@@ -45,7 +45,6 @@ import java.io.File;
 public final class DistributedFlowProgramRunner extends AbstractDistributedProgramRunner {
 
   private static final Logger LOG = LoggerFactory.getLogger(DistributedFlowProgramRunner.class);
-
   private final QueueAdmin queueAdmin;
 
   @Inject
