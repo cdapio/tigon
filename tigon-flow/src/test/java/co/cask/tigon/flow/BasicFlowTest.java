@@ -33,7 +33,6 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.FileWriter;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -59,6 +58,7 @@ public class BasicFlowTest extends TestBase {
     manager.setFlowletInstances("sink", 1);
     TimeUnit.SECONDS.sleep(5);
     manager.stop();
+
   }
 }
 
@@ -82,7 +82,6 @@ class GeneratorFlowlet extends AbstractFlowlet {
 
   private FileWriter fileWriter;
   private OutputEmitter<Integer> intEmitter;
-  private Random random = new Random();
   private int i = 0;
   private static final Logger LOG = LoggerFactory.getLogger(GeneratorFlowlet.class);
   private Metrics metrics;
@@ -116,7 +115,6 @@ class GeneratorFlowlet extends AbstractFlowlet {
 }
 
 class SinkFlowlet extends AbstractFlowlet {
-
   private FileWriter fileWriter;
 
   @Override

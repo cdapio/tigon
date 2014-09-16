@@ -26,5 +26,23 @@ the License.
 
   <artifactId>tigon-client</artifactId>
 
-
+  <dependencies>
+    <dependency>
+      <groupId>co.cask.tigon</groupId>
+      <artifactId>tigon-flow</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.twill</groupId>
+      <artifactId>twill-common</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
+  </dependencies>
 </project>

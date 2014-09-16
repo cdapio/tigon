@@ -20,6 +20,7 @@ import co.cask.tigon.api.flow.FlowletDefinition;
 import co.cask.tigon.api.flow.flowlet.FlowletSpecification;
 import co.cask.tigon.app.program.Program;
 import co.cask.tigon.app.program.ProgramType;
+import co.cask.tigon.conf.Constants;
 import com.google.common.base.Preconditions;
 import org.apache.twill.api.EventHandler;
 import org.apache.twill.api.ResourceSpecification;
@@ -53,8 +54,7 @@ public final class FlowTwillApplication implements TwillApplication {
   @Override
   public TwillSpecification configure() {
     TwillSpecification.Builder.MoreRunnable moreRunnable = TwillSpecification.Builder.with()
-      .setName(String.format("%s.%s",
-                             ProgramType.FLOW.name().toLowerCase(), spec.getName()))
+      .setName(String.format("%s.%s", ProgramType.FLOW.name().toLowerCase(), spec.getName()))
       .withRunnable();
 
     Location programLocation = program.getJarLocation();
@@ -78,6 +78,13 @@ public final class FlowTwillApplication implements TwillApplication {
     }
 
     Preconditions.checkState(runnableSetter != null, "No flowlet for the flow.");
+    //TODO: What if the flowlet name is named "txManager"?
+    runnableSetter = moreRunnable
+      .add("txManager", new TransactionServiceTwillRunnable(Constants.Service.TRANSACTION, "cConf.xml", "hConf.xml"))
+      .withLocalFiles()
+      .add("cConf.xml", cConfig.toURI())
+      .add("hConf.xml", hConfig.toURI())
+      .apply();
     return runnableSetter.anyOrder().withEventHandler(eventHandler).build();
   }
 }

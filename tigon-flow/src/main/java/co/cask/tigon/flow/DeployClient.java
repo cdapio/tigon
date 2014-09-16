@@ -70,7 +70,7 @@ public class DeployClient {
     return manifest;
   }
 
-  public Location deployFlow(final String applicationId, Class<?> flowClz, File... bundleEmbeddedJars)
+  public Location deployFlow(Class<?> flowClz, File... bundleEmbeddedJars)
     throws Exception {
     Preconditions.checkNotNull(flowClz, "Flow cannot be null.");
     Location deployedJar = locationFactory.create(createDeploymentJar(
