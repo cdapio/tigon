@@ -35,7 +35,7 @@ The document is organized as:
 Stream Query Language 
 ---------------------
 
-The Tigon query language, *TigonSQL*, is a pure stream query language with SQL-like
+The Tigon query language, *TigonSQL*, is a pure stream query language with a SQL-like
 syntax (being mostly a restriction of SQL). That is, all inputs to a TigonSQL are streams, and
 the output is a data stream. This restriction enables easy query composition and greatly
 simplifies and streamlines the implementation of efficient streaming operators. The query
