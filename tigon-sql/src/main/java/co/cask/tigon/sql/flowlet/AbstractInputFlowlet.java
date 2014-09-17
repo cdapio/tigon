@@ -224,7 +224,7 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
 
   private void cleanTempDir(File dir) {
     Queue<File> pendingList = Queues.newArrayDeque();
-    for(File tmpFile : dir.listFiles()) {
+    for (File tmpFile : dir.listFiles()) {
       if (!tmpFile.isDirectory()) {
         if (!tmpFile.delete()) {
           LOG.info("Failed to delete {}", tmpFile.toURI().toString());
