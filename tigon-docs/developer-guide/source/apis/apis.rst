@@ -9,7 +9,7 @@ Tigon APIs
 Tigon Java API
 --------------
 
-`Tigon Java API Javadocs <apis/javadocs/index.html>`__
+`Tigon Java API Javadocs <javadocs/index.html>`__
 
 
 Tigon SQL
