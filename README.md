@@ -4,15 +4,33 @@
 
 **Introduction**
 
-Tigon is a high-speed stream database. Tigon's original purpose was network monitoring, though
-there are many other applications that can take advantage of its features:
+Tigon is a collaborative effort between Cask Data, Inc. and AT&T that combines 
+technologies from these companies to create a disruptive new framework to handle a diverse
+set of real-time streaming requirements.
+
+Cask Data has built technology that provides scalable, reliable, and persistent high-throughput
+event processing with high-level Java APIs using Hadoop and HBase.
+
+AT&T has built a streaming engine that provides massively scalable, flexible, and in-memory
+low-latency stream processing with a SQL-like query Language.
+
+Together, they have combined to create **Tigon**, an open-source, real-time, low-latency,
+high-throughput stream processing framework.
+
+There are many applications that can take advantage of these features:
 
 - Ability to handle extremely large data flows;
-- Data is touched only once, useless data is not gathered, and results are quickly produced;
-- Runs collections of queries using pipelined query plans and a SQL-like language;
-- Supports a significant amount of parallelization; and 
-- Able to transparently handle complex record routing in large parallelized implementations.
-
+- Exactly-once event processing using an app-level Java API with consistency, reliability, and persistence;
+- Streaming database using a SQL-like language to filter, group and join data streams in-memory;
+- Runs collections of queries using pipelined query plans;
+- Able to transparently handle complex record routing in large parallelized implementations;
+- Runs and scales as a native Apache Hadoop YARN Application;
+- Reads, writes, and tightly integrates with HDFS and HBase;
+- Supports a significant amount of parallelization;
+- Fault-tolerance and horizontal scalability without burdening the developer;
+- Enterprise security features with debugging, logging, and monitoring tools; and
+- Simpler programming model, tools and UI; and
+- Open-source software and development process.
 
 For more information, see our collection of 
 [Guides and other documentation](http://docs.cask.co/tigon/current/index.html).
@@ -38,7 +56,9 @@ To install and use Tigon and its included examples, there are a few prerequisite
   2. GCC
   3. G++
   4. libcurl (if it is not already included in your operating system)
-  5. Apache Maven 3.0+ (required to build the example applications)
+  5. libz
+  6. Apache Maven 3.0+ (required to build the example applications)
+  7. In standalone mode, both Perl and Python 3.x are required
 
 
 ### Download
