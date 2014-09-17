@@ -215,7 +215,7 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
     try {
       FileUtils.deleteDirectory(tmpFolder);
     } catch (IOException e) {
-      LOG.info("Failed to delete {}", tmpFolder.toURI().toString());
+      LOG.warn("Failed to delete {}", tmpFolder.toURI().toString());
     }
     Services.chainStop(healthInspector, inputFlowletService);
     super.destroy();
