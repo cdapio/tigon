@@ -27,7 +27,7 @@ Build                                                                     | Stat
 
 ## Getting Started
 
-### Prerequistes
+### Prerequisites
 
 Tigon is supported on *NIX systems such as Linux and Macintosh OS X.
 It is not supported on Microsoft Windows.
