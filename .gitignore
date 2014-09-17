@@ -1,10 +1,8 @@
-<<<<<<< HEAD
 *.class
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
-=======
 # Ignore everything in this directory
 build/
 .gradle/
@@ -16,13 +14,12 @@ build/
 *.iml
 *.iws
 *.ipr
->>>>>>> origin/develop
+
 # Package Files #
 *.jar
 *.war
 *.ear
 
-<<<<<<< HEAD
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 
@@ -34,9 +31,28 @@ hs_err_pid*
 
 # Maven build directory
 target
-=======
+
 # Maven Build Folder
 target/
+
+# Generated binaries
+tigon-sql/bin
+tigon-sql/lib
+*.a
+*.o
+tigon-sql/src/main/c/ftacmp/gen_tuple_access
+tigon-sql/src/main/c/ftacmp/translate_fta
+tigon-sql/src/main/c/tools/gdat2ascii
+tigon-sql/src/main/c/tools/gdatcat
+tigon-sql/src/main/c/tools/gsexit
+tigon-sql/src/main/c/tools/gsgdatprint
+tigon-sql/src/main/c/tools/gsprintconsole
+tigon-sql/src/main/c/tools/gssinksim
+tigon-sql/src/main/c/tools/process_logs
+
+# GCOV
+*.gcov
+*.gcov.gcno
+*.gcov.o
 # Except this file
 !.gitignore
->>>>>>> origin/develop
