@@ -34,8 +34,8 @@ import co.cask.tigon.sql.io.GDATDecoder;
 import co.cask.tigon.sql.io.MethodsDriver;
 import co.cask.tigon.sql.util.MetaInformationParser;
 import com.google.common.base.Stopwatch;
-import com.google.common.collect.Queues;
 import com.google.common.io.Files;
+import org.apache.commons.io.FileUtils;
 import org.apache.twill.common.Services;
 import org.apache.twill.filesystem.LocalLocationFactory;
 import org.apache.twill.filesystem.Location;
@@ -44,9 +44,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nullable;
@@ -132,7 +132,6 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
 
     // Setup temporary directory structure
     tmpFolder = Files.createTempDir();
-    tmpFolder.deleteOnExit();
     LocationFactory locationFactory = new LocalLocationFactory(tmpFolder);
 
     Location baseDir = locationFactory.create("baseDir");
@@ -213,30 +212,13 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
 
   @Override
   public void destroy() {
-    cleanTempDir();
+    try {
+      FileUtils.deleteDirectory(tmpFolder);
+    } catch (IOException e) {
+      LOG.info("Failed to delete {}", tmpFolder.toURI().toString());
+    }
     Services.chainStop(healthInspector, inputFlowletService);
     super.destroy();
-  }
-
-  private void cleanTempDir() {
-    cleanTempDir(tmpFolder);
-  }
-
-  private void cleanTempDir(File dir) {
-    Queue<File> pendingList = Queues.newArrayDeque();
-    for (File tmpFile : dir.listFiles()) {
-      if (!tmpFile.isDirectory()) {
-        if (!tmpFile.delete()) {
-          LOG.info("Failed to delete {}", tmpFile.toURI().toString());
-        }
-      } else {
-        pendingList.add(tmpFile);
-      }
-    }
-    for (File tmpDir : pendingList) {
-      cleanTempDir(tmpDir);
-    }
-    dir.delete();
   }
 
   /**
