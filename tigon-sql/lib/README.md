@@ -1,1 +1,1 @@
-This directory contains the lib files required by the SQL compiler
+contains all local libraries
