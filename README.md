@@ -22,7 +22,7 @@ For more information, see our collection of
 Build                                                                     | Status / Version
 --------------------------------------------------------------------------|-----------------
 [Travis Continuous Integration Build](https://travis-ci.org/caskco/tigon) | ![travis](https://travis-ci.org/caskco/tigon.svg?branch=develop)
-[GitHub Version](ttps://github.com/caskco/tigon/releases/latest)          | ![github](http://img.shields.io/github/release/caskco/tigon.svg)
+[GitHub Version](https://github.com/caskco/tigon/releases/latest)         | ![github](http://img.shields.io/github/release/caskco/tigon.svg)
 
 
 ## Getting Started
@@ -39,10 +39,22 @@ To install and use Tigon and its included examples, there are a few prerequisite
   3. G++
   4. libcurl (if it is not already included in your operating system)
   5. Apache Maven 3.0+ (required to build the example applications)
-  
-### Build
 
-You can get started with Tigon by building directly from the latest source code::
+
+### Download
+
+Pre-compiled sources and related files can be downloaded in a zip file: 
+[tigon-0.1.0.zip] (http://cask.co/downloads/tigon/tigon-0.1.0.zip).
+
+
+### Install 
+
+Once the download has completed, unzip the file in a suitable location.
+
+
+### Building from Source
+
+You can also get started with Tigon by building directly from the latest source code::
 
 ```
   git clone https://github.com/cask/tigon.git
