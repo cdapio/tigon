@@ -1,4 +1,4 @@
-Contains documentation files for Tigon
+Documentation files for Tigon
 
 ## License and Trademarks
 
