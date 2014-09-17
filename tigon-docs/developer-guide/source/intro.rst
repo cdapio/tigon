@@ -19,10 +19,10 @@ there are many other applications that can take advantage of its features:
 - All software available as open-source;
 
 Getting Started
----------------
+===============
 
 Prerequisites
-.............
+-------------
 
 Tigon is supported on \*NIX systems such as Linux and Macintosh OS X.
 It is not supported on Microsoft Windows.
@@ -37,20 +37,20 @@ To install and use Tigon and its included examples, there are a few prerequisite
 
 
 Download
-........
+--------
 
 Pre-compiled sources and related files can be downloaded in a zip file: 
-`tigon-0.1.0.zip <http://cask.co/downloads/tigon/tigon-0.1.0.zip>.
+`tigon-0.1.0.zip <http://cask.co/downloads/tigon/tigon-0.1.0.zip>`.
 
 
 Install 
-.......
+-------
 
 Once the download has completed, unzip the file in a suitable location.
 
   
 Building Tigon from Source
-..........................
+--------------------------
 
 .. highlight:: console
 
@@ -70,10 +70,10 @@ source distribution.
 
 
 Configuration
-.............
+-------------
 
 Macintosh OS X
-``````````````
+..............
 
 .. highlight:: console
 
@@ -89,10 +89,11 @@ To run Tigon, you'll need to revise these settings by executing these commands::
 
 
 Setting up Your Development Environment
-........................................
+---------------------------------------
 
 
-## Quick Start
+Quick Start
+-----------
 
 Visit our web site for a [Quick Start](http://docs.cask.co/docs/tigon/current/quickstart.html)
 that will guide you through installing Tigon, running an example that....  
