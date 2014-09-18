@@ -62,8 +62,6 @@ public final class FlowTwillApplication implements TwillApplication {
 
     Location programLocation = program.getJarLocation();
     String programName = programLocation.getName();
-    LOG.info("STAMP : FlowTwillApplication : Received Program {}; Program Name {}", programLocation.toURI().getPath(),
-             programName);
     TwillSpecification.Builder.RunnableSetter runnableSetter = null;
     for (Map.Entry<String, FlowletDefinition> entry  : spec.getFlowlets().entrySet()) {
       FlowletDefinition flowletDefinition = entry.getValue();
