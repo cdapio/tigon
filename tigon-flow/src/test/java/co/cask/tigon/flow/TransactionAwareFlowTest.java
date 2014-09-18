@@ -18,7 +18,7 @@ package co.cask.tigon.flow;
 
 import com.continuuity.tephra.TransactionAware;
 import com.continuuity.tephra.TransactionContext;
-import com.continuuity.tephra.hbase94.TransactionAwareHTable;
+import com.continuuity.tephra.hbase96.TransactionAwareHTable;
 import com.continuuity.tephra.inmemory.DetachedTxSystemClient;
 import co.cask.tigon.api.annotation.HashPartition;
 import co.cask.tigon.api.annotation.ProcessInput;

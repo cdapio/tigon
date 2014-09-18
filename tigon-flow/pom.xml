@@ -63,7 +63,7 @@ the License.
     </dependency>
     <dependency>
       <groupId>com.continuuity.tephra</groupId>
-      <artifactId>tephra-hbase-compat-0.94</artifactId>
+      <artifactId>tephra-hbase-compat-0.96</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>

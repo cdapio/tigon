@@ -53,5 +53,4 @@
       <artifactId>tephra-api</artifactId>
     </dependency>
   </dependencies>
-
 </project>
