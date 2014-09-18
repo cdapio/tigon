@@ -50,32 +50,6 @@
     </dependency>
   </dependencies>
 
-  <!--<build>-->
-    <!--<plugins>-->
-      <!--<plugin>-->
-        <!--<artifactId>maven-assembly-plugin</artifactId>-->
-        <!--<executions>-->
-          <!--<execution>-->
-            <!--<id>distro-assembly</id>-->
-            <!--<phase>package</phase>-->
-            <!--<goals>-->
-              <!--<goal>single</goal>-->
-            <!--</goals>-->
-            <!--<configuration>-->
-              <!--<finalName>tigon-${project.version}</finalName>-->
-              <!--<formats>-->
-                <!--<format>tar.gz</format>-->
-              <!--</formats>-->
-              <!--<descriptors>-->
-                <!--<descriptor>src/assembly/tgz.xml</descriptor>-->
-              <!--</descriptors>-->
-            <!--</configuration>-->
-          <!--</execution>-->
-        <!--</executions>-->
-      <!--</plugin>-->
-    <!--</plugins>-->
-  <!--</build>-->
-  <!-- Maven assembly -->
   <build>
     <plugins>
       <plugin>

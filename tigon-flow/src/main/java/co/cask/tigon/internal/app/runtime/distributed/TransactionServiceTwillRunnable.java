@@ -55,7 +55,6 @@ public class TransactionServiceTwillRunnable extends AbstractMasterTwillRunnable
   private static final Logger LOG = LoggerFactory.getLogger(TransactionServiceTwillRunnable.class);
 
   private ZKClientService zkClient;
-//  private KafkaClientService kafkaClient;
   private MetricsCollectionService metricsCollectionService;
   private TransactionService txService;
 
@@ -69,19 +68,14 @@ public class TransactionServiceTwillRunnable extends AbstractMasterTwillRunnable
       getCConfiguration().set(Constants.Transaction.Container.ADDRESS, context.getHost().getCanonicalHostName());
 
       Injector injector = createGuiceInjector(getCConfiguration(), getConfiguration());
-//      injector.getInstance(LogAppenderInitializer.class).initialize();
-//      LoggingContextAccessor.setLoggingContext(new ServiceLoggingContext(Constants.Logging.SYSTEM_NAME,
-//                                                                         Constants.Logging.COMPONENT_NAME,
-//                                                                         Constants.Service.TRANSACTION));
 
       LOG.info("Initializing runnable {}", name);
       // Set the hostname of the machine so that cConf can be used to start internal services
       LOG.info("{} Setting host name to {}", name, context.getHost().getCanonicalHostName());
 
 
-      //Get Zookeeper and Kafka Client Instances
+      //Get Zookeeper Client Instances
       zkClient = injector.getInstance(ZKClientService.class);
-//      kafkaClient = injector.getInstance(KafkaClientService.class);
 
       // Get the metrics collection service
       metricsCollectionService = injector.getInstance(MetricsCollectionService.class);
@@ -99,7 +93,6 @@ public class TransactionServiceTwillRunnable extends AbstractMasterTwillRunnable
   @Override
   public void getServices(List<? super Service> services) {
     services.add(zkClient);
-//    services.add(kafkaClient);
     services.add(metricsCollectionService);
     services.add(txService);
   }

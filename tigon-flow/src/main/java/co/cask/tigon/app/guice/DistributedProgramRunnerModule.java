@@ -20,7 +20,6 @@ import co.cask.tigon.internal.app.runtime.ProgramRunnerFactory;
 import co.cask.tigon.internal.app.runtime.distributed.DistributedFlowProgramRunner;
 import com.google.common.base.Preconditions;
 import com.google.inject.AbstractModule;
-import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
@@ -39,26 +38,6 @@ final class DistributedProgramRunnerModule extends AbstractModule {
     MapBinder<ProgramRunnerFactory.Type, ProgramRunner> runnerFactoryBinder =
       MapBinder.newMapBinder(binder(), ProgramRunnerFactory.Type.class, ProgramRunner.class);
     runnerFactoryBinder.addBinding(ProgramRunnerFactory.Type.FLOW).to(DistributedFlowProgramRunner.class);
-    //bind(ProgramRunnerFactory.class).to(DistributedFlowProgramRunnerFactory.class).in(Scopes.SINGLETON);
-    //expose(ProgramRunnerFactory.class);
-  }
-
-  @Singleton
-  private static final class DistributedFlowProgramRunnerFactory implements ProgramRunnerFactory {
-
-    private final Map<ProgramRunnerFactory.Type, Provider<ProgramRunner>> providers;
-
-    @Inject
-    private DistributedFlowProgramRunnerFactory(Map<ProgramRunnerFactory.Type, Provider<ProgramRunner>> providers) {
-      this.providers = providers;
-    }
-
-    @Override
-    public ProgramRunner create(ProgramRunnerFactory.Type programType) {
-      Provider<ProgramRunner> provider = providers.get(programType);
-      Preconditions.checkNotNull(provider, "Unsupported program type: " + programType);
-      return provider.get();
-    }
   }
 
   @Singleton

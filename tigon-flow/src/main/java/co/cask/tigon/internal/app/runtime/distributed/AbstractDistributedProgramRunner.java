@@ -100,7 +100,6 @@ public abstract class AbstractDistributedProgramRunner implements ProgramRunner 
       cConfFile = saveCConf(cConf, File.createTempFile("cConf", ".xml"));
       programDir = Files.createTempDir();
       copiedProgram = copyProgramJar(program, programDir);
-      LOG.info("STAMP : RunnableOptions : {}", copiedProgram.getJarLocation().getName());
     } catch (IOException e) {
       throw Throwables.propagate(e);
     }

@@ -101,9 +101,7 @@ public class TestBase {
   public static void init() throws Exception {
     File localDataDir = tmpFolder.newFolder();
     CConfiguration cConf = CConfiguration.create();
-    cConf.set(Constants.Dataset.Manager.ADDRESS, "localhost");
     cConf.set(Constants.CFG_LOCAL_DATA_DIR, localDataDir.getAbsolutePath());
-    cConf.setBoolean(Constants.Dangerous.UNRECOVERABLE_RESET, true);
 
     Configuration hConf = new Configuration();
     hConf.addResource("mapred-site-local.xml");

@@ -16,7 +16,6 @@
 
 package co.cask.tigon;
 
-import co.cask.tigon.api.flow.Flow;
 import co.cask.tigon.app.guice.ProgramRunnerRuntimeModule;
 import co.cask.tigon.app.program.Program;
 import co.cask.tigon.app.program.Programs;
@@ -33,9 +32,6 @@ import co.cask.tigon.internal.app.runtime.BasicArguments;
 import co.cask.tigon.internal.app.runtime.ProgramController;
 import co.cask.tigon.internal.app.runtime.ProgramRunnerFactory;
 import co.cask.tigon.internal.app.runtime.SimpleProgramOptions;
-import co.cask.tigon.lang.ApiResourceListHolder;
-import co.cask.tigon.lang.ClassLoaders;
-import co.cask.tigon.lang.jar.ProgramClassLoader;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import co.cask.tigon.metrics.NoOpMetricsCollectionService;
 import com.google.common.io.Files;
@@ -52,15 +48,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.PrintStream;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Enumeration;
-import java.util.concurrent.TimeUnit;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * Tigon Distributed Main.
@@ -75,66 +64,30 @@ public class DistributedMain {
   private static ProgramRunnerFactory programRunnerFactory;
   private static ProgramController controller;
   private static TwillRunnerService twillRunnerService;
+  private static CountDownLatch runLatch;
 
   static void usage(boolean error) {
     // Which output stream should we use?
     PrintStream out = (error ? System.err : System.out);
-    out.println("Print help message here");
+    out.println("Usage: ./run_standalone.sh <path-to-JAR> <FlowClassName>");
+    out.println("Example: ./run_standalone.sh /home/user/tweetFlow-1.0.jar com.cname.main.TweetFlow");
     out.println("");
     if (error) {
       throw new IllegalArgumentException();
     }
   }
 
-  private static void expandJar(File jarPath, File unpackDir) throws Exception {
-    JarFile jar = new JarFile(jarPath);
-    Enumeration enumEntries = jar.entries();
-    while (enumEntries.hasMoreElements()) {
-      JarEntry file = (JarEntry) enumEntries.nextElement();
-      File f = new File(unpackDir + File.separator + file.getName());
-      if (file.isDirectory()) {
-        f.mkdirs();
-        continue;
-      } else {
-        f.getParentFile().mkdirs();
-      }
-      InputStream is = jar.getInputStream(file);
-      FileOutputStream fos = new FileOutputStream(f);
-      while (is.available() > 0) {
-        fos.write(is.read());
-      }
-      fos.close();
-      is.close();
-    }
-  }
-
   private static void deploy(File jarPath, String classToLoad) throws Exception {
-    expandJar(jarPath, jarUnpackDir);
-    URL jarURL = jarUnpackDir.toURI().toURL();
-    ProgramClassLoader filterClassLoader = ClassLoaders.newProgramClassLoader(jarUnpackDir,
-                                                                              ApiResourceListHolder.getResourceList(),
-                                                                              StandaloneMain.class.getClassLoader());
-    URLClassLoader classLoader = new URLClassLoader(new URL[]{jarURL}, filterClassLoader);
-    Class<?> clz = classLoader.loadClass(classToLoad);
-    if (!(clz.newInstance() instanceof Flow)) {
-      throw new Exception("Expected Flow class");
-    }
-    ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
-    Thread.currentThread().setContextClassLoader(classLoader);
-
-    Location deployedJar = deployClient.deployFlow(clz);
-    System.out.println("Deployed Jar at : " + deployedJar.toURI().getPath());
+    Location deployedJar = deployClient.createJar(jarPath, classToLoad, jarUnpackDir);
     Program program = Programs.createWithUnpack(deployedJar, jarUnpackDir);
     controller = programRunnerFactory.create(ProgramRunnerFactory.Type.FLOW).run(
-      program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments(), true));
-    System.out.println("Launched the Flow! Received the controller");
-    TimeUnit.SECONDS.sleep(500);
+      program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments()));
   }
 
   //Args expected : Path to the Main class;
   //TODO: Add Runtime args to the list
   public static void main(String[] args) {
-    System.out.println("Welcome to Tigon Standalone");
+    System.out.println("Tigon Distributed");
     if (args.length > 0) {
       if ("--help".equals(args[0]) || "-h".equals(args[0])) {
         usage(false);
@@ -150,6 +103,7 @@ public class DistributedMain {
       try {
         init();
         deploy(jarPath, mainClassName);
+        runLatch.await();
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -157,6 +111,7 @@ public class DistributedMain {
   }
 
   public static void init() throws Exception {
+    runLatch = new CountDownLatch(1);
     CConfiguration cConf = CConfiguration.create();
     Configuration hConf = HBaseConfiguration.create();
 
@@ -166,7 +121,7 @@ public class DistributedMain {
       new IOModule(),
       new ZKClientModule(),
       new TwillModule(),
-      new LocationRuntimeModule().getTwillDistributedModules(),
+      new LocationRuntimeModule().getDistributedModules(),
       new DiscoveryRuntimeModule().getDistributedModules(),
       new ProgramRunnerRuntimeModule().getDistributedModules(),
       new TestMetricsClientModule()
@@ -188,6 +143,7 @@ public class DistributedMain {
       @Override
       public void run() {
         try {
+          runLatch.countDown();
           finish();
         } catch (Throwable e) {
           LOG.error("Failed to shutdown", e);
@@ -198,8 +154,7 @@ public class DistributedMain {
 
   public static void finish() throws Exception {
     if (controller != null) {
-      controller.stop();
-      TimeUnit.SECONDS.sleep(2);
+      controller.stop().get();
     }
     twillRunnerService.stopAndWait();
     metricsCollectionService.stopAndWait();
@@ -213,5 +168,4 @@ public class DistributedMain {
       bind(MetricsCollectionService.class).to(NoOpMetricsCollectionService.class).in(Scopes.SINGLETON);
     }
   }
-
 }

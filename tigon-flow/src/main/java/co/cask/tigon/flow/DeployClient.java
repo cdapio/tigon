@@ -22,6 +22,9 @@ import co.cask.tigon.app.program.ManifestFields;
 import co.cask.tigon.internal.app.FlowSpecificationAdapter;
 import co.cask.tigon.internal.flow.DefaultFlowSpecification;
 import co.cask.tigon.internal.io.ReflectionSchemaGenerator;
+import co.cask.tigon.lang.ApiResourceListHolder;
+import co.cask.tigon.lang.ClassLoaders;
+import co.cask.tigon.lang.jar.ProgramClassLoader;
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
@@ -38,9 +41,14 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Enumeration;
 import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
@@ -72,7 +80,45 @@ public class DeployClient {
     return manifest;
   }
 
-  public Location deployFlow(Class<?> flowClz, File... bundleEmbeddedJars)
+  private static void expandJar(File jarPath, File unpackDir) throws Exception {
+    JarFile jar = new JarFile(jarPath);
+    Enumeration enumEntries = jar.entries();
+    while (enumEntries.hasMoreElements()) {
+      JarEntry file = (JarEntry) enumEntries.nextElement();
+      File f = new File(unpackDir + File.separator + file.getName());
+      if (file.isDirectory()) {
+        f.mkdirs();
+        continue;
+      } else {
+        f.getParentFile().mkdirs();
+      }
+      InputStream is = jar.getInputStream(file);
+      FileOutputStream fos = new FileOutputStream(f);
+      while (is.available() > 0) {
+        fos.write(is.read());
+      }
+      fos.close();
+      is.close();
+    }
+  }
+
+  public Location createJar(File jarPath, String classToLoad, File jarUnpackDir) throws Exception {
+    expandJar(jarPath, jarUnpackDir);
+    URL jarURL = jarUnpackDir.toURI().toURL();
+    ProgramClassLoader filterClassLoader = ClassLoaders.newProgramClassLoader(jarUnpackDir,
+                                                                              ApiResourceListHolder.getResourceList(),
+                                                                              DeployClient.class.getClassLoader());
+    URLClassLoader classLoader = new URLClassLoader(new URL[]{jarURL}, filterClassLoader);
+    Class<?> clz = classLoader.loadClass(classToLoad);
+    if (!(clz.newInstance() instanceof Flow)) {
+      throw new Exception("Expected Flow class");
+    }
+    ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+    Thread.currentThread().setContextClassLoader(classLoader);
+    return deployFlow(clz);
+  }
+
+  Location deployFlow(Class<?> flowClz, File... bundleEmbeddedJars)
     throws Exception {
     Preconditions.checkNotNull(flowClz, "Flow cannot be null.");
     Location deployedJar = locationFactory.create(createDeploymentJar(

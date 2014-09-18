@@ -20,7 +20,6 @@ package co.cask.tigon.metrics;
  * Define scopes of metrics.
  */
 public enum MetricsScope {
-  //  todo: should not be called "REACTOR": REACTOR-852
-  REACTOR,
+  SYSTEM,
   USER
 }

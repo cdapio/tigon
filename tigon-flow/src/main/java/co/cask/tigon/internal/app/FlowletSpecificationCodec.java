@@ -30,7 +30,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.Map;
-import java.util.Set;
 
 /**
  *
@@ -61,7 +60,6 @@ final class FlowletSpecificationCodec extends AbstractSpecificationCodec<Flowlet
     String name = jsonObj.get("name").getAsString();
     String description = jsonObj.get("description").getAsString();
     FailurePolicy policy = FailurePolicy.valueOf(jsonObj.get("failurePolicy").getAsString());
-    Set<String> dataSets = deserializeSet(jsonObj.get("datasets"), context, String.class);
     Map<String, String> properties = deserializeMap(jsonObj.get("properties"), context, String.class);
     ResourceSpecification resources = context.deserialize(jsonObj.get("resources"),
                                                           new TypeToken<ResourceSpecification>() { }.getType());

@@ -299,6 +299,7 @@
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-mapreduce-client-core</artifactId>
         <version>${hadoop.version}</version>
+        <scope>provided</scope>
         <exclusions>
           <exclusion>
             <groupId>org.slf4j</groupId>
@@ -340,6 +341,7 @@
         <groupId>org.apache.hbase</groupId>
         <artifactId>hbase</artifactId>
         <version>${hbase94.version}</version>
+        <scope>provided</scope>
         <exclusions>
           <exclusion>
             <groupId>junit</groupId>
@@ -425,11 +427,13 @@
         <groupId>org.apache.hbase</groupId>
         <artifactId>hbase-common</artifactId>
         <version>${hbase96.version}</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.hbase</groupId>
         <artifactId>hbase-client</artifactId>
         <version>${hbase96.version}</version>
+        <scope>provided</scope>
         <exclusions>
           <exclusion>
             <groupId>io.netty</groupId>
@@ -441,11 +445,13 @@
         <groupId>org.apache.hbase</groupId>
         <artifactId>hbase-protocol</artifactId>
         <version>${hbase96.version}</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.hbase</groupId>
         <artifactId>hbase-server</artifactId>
         <version>${hbase96.version}</version>
+        <scope>provided</scope>
         <exclusions>
           <exclusion>
             <groupId>org.mortbay.jetty</groupId>

@@ -37,24 +37,4 @@
       </binaries>
     </moduleSet>
   </moduleSets>
-  <!--<fileSets>-->
-    <!--&lt;!&ndash; Include top level bin directory &ndash;&gt;-->
-    <!--&lt;!&ndash; First copy all but the *.cmd files&ndash;&gt;-->
-    <!--<fileSet>-->
-      <!--<directory>${project.basedir}/../bin</directory>-->
-      <!--<outputDirectory>bin</outputDirectory>-->
-      <!--<fileMode>0755</fileMode>-->
-      <!--<directoryMode>0755</directoryMode>-->
-    <!--</fileSet>-->
-    <!--&lt;!&ndash; Include top level text files&ndash;&gt;-->
-    <!--<fileSet>-->
-      <!--<directory>${project.basedir}/..</directory>-->
-      <!--<outputDirectory>.</outputDirectory>-->
-      <!--<includes>-->
-        <!--<include>LICENSE</include>-->
-        <!--<include>README.rst</include>-->
-      <!--</includes>-->
-      <!--<fileMode>0644</fileMode>-->
-    <!--</fileSet>-->
-  <!--</fileSets>-->
 </assembly>

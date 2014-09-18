@@ -45,7 +45,7 @@ public abstract class AbstractContext implements RuntimeContext {
 
     if (metricsCollectionService != null) {
       // NOTE: RunId metric is not supported now. Need UI refactoring to enable it.
-      this.programMetrics = metricsCollectionService.getCollector(MetricsScope.REACTOR, metricsContext, "0");
+      this.programMetrics = metricsCollectionService.getCollector(MetricsScope.SYSTEM, metricsContext, "0");
     } else {
       this.programMetrics = null;
     }
