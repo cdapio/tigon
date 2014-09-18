@@ -168,7 +168,6 @@ public final class ExternalProgramExecutor extends AbstractExecutionThreadServic
 
           String line = reader.readLine();
           while (!Thread.currentThread().isInterrupted() && line != null) {
-            LOG.info(line);
             line = reader.readLine();
           }
         } catch (IOException e) {
@@ -189,7 +188,6 @@ public final class ExternalProgramExecutor extends AbstractExecutionThreadServic
         try {
           String line = reader.readLine();
           while (!Thread.currentThread().isInterrupted() && line != null) {
-            LOG.info(line);
             line = reader.readLine();
           }
         } catch (IOException e) {
