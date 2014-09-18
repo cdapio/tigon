@@ -142,7 +142,6 @@ gs_retval_t str_constructor(struct string *s, gs_sp_t l){
 gs_param_handle_t register_handle_for_str_regex_match_slot_1(struct FTA * f,
 					struct string* pattern) {
     regex_t * reg;
-    //XXX bug should allocate towards FTA
     if ((reg=(regex_t *) fta_alloc(0,sizeof(regex_t)))==0)  {
 	return 0;
     }
@@ -156,11 +155,25 @@ gs_uint32_t str_regex_match(struct string* str, gs_param_handle_t pattern_handle
     regex_t * reg = (regex_t *) pattern_handle ;
     gs_sp_t source = (gs_sp_t)(str->data);
     int res;
+    static gs_sp_t d=0;
+    static gs_uint32_t dlen=0;
+    // grow our static buffer to the longest string we ever see
+    if ((str->length+1) >= dlen) {
+        if (d!=0) fta_free(0,(void*)d);
+        dlen=0;
+        d=0;
+        if ((d=(gs_sp_t)fta_alloc(0,str->length+1))==0) return 0;
+        dlen=str->length+1;
+    }
+    
     if (str->length==0) return 0;
 
-    /* HACK ALERT: commented out regnexec invocations to unbreak the build */
+    // copy the string and 0 terminate it
+    memcpy((void *)d,(void *) str->data, str->length);
+    d[str->length]=0;
+    
     res = REG_NOMATCH;
-    /* res = regnexec(reg, (gs_sp_t)(str->data),str->length, 0, NULL, 0); */
+    res = regexec(reg, d, 0, NULL, 0);
     return (res==REG_NOMATCH)?0:1;
 }
 
@@ -191,11 +204,28 @@ gs_uint32_t str_partial_regex_match(struct string* str,
     gs_sp_t source = (gs_sp_t)(str->data);
     gs_int32_t res;
     gs_int32_t end;
+    static gs_sp_t d=0;
+    static gs_uint32_t dlen=0;
+    // grow our static buffer to the longest string we ever see
+    if ((str->length+1) >= dlen) {
+        if (d!=0) fta_free(0,d);
+        dlen=0;
+        d=0;
+        if ((d=(gs_sp_t)fta_alloc(0,str->length+1))==0) return 0;
+        dlen=str->length+1;
+    }
+    
     if (str->length==0) return 0;
-    end=(maxlen>(str->length-1))?(str->length-1):maxlen;
-    /* HACK ALERT: commented out regnexec invocations to unbreak the build */
+    
+    end=(maxlen>(str->length))?(str->length):maxlen;
+ 
+    // copy the string and 0 terminate it
+    memcpy((void *)d,(void *) str->data, end);
+    d[str->length]=0;
+ 
+     /* HACK ALERT: commented out regnexec invocations to unbreak the build */
     res = REG_NOMATCH;
-    /* res = regnexec(reg, (gs_sp_t)(str->data),end, 0, NULL, 0); */
+    res = regexec(reg,d, 0, NULL, 0);
     return (res==REG_NOMATCH)?0:1;
 }
 

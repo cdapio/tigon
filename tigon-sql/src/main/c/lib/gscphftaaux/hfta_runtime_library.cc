@@ -158,13 +158,26 @@ gs_param_handle_t register_handle_for_str_regex_match_slot_1(vstring* pattern) {
 
 gs_uint32_t str_regex_match(vstring* str, gs_param_handle_t pattern_handle) {
     regex_t * reg = (regex_t *) pattern_handle ;
-    gs_sp_t source = (gs_sp_t)(str->offset);
     gs_int32_t res;
+    static gs_sp_t d=0;
+    static gs_uint32_t dlen=0;
+    // grow our static buffer to the longest string we ever see
+    if ((str->length+1) >= dlen) {
+        if (d!=0) free((void*)d);
+        dlen=0;
+        d=0;
+        if ((d=(gs_sp_t)malloc(str->length+1))==0) return 0;
+        dlen=str->length+1;
+    }
+    
     if (str->length==0) return 0;
     
-    // HACK ALERT: commented out regnexec invocations to unbreak the build
+    // copy the string and 0 terminate it
+    memcpy((void *)d,(void *) str->offset, str->length);
+    d[str->length]=0;
+    
     res = REG_NOMATCH;
-    //res = regnexec(reg, (gs_sp_t)(str->offset),str->length, 0, NULL, 0);
+    res = regexec(reg, d, 0, NULL, 0);
     return (res==REG_NOMATCH)?0:1;
 }
 
@@ -196,14 +209,29 @@ gs_param_handle_t register_handle_for_str_partial_regex_match_slot_1(vstring* pa
 gs_uint32_t str_partial_regex_match(vstring* str, gs_param_handle_t pattern_handle,
 			     uint maxlen) {
     regex_t * reg = (regex_t *) pattern_handle ;
-    gs_sp_t source = (gs_sp_t)(str->offset);
     gs_int32_t res;
     gs_int32_t end;
+    static gs_sp_t d=0;
+    static gs_uint32_t dlen=0;
+    // grow our static buffer to the longest string we ever see
+    if ((str->length+1) >= dlen) {
+        if (d!=0) free((void*)d);
+        dlen=0;
+        d=0;
+        if ((d=(gs_sp_t)malloc(str->length+1))==0) return 0;
+        dlen=str->length+1;
+    }
+    
     if (str->length==0) return 0;
-    end=(maxlen>(str->length-1))?(str->length-1):maxlen;
-    // HACK ALERT: commented out regnexec invocations to unbreak the build
-    res = REG_NOMATCH;    
-    //res = regnexec(reg, (gs_sp_t)(str->offset), end,0, NULL, 0);
+    
+    end=(maxlen>(str->length))?(str->length):maxlen;
+    
+    // copy the string and 0 terminate it
+    memcpy((void *)d,(void *) str->offset, end);
+    d[str->length]=0;
+ 
+    res = REG_NOMATCH;
+    res = regexec(reg, d,0, NULL, 0);
     return (res==REG_NOMATCH)?0:1;
 }
 
@@ -239,10 +267,25 @@ gs_retval_t str_extract_regex( vstring * result, vstring * str, gs_param_handle_
     gs_sp_t source = (gs_sp_t)(str->offset);
     gs_retval_t res;
     regmatch_t match;
+    static gs_sp_t d=0;
+    static gs_uint32_t dlen=0;
+    // grow our static buffer to the longest string we ever see
+    if ((str->length+1) >= dlen) {
+        if (d!=0) free((void*)d);
+        dlen=0;
+        d=0;
+        if ((d=(gs_sp_t)malloc(str->length+1))==0) return 1;
+        dlen=str->length+1;
+    }
+    
     if (str->length==0) return 1;
-    // HACK ALERT: commented out regnexec invocations to unbreak the build
+    
+    // copy the string and 0 terminate it
+    memcpy((void *)d,(void *) str->offset, str->length);
+    d[str->length]=0;
+
     res = REG_NOMATCH;
-    //res = regnexec(reg, (gs_sp_t)(str->offset),str->length, 1, &match, 0);
+    res = regexec(reg, d, 1, &match, 0);
     if (res==REG_NOMATCH) return 1;
     result->offset= (gs_p_t) &source[match.rm_so];
     result->length=match.rm_eo-match.rm_so;
