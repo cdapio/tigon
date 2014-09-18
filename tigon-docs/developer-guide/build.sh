@@ -30,6 +30,11 @@ SOURCE="source"
 BUILD="build"
 BUILD_PDF="build-pdf"
 HTML="html"
+
+# TIGON-API="tigon-api"
+# TIGON-FLOW="tigon-flow"
+# TIGON-SQL="tigon-sql"
+
 API="tigon-api"
 APIS="apis"
 APIDOCS="apidocs"
@@ -73,7 +78,7 @@ function usage() {
   echo "    build         Clean build of javadocs and HTML docs, copy javadocs and PDFs into place, zip results"
   echo ""
   echo "    docs          Clean build of docs"
-  echo "    javadocs      Clean build of javadocs (api module only) for SDK and website"
+  echo "    javadocs      Clean build of javadocs (selected modules only) for SDK and website"
   echo "    javadocs-full Clean build of javadocs for all modules"
   echo "    zip           Zips docs into $ZIP"
   echo ""
@@ -98,20 +103,34 @@ function build_docs() {
 
 function build_javadocs_full() {
   cd $PROJECT_PATH
-  mvn clean site -DskipTests
+  mvn clean install site -DskipTests
 }
 
-function build_javadocs_sdk() {
+function build_javadocs_selected() {
   cd $PROJECT_PATH
-  mvn clean package javadoc:javadoc -pl tigon-api -am -DskipTests -P release
+  mvn clean package javadoc:javadoc -pl tigon-api -pl tigon-flow -pl tigon-sql -am -DskipTests -P release
 }
 
-function copy_javadocs_sdk() {
+function copy_javadocs_selected() {
   cd $BUILD_APIS
   rm -rf $JAVADOCS
   cp -r $SDK_JAVADOCS .
   mv -f $APIDOCS $JAVADOCS
 }
+
+# function copy_javadocs_selected() {
+#   copy_a_javadoc $TIGON-API
+#   copy_a_javadoc $TIGON-FLOW
+#   copy_a_javadoc $TIGON-SQL
+# }
+# 
+# function copy_a_javadoc() {
+#   cd $BUILD_APIS/$JAVADOCS
+#   rm -rf *
+#   cp -r $SDK_JAVADOCS .
+#   mv -f $APIDOCS $JAVADOCS
+#   
+# }
 
 function make_zip() {
   cd $SCRIPT_PATH/$BUILD
@@ -120,8 +139,8 @@ function make_zip() {
 
 function build() {
   build_docs
-  build_javadocs_sdk
-  copy_javadocs_sdk
+  build_javadocs_selected
+  copy_javadocs_selected
   make_zip
 }
 
@@ -173,8 +192,8 @@ case "$1" in
   build )             build; exit 1;;
   docs )              build_docs; exit 1;;
   build-standalone )  build_standalone; exit 1;;
-  copy-javadocs )     copy_javadocs; exit 1;;
-  javadocs )          build_javadocs_sdk; exit 1;;
+  copy-javadocs )     copy_javadocs_selected; exit 1;;
+  javadocs )          build_javadocs_selected; exit 1;;
   javadocs-full )     build_javadocs_full; exit 1;;
   depends )           build_dependencies; exit 1;;
   sdk )               build_sdk; exit 1;;
