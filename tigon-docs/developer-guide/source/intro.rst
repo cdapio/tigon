@@ -6,6 +6,8 @@
 Tigon Introduction
 ============================================
 
+**Tigon** is an open-source, real-time, low-latency, high-throughput stream processing framework.
+
 Tigon is a collaborative effort between Cask Data, Inc. and AT&T that combines 
 technologies from these companies to create a disruptive new framework to handle a diverse
 set of real-time streaming requirements.
@@ -16,8 +18,7 @@ event processing with high-level Java APIs using Hadoop and HBase.
 AT&T has built a streaming engine that provides massively scalable, flexible, and in-memory
 low-latency stream processing with a SQL-like query Language.
 
-Together, they have combined to create **Tigon**, an open-source, real-time, low-latency,
-high-throughput stream processing framework.
+Together, they have combined to create **Tigon**.
 
 There are many applications that can take advantage of these features:
 
@@ -51,7 +52,7 @@ To install and use Tigon and its included examples, there are a few prerequisite
 #. libcurl (if it is not already included in your operating system)
 #. libz
 #. Apache Maven 3.0+ (required to build the example applications)
-#. In standalone mode, both Perl and Python 3.x are required
+#. In standalone mode, both Perl 5.x and Python 3.x are required
 
 
 Download
