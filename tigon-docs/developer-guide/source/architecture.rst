@@ -2,8 +2,6 @@
    :description: Index document
    :copyright: Copyright © 2014 Cask Data, Inc.
 
-.. highlight:: sql
-
 ============================================
 Tigon Architecture
 ============================================
@@ -123,6 +121,7 @@ new UDAF into Tigon, the user needs to provide the following four functions:
 
 Tigon handles all the details of managing the scratchpad space for maintaining the state
 of aggregates and automatically inserts the calls to corresponding functions.
+
 
 Running Aggregates 
 ...................
@@ -328,7 +327,7 @@ selection query is::
     
 The query selects only TCP packets that starts with “GET” (using the ``str_match_start()``
 function) and extracts the name of HTTP hostnames using ``str_extract_regex()``. For the
-runtime system running on a NIC, ``str_extract_regex()`` is prohibitively expensive and thus
+runtime system, ``str_extract_regex()`` is prohibitively expensive and thus
 it is move into a high-level subquery. The results of automatic query decomposition for
 the query are:
 
@@ -337,7 +336,7 @@ Query **hostnames_low**::
   SELECT tb*60 as t, destIP, dest_port, TCP_data
   FROM TCP
   WHERE ipversion=4 and offset=0 and protocol=6 
-    
+
 Query **hostnames_high**::
 
   SELECT t, destIP, dest_port, 
