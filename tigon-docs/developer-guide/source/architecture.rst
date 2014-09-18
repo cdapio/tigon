@@ -2,6 +2,8 @@
    :description: Index document
    :copyright: Copyright © 2014 Cask Data, Inc.
 
+.. highlight:: sql
+
 ============================================
 Tigon Architecture
 ============================================
@@ -197,8 +199,7 @@ Tigon has a *two-level query architecture*, where the *low* level is used for da
 reduction and the *high* level performs more complex processing. This approach is employed
 to keep up with high streaming rates in a controlled way. 
 
-High speed data streams (from, e.g., a Network Interface Card or NIC) are placed in a large
-ring buffer. These streams are called source streams to distinguish them from data streams
+High-speed data streams are called source streams to distinguish them from data streams
 created by queries. The data volumes of these source streams are far too large to provide
 a copy to each query on the stream. Instead, the queries are shipped to the streams. 
 
@@ -217,8 +218,7 @@ are intended to be fast, lightweight data reduction queries. By deferring expens
 processing (expensive functions and predicates, joins, large scale aggregation), the high
 volume source stream is quickly processed, minimizing buffer requirements. The expensive
 processing is performed on the output of the low level queries, but this data volume is
-smaller and easily buffered. Depending on the capabilities of the network interface card
-(NIC), we can push some or all of the subquery processing into the NIC itself.
+smaller and easily buffered.
 
 In general, the most appropriate strategy depends on the streaming rate as well as the
 available processing resources. Choosing the best strategy is a complex query optimization
@@ -261,12 +261,11 @@ runtime system, cluster manager, and applications:
 
 - **Runtime system** provides the entire infrastructure necessary for running the FTA on
   the network streams coming from one of the managed interfaces. It provides such services
-  as management and tracking of the data sources (network interface cards, remote source,
-  and file sources), maintaining the registry of all active FTAs, and handling
-  Inter-Process Communications (IPC). Additionally, the runtime system is responsible for
-  the scheduling and execution of all the low-level queries linked directly into it. Each
-  Tigon node in distributed configurations runs its own runtime system responsible for the
-  local FTAs.
+  as management and tracking of the data sources, maintaining the registry of all active
+  FTAs, and handling Inter-Process Communications (IPC). Additionally, the runtime system
+  is responsible for the scheduling and execution of all the low-level queries linked
+  directly into it. Each Tigon node in distributed configurations runs its own runtime
+  system responsible for the local FTAs.
 
 - **Cluster manager** component is responsible for managing a network of cooperating Tigon
   nodes. This component is responsible for all aspects of distributed stream processing:
@@ -314,12 +313,8 @@ low-level (called LFTA-safe predicates and functions) are pushed down for execut
 LFTA.
 
 LFTA-safeness largely depends on the restrictions or additional capabilities of the
-runtime system used in particular Tigon configuration. For example, if the runtime system
-is running on a network interface card, complex operations such as regular expression
-matching will be considered too expensive to be pushed to the LFTA level. However, on
-specialized hardware using FPGAs to perform fast regular expression matching, this
-operation is natively supported and will therefore be pushed down by the query translator.
- 
+runtime system used in particular Tigon configuration.
+
 We will illustrate how query splitting works using a network monitoring query that
 extracts the names of the hosts from HTTP requests. The TigonSQL statement for this
 selection query is::
@@ -342,7 +337,6 @@ Query **hostnames_low**::
   SELECT tb*60 as t, destIP, dest_port, TCP_data
   FROM TCP
   WHERE ipversion=4 and offset=0 and protocol=6 
-    str_match_start[TCP_data, ‘GET’]
     
 Query **hostnames_high**::
 
@@ -350,7 +344,7 @@ Query **hostnames_high**::
     str_extract_regex(TCP_data, `[Hh][Oo][Ss][Tt]:[0-9A-Z\\.: ]*’)
     as hostheader
   FROM hostnames_low
-  WHERE
+  WHERE str_match_start[TCP_data, ‘GET’]
 
 Splitting aggregation queries is done similarly; however there are additional
 considerations related to the way that aggregation is implemented at LFTA level. To
