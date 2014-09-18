@@ -84,7 +84,7 @@ public class StandaloneMain {
   }
 
   //Args expected : Flow JAR, Flow Class;
-  //TODO: Add Runtime args to the list
+  //TODO: Add Runtime args, ZooKeeper Ctx String to the list
   public static void main(String[] args) {
     System.out.println("Tigon Standalone");
     if (args.length > 0) {

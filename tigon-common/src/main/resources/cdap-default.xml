@@ -25,7 +25,7 @@
 
     <property>
         <name>zookeeper.quorum</name>
-        <value>162.242.160.243:2181/${root.namespace}</value>
+        <value>127.0.0.1/${root.namespace}</value>
         <description>Specifies the zookeeper quorum string</description>
     </property>
 

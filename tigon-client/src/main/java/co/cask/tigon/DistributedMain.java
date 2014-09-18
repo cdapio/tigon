@@ -84,8 +84,6 @@ public class DistributedMain {
       program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments()));
   }
 
-  //Args expected : Path to the Main class;
-  //TODO: Add Runtime args to the list
   public static void main(String[] args) {
     System.out.println("Tigon Distributed");
     if (args.length > 0) {
