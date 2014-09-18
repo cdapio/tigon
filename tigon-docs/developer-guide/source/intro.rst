@@ -49,7 +49,9 @@ To install and use Tigon and its included examples, there are a few prerequisite
 #. GCC
 #. G++
 #. libcurl (if it is not already included in your operating system)
+#. libz
 #. Apache Maven 3.0+ (required to build the example applications)
+#. In standalone mode, both Perl and Python 3.x are required
 
 
 Download
@@ -84,6 +86,21 @@ Take the `tigon-<version>.tar.gz` file and unzip it into a suitable location.
 For more build options, please refer to the [build instructions](BUILD.md) included in the
 source distribution.
 
+Is It Building?
+...............
+
+============================================================================= ==================
+ Build                                                                         Status / Version
+============================================================================= ==================
+`Travis Continuous Integration Build <https://travis-ci.org/caskco/tigon>`__   |travis-tigon|
+`GitHub Version <https://github.com/caskco/tigon/releases/latest>`__           |github-tigon|
+============================================================================= ==================
+
+.. |travis-tigon| image:: https://travis-ci.org/caskco/tigon.svg?branch=develop
+                  :height: 30px
+
+.. |github-tigon| image:: http://img.shields.io/github/release/caskco/tigon.svg
+                  :height: 30px
 
 Configuration
 -------------

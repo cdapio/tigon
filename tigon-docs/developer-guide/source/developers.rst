@@ -605,5 +605,8 @@ syntax (being mostly a restriction of SQL).
 *TigonSQL* is presented in the `Tigon Architecture Guide 
 <architecture#stream-query-language>`__, including the basic concepts with examples.
 
-Details of the language, its theory of operation, a quick start guide and a complete 
-reference can be found in the `Tigon SQL User Manual <_downloads/User_Manual_2014.html>`__.
+Details of the language, its theory of operation, quick start guide and complete 
+reference can be found in the `Tigon SQL User Manual <_downloads/User_Manual_2014_rev1.html>`__.
+
+For developers who are writing extensions to Tigon SQL, please refer to the
+`Tigon SQL Contributor Manual <_downloads/Contributor_Manual_2014_rev1.html>`__.

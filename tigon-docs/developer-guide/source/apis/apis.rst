@@ -15,6 +15,13 @@ Tigon Java API
 Tigon SQL
 ---------
 
-`Tigon SQL User Manual <../_downloads/User_Manual_2014.html>`__
+- Details of the language, its theory of operation, quick start guide and complete reference:
 
-:download:`  </apis/sql/User_Manual_2014.html>`
+  `Tigon SQL User Manual <../_downloads/User_Manual_2014_rev1.html>`__
+
+- For developers who are writing extensions to Tigon SQL:
+
+  `Tigon SQL Contributor Manual <../_downloads/Contributor_Manual_2014_rev1.html>`__
+
+:download:`  </apis/sql/User_Manual_2014_rev1.html>`
+:download:`  </apis/sql/Contributor_Manual_2014_rev1.html>`
