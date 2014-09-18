@@ -16,11 +16,10 @@
 
 package co.cask.tigon.internal.app.runtime.flow;
 
-import co.cask.tigon.api.flow.flowlet.FlowletContext;
-import co.cask.tigon.api.flow.flowlet.FlowletSpecification;
 import com.continuuity.tephra.TransactionAware;
 import com.continuuity.tephra.TransactionContext;
-import com.google.common.collect.Iterables;
+import co.cask.tigon.api.flow.flowlet.FlowletContext;
+import co.cask.tigon.api.flow.flowlet.FlowletSpecification;
 
 import java.util.Map;
 

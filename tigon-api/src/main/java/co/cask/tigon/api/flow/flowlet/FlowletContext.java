@@ -16,8 +16,8 @@
 
 package co.cask.tigon.api.flow.flowlet;
 
-import co.cask.tigon.api.RuntimeContext;
 import com.continuuity.tephra.TransactionAware;
+import co.cask.tigon.api.RuntimeContext;
 
 /**
  * This interface represents the Flowlet context.

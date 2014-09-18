@@ -16,6 +16,10 @@
 
 package co.cask.tigon.flow;
 
+import com.continuuity.tephra.TransactionAware;
+import com.continuuity.tephra.TransactionContext;
+import com.continuuity.tephra.hbase94.TransactionAwareHTable;
+import com.continuuity.tephra.inmemory.DetachedTxSystemClient;
 import co.cask.tigon.api.annotation.HashPartition;
 import co.cask.tigon.api.annotation.ProcessInput;
 import co.cask.tigon.api.annotation.Tick;
@@ -24,10 +28,6 @@ import co.cask.tigon.api.flow.FlowSpecification;
 import co.cask.tigon.api.flow.flowlet.AbstractFlowlet;
 import co.cask.tigon.api.flow.flowlet.FlowletContext;
 import co.cask.tigon.api.flow.flowlet.OutputEmitter;
-import com.continuuity.tephra.TransactionAware;
-import com.continuuity.tephra.TransactionContext;
-import com.continuuity.tephra.hbase94.TransactionAwareHTable;
-import com.continuuity.tephra.inmemory.DetachedTxSystemClient;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
 import org.apache.hadoop.hbase.HBaseTestingUtility;
