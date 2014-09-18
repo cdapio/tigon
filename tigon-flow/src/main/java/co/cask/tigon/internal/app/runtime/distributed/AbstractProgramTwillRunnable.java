@@ -37,7 +37,6 @@ import co.cask.tigon.internal.app.runtime.ProgramOptions;
 import co.cask.tigon.internal.app.runtime.ProgramResourceReporter;
 import co.cask.tigon.internal.app.runtime.ProgramRunner;
 import co.cask.tigon.internal.app.runtime.SimpleProgramOptions;
-import co.cask.tigon.logging.LogAppenderInitializer;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import com.google.common.base.Predicates;
 import com.google.common.base.Throwables;
@@ -76,7 +75,6 @@ import org.apache.twill.common.Services;
 import org.apache.twill.filesystem.LocalLocationFactory;
 import org.apache.twill.filesystem.Location;
 import org.apache.twill.filesystem.LocationFactory;
-import org.apache.twill.kafka.client.KafkaClientService;
 import org.apache.twill.zookeeper.ZKClientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,10 +105,10 @@ public abstract class AbstractProgramTwillRunnable<T extends ProgramRunner> impl
   private Configuration hConf;
   private CConfiguration cConf;
   private ZKClientService zkClientService;
-  private KafkaClientService kafkaClientService;
+  //private KafkaClientService kafkaClientService;
   private MetricsCollectionService metricsCollectionService;
   private ProgramResourceReporter resourceReporter;
-  private LogAppenderInitializer logAppenderInitializer;
+  //private LogAppenderInitializer logAppenderInitializer;
   private CountDownLatch runlatch;
 
   protected AbstractProgramTwillRunnable(String name, String hConfName, String cConfName) {
@@ -165,12 +163,12 @@ public abstract class AbstractProgramTwillRunnable<T extends ProgramRunner> impl
       injector = Guice.createInjector(createModule(context));
 
       zkClientService = injector.getInstance(ZKClientService.class);
-      kafkaClientService = injector.getInstance(KafkaClientService.class);
+      //kafkaClientService = injector.getInstance(KafkaClientService.class);
       metricsCollectionService = injector.getInstance(MetricsCollectionService.class);
 
       // Initialize log appender
-      logAppenderInitializer = injector.getInstance(LogAppenderInitializer.class);
-      logAppenderInitializer.initialize();
+      //logAppenderInitializer = injector.getInstance(LogAppenderInitializer.class);
+      //logAppenderInitializer.initialize();
 
       try {
         program = injector.getInstance(ProgramFactory.class)
@@ -216,7 +214,7 @@ public abstract class AbstractProgramTwillRunnable<T extends ProgramRunner> impl
     try {
       LOG.info("Stopping runnable: {}", name);
       controller.stop().get();
-      logAppenderInitializer.close();
+      //logAppenderInitializer.close();
     } catch (Exception e) {
       LOG.error("Fail to stop: {}", e, e);
       throw Throwables.propagate(e);
@@ -227,7 +225,9 @@ public abstract class AbstractProgramTwillRunnable<T extends ProgramRunner> impl
   public void run() {
     LOG.info("Starting metrics service");
     Futures.getUnchecked(
-      Services.chainStart(zkClientService, kafkaClientService, metricsCollectionService, resourceReporter));
+      Services.chainStart(zkClientService,
+                          //kafkaClientService,
+                          metricsCollectionService, resourceReporter));
 
     LOG.info("Starting runnable: {}", name);
     controller = injector.getInstance(getProgramClass()).run(program, programOpts);
@@ -259,7 +259,9 @@ public abstract class AbstractProgramTwillRunnable<T extends ProgramRunner> impl
   public void destroy() {
     LOG.info("Releasing resources: {}", name);
     Futures.getUnchecked(
-      Services.chainStop(resourceReporter, metricsCollectionService, kafkaClientService, zkClientService));
+      Services.chainStop(resourceReporter, metricsCollectionService,
+                         //kafkaClientService,
+                         zkClientService));
     LOG.info("Runnable stopped: {}", name);
   }
 
@@ -302,7 +304,7 @@ public abstract class AbstractProgramTwillRunnable<T extends ProgramRunner> impl
       new IOModule(),
       new ZKClientModule(),
       new MetricsClientRuntimeModule().getDistributedModules(),
-      new LocationRuntimeModule().getDistributedModules(),
+      new LocationRuntimeModule().getTwillDistributedModules(),
       new DiscoveryRuntimeModule().getDistributedModules(),
       new DataFabricModules().getDistributedModules(),
       new AbstractModule() {

@@ -31,7 +31,6 @@ import co.cask.tigon.guice.DiscoveryRuntimeModule;
 import co.cask.tigon.guice.IOModule;
 import co.cask.tigon.guice.LocationRuntimeModule;
 import co.cask.tigon.guice.ZKClientModule;
-import co.cask.tigon.logging.LogAppenderInitializer;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import com.google.common.base.Throwables;
 import com.google.common.util.concurrent.Service;
@@ -43,7 +42,6 @@ import com.google.inject.name.Names;
 import com.google.inject.util.Modules;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.twill.api.TwillContext;
-import org.apache.twill.kafka.client.KafkaClientService;
 import org.apache.twill.zookeeper.ZKClientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,7 +55,7 @@ public class TransactionServiceTwillRunnable extends AbstractMasterTwillRunnable
   private static final Logger LOG = LoggerFactory.getLogger(TransactionServiceTwillRunnable.class);
 
   private ZKClientService zkClient;
-  private KafkaClientService kafkaClient;
+//  private KafkaClientService kafkaClient;
   private MetricsCollectionService metricsCollectionService;
   private TransactionService txService;
 
@@ -71,7 +69,7 @@ public class TransactionServiceTwillRunnable extends AbstractMasterTwillRunnable
       getCConfiguration().set(Constants.Transaction.Container.ADDRESS, context.getHost().getCanonicalHostName());
 
       Injector injector = createGuiceInjector(getCConfiguration(), getConfiguration());
-      injector.getInstance(LogAppenderInitializer.class).initialize();
+//      injector.getInstance(LogAppenderInitializer.class).initialize();
 //      LoggingContextAccessor.setLoggingContext(new ServiceLoggingContext(Constants.Logging.SYSTEM_NAME,
 //                                                                         Constants.Logging.COMPONENT_NAME,
 //                                                                         Constants.Service.TRANSACTION));
@@ -83,7 +81,7 @@ public class TransactionServiceTwillRunnable extends AbstractMasterTwillRunnable
 
       //Get Zookeeper and Kafka Client Instances
       zkClient = injector.getInstance(ZKClientService.class);
-      kafkaClient = injector.getInstance(KafkaClientService.class);
+//      kafkaClient = injector.getInstance(KafkaClientService.class);
 
       // Get the metrics collection service
       metricsCollectionService = injector.getInstance(MetricsCollectionService.class);
@@ -101,7 +99,7 @@ public class TransactionServiceTwillRunnable extends AbstractMasterTwillRunnable
   @Override
   public void getServices(List<? super Service> services) {
     services.add(zkClient);
-    services.add(kafkaClient);
+//    services.add(kafkaClient);
     services.add(metricsCollectionService);
     services.add(txService);
   }

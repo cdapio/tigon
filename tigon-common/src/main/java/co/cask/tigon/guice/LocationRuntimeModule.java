@@ -52,6 +52,11 @@ public final class LocationRuntimeModule extends RuntimeModule {
 
   @Override
   public Module getDistributedModules() {
+    //return new HDFSLocationModule();
+    return new LocalLocationModule();
+  }
+
+  public Module getTwillDistributedModules() {
     return new HDFSLocationModule();
   }
 
@@ -70,6 +75,7 @@ public final class LocationRuntimeModule extends RuntimeModule {
   }
 
   private static final class HDFSLocationModule extends AbstractModule {
+
 
     @Override
     protected void configure() {

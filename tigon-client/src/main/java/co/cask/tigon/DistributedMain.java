@@ -33,6 +33,9 @@ import co.cask.tigon.internal.app.runtime.BasicArguments;
 import co.cask.tigon.internal.app.runtime.ProgramController;
 import co.cask.tigon.internal.app.runtime.ProgramRunnerFactory;
 import co.cask.tigon.internal.app.runtime.SimpleProgramOptions;
+import co.cask.tigon.lang.ApiResourceListHolder;
+import co.cask.tigon.lang.ClassLoaders;
+import co.cask.tigon.lang.jar.ProgramClassLoader;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import co.cask.tigon.metrics.NoOpMetricsCollectionService;
 import com.google.common.io.Files;
@@ -40,13 +43,11 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Scopes;
+import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.twill.api.TwillController;
 import org.apache.twill.api.TwillRunnerService;
 import org.apache.twill.filesystem.Location;
-import org.apache.twill.filesystem.LocationFactory;
-import org.apache.twill.zookeeper.ZKClientService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,6 +58,7 @@ import java.io.PrintStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
+import java.util.concurrent.TimeUnit;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -65,18 +67,14 @@ import java.util.jar.JarFile;
  */
 public class DistributedMain {
   private static final Logger LOG = LoggerFactory.getLogger(DistributedMain.class);
-  private static final File localDataDir = Files.createTempDir();
   private static final File jarUnpackDir = Files.createTempDir();
 
   private static Injector injector;
-  private ZKClientService zkClientService;
-  private volatile TwillRunnerService twillRunnerService;
-  private volatile TwillController twillController;
   private static MetricsCollectionService metricsCollectionService;
-  private static LocationFactory locationFactory;
   private static DeployClient deployClient;
   private static ProgramRunnerFactory programRunnerFactory;
   private static ProgramController controller;
+  private static TwillRunnerService twillRunnerService;
 
   static void usage(boolean error) {
     // Which output stream should we use?
@@ -88,7 +86,7 @@ public class DistributedMain {
     }
   }
 
-  private static void expandJar(String jarPath, File unpackDir) throws Exception {
+  private static void expandJar(File jarPath, File unpackDir) throws Exception {
     JarFile jar = new JarFile(jarPath);
     Enumeration enumEntries = jar.entries();
     while (enumEntries.hasMoreElements()) {
@@ -110,23 +108,33 @@ public class DistributedMain {
     }
   }
 
-  private static void deploy(String jarPath, String classToLoad) throws Exception {
+  private static void deploy(File jarPath, String classToLoad) throws Exception {
     expandJar(jarPath, jarUnpackDir);
-    URL jarURL = new URL("file://" + jarUnpackDir.getAbsolutePath() + "/");
-    URLClassLoader classLoader = new URLClassLoader(new URL[] { jarURL }, StandaloneMain.class.getClassLoader());
+    URL jarURL = jarUnpackDir.toURI().toURL();
+    ProgramClassLoader filterClassLoader = ClassLoaders.newProgramClassLoader(jarUnpackDir,
+                                                                              ApiResourceListHolder.getResourceList(),
+                                                                              StandaloneMain.class.getClassLoader());
+    URLClassLoader classLoader = new URLClassLoader(new URL[]{jarURL}, filterClassLoader);
     Class<?> clz = classLoader.loadClass(classToLoad);
     if (!(clz.newInstance() instanceof Flow)) {
       throw new Exception("Expected Flow class");
     }
+    ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+    Thread.currentThread().setContextClassLoader(classLoader);
+
     Location deployedJar = deployClient.deployFlow(clz);
+    System.out.println("Deployed Jar at : " + deployedJar.toURI().getPath());
     Program program = Programs.createWithUnpack(deployedJar, jarUnpackDir);
     controller = programRunnerFactory.create(ProgramRunnerFactory.Type.FLOW).run(
-      program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments()));
+      program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments(), true));
+    System.out.println("Launched the Flow! Received the controller");
+    TimeUnit.SECONDS.sleep(500);
   }
 
+  //Args expected : Path to the Main class;
+  //TODO: Add Runtime args to the list
   public static void main(String[] args) {
-    String jarPath;
-    String mainClassName;
+    System.out.println("Welcome to Tigon Standalone");
     if (args.length > 0) {
       if ("--help".equals(args[0]) || "-h".equals(args[0])) {
         usage(false);
@@ -137,13 +145,13 @@ public class DistributedMain {
         usage(true);
       }
 
-      jarPath = args[0];
-      mainClassName = args[1];
+      File jarPath = new File(args[0]);
+      String mainClassName = args[1];
       try {
         init();
         deploy(jarPath, mainClassName);
       } catch (Exception e) {
-        System.err.println(e);
+        e.printStackTrace();
       }
     }
   }
@@ -158,17 +166,24 @@ public class DistributedMain {
       new IOModule(),
       new ZKClientModule(),
       new TwillModule(),
-      new LocationRuntimeModule().getDistributedModules(),
+      new LocationRuntimeModule().getTwillDistributedModules(),
       new DiscoveryRuntimeModule().getDistributedModules(),
       new ProgramRunnerRuntimeModule().getDistributedModules(),
       new TestMetricsClientModule()
     );
 
+    Injector localInjector = Guice.createInjector(
+      new ConfigModule(cConf, hConf),
+      new LocationRuntimeModule().getInMemoryModules()
+    );
+
     metricsCollectionService = injector.getInstance(MetricsCollectionService.class);
     metricsCollectionService.startAndWait();
-    locationFactory = injector.getInstance(LocationFactory.class);
-    deployClient = new DeployClient(locationFactory);
+    deployClient = localInjector.getInstance(DeployClient.class);
     programRunnerFactory = injector.getInstance(ProgramRunnerFactory.class);
+    twillRunnerService = injector.getInstance(TwillRunnerService.class);
+    twillRunnerService.startAndWait();
+
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
       public void run() {
@@ -181,11 +196,14 @@ public class DistributedMain {
     });
   }
 
-  public static void finish() {
+  public static void finish() throws Exception {
     if (controller != null) {
       controller.stop();
+      TimeUnit.SECONDS.sleep(2);
     }
+    twillRunnerService.stopAndWait();
     metricsCollectionService.stopAndWait();
+    FileUtils.deleteDirectory(jarUnpackDir);
   }
 
   private static final class TestMetricsClientModule extends AbstractModule {

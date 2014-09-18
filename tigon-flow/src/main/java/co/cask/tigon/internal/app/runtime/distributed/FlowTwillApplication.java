@@ -27,6 +27,8 @@ import org.apache.twill.api.ResourceSpecification;
 import org.apache.twill.api.TwillApplication;
 import org.apache.twill.api.TwillSpecification;
 import org.apache.twill.filesystem.Location;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Map;
@@ -36,6 +38,7 @@ import java.util.Map;
  */
 public final class FlowTwillApplication implements TwillApplication {
 
+  private static final Logger LOG = LoggerFactory.getLogger(FlowTwillApplication.class);
   private final FlowSpecification spec;
   private final Program program;
   private final File hConfig;
@@ -59,6 +62,8 @@ public final class FlowTwillApplication implements TwillApplication {
 
     Location programLocation = program.getJarLocation();
     String programName = programLocation.getName();
+    LOG.info("STAMP : FlowTwillApplication : Received Program {}; Program Name {}", programLocation.toURI().getPath(),
+             programName);
     TwillSpecification.Builder.RunnableSetter runnableSetter = null;
     for (Map.Entry<String, FlowletDefinition> entry  : spec.getFlowlets().entrySet()) {
       FlowletDefinition flowletDefinition = entry.getValue();
@@ -82,6 +87,7 @@ public final class FlowTwillApplication implements TwillApplication {
     runnableSetter = moreRunnable
       .add("txManager", new TransactionServiceTwillRunnable(Constants.Service.TRANSACTION, "cConf.xml", "hConf.xml"))
       .withLocalFiles()
+      .add(programName, programLocation.toURI())
       .add("cConf.xml", cConfig.toURI())
       .add("hConf.xml", hConfig.toURI())
       .apply();

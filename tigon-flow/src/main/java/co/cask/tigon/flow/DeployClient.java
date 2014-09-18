@@ -29,6 +29,7 @@ import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.common.io.InputSupplier;
 import com.google.gson.Gson;
+import com.google.inject.Inject;
 import org.apache.twill.filesystem.Location;
 import org.apache.twill.filesystem.LocationFactory;
 import org.apache.twill.internal.ApplicationBundler;
@@ -53,6 +54,7 @@ public class DeployClient {
 
   private final LocationFactory locationFactory;
 
+  @Inject
   public DeployClient(LocationFactory locationFactory) {
     this.locationFactory = locationFactory;
   }
@@ -116,7 +118,7 @@ public class DeployClient {
         while (jarEntry != null) {
           boolean isDir = jarEntry.isDirectory();
           String entryName = jarEntry.getName();
-          if (!entryName.equals("classes/")) {
+          if (!entryName.equals("classes/") && !entryName.endsWith("META-INF/MANIFEST.MF")) {
             if (entryName.startsWith("classes/")) {
               jarEntry = new JarEntry(entryName.substring("classes/".length()));
             } else {

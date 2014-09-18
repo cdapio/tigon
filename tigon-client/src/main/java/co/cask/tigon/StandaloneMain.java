@@ -32,6 +32,9 @@ import co.cask.tigon.internal.app.runtime.BasicArguments;
 import co.cask.tigon.internal.app.runtime.ProgramController;
 import co.cask.tigon.internal.app.runtime.ProgramRunnerFactory;
 import co.cask.tigon.internal.app.runtime.SimpleProgramOptions;
+import co.cask.tigon.lang.ApiResourceListHolder;
+import co.cask.tigon.lang.ClassLoaders;
+import co.cask.tigon.lang.jar.ProgramClassLoader;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import co.cask.tigon.metrics.NoOpMetricsCollectionService;
 import com.google.common.io.Files;
@@ -39,6 +42,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Scopes;
+import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.twill.filesystem.Location;
 import org.apache.twill.filesystem.LocationFactory;
@@ -52,6 +56,7 @@ import java.io.PrintStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
+import java.util.concurrent.TimeUnit;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -80,7 +85,7 @@ public class StandaloneMain {
     }
   }
 
-  private static void expandJar(String jarPath, File unpackDir) throws Exception {
+  private static void expandJar(File jarPath, File unpackDir) throws Exception {
     JarFile jar = new JarFile(jarPath);
     Enumeration enumEntries = jar.entries();
     while (enumEntries.hasMoreElements()) {
@@ -102,15 +107,22 @@ public class StandaloneMain {
     }
   }
 
-  private static void deploy(String jarPath, String classToLoad) throws Exception {
+  private static void deploy(File jarPath, String classToLoad) throws Exception {
     expandJar(jarPath, jarUnpackDir);
-    URL jarURL = new URL("file://" + jarUnpackDir.getAbsolutePath() + "/");
-    URLClassLoader classLoader = new URLClassLoader(new URL[] { jarURL }, StandaloneMain.class.getClassLoader());
+    URL jarURL = jarUnpackDir.toURI().toURL();
+    ProgramClassLoader filterClassLoader = ClassLoaders.newProgramClassLoader(jarUnpackDir,
+                                                                              ApiResourceListHolder.getResourceList(),
+                                                                              StandaloneMain.class.getClassLoader());
+    URLClassLoader classLoader = new URLClassLoader(new URL[] { jarURL }, filterClassLoader);
     Class<?> clz = classLoader.loadClass(classToLoad);
     if (!(clz.newInstance() instanceof Flow)) {
       throw new Exception("Expected Flow class");
     }
+    ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+    Thread.currentThread().setContextClassLoader(classLoader);
+
     Location deployedJar = deployClient.deployFlow(clz);
+    System.out.println("Deployed Jar at : " + deployedJar.toURI().getPath());
     Program program = Programs.createWithUnpack(deployedJar, jarUnpackDir);
     controller = programRunnerFactory.create(ProgramRunnerFactory.Type.FLOW).run(
       program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments()));
@@ -119,9 +131,7 @@ public class StandaloneMain {
   //Args expected : Path to the Main class;
   //TODO: Add Runtime args to the list
   public static void main(String[] args) {
-    System.out.println("Welcome to Tigon Standalone");
-    String jarPath;
-    String mainClassName;
+    System.out.println("Welcome to Tigon Standalone " + jarUnpackDir.getAbsolutePath());
     if (args.length > 0) {
       if ("--help".equals(args[0]) || "-h".equals(args[0])) {
         usage(false);
@@ -132,13 +142,13 @@ public class StandaloneMain {
         usage(true);
       }
 
-      jarPath = args[0];
-      mainClassName = args[1];
+      File jarPath = new File(args[0]);
+      String mainClassName = args[1];
       try {
         init();
         deploy(jarPath, mainClassName);
       } catch (Exception e) {
-        System.err.println(e);
+        e.printStackTrace();
       }
     }
   }
@@ -171,7 +181,7 @@ public class StandaloneMain {
     metricsCollectionService = injector.getInstance(MetricsCollectionService.class);
     metricsCollectionService.startAndWait();
     locationFactory = injector.getInstance(LocationFactory.class);
-    deployClient = new DeployClient(locationFactory);
+    deployClient = injector.getInstance(DeployClient.class);
     programRunnerFactory = injector.getInstance(ProgramRunnerFactory.class);
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
@@ -185,12 +195,15 @@ public class StandaloneMain {
     });
   }
 
-  public static void finish() {
+  public static void finish() throws Exception {
     if (controller != null) {
       controller.stop();
+      TimeUnit.SECONDS.sleep(3);
     }
     metricsCollectionService.stopAndWait();
     txService.stopAndWait();
+    FileUtils.deleteDirectory(localDataDir);
+    FileUtils.deleteDirectory(jarUnpackDir);
   }
 
   private static final class TestMetricsClientModule extends AbstractModule {
