@@ -27,5 +27,4 @@ public interface DataFabricFacade extends QueueClientFactory {
 
   TransactionContext createTransactionManager();
 
-  TransactionExecutor createTransactionExecutor();
 }

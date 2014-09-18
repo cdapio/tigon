@@ -18,7 +18,6 @@ package co.cask.tigon.internal.app.runtime;
 
 import com.continuuity.tephra.TransactionAware;
 import com.continuuity.tephra.TransactionContext;
-import com.continuuity.tephra.TransactionExecutor;
 import com.continuuity.tephra.TransactionExecutorFactory;
 import com.continuuity.tephra.TransactionSystemClient;
 import co.cask.tigon.data.queue.ConsumerConfig;
@@ -39,25 +38,17 @@ import java.util.Set;
 public abstract class AbstractDataFabricFacade implements DataFabricFacade {
 
   private final QueueClientFactory queueClientFactory;
-  private final TransactionExecutorFactory txExecutorFactory;
   private final TransactionSystemClient txSystemClient;
   private final Set<TransactionAware> txAware = Sets.newIdentityHashSet();
 
-  public AbstractDataFabricFacade(TransactionSystemClient txSystemClient, TransactionExecutorFactory txExecutorFactory,
-                                  QueueClientFactory queueClientFactory) {
+  public AbstractDataFabricFacade(TransactionSystemClient txSystemClient, QueueClientFactory queueClientFactory) {
     this.txSystemClient = txSystemClient;
     this.queueClientFactory = queueClientFactory;
-    this.txExecutorFactory = txExecutorFactory;
   }
 
   @Override
   public TransactionContext createTransactionManager() {
     return new TransactionContext(txSystemClient, Iterables.unmodifiableIterable(txAware));
-  }
-
-  @Override
-  public TransactionExecutor createTransactionExecutor() {
-    return txExecutorFactory.createExecutor(Iterables.unmodifiableIterable(txAware));
   }
 
   @Override

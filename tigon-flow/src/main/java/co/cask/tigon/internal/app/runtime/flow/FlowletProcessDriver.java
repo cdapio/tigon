@@ -16,6 +16,7 @@
 
 package co.cask.tigon.internal.app.runtime.flow;
 
+import com.continuuity.tephra.TransactionAware;
 import com.continuuity.tephra.TransactionContext;
 import com.continuuity.tephra.TransactionExecutor;
 import com.continuuity.tephra.TransactionFailureException;
@@ -257,7 +258,8 @@ final class FlowletProcessDriver extends AbstractExecutionThreadService {
     }
 
     // Begin transaction and dequeue
-    TransactionContext txContext = dataFabricFacade.createTransactionManager();
+    final TransactionContext txContext = createFlowletTransactionContext();
+
     try {
       txContext.start();
 
@@ -370,37 +372,44 @@ final class FlowletProcessDriver extends AbstractExecutionThreadService {
   }
 
   private void initFlowlet() throws InterruptedException {
+    final TransactionContext txContext = dataFabricFacade.createTransactionManager();
     try {
-      dataFabricFacade.createTransactionExecutor().execute(new TransactionExecutor.Subroutine() {
-        @Override
-        public void apply() throws Exception {
-          LOG.info("Initializing flowlet: " + flowletContext);
-          flowlet.initialize(flowletContext);
-          LOG.info("Flowlet initialized: " + flowletContext);
-        }
-      });
+      txContext.start();
+
+      try {
+        LOG.info("Initializing flowlet: " + flowletContext);
+        flowlet.initialize(new ForwardingFlowletContext(flowletContext, txContext));
+        LOG.info("Flowlet initialized: " + flowletContext);
+
+        txContext.finish();
+      } catch (Exception e) {
+        LOG.error("User code exception. Aborting transaction.", e);
+        txContext.abort(new TransactionFailureException("User code exception. Aborting transaction", e));
+        throw Throwables.propagate(e);
+      }
     } catch (TransactionFailureException e) {
-      Throwable cause = e.getCause() == null ? e : e.getCause();
-      LOG.error("Flowlet throws exception during flowlet initialize: " + flowletContext, cause);
-      throw Throwables.propagate(cause);
+      LOG.error("Flowlet throws exception during flowlet initialize: " + flowletContext, e);
+      throw Throwables.propagate(e);
     }
   }
 
   private void destroyFlowlet() {
+    final TransactionContext txContext = createFlowletTransactionContext();
     try {
-      dataFabricFacade.createTransactionExecutor().execute(new TransactionExecutor.Subroutine() {
-        @Override
-        public void apply() throws Exception {
-          LOG.info("Destroying flowlet: " + flowletContext);
-          flowlet.destroy();
-          LOG.info("Flowlet destroyed: " + flowletContext);
-        }
-      });
+      txContext.start();
+      try {
+        LOG.info("Destroying flowlet: " + flowletContext);
+        flowlet.destroy();
+        LOG.info("Flowlet destroyed: " + flowletContext);
+
+        txContext.finish();
+      } catch (Exception e) {
+        LOG.error("User code exception. Aborting transaction.", e);
+        txContext.abort(new TransactionFailureException("User code exception. Aborting transaction", e));
+        // No need to propagate, as it is shutting down.
+      }
     } catch (TransactionFailureException e) {
-      Throwable cause = e.getCause() == null ? e : e.getCause();
-      LOG.error("Flowlet throws exception during flowlet destroy: " + flowletContext, cause);
-      // No need to propagate, as it is shutting down.
-    } catch (InterruptedException e) {
+      LOG.error("Flowlet throws exception during flowlet destroy: " + flowletContext, e);
       // No need to propagate, as it is shutting down.
     }
   }
@@ -485,5 +494,13 @@ final class FlowletProcessDriver extends AbstractExecutionThreadService {
         }
       }
     };
+  }
+
+  private TransactionContext createFlowletTransactionContext() {
+    TransactionContext txContext = dataFabricFacade.createTransactionManager();
+    for (TransactionAware txAware : flowletContext.getTransactionAwares()) {
+      txContext.addTransactionAware(txAware);
+    }
+    return txContext;
   }
 }

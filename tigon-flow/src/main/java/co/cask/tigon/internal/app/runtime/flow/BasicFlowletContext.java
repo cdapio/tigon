@@ -21,14 +21,20 @@ import co.cask.tigon.api.flow.flowlet.FlowletSpecification;
 import co.cask.tigon.api.metrics.Metrics;
 import co.cask.tigon.app.metrics.FlowletMetrics;
 import co.cask.tigon.app.program.Program;
+import co.cask.tigon.conf.Constants;
 import co.cask.tigon.internal.app.runtime.AbstractContext;
 import co.cask.tigon.internal.app.runtime.Arguments;
 import co.cask.tigon.logging.FlowletLoggingContext;
 import co.cask.tigon.logging.LoggingContext;
 import co.cask.tigon.metrics.MetricsCollectionService;
+import com.continuuity.tephra.TransactionAware;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import org.apache.twill.api.RunId;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,6 +51,7 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
   private volatile int instanceCount;
   private final FlowletMetrics flowletMetrics;
   private final Arguments runtimeArguments;
+  private final List<TransactionAware> transactionAwares;
 
   BasicFlowletContext(Program program, String flowletId,
                       int instanceId, RunId runId,
@@ -60,6 +67,7 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
     this.runtimeArguments = runtimeArguments;
     this.flowletSpec = flowletSpec;
     this.flowletMetrics = new FlowletMetrics(metricsCollectionService, flowId, flowletId);
+    this.transactionAwares = Lists.newArrayList();
   }
 
   @Override
@@ -81,6 +89,16 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
   @Override
   public FlowletSpecification getSpecification() {
     return flowletSpec;
+  }
+
+  @Override
+  public void addTransactionAware(TransactionAware transactionAware) {
+    transactionAwares.add(transactionAware);
+  }
+
+  @Override
+  public void addTransactionAwares(Iterable<? extends TransactionAware> transactionAwares) {
+    Iterables.addAll(this.transactionAwares, transactionAwares);
   }
 
   /**
@@ -105,6 +123,10 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
 
   public String getFlowletId() {
     return flowletId;
+  }
+
+  public List<TransactionAware> getTransactionAwares() {
+    return transactionAwares;
   }
 
   @Override

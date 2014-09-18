@@ -48,6 +48,10 @@
       <groupId>org.apache.twill</groupId>
       <artifactId>twill-discovery-api</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.continuuity.tephra</groupId>
+      <artifactId>tephra-api</artifactId>
+    </dependency>
   </dependencies>
 
 </project>
