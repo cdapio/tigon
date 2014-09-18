@@ -228,7 +228,7 @@ gs_uint32_t str_partial_regex_match(vstring* str, gs_param_handle_t pattern_hand
     
     // copy the string and 0 terminate it
     memcpy((void *)d,(void *) str->offset, end);
-    d[str->length]=0;
+    d[end]=0;
  
     res = REG_NOMATCH;
     res = regexec(reg, d,0, NULL, 0);
