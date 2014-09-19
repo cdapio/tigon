@@ -27,7 +27,7 @@ hs_err_pid*
 *.iws
 *.iml
 *.ipr
-.idea
+.idea/
 
 # Maven build directory
 target/

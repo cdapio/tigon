@@ -28,7 +28,7 @@ import com.google.inject.multibindings.MapBinder;
 import java.util.Map;
 
 /**
- * Guice module for distributed AppFabric. Used by the app-fabric server, not for distributed containers.
+ * Guice module for distributed Flow Program Runner.
  */
 final class DistributedProgramRunnerModule extends AbstractModule {
 
