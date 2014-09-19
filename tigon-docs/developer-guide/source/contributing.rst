@@ -6,7 +6,9 @@
 Contributing to Tigon
 ============================================
 
-Interested in helping to improve Tigon? We welcome all contributions, whether in filing detailed
+Interested in helping to improve Tigon? 
+
+We welcome all contributions, whether in filing detailed
 bug reports, submitting pull requests for code changes and improvements, or by asking questions and
 assisting others on the mailing list.
 
@@ -38,7 +40,7 @@ Mailing List
 ------------
 
 Tigon User Group and Development Discussions: 
-[tigon-dev@googlegroups.com](https://groups.google.com/d/forum/tigon-dev)
+`tigon-dev@googlegroups.com <https://groups.google.com/d/forum/tigon-dev>`__
 
 IRC Channel
 -----------
