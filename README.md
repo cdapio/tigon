@@ -144,7 +144,7 @@ Tigon User Group and Development Discussions:
 
 ### IRC Channel
 
-Tigon IRC Channel #cask-tigon on irc.freenode.net
+Tigon IRC Channel #tigon on irc.freenode.net
 
 
 ## License and Trademarks
