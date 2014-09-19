@@ -124,6 +124,6 @@ public class HealthInspector extends AbstractIdleService {
   @Override
   protected void shutDown() throws Exception {
     monitorFuture.cancel(true);
-    heartbeatCounter.clear();
+    modelCounter.clear();
   }
 }

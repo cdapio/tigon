@@ -86,7 +86,7 @@ public final class InputFlowletService extends AbstractIdleService {
       .setBinaryLocation(dir)
       .build();
 
-    startService();
+    startService(healthInspector);
   }
 
   @Override
@@ -95,7 +95,7 @@ public final class InputFlowletService extends AbstractIdleService {
     Services.chainStop(ioService, processInitiator, discoveryServer);
   }
 
-  public void startService() {
+  public void startService(HealthInspector healthInspector) {
     //Initializing discovery server
     discoveryServer = new DiscoveryServer(hubDataStore, healthInspector, metricsRecorder);
     discoveryServer.startAndWait();
@@ -107,8 +107,8 @@ public final class InputFlowletService extends AbstractIdleService {
     processInitiator.startAndWait();
   }
 
-  public void restartService() {
+  public void restartService(HealthInspector healthInspector) {
     Services.chainStop(processInitiator, discoveryServer);
-    startService();
+    startService(healthInspector);
   }
 }
