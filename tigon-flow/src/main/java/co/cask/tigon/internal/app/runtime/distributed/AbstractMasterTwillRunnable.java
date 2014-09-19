@@ -163,7 +163,7 @@ public abstract class AbstractMasterTwillRunnable extends AbstractTwillRunnable 
   }
 
   /**
-   * Class extending AbstractReactorTwillRunnable should populate services
+   * Class extending {@link AbstractMasterTwillRunnable} should populate services
    * with a list of Services which will be started in increasing order of index.
    * The services will be stopped in the reverse order.
    */
