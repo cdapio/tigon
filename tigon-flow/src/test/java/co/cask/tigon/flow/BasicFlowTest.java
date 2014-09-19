@@ -37,9 +37,9 @@ import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
-import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,6 +63,8 @@ public class BasicFlowTest extends TestBase {
 
   private static NettyHttpService service;
   private static String baseURL;
+  private static FlowManager flowManager;
+  private static HttpClient httpClient;
 
   // Endpoints exposed by the Netty service.
   private static final class EndPoints {
@@ -71,8 +73,8 @@ public class BasicFlowTest extends TestBase {
     private static final String COUNTDOWN = "/countdown";
   }
 
-  @Before
-  public void before() {
+  @BeforeClass
+  public static void beforeClass() throws Exception {
     service = NettyHttpService.builder()
       .addHttpHandlers(ImmutableList.of(new TestHandler()))
       .setExecThreadPoolSize(1)
@@ -81,54 +83,46 @@ public class BasicFlowTest extends TestBase {
     service.startAndWait();
     InetSocketAddress address = service.getBindAddress();
     baseURL = "http://" + address.getHostName() + ":" + address.getPort();
+
+    Map<String, String> runtimeArgs = Maps.newHashMap();
+    runtimeArgs.put("baseURL", baseURL);
+
+    httpClient = new HttpClient();
+    // Start the flow and let it run for 15 seconds.
+    flowManager = deployFlow(TestFlow.class, runtimeArgs);
+    TimeUnit.SECONDS.sleep(15);
   }
 
-  @After
-  public void after() {
+  @AfterClass
+  public static void afterClass() {
+    flowManager.stop();
     service.stopAndWait();
   }
 
   @Test
   public void testFlow() throws Exception {
-    Map<String, String> runtimeArgs = Maps.newHashMap();
-    runtimeArgs.put("baseURL", baseURL);
-
-    FlowManager manager = deployFlow(TestFlow.class, runtimeArgs);
-    TimeUnit.SECONDS.sleep(15);
-
-    HttpClient client = new HttpClient();
     GetMethod method = new GetMethod(baseURL + EndPoints.PING);
-    client.executeMethod(method);
+    httpClient.executeMethod(method);
     int pingCount = Integer.valueOf(method.getResponseBodyAsString());
     Assert.assertEquals(10, pingCount);
-
-    manager.stop();
   }
 
   @Test
   public void testInstanceChange() throws Exception {
-    Map<String, String> runtimeArgs = Maps.newHashMap();
-    runtimeArgs.put("baseURL", baseURL);
-
-    FlowManager manager = deployFlow(TestFlow.class, runtimeArgs);
-    HttpClient client = new HttpClient();
-    GetMethod method = new GetMethod(baseURL + EndPoints.GENERATOR_INSTANCES);
-
-    manager.setFlowletInstances("generator", 5);
+    flowManager.setFlowletInstances("generator", 5);
     TimeUnit.SECONDS.sleep(5);
 
-    client.executeMethod(method);
+    GetMethod method = new GetMethod(baseURL + EndPoints.GENERATOR_INSTANCES);
+    httpClient.executeMethod(method);
     int instanceCount = Integer.valueOf(method.getResponseBodyAsString());
     Assert.assertEquals(5, instanceCount);
 
-    manager.setFlowletInstances("generator", 2);
+    flowManager.setFlowletInstances("generator", 2);
     TimeUnit.SECONDS.sleep(5);
 
-    client.executeMethod(method);
+    httpClient.executeMethod(method);
     instanceCount = Integer.valueOf(method.getResponseBodyAsString());
     Assert.assertEquals(2, instanceCount);
-
-    manager.stop();
   }
 
   public static final class TestFlow implements Flow {
