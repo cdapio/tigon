@@ -16,7 +16,6 @@
 package co.cask.tigon.flow.test;
 
 import com.continuuity.tephra.TransactionManager;
-import com.continuuity.tephra.TransactionSystemClient;
 import co.cask.tigon.api.flow.Flow;
 import co.cask.tigon.app.guice.ProgramRunnerRuntimeModule;
 import co.cask.tigon.app.program.Program;
@@ -33,7 +32,6 @@ import co.cask.tigon.internal.app.runtime.BasicArguments;
 import co.cask.tigon.internal.app.runtime.ProgramController;
 import co.cask.tigon.internal.app.runtime.ProgramRunnerFactory;
 import co.cask.tigon.internal.app.runtime.SimpleProgramOptions;
-import co.cask.tigon.logging.LogAppenderInitializer;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import co.cask.tigon.metrics.NoOpMetricsCollectionService;
 import com.google.common.base.Preconditions;
@@ -43,7 +41,6 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Scopes;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.twill.discovery.DiscoveryServiceClient;
 import org.apache.twill.filesystem.Location;
 import org.apache.twill.filesystem.LocationFactory;
 import org.junit.AfterClass;
@@ -64,9 +61,6 @@ public class TestBase {
 
   private static Injector injector;
   private static MetricsCollectionService metricsCollectionService;
-  private static LogAppenderInitializer logAppenderInitializer;
-  private static TransactionSystemClient txSystemClient;
-  private static DiscoveryServiceClient discoveryServiceClient;
   private static TransactionManager txService;
   private static LocationFactory locationFactory;
   private static DeployClient deployClient;
@@ -110,8 +104,6 @@ public class TestBase {
     metricsCollectionService.startAndWait();
     locationFactory = injector.getInstance(LocationFactory.class);
     deployClient = new DeployClient(locationFactory);
-    discoveryServiceClient = injector.getInstance(DiscoveryServiceClient.class);
-    txSystemClient = injector.getInstance(TransactionSystemClient.class);
     programRunnerFactory = injector.getInstance(ProgramRunnerFactory.class);
   }
 
