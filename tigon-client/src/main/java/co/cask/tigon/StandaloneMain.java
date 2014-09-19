@@ -17,8 +17,6 @@ package co.cask.tigon;
 
 import com.continuuity.tephra.TransactionManager;
 import co.cask.tigon.app.guice.ProgramRunnerRuntimeModule;
-import co.cask.tigon.app.program.Program;
-import co.cask.tigon.app.program.Programs;
 import co.cask.tigon.conf.CConfiguration;
 import co.cask.tigon.conf.Constants;
 import co.cask.tigon.data.runtime.DataFabricInMemoryModule;
@@ -27,26 +25,24 @@ import co.cask.tigon.guice.ConfigModule;
 import co.cask.tigon.guice.DiscoveryRuntimeModule;
 import co.cask.tigon.guice.IOModule;
 import co.cask.tigon.guice.LocationRuntimeModule;
-import co.cask.tigon.internal.app.runtime.BasicArguments;
 import co.cask.tigon.internal.app.runtime.ProgramController;
-import co.cask.tigon.internal.app.runtime.ProgramRunnerFactory;
-import co.cask.tigon.internal.app.runtime.SimpleProgramOptions;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import co.cask.tigon.metrics.NoOpMetricsCollectionService;
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 import com.google.inject.Scopes;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.twill.filesystem.Location;
-import org.apache.twill.filesystem.LocationFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -54,35 +50,44 @@ import java.util.concurrent.CountDownLatch;
  */
 public class StandaloneMain {
   private static final Logger LOG = LoggerFactory.getLogger(StandaloneMain.class);
-  private static final File jarUnpackDir = Files.createTempDir();
-  private static final File localDataDir = Files.createTempDir();
-  private static Injector injector;
-  private static MetricsCollectionService metricsCollectionService;
-  private static TransactionManager txService;
-  private static LocationFactory locationFactory;
-  private static DeployClient deployClient;
-  private static ProgramRunnerFactory programRunnerFactory;
-  private static ProgramController controller;
-  private static CountDownLatch runLatch;
+
+  private final CountDownLatch runLatch;
+  private final File jarUnpackDir;
+  private final File localDataDir;
+  private final MetricsCollectionService metricsCollectionService;
+  private final TransactionManager txService;
+  private final DeployClient deployClient;
+  private ProgramController controller;
+
+  public StandaloneMain() {
+    runLatch = new CountDownLatch(1);
+    jarUnpackDir = Files.createTempDir();
+    localDataDir = Files.createTempDir();
+    CConfiguration cConf = CConfiguration.create();
+    cConf.set(Constants.CFG_LOCAL_DATA_DIR, localDataDir.getAbsolutePath());
+    Configuration hConf = new Configuration();
+
+    Injector injector = Guice.createInjector(createModules(cConf, hConf));
+    txService = injector.getInstance(TransactionManager.class);
+    metricsCollectionService = injector.getInstance(MetricsCollectionService.class);
+    deployClient = injector.getInstance(DeployClient.class);
+  }
 
   static void usage(boolean error) {
     PrintStream out = (error ? System.err : System.out);
-    out.println("./run_standalone.sh <path-to-JAR> <FlowClassName>");
-    out.println("Example: ./run_standalone.sh /home/user/tweetFlow-1.0.jar com.cname.main.TweetFlow");
+    out.println("java -cp .:lib/* co.cask.tigon.StandaloneMain <path-to-JAR> <FlowClassName>");
+    out.println("Example: java -cp .:lib/* co.cask.tigon.StandaloneMain /home/user/tweetFlow-1.0.jar " +
+                  "com.cname.main.TweetFlow");
     out.println("");
     if (error) {
       throw new IllegalArgumentException();
     }
   }
 
-  private static void deploy(File jarPath, String classToLoad) throws Exception {
-    Location deployedJar = deployClient.createJar(jarPath, classToLoad, jarUnpackDir);
-    Program program = Programs.createWithUnpack(deployedJar, jarUnpackDir);
-    controller = programRunnerFactory.create(ProgramRunnerFactory.Type.FLOW).run(
-      program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments()));
+  public static StandaloneMain createStandaloneMain() {
+    return new StandaloneMain();
   }
 
-  //Args expected : Flow JAR, Flow Class;
   //TODO: Add Runtime args, ZooKeeper Ctx String to the list
   public static void main(String[] args) {
     System.out.println("Tigon Standalone Client");
@@ -98,24 +103,51 @@ public class StandaloneMain {
 
       File jarPath = new File(args[0]);
       String mainClassName = args[1];
+
+      StandaloneMain main = null;
       try {
-        init();
-        deploy(jarPath, mainClassName);
-        runLatch.await();
+        main = createStandaloneMain();
+        main.startUp(jarPath, mainClassName);
       } catch (Exception e) {
         e.printStackTrace();
       }
     }
   }
 
-  public static void init() throws Exception {
-    runLatch = new CountDownLatch(1);
-    CConfiguration cConf = CConfiguration.create();
-    cConf.set(Constants.CFG_LOCAL_DATA_DIR, localDataDir.getAbsolutePath());
+  public void startUp(File jarPath, String mainClassName) throws Exception {
+    txService.startAndWait();
+    metricsCollectionService.startAndWait();
+    controller = deployClient.deployFlow(jarPath, mainClassName, jarUnpackDir);
+    Runtime.getRuntime().addShutdownHook(new Thread() {
+      @Override
+      public void run() {
+        try {
+          shutDown();
+        } catch (Throwable e) {
+          LOG.error("Failed to shutdown", e);
+        }
+      }
+    });
+    runLatch.await();
+  }
 
-    Configuration hConf = new Configuration();
+  public void shutDown() {
+    try {
+      if (controller != null) {
+        controller.stop().get();
+      }
+      metricsCollectionService.stopAndWait();
+      txService.stopAndWait();
+      FileUtils.deleteDirectory(localDataDir);
+      FileUtils.deleteDirectory(jarUnpackDir);
+      runLatch.countDown();
+    } catch (Exception e) {
+      LOG.warn(e.getMessage(), e);
+    }
+  }
 
-    injector = Guice.createInjector(
+  private static List<Module> createModules(CConfiguration cConf, Configuration hConf) {
+    return ImmutableList.of(
       new DataFabricInMemoryModule(),
       new ConfigModule(cConf, hConf),
       new IOModule(),
@@ -124,43 +156,12 @@ public class StandaloneMain {
       new ProgramRunnerRuntimeModule().getInMemoryModules(),
       new MetricsClientModule()
     );
-
-    txService = injector.getInstance(TransactionManager.class);
-    txService.startAndWait();
-    metricsCollectionService = injector.getInstance(MetricsCollectionService.class);
-    metricsCollectionService.startAndWait();
-    locationFactory = injector.getInstance(LocationFactory.class);
-    deployClient = injector.getInstance(DeployClient.class);
-    programRunnerFactory = injector.getInstance(ProgramRunnerFactory.class);
-    Runtime.getRuntime().addShutdownHook(new Thread() {
-      @Override
-      public void run() {
-        try {
-          runLatch.countDown();
-          finish();
-        } catch (Throwable e) {
-          LOG.error("Failed to shutdown", e);
-        }
-      }
-    });
-  }
-
-  public static void finish() throws Exception {
-    if (controller != null) {
-      controller.stop().get();
-    }
-    metricsCollectionService.stopAndWait();
-    txService.stopAndWait();
-    FileUtils.deleteDirectory(localDataDir);
-    FileUtils.deleteDirectory(jarUnpackDir);
   }
 
   private static final class MetricsClientModule extends AbstractModule {
-
     @Override
     protected void configure() {
       bind(MetricsCollectionService.class).to(NoOpMetricsCollectionService.class).in(Scopes.SINGLETON);
     }
   }
-
 }

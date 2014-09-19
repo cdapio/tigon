@@ -42,7 +42,6 @@ import com.google.inject.Injector;
 import com.google.inject.Scopes;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.twill.filesystem.Location;
-import org.apache.twill.filesystem.LocationFactory;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -59,10 +58,8 @@ public class TestBase {
   @ClassRule
   public static TemporaryFolder tmpFolder = new TemporaryFolder();
 
-  private static Injector injector;
   private static MetricsCollectionService metricsCollectionService;
   private static TransactionManager txService;
-  private static LocationFactory locationFactory;
   private static DeployClient deployClient;
   private static ProgramRunnerFactory programRunnerFactory;
 
@@ -88,7 +85,7 @@ public class TestBase {
 
     Configuration hConf = new Configuration();
 
-    injector = Guice.createInjector(
+    Injector injector = Guice.createInjector(
       new DataFabricInMemoryModule(),
       new ConfigModule(cConf, hConf),
       new IOModule(),
@@ -102,8 +99,7 @@ public class TestBase {
     txService.startAndWait();
     metricsCollectionService = injector.getInstance(MetricsCollectionService.class);
     metricsCollectionService.startAndWait();
-    locationFactory = injector.getInstance(LocationFactory.class);
-    deployClient = new DeployClient(locationFactory);
+    deployClient = injector.getInstance(DeployClient.class);
     programRunnerFactory = injector.getInstance(ProgramRunnerFactory.class);
   }
 

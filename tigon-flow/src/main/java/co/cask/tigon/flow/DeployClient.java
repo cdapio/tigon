@@ -19,7 +19,15 @@ package co.cask.tigon.flow;
 import co.cask.tigon.api.flow.Flow;
 import co.cask.tigon.api.flow.FlowSpecification;
 import co.cask.tigon.app.program.ManifestFields;
+import co.cask.tigon.app.program.Program;
+import co.cask.tigon.app.program.Programs;
+import co.cask.tigon.conf.CConfiguration;
+import co.cask.tigon.conf.Constants;
 import co.cask.tigon.internal.app.FlowSpecificationAdapter;
+import co.cask.tigon.internal.app.runtime.BasicArguments;
+import co.cask.tigon.internal.app.runtime.ProgramController;
+import co.cask.tigon.internal.app.runtime.ProgramRunnerFactory;
+import co.cask.tigon.internal.app.runtime.SimpleProgramOptions;
 import co.cask.tigon.internal.flow.DefaultFlowSpecification;
 import co.cask.tigon.internal.io.ReflectionSchemaGenerator;
 import co.cask.tigon.lang.ApiResourceListHolder;
@@ -33,6 +41,7 @@ import com.google.common.io.Files;
 import com.google.common.io.InputSupplier;
 import com.google.gson.Gson;
 import com.google.inject.Inject;
+import org.apache.twill.filesystem.LocalLocationFactory;
 import org.apache.twill.filesystem.Location;
 import org.apache.twill.filesystem.LocationFactory;
 import org.apache.twill.internal.ApplicationBundler;
@@ -61,10 +70,12 @@ public class DeployClient {
   private static final Gson GSON = new Gson();
 
   private final LocationFactory locationFactory;
+  private final ProgramRunnerFactory programRunnerFactory;
 
   @Inject
-  public DeployClient(LocationFactory locationFactory) {
-    this.locationFactory = locationFactory;
+  public DeployClient(CConfiguration cConf, ProgramRunnerFactory programRunnerFactory) {
+    this.locationFactory = new LocalLocationFactory(new File(cConf.get(Constants.CFG_LOCAL_DATA_DIR)));
+    this.programRunnerFactory = programRunnerFactory;
   }
 
   /**
@@ -102,7 +113,7 @@ public class DeployClient {
     }
   }
 
-  public Location createJar(File jarPath, String classToLoad, File jarUnpackDir) throws Exception {
+  private Location createJar(File jarPath, String classToLoad, File jarUnpackDir) throws Exception {
     expandJar(jarPath, jarUnpackDir);
     URL jarURL = jarUnpackDir.toURI().toURL();
     ProgramClassLoader filterClassLoader = ClassLoaders.newProgramClassLoader(jarUnpackDir,
@@ -116,6 +127,13 @@ public class DeployClient {
     ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
     Thread.currentThread().setContextClassLoader(classLoader);
     return deployFlow(clz);
+  }
+
+  public ProgramController deployFlow(File jarPath, String classToLoad, File jarUnpackDir) throws Exception {
+    Location deployedJar = createJar(jarPath, classToLoad, jarUnpackDir);
+    Program program = Programs.createWithUnpack(deployedJar, jarUnpackDir);
+    return programRunnerFactory.create(ProgramRunnerFactory.Type.FLOW).run(
+      program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments()));
   }
 
   public Location deployFlow(Class<?> flowClz, File... bundleEmbeddedJars)

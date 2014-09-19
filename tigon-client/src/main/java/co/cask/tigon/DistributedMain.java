@@ -17,9 +17,8 @@
 package co.cask.tigon;
 
 import co.cask.tigon.app.guice.ProgramRunnerRuntimeModule;
-import co.cask.tigon.app.program.Program;
-import co.cask.tigon.app.program.Programs;
 import co.cask.tigon.conf.CConfiguration;
+import co.cask.tigon.conf.Constants;
 import co.cask.tigon.data.runtime.DataFabricDistributedModule;
 import co.cask.tigon.flow.DeployClient;
 import co.cask.tigon.guice.ConfigModule;
@@ -28,27 +27,26 @@ import co.cask.tigon.guice.IOModule;
 import co.cask.tigon.guice.LocationRuntimeModule;
 import co.cask.tigon.guice.TwillModule;
 import co.cask.tigon.guice.ZKClientModule;
-import co.cask.tigon.internal.app.runtime.BasicArguments;
 import co.cask.tigon.internal.app.runtime.ProgramController;
-import co.cask.tigon.internal.app.runtime.ProgramRunnerFactory;
-import co.cask.tigon.internal.app.runtime.SimpleProgramOptions;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import co.cask.tigon.metrics.NoOpMetricsCollectionService;
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.Files;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Module;
 import com.google.inject.Scopes;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.twill.api.TwillRunnerService;
-import org.apache.twill.filesystem.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -56,31 +54,45 @@ import java.util.concurrent.CountDownLatch;
  */
 public class DistributedMain {
   private static final Logger LOG = LoggerFactory.getLogger(DistributedMain.class);
-  private static final File jarUnpackDir = Files.createTempDir();
 
-  private static Injector injector;
-  private static MetricsCollectionService metricsCollectionService;
-  private static DeployClient deployClient;
-  private static ProgramRunnerFactory programRunnerFactory;
-  private static ProgramController controller;
-  private static TwillRunnerService twillRunnerService;
-  private static CountDownLatch runLatch;
+  private final CountDownLatch runLatch;
+  private final MetricsCollectionService metricsCollectionService;
+  private final DeployClient deployClient;
+  private final TwillRunnerService twillRunnerService;
+  private final File jarUnpackDir;
+  private final File localDataDir;
+  private ProgramController controller;
+
+  public DistributedMain() {
+    runLatch = new CountDownLatch(1);
+    jarUnpackDir = Files.createTempDir();
+    localDataDir = Files.createTempDir();
+
+    CConfiguration cConf = CConfiguration.create();
+    cConf.set(Constants.CFG_LOCAL_DATA_DIR, localDataDir.getAbsolutePath());
+    Configuration hConf = HBaseConfiguration.create();
+
+    Injector injector = Guice.createInjector(createModules(cConf, hConf));
+    metricsCollectionService = injector.getInstance(MetricsCollectionService.class);
+    twillRunnerService = injector.getInstance(TwillRunnerService.class);
+    deployClient = injector.getInstance(DeployClient.class);
+  }
 
   static void usage(boolean error) {
     PrintStream out = (error ? System.err : System.out);
-    out.println("Usage: ./run_distributed.sh <path-to-JAR> <FlowClassName>");
-    out.println("Example: ./run_distributed.sh /home/user/tweetFlow-1.0.jar com.cname.main.TweetFlow");
+    out.println(
+      "Usage:   java -cp lib/*:<hadoop/hbase classpath> co.cask.tigon.DistributedMain <path-to-JAR> <FlowClassName>");
+    out.println(
+      "Example: java -cp lib/*:$HBASE_CLASSPATH co.cask.tigon.DistributedMain /home/user/tweetFlow-1.0.jar " +
+        "com.cname.main.TweetFlow");
     out.println("");
     if (error) {
       throw new IllegalArgumentException();
     }
   }
 
-  private static void deploy(File jarPath, String classToLoad) throws Exception {
-    Location deployedJar = deployClient.createJar(jarPath, classToLoad, jarUnpackDir);
-    Program program = Programs.createWithUnpack(deployedJar, jarUnpackDir);
-    controller = programRunnerFactory.create(ProgramRunnerFactory.Type.FLOW).run(
-      program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments()));
+  public static DistributedMain createDistributedMain() {
+    return new DistributedMain();
   }
 
   public static void main(String[] args) {
@@ -97,22 +109,51 @@ public class DistributedMain {
 
       File jarPath = new File(args[0]);
       String mainClassName = args[1];
+
+      DistributedMain main = null;
       try {
-        init();
-        deploy(jarPath, mainClassName);
-        runLatch.await();
+        main = createDistributedMain();
+        main.startUp(jarPath, mainClassName);
       } catch (Exception e) {
-        e.printStackTrace();
+        LOG.error(e.getMessage(), e);
       }
     }
   }
 
-  public static void init() throws Exception {
-    runLatch = new CountDownLatch(1);
-    CConfiguration cConf = CConfiguration.create();
-    Configuration hConf = HBaseConfiguration.create();
+  public void startUp(File jarPath, String mainClassName) throws Exception {
+    twillRunnerService.startAndWait();
+    metricsCollectionService.startAndWait();
+    controller = deployClient.deployFlow(jarPath, mainClassName, jarUnpackDir);
+    Runtime.getRuntime().addShutdownHook(new Thread() {
+      @Override
+      public void run() {
+        try {
+          shutDown();
+        } catch (Throwable e) {
+          LOG.error("Failed to shutdown", e);
+        }
+      }
+    });
+    runLatch.await();
+  }
 
-    injector = Guice.createInjector(
+  public void shutDown() {
+    try {
+      if (controller != null) {
+        controller.stop().get();
+      }
+      twillRunnerService.stopAndWait();
+      metricsCollectionService.stopAndWait();
+      FileUtils.deleteDirectory(jarUnpackDir);
+      FileUtils.deleteDirectory(localDataDir);
+      runLatch.countDown();
+    } catch (Exception e) {
+      LOG.warn(e.getMessage(), e);
+    }
+  }
+
+  private static List<Module> createModules(CConfiguration cConf, Configuration hConf) {
+    return ImmutableList.of(
       new DataFabricDistributedModule(),
       new ConfigModule(cConf, hConf),
       new IOModule(),
@@ -123,43 +164,9 @@ public class DistributedMain {
       new ProgramRunnerRuntimeModule().getDistributedModules(),
       new MetricsClientModule()
     );
-
-    Injector localInjector = Guice.createInjector(
-      new ConfigModule(cConf, hConf),
-      new LocationRuntimeModule().getInMemoryModules()
-    );
-
-    metricsCollectionService = injector.getInstance(MetricsCollectionService.class);
-    metricsCollectionService.startAndWait();
-    deployClient = localInjector.getInstance(DeployClient.class);
-    programRunnerFactory = injector.getInstance(ProgramRunnerFactory.class);
-    twillRunnerService = injector.getInstance(TwillRunnerService.class);
-    twillRunnerService.startAndWait();
-
-    Runtime.getRuntime().addShutdownHook(new Thread() {
-      @Override
-      public void run() {
-        try {
-          runLatch.countDown();
-          finish();
-        } catch (Throwable e) {
-          LOG.error("Failed to shutdown", e);
-        }
-      }
-    });
-  }
-
-  public static void finish() throws Exception {
-    if (controller != null) {
-      controller.stop().get();
-    }
-    twillRunnerService.stopAndWait();
-    metricsCollectionService.stopAndWait();
-    FileUtils.deleteDirectory(jarUnpackDir);
   }
 
   private static final class MetricsClientModule extends AbstractModule {
-
     @Override
     protected void configure() {
       bind(MetricsCollectionService.class).to(NoOpMetricsCollectionService.class).in(Scopes.SINGLETON);
