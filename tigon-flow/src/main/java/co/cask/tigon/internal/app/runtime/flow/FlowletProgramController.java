@@ -16,6 +16,8 @@
 
 package co.cask.tigon.internal.app.runtime.flow;
 
+import co.cask.tigon.api.flow.flowlet.Flowlet;
+import co.cask.tigon.api.flow.flowlet.FlowletContext;
 import co.cask.tigon.internal.app.runtime.AbstractProgramController;
 import co.cask.tigon.internal.app.runtime.ProgramOptionConstants;
 import com.google.common.base.Preconditions;
@@ -100,6 +102,13 @@ final class FlowletProgramController extends AbstractProgramController {
     LOG.info("Change flowlet instance count: " + flowletContext + ", new count is " + instances);
     changeInstanceCount(flowletContext, instances);
     LOG.info("Flowlet instance count changed: " + flowletContext + ", new count is " + instances);
+  }
+
+  /**
+   * @return a {@link FlowletContext} for the current {@link Flowlet}.
+   */
+  public FlowletContext getFlowletContext() {
+    return flowletContext;
   }
 
   private void changeInstanceCount(BasicFlowletContext flowletContext, int instanceCount) {

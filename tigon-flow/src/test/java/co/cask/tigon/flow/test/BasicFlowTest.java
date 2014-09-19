@@ -26,10 +26,13 @@ import co.cask.tigon.api.flow.Flow;
 import co.cask.tigon.api.flow.FlowSpecification;
 import co.cask.tigon.api.flow.flowlet.AbstractFlowlet;
 import co.cask.tigon.api.flow.flowlet.FlowletContext;
+import co.cask.tigon.api.flow.flowlet.FlowletSpecification;
 import co.cask.tigon.api.flow.flowlet.OutputEmitter;
 import com.google.common.base.Throwables;
+import com.google.common.collect.ConcurrentHashMultiset;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Multiset;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpMethod;
 import org.apache.commons.httpclient.methods.DeleteMethod;
@@ -48,10 +51,12 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 
 /**
  * Basic integration tests for Flows.
@@ -61,6 +66,9 @@ import javax.ws.rs.Path;
  */
 public class BasicFlowTest extends TestBase {
 
+  private static final String GENERATOR_FLOWLET_ID = "generator";
+  private static final String SINK_FLOWLET_ID = "sink";
+
   private static NettyHttpService service;
   private static String baseURL;
   private static FlowManager flowManager;
@@ -68,16 +76,16 @@ public class BasicFlowTest extends TestBase {
 
   // Endpoints exposed by the Netty service.
   private static final class EndPoints {
-    private static final String GENERATOR_INSTANCES = "/instances";
+    private static final String INSTANCES = "/instances/{key}";
     private static final String PING = "/ping";
     private static final String COUNTDOWN = "/countdown";
   }
 
   @BeforeClass
   public static void beforeClass() throws Exception {
+    // Create and start the Netty service.
     service = NettyHttpService.builder()
       .addHttpHandlers(ImmutableList.of(new TestHandler()))
-      .setExecThreadPoolSize(1)
       .build();
 
     service.startAndWait();
@@ -101,6 +109,7 @@ public class BasicFlowTest extends TestBase {
 
   @Test
   public void testFlow() throws Exception {
+    // Exactly 10 events should have been emitted from the generator to the sink.
     GetMethod method = new GetMethod(baseURL + EndPoints.PING);
     httpClient.executeMethod(method);
     int pingCount = Integer.valueOf(method.getResponseBodyAsString());
@@ -109,20 +118,37 @@ public class BasicFlowTest extends TestBase {
 
   @Test
   public void testInstanceChange() throws Exception {
-    flowManager.setFlowletInstances("generator", 5);
+    flowManager.setFlowletInstances(GENERATOR_FLOWLET_ID, 5);
     TimeUnit.SECONDS.sleep(5);
 
-    GetMethod method = new GetMethod(baseURL + EndPoints.GENERATOR_INSTANCES);
-    httpClient.executeMethod(method);
-    int instanceCount = Integer.valueOf(method.getResponseBodyAsString());
-    Assert.assertEquals(5, instanceCount);
+    GetMethod generatorInstancesMethod = new GetMethod(baseURL + getFlowletInstancesEndpoint(GENERATOR_FLOWLET_ID));
+    httpClient.executeMethod(generatorInstancesMethod);
+    int flowletInstances = Integer.valueOf(generatorInstancesMethod.getResponseBodyAsString());
+    Assert.assertEquals(5, flowletInstances);
 
-    flowManager.setFlowletInstances("generator", 2);
+    flowManager.setFlowletInstances(GENERATOR_FLOWLET_ID, 2);
     TimeUnit.SECONDS.sleep(5);
 
-    httpClient.executeMethod(method);
-    instanceCount = Integer.valueOf(method.getResponseBodyAsString());
-    Assert.assertEquals(2, instanceCount);
+    httpClient.executeMethod(generatorInstancesMethod);
+    flowletInstances = Integer.valueOf(generatorInstancesMethod.getResponseBodyAsString());
+    Assert.assertEquals(2, flowletInstances);
+
+    flowManager.setFlowletInstances(SINK_FLOWLET_ID, 3);
+    TimeUnit.SECONDS.sleep(5);
+
+    GetMethod sinkInstancesMethod = new GetMethod(baseURL + getFlowletInstancesEndpoint(SINK_FLOWLET_ID));
+    httpClient.executeMethod(sinkInstancesMethod);
+    int sinkInstances = Integer.valueOf(sinkInstancesMethod.getResponseBodyAsString());
+    Assert.assertEquals(3, sinkInstances);
+
+    // The sink flowlet is configured to have a maximum of only 3 instances.
+    // Setting a number above that should fail, and the instance count should remain the same.
+    flowManager.setFlowletInstances(SINK_FLOWLET_ID, 5);
+    TimeUnit.SECONDS.sleep(5);
+
+    httpClient.executeMethod(sinkInstancesMethod);
+    sinkInstances = Integer.valueOf(sinkInstancesMethod.getResponseBodyAsString());
+    Assert.assertEquals(3, sinkInstances);
   }
 
   public static final class TestFlow implements Flow {
@@ -133,39 +159,44 @@ public class BasicFlowTest extends TestBase {
         .setName("testFlow")
         .setDescription("")
         .withFlowlets()
-        .add("generator", new GeneratorFlowlet(), 1)
-        .add("sink", new SinkFlowlet(), 1)
+        .add(GENERATOR_FLOWLET_ID, new GeneratorFlowlet(), 1)
+        .add(SINK_FLOWLET_ID, new SinkFlowlet(), 1)
         .connect()
-        .from("generator").to("sink")
+        .from(GENERATOR_FLOWLET_ID).to(SINK_FLOWLET_ID)
         .build();
     }
   }
 
   private static final class GeneratorFlowlet extends AbstractFlowlet {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GeneratorFlowlet.class);
+    private final static Logger LOG = LoggerFactory.getLogger(GeneratorFlowlet.class);
     private OutputEmitter<Integer> intEmitter;
     private int i = 0;
     private HttpClient client;
     private HttpMethod countdownMethod;
     private HttpMethod decreaseInstanceMethod;
 
+    @Override
     public void initialize(FlowletContext context) throws Exception {
+      super.initialize(context);
       String baseURL = context.getRuntimeArguments().get("baseURL");
       client = new HttpClient();
 
       LOG.info("Starting GeneratorFlowlet.");
 
+      String generatorInstancesEndpoint = baseURL + getFlowletInstancesEndpoint(GENERATOR_FLOWLET_ID);
       // Notify the NettyServer that a new Generator flowlet is initialized.
-      HttpMethod increaseInstanceMethod = new PostMethod(baseURL + EndPoints.GENERATOR_INSTANCES);
+      HttpMethod increaseInstanceMethod = new PostMethod(generatorInstancesEndpoint);
       client.executeMethod(increaseInstanceMethod);
 
       countdownMethod = new GetMethod(baseURL + EndPoints.COUNTDOWN);
-      decreaseInstanceMethod = new DeleteMethod(baseURL + EndPoints.GENERATOR_INSTANCES);
+      decreaseInstanceMethod = new DeleteMethod(generatorInstancesEndpoint);
     }
 
     @Tick(delay = 1L, unit = TimeUnit.SECONDS)
+    @SuppressWarnings("UnusedDeclaration")
     public void process() throws Exception {
+      // Emit an event only if 10 events haven't been emitted yet.
       if (client.executeMethod(countdownMethod) == 200) {
         Integer value = ++i;
         intEmitter.emit(value, "integer", value.hashCode());
@@ -190,69 +221,88 @@ public class BasicFlowTest extends TestBase {
     private HttpMethod pingMethod;
 
     @Override
+    public FlowletSpecification configure() {
+      return FlowletSpecification.Builder.with()
+        .setName(getName())
+        .setDescription(getDescription())
+        .setMaxInstances(3)
+        .build();
+    }
+
+    @Override
     public void initialize(FlowletContext context) throws Exception {
       String baseURL = context.getRuntimeArguments().get("baseURL");
       client = new HttpClient();
       pingMethod = new PostMethod(baseURL + EndPoints.PING);
+
       LOG.info("Starting SinkFlowlet.");
+
+      // Notify the server that a new Sink flowlet is initialized.
+      HttpMethod increaseInstanceMethod = new PostMethod(baseURL + getFlowletInstancesEndpoint(SINK_FLOWLET_ID));
+      client.executeMethod(increaseInstanceMethod);
     }
 
     @HashPartition("integer")
     @ProcessInput
+    @SuppressWarnings("UnusedDeclaration")
     public void process(Integer value) throws Exception {
+      // Notify the server that a an event has been received.
       client.executeMethod(pingMethod);
       LOG.info("Ping NettyService.");
     }
   }
 
   public static final class TestHandler extends AbstractHttpHandler {
-    private static int countdownLimit = 10;
-    private static int pingCount = 0;
-    private static int instanceCount = 0;
+    private static AtomicInteger countdownLimit = new AtomicInteger(10);
+    private static AtomicInteger pingCount = new AtomicInteger(0);
+    private static Multiset<String> flowletInstanceCounts = ConcurrentHashMultiset.create();
 
     @Path(EndPoints.PING)
     @POST
     public void incrementPing(HttpRequest request, HttpResponder responder) {
-      pingCount++;
+      pingCount.incrementAndGet();
       responder.sendStatus(HttpResponseStatus.OK);
     }
 
     @Path(EndPoints.PING)
     @GET
     public void getPingCount(HttpRequest request, HttpResponder responder) {
-      responder.sendJson(HttpResponseStatus.OK, pingCount);
+      responder.sendJson(HttpResponseStatus.OK, pingCount.get());
     }
 
     @Path(EndPoints.COUNTDOWN)
     @GET
     public void countdown(HttpRequest request, HttpResponder responder) {
-      if (countdownLimit > 0) {
-        countdownLimit--;
+      if (countdownLimit.intValue() > 0) {
+        countdownLimit.decrementAndGet();
         responder.sendStatus(HttpResponseStatus.OK);
       } else {
         responder.sendStatus(HttpResponseStatus.NO_CONTENT);
       }
     }
 
-    @Path(EndPoints.GENERATOR_INSTANCES)
+    @Path(EndPoints.INSTANCES)
     @POST
-    public void increaseInstanceCount(HttpRequest request, HttpResponder responder) {
-      instanceCount++;
+    public void increaseInstanceCount(HttpRequest request, HttpResponder responder, @PathParam("key") String key) {
+      flowletInstanceCounts.add(key);
       responder.sendStatus(HttpResponseStatus.OK);
     }
 
-    @Path(EndPoints.GENERATOR_INSTANCES)
+    @Path(EndPoints.INSTANCES)
     @DELETE
-    public void decreaseInstanceCount(HttpRequest request, HttpResponder responder) {
-      instanceCount--;
+    public void decreaseInstanceCount(HttpRequest request, HttpResponder responder, @PathParam("key") String key) {
+      flowletInstanceCounts.remove(key);
       responder.sendStatus(HttpResponseStatus.OK);
     }
 
-    @Path(EndPoints.GENERATOR_INSTANCES)
+    @Path(EndPoints.INSTANCES)
     @GET
-    public void getInstanceCount(HttpRequest request, HttpResponder responder) {
-      responder.sendJson(HttpResponseStatus.OK, instanceCount);
+    public void getInstanceCount(HttpRequest request, HttpResponder responder, @PathParam("key") String key) {
+      responder.sendJson(HttpResponseStatus.OK, flowletInstanceCounts.count(key));
     }
+  }
 
+  protected static String getFlowletInstancesEndpoint(String flowletId) {
+    return EndPoints.INSTANCES.replace("{key}", flowletId);
   }
 }

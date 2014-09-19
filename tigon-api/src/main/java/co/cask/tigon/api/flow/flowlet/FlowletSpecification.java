@@ -69,6 +69,11 @@ public interface FlowletSpecification extends PropertyProvider {
   ResourceSpecification getResources();
 
   /**
+   * @return The maximum instances allowed for this flowlet.
+   */
+  int getMaxInstances();
+
+  /**
    * Builder for creating instance of {@link FlowletSpecification}. The builder instance is
    * not reusable, meaning each instance of this class can only be used to create one instance
    * of {@link FlowletSpecification}.
@@ -78,9 +83,9 @@ public interface FlowletSpecification extends PropertyProvider {
     private String name;
     private String description;
     private FailurePolicy failurePolicy = FailurePolicy.RETRY;
-    private final ImmutableSet.Builder<String> dataSets = ImmutableSet.builder();
     private Map<String, String> arguments;
     private ResourceSpecification resources = ResourceSpecification.BASIC;
+    private int maxInstances = Integer.MAX_VALUE;
 
     /**
      * Creates a {@link Builder} for building instance of this class.
@@ -155,11 +160,21 @@ public interface FlowletSpecification extends PropertyProvider {
       }
 
       /**
+       * Set the maximum instances allowed for this flowlet.
+       * @param maxInstances The maximum number of instances allowed for this flowlet.
+       * @return An instance of {@link AfterDescription}.
+       */
+      public AfterDescription setMaxInstances(int maxInstances) {
+        Builder.this.maxInstances = maxInstances;
+        return this;
+      }
+
+      /**
        * Creates an instance of {@link FlowletSpecification}.
        * @return An instance of {@link FlowletSpecification}.
        */
       public FlowletSpecification build() {
-        return new DefaultFlowletSpecification(name, description, failurePolicy, arguments, resources);
+        return new DefaultFlowletSpecification(name, description, failurePolicy, arguments, resources, maxInstances);
       }
     }
 

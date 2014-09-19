@@ -16,10 +16,12 @@
 
 package co.cask.tigon.internal.app.runtime.distributed;
 
+import co.cask.tigon.api.flow.FlowletDefinition;
 import co.cask.tigon.app.program.Program;
 import co.cask.tigon.data.queue.QueueName;
 import co.cask.tigon.data.transaction.queue.QueueAdmin;
 import co.cask.tigon.internal.app.runtime.flow.FlowUtils;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Multimap;
 import org.apache.twill.api.TwillController;
 import org.slf4j.Logger;
@@ -50,6 +52,12 @@ final class DistributedFlowletInstanceUpdater {
   }
 
   void update(String flowletId, int newInstanceCount, int oldInstanceCount) throws Exception {
+
+    FlowletDefinition flowletDefinition = program.getSpecification().getFlowlets().get(flowletId);
+    int maxInstances = flowletDefinition.getFlowletSpec().getMaxInstances();
+    Preconditions.checkArgument(newInstanceCount <= maxInstances,
+                                "Flowlet %s can have a maximum of %s instances", flowletId, maxInstances);
+
     waitForInstances(flowletId, oldInstanceCount);
     twillController.sendCommand(flowletId, ProgramCommands.SUSPEND).get();
 
