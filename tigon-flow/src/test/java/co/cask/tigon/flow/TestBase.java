@@ -66,14 +66,11 @@ public class TestBase {
 
   private static Injector injector;
   private static MetricsCollectionService metricsCollectionService;
-  private static LogAppenderInitializer logAppenderInitializer;
-  private static TransactionSystemClient txSystemClient;
-  private static DiscoveryServiceClient discoveryServiceClient;
   private static TransactionManager txService;
   private static DeployClient deployClient;
   private static ProgramRunnerFactory programRunnerFactory;
 
-  protected FlowManager deployFlow(Class<? extends Flow> flowClz, Map<String, String> runtimeArgs,
+  protected static FlowManager deployFlow(Class<? extends Flow> flowClz, Map<String, String> runtimeArgs,
                                    File...bundleEmbeddedJars) {
     Preconditions.checkNotNull(flowClz, "Flow class cannot be null");
     try {
@@ -113,7 +110,7 @@ public class TestBase {
     hConf.set("hadoop.tmp.dir", new File(localDataDir, cConf.get(Constants.AppFabric.TEMP_DIR)).getAbsolutePath());
 
     injector = Guice.createInjector(
-      createDataFabricModule(cConf),
+      createDataFabricModule(),
       new ConfigModule(cConf, hConf),
       new IOModule(),
       new LocationRuntimeModule().getInMemoryModules(),
@@ -134,8 +131,6 @@ public class TestBase {
     metricsCollectionService.startAndWait();
     LocationFactory locationFactory = injector.getInstance(LocationFactory.class);
     deployClient = new DeployClient(locationFactory);
-    discoveryServiceClient = injector.getInstance(DiscoveryServiceClient.class);
-    txSystemClient = injector.getInstance(TransactionSystemClient.class);
     programRunnerFactory = injector.getInstance(ProgramRunnerFactory.class);
   }
 
@@ -145,7 +140,7 @@ public class TestBase {
     txService.stopAndWait();
   }
 
-  private static Module createDataFabricModule(final CConfiguration cConf) {
+  private static Module createDataFabricModule() {
     return new DataFabricInMemoryModule();
   }
 
