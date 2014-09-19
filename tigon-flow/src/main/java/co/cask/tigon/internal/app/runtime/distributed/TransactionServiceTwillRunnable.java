@@ -22,7 +22,6 @@ import com.continuuity.tephra.persist.TransactionStateStorage;
 import com.continuuity.tephra.runtime.TransactionStateStorageProvider;
 import co.cask.tigon.app.guice.MetricsClientRuntimeModule;
 import co.cask.tigon.conf.CConfiguration;
-import co.cask.tigon.conf.Constants;
 import co.cask.tigon.data.runtime.DataFabricModules;
 import co.cask.tigon.data.runtime.HDFSTransactionStateStorageProvider;
 import co.cask.tigon.data.runtime.TransactionManagerProvider;
@@ -65,14 +64,8 @@ public class TransactionServiceTwillRunnable extends AbstractMasterTwillRunnable
   @Override
   protected void doInit(TwillContext context) {
     try {
-      getCConfiguration().set(Constants.Transaction.Container.ADDRESS, context.getHost().getCanonicalHostName());
-
-      Injector injector = createGuiceInjector(getCConfiguration(), getConfiguration());
-
       LOG.info("Initializing runnable {}", name);
-      // Set the hostname of the machine so that cConf can be used to start internal services
-      LOG.info("{} Setting host name to {}", name, context.getHost().getCanonicalHostName());
-
+      Injector injector = createGuiceInjector(getCConfiguration(), getConfiguration());
 
       //Get Zookeeper Client Instances
       zkClient = injector.getInstance(ZKClientService.class);

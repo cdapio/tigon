@@ -66,10 +66,9 @@ public class StandaloneMain {
   private static CountDownLatch runLatch;
 
   static void usage(boolean error) {
-    // Which output stream should we use?
     PrintStream out = (error ? System.err : System.out);
-    out.println("./run_distributed.sh <path-to-JAR> <FlowClassName>");
-    out.println("Example: ./run_distributed.sh /home/user/tweetFlow-1.0.jar com.cname.main.TweetFlow");
+    out.println("./run_standalone.sh <path-to-JAR> <FlowClassName>");
+    out.println("Example: ./run_standalone.sh /home/user/tweetFlow-1.0.jar com.cname.main.TweetFlow");
     out.println("");
     if (error) {
       throw new IllegalArgumentException();
@@ -86,7 +85,7 @@ public class StandaloneMain {
   //Args expected : Flow JAR, Flow Class;
   //TODO: Add Runtime args, ZooKeeper Ctx String to the list
   public static void main(String[] args) {
-    System.out.println("Tigon Standalone");
+    System.out.println("Tigon Standalone Client");
     if (args.length > 0) {
       if ("--help".equals(args[0]) || "-h".equals(args[0])) {
         usage(false);
@@ -115,11 +114,6 @@ public class StandaloneMain {
     cConf.set(Constants.CFG_LOCAL_DATA_DIR, localDataDir.getAbsolutePath());
 
     Configuration hConf = new Configuration();
-    hConf.addResource("mapred-site-local.xml");
-    hConf.reloadConfiguration();
-    hConf.set(Constants.CFG_LOCAL_DATA_DIR, localDataDir.getAbsolutePath());
-    hConf.set(Constants.AppFabric.OUTPUT_DIR, cConf.get(Constants.AppFabric.OUTPUT_DIR));
-    hConf.set("hadoop.tmp.dir", new File(localDataDir, cConf.get(Constants.AppFabric.TEMP_DIR)).getAbsolutePath());
 
     injector = Guice.createInjector(
       new DataFabricInMemoryModule(),
@@ -128,7 +122,7 @@ public class StandaloneMain {
       new LocationRuntimeModule().getInMemoryModules(),
       new DiscoveryRuntimeModule().getInMemoryModules(),
       new ProgramRunnerRuntimeModule().getInMemoryModules(),
-      new TestMetricsClientModule()
+      new MetricsClientModule()
     );
 
     txService = injector.getInstance(TransactionManager.class);
@@ -161,7 +155,7 @@ public class StandaloneMain {
     FileUtils.deleteDirectory(jarUnpackDir);
   }
 
-  private static final class TestMetricsClientModule extends AbstractModule {
+  private static final class MetricsClientModule extends AbstractModule {
 
     @Override
     protected void configure() {

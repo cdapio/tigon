@@ -63,7 +63,7 @@ public class TwillModule extends PrivateModule {
                                                                LocationFactories.namespace(locationFactory, "twill"));
 
     // Set JVM options based on configuration
-    runner.setJVMOptions(configuration.get(Constants.AppFabric.PROGRAM_JVM_OPTS));
+    runner.setJVMOptions(configuration.get(Constants.Container.PROGRAM_JVM_OPTS));
 
     return runner;
   }

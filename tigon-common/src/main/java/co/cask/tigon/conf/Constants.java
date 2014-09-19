@@ -38,34 +38,13 @@ public final class Constants {
   }
 
   /**
-   * App Fabric Configuration.
+   * Container Configuration.
    */
-  public static final class AppFabric {
+  public static final class Container {
     /**
-     * App Fabric Server.
+     * JVM Options.
      */
-    public static final String SERVER_ADDRESS = "app.bind.address";
-    public static final String OUTPUT_DIR = "app.output.dir";
-    public static final String TEMP_DIR = "app.temp.dir";
-    public static final String REST_PORT = "app.rest.port";
     public static final String PROGRAM_JVM_OPTS = "app.program.jvm.opts";
-
-  }
-
-  /**
-   * Transactions.
-   */
-  public static final class Transaction {
-    /**
-     * Twill Runnable configuration.
-     */
-    public static final class Container {
-      public static final String ADDRESS = "data.tx.bind.address";
-      public static final String NUM_INSTANCES = "data.tx.num.instances";
-      public static final String NUM_CORES = "data.tx.num.cores";
-      public static final String MEMORY_MB = "data.tx.memory.mb";
-      public static final String MAX_INSTANCES = "data.tx.max.instances";
-    }
   }
 
   /**

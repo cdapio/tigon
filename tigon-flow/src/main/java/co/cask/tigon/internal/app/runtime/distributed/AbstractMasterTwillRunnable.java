@@ -117,7 +117,6 @@ public abstract class AbstractMasterTwillRunnable extends AbstractTwillRunnable 
     Services.chainStart(services.get(0), services.subList(1, services.size()).toArray(new Service[0]));
     LOG.info("Runnable started {}", name);
 
-
     try {
       Futures.allAsList(completions).get();
     } catch (InterruptedException e) {

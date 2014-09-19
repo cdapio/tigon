@@ -20,7 +20,6 @@ import co.cask.tigon.app.guice.MetricsClientRuntimeModule;
 import co.cask.tigon.app.program.Program;
 import co.cask.tigon.app.program.Programs;
 import co.cask.tigon.conf.CConfiguration;
-import co.cask.tigon.conf.Constants;
 import co.cask.tigon.data.runtime.DataFabricModules;
 import co.cask.tigon.guice.ConfigModule;
 import co.cask.tigon.guice.DiscoveryRuntimeModule;
@@ -81,7 +80,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
@@ -298,9 +296,6 @@ public abstract class AbstractProgramTwillRunnable<T extends ProgramRunner> impl
       new AbstractModule() {
         @Override
         protected void configure() {
-          bind(InetAddress.class).annotatedWith(Names.named(Constants.AppFabric.SERVER_ADDRESS))
-            .toInstance(context.getHost());
-
           // For Binding queue stuff
           bind(QueueReaderFactory.class).in(Scopes.SINGLETON);
 

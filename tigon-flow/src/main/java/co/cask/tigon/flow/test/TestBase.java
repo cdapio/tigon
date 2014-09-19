@@ -13,18 +13,18 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package co.cask.tigon.flow;
+package co.cask.tigon.flow.test;
 
 import com.continuuity.tephra.TransactionManager;
 import com.continuuity.tephra.TransactionSystemClient;
 import co.cask.tigon.api.flow.Flow;
-import co.cask.tigon.api.flow.FlowSpecification;
 import co.cask.tigon.app.guice.ProgramRunnerRuntimeModule;
 import co.cask.tigon.app.program.Program;
 import co.cask.tigon.app.program.Programs;
 import co.cask.tigon.conf.CConfiguration;
 import co.cask.tigon.conf.Constants;
 import co.cask.tigon.data.runtime.DataFabricInMemoryModule;
+import co.cask.tigon.flow.DeployClient;
 import co.cask.tigon.guice.ConfigModule;
 import co.cask.tigon.guice.DiscoveryRuntimeModule;
 import co.cask.tigon.guice.IOModule;
@@ -33,7 +33,6 @@ import co.cask.tigon.internal.app.runtime.BasicArguments;
 import co.cask.tigon.internal.app.runtime.ProgramController;
 import co.cask.tigon.internal.app.runtime.ProgramRunnerFactory;
 import co.cask.tigon.internal.app.runtime.SimpleProgramOptions;
-import co.cask.tigon.internal.flow.DefaultFlowSpecification;
 import co.cask.tigon.logging.LogAppenderInitializer;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import co.cask.tigon.metrics.NoOpMetricsCollectionService;
@@ -56,7 +55,7 @@ import java.io.File;
 import java.util.Map;
 
 /**
- *
+ * Tigon Test Base to Test Flows.
  */
 public class TestBase {
 
@@ -77,16 +76,6 @@ public class TestBase {
                                    File...bundleEmbeddedJars) {
     Preconditions.checkNotNull(flowClz, "Flow class cannot be null");
     try {
-      Object flowInstance = flowClz.newInstance();
-      FlowSpecification flowSpec;
-
-      if (flowInstance instanceof Flow) {
-        Flow flow = (Flow) flowInstance;
-        flowSpec = new DefaultFlowSpecification(flow.getClass().getName(), flow.configure());
-      } else {
-        throw new IllegalArgumentException("Flow class does not represent flow: " + flowClz.getName());
-      }
-
       Location deployedJar = deployClient.deployFlow(flowClz, bundleEmbeddedJars);
       Program program = Programs.createWithUnpack(deployedJar, tmpFolder.newFolder());
       ProgramController controller = programRunnerFactory.create(ProgramRunnerFactory.Type.FLOW).run(
@@ -104,11 +93,6 @@ public class TestBase {
     cConf.set(Constants.CFG_LOCAL_DATA_DIR, localDataDir.getAbsolutePath());
 
     Configuration hConf = new Configuration();
-    hConf.addResource("mapred-site-local.xml");
-    hConf.reloadConfiguration();
-    hConf.set(Constants.CFG_LOCAL_DATA_DIR, localDataDir.getAbsolutePath());
-    hConf.set(Constants.AppFabric.OUTPUT_DIR, cConf.get(Constants.AppFabric.OUTPUT_DIR));
-    hConf.set("hadoop.tmp.dir", new File(localDataDir, cConf.get(Constants.AppFabric.TEMP_DIR)).getAbsolutePath());
 
     injector = Guice.createInjector(
       new DataFabricInMemoryModule(),

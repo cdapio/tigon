@@ -71,7 +71,6 @@ public final class LocationRuntimeModule extends RuntimeModule {
 
   private static final class HDFSLocationModule extends AbstractModule {
 
-
     @Override
     protected void configure() {
       bind(LocationFactory.class).to(HDFSLocationFactory.class);

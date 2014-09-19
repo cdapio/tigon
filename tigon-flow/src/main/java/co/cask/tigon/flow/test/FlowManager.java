@@ -14,7 +14,7 @@
  * the License.
  */
 
-package co.cask.tigon.flow;
+package co.cask.tigon.flow.test;
 
 /**
  * Instance for this class is for managing a running {@link co.cask.tigon.api.flow.Flow}.

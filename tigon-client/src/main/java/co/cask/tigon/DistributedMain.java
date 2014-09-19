@@ -67,10 +67,9 @@ public class DistributedMain {
   private static CountDownLatch runLatch;
 
   static void usage(boolean error) {
-    // Which output stream should we use?
     PrintStream out = (error ? System.err : System.out);
-    out.println("Usage: ./run_standalone.sh <path-to-JAR> <FlowClassName>");
-    out.println("Example: ./run_standalone.sh /home/user/tweetFlow-1.0.jar com.cname.main.TweetFlow");
+    out.println("Usage: ./run_distributed.sh <path-to-JAR> <FlowClassName>");
+    out.println("Example: ./run_distributed.sh /home/user/tweetFlow-1.0.jar com.cname.main.TweetFlow");
     out.println("");
     if (error) {
       throw new IllegalArgumentException();
@@ -85,7 +84,7 @@ public class DistributedMain {
   }
 
   public static void main(String[] args) {
-    System.out.println("Tigon Distributed");
+    System.out.println("Tigon Distributed Client");
     if (args.length > 0) {
       if ("--help".equals(args[0]) || "-h".equals(args[0])) {
         usage(false);
@@ -122,7 +121,7 @@ public class DistributedMain {
       new LocationRuntimeModule().getDistributedModules(),
       new DiscoveryRuntimeModule().getDistributedModules(),
       new ProgramRunnerRuntimeModule().getDistributedModules(),
-      new TestMetricsClientModule()
+      new MetricsClientModule()
     );
 
     Injector localInjector = Guice.createInjector(
@@ -159,7 +158,7 @@ public class DistributedMain {
     FileUtils.deleteDirectory(jarUnpackDir);
   }
 
-  private static final class TestMetricsClientModule extends AbstractModule {
+  private static final class MetricsClientModule extends AbstractModule {
 
     @Override
     protected void configure() {
