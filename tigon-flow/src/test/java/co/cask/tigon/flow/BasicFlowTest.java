@@ -16,6 +16,9 @@
 
 package co.cask.tigon.flow;
 
+import co.cask.http.AbstractHttpHandler;
+import co.cask.http.HttpResponder;
+import co.cask.http.NettyHttpService;
 import co.cask.tigon.api.annotation.HashPartition;
 import co.cask.tigon.api.annotation.ProcessInput;
 import co.cask.tigon.api.annotation.Tick;
@@ -24,121 +27,238 @@ import co.cask.tigon.api.flow.FlowSpecification;
 import co.cask.tigon.api.flow.flowlet.AbstractFlowlet;
 import co.cask.tigon.api.flow.flowlet.FlowletContext;
 import co.cask.tigon.api.flow.flowlet.OutputEmitter;
-import co.cask.tigon.api.metrics.Metrics;
+import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.HttpMethod;
+import org.apache.commons.httpclient.methods.DeleteMethod;
+import org.apache.commons.httpclient.methods.GetMethod;
+import org.apache.commons.httpclient.methods.PostMethod;
+import org.jboss.netty.handler.codec.http.HttpRequest;
+import org.jboss.netty.handler.codec.http.HttpResponseStatus;
+import org.junit.After;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
-import java.io.FileWriter;
+import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.util.Map;
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 
 /**
+ * Basic integration tests for Flows.
  *
+ * The testing is done via a NettyHttp service. Different requests are made to the service depending on actions/state,
+ * and these actions/states are tested by querying the service.
  */
 public class BasicFlowTest extends TestBase {
-  private static final Logger LOG = LoggerFactory.getLogger(BasicFlowTest.class);
+
+  private static NettyHttpService service;
+  private static String baseURL;
+
+  // Endpoints exposed by the Netty service.
+  private static final class EndPoints {
+    private static final String GENERATOR_INSTANCES = "/instances";
+    private static final String PING = "/ping";
+    private static final String COUNTDOWN = "/countdown";
+  }
+
+  @Before
+  public void before() {
+    service = NettyHttpService.builder()
+      .addHttpHandlers(ImmutableList.of(new TestHandler()))
+      .setExecThreadPoolSize(1)
+      .build();
+
+    service.startAndWait();
+    InetSocketAddress address = service.getBindAddress();
+    baseURL = "http://" + address.getHostName() + ":" + address.getPort();
+  }
+
+  @After
+  public void after() {
+    service.stopAndWait();
+  }
 
   @Test
   public void testFlow() throws Exception {
     Map<String, String> runtimeArgs = Maps.newHashMap();
-    String tmpDir = tmpFolder.newFolder().toString();
-    runtimeArgs.put("folder", tmpDir);
-    LOG.info("Check {} dir for the files", tmpDir);
+    runtimeArgs.put("baseURL", baseURL);
 
-    FlowManager manager = deployFlow(BasicFlow.class, runtimeArgs);
-    TimeUnit.SECONDS.sleep(5);
-    manager.setFlowletInstances("generator", 4);
-    TimeUnit.SECONDS.sleep(5);
-    manager.setFlowletInstances("sink", 3);
-    TimeUnit.SECONDS.sleep(5);
-    manager.setFlowletInstances("generator", 2);
-    manager.setFlowletInstances("sink", 1);
-    TimeUnit.SECONDS.sleep(5);
+    FlowManager manager = deployFlow(TestFlow.class, runtimeArgs);
+    TimeUnit.SECONDS.sleep(15);
+
+    HttpClient client = new HttpClient();
+    GetMethod method = new GetMethod(baseURL + EndPoints.PING);
+    client.executeMethod(method);
+    int pingCount = Integer.valueOf(method.getResponseBodyAsString());
+    Assert.assertEquals(10, pingCount);
+
     manager.stop();
   }
-}
 
-class BasicFlow implements Flow {
+  @Test
+  public void testInstanceChange() throws Exception {
+    Map<String, String> runtimeArgs = Maps.newHashMap();
+    runtimeArgs.put("baseURL", baseURL);
 
-  @Override
-  public FlowSpecification configure() {
-    return FlowSpecification.Builder.with()
-      .setName("testFlow")
-      .setDescription("")
-      .withFlowlets()
-      .add("generator", new GeneratorFlowlet(), 2)
-      .add("sink", new SinkFlowlet(), 2)
-      .connect()
-      .from("generator").to("sink")
-      .build();
-  }
-}
+    FlowManager manager = deployFlow(TestFlow.class, runtimeArgs);
+    HttpClient client = new HttpClient();
+    GetMethod method = new GetMethod(baseURL + EndPoints.GENERATOR_INSTANCES);
 
-class GeneratorFlowlet extends AbstractFlowlet {
+    manager.setFlowletInstances("generator", 5);
+    TimeUnit.SECONDS.sleep(5);
 
-  private FileWriter fileWriter;
-  private OutputEmitter<Integer> intEmitter;
-  private Random random = new Random();
-  private int i = 0;
-  private static final Logger LOG = LoggerFactory.getLogger(GeneratorFlowlet.class);
-  private Metrics metrics;
+    client.executeMethod(method);
+    int instanceCount = Integer.valueOf(method.getResponseBodyAsString());
+    Assert.assertEquals(5, instanceCount);
 
-  @Override
-  public void initialize(FlowletContext context) throws Exception {
-    String tmpFolder = context.getRuntimeArguments().get("folder");
-    fileWriter = new FileWriter(new File(tmpFolder + "/flgen" + context.getInstanceId()));
-    LOG.info("Getting Started");
+    manager.setFlowletInstances("generator", 2);
+    TimeUnit.SECONDS.sleep(5);
+
+    client.executeMethod(method);
+    instanceCount = Integer.valueOf(method.getResponseBodyAsString());
+    Assert.assertEquals(2, instanceCount);
+
+    manager.stop();
   }
 
-  @Tick(delay = 1L, unit = TimeUnit.SECONDS)
-  public void process() throws Exception {
-    Integer value = ++i;
-    intEmitter.emit(value, "integer", value.hashCode());
-    fileWriter.write(String.valueOf(value));
-    fileWriter.write("\n");
-    fileWriter.flush();
-    LOG.info("Sending some data {}", value);
-    metrics.count("sendData", 1);
-  }
+  public static final class TestFlow implements Flow {
 
-  @Override
-  public void destroy() {
-    try {
-      fileWriter.close();
-    } catch (Exception e) {
-
+    @Override
+    public FlowSpecification configure() {
+      return FlowSpecification.Builder.with()
+        .setName("testFlow")
+        .setDescription("")
+        .withFlowlets()
+        .add("generator", new GeneratorFlowlet(), 1)
+        .add("sink", new SinkFlowlet(), 1)
+        .connect()
+        .from("generator").to("sink")
+        .build();
     }
   }
-}
 
-class SinkFlowlet extends AbstractFlowlet {
+  private static final class GeneratorFlowlet extends AbstractFlowlet {
 
-  private FileWriter fileWriter;
+    private static final Logger LOG = LoggerFactory.getLogger(GeneratorFlowlet.class);
+    private OutputEmitter<Integer> intEmitter;
+    private int i = 0;
+    private HttpClient client;
+    private HttpMethod countdownMethod;
+    private HttpMethod decreaseInstanceMethod;
 
-  @Override
-  public void initialize(FlowletContext context) throws Exception {
-    String tmpFolder = context.getRuntimeArguments().get("folder");
-    fileWriter = new FileWriter(new File(tmpFolder + "/flsink" + context.getInstanceId()));
-  }
+    public void initialize(FlowletContext context) throws Exception {
+      String baseURL = context.getRuntimeArguments().get("baseURL");
+      client = new HttpClient();
 
-  @HashPartition("integer")
-  @ProcessInput
-  public void process(Integer value) throws Exception {
-    fileWriter.write(String.valueOf(value));
-    fileWriter.write("\n");
-    fileWriter.flush();
-  }
+      LOG.info("Starting GeneratorFlowlet.");
 
-  @Override
-  public void destroy() {
-    try {
-      fileWriter.close();
-    } catch (Exception e) {
+      // Notify the NettyServer that a new Generator flowlet is initialized.
+      HttpMethod increaseInstanceMethod = new PostMethod(baseURL + EndPoints.GENERATOR_INSTANCES);
+      client.executeMethod(increaseInstanceMethod);
 
+      countdownMethod = new GetMethod(baseURL + EndPoints.COUNTDOWN);
+      decreaseInstanceMethod = new DeleteMethod(baseURL + EndPoints.GENERATOR_INSTANCES);
     }
+
+    @Tick(delay = 1L, unit = TimeUnit.SECONDS)
+    public void process() throws Exception {
+      if (client.executeMethod(countdownMethod) == 200) {
+        Integer value = ++i;
+        intEmitter.emit(value, "integer", value.hashCode());
+        LOG.info("Sending data {} to sink.", value);
+      }
+    }
+
+    @Override
+    public void destroy() {
+      try {
+        client.executeMethod(decreaseInstanceMethod);
+      } catch (IOException e) {
+        throw Throwables.propagate(e);
+      }
+    }
+  }
+
+  private static final class SinkFlowlet extends AbstractFlowlet {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SinkFlowlet.class);
+    private HttpClient client;
+    private HttpMethod pingMethod;
+
+    @Override
+    public void initialize(FlowletContext context) throws Exception {
+      String baseURL = context.getRuntimeArguments().get("baseURL");
+      client = new HttpClient();
+      pingMethod = new PostMethod(baseURL + EndPoints.PING);
+      LOG.info("Starting SinkFlowlet.");
+    }
+
+    @HashPartition("integer")
+    @ProcessInput
+    public void process(Integer value) throws Exception {
+      client.executeMethod(pingMethod);
+      LOG.info("Ping NettyService.");
+    }
+  }
+
+  public static final class TestHandler extends AbstractHttpHandler {
+    private static int countdownLimit = 10;
+    private static int pingCount = 0;
+    private static int instanceCount = 0;
+
+    @Path(EndPoints.PING)
+    @POST
+    public void incrementPing(HttpRequest request, HttpResponder responder) {
+      pingCount++;
+      responder.sendStatus(HttpResponseStatus.OK);
+    }
+
+    @Path(EndPoints.PING)
+    @GET
+    public void getPingCount(HttpRequest request, HttpResponder responder) {
+      responder.sendJson(HttpResponseStatus.OK, pingCount);
+    }
+
+    @Path(EndPoints.COUNTDOWN)
+    @GET
+    public void countdown(HttpRequest request, HttpResponder responder) {
+      if (countdownLimit > 0) {
+        countdownLimit--;
+        responder.sendStatus(HttpResponseStatus.OK);
+      } else {
+        responder.sendStatus(HttpResponseStatus.NO_CONTENT);
+      }
+    }
+
+    @Path(EndPoints.GENERATOR_INSTANCES)
+    @POST
+    public void increaseInstanceCount(HttpRequest request, HttpResponder responder) {
+      instanceCount++;
+      responder.sendStatus(HttpResponseStatus.OK);
+    }
+
+    @Path(EndPoints.GENERATOR_INSTANCES)
+    @DELETE
+    public void decreaseInstanceCount(HttpRequest request, HttpResponder responder) {
+      instanceCount--;
+      responder.sendStatus(HttpResponseStatus.OK);
+    }
+
+    @Path(EndPoints.GENERATOR_INSTANCES)
+    @GET
+    public void getInstanceCount(HttpRequest request, HttpResponder responder) {
+      responder.sendJson(HttpResponseStatus.OK, instanceCount);
+    }
+
   }
 }
