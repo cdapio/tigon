@@ -24,7 +24,8 @@ import co.cask.tigon.data.Namespace;
 import javax.annotation.Nullable;
 
 /**
- * Default dataset namespace, which namespace by configuration setting {@link Constants.Dataset#TABLE_PREFIX}.
+ * Default dataset namespace; which namespace, determined by the configuration setting 
+ * {@link co.cask.tigon.conf.Constants.Dataset#TABLE_PREFIX}.
  */
 public class DefaultDatasetNamespace implements DatasetNamespace {
   private final String namespacePrefix;

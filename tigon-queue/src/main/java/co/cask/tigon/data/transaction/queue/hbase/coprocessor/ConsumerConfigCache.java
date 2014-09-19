@@ -39,7 +39,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import javax.annotation.Nullable;
 
 /**
- * Provides a RegionServer shared cache for all instances of {@link HBaseQueueRegionObserver} of the recent
+ * Provides a RegionServer shared cache for all instances of HBaseQueueRegionObserver of the recent
  * queue consumer configuration.
  */
 public class ConsumerConfigCache {

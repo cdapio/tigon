@@ -29,21 +29,21 @@ public interface QueueConsumer {
 
   /**
    * Returns the configuration of this consumer.
-   * @return
+   * @return the configuration
    */
   ConsumerConfig getConfig();
 
   /**
    * Dequeue an entry from the queue.
-   * @return A {@link DequeueResult}.
+   * @return the {@link DequeueResult}
    */
   DequeueResult<byte[]> dequeue() throws IOException;
 
   /**
    * Dequeue multiple entries from the queue. The dequeue result may have less entries than the given
    * maxBatchSize, depending on how many entries in the queue.
-   * @param maxBatchSize Maximum number of entries to queue.
-   * @return A {@link DequeueResult}.
+   * @param maxBatchSize maximum number of entries to queue
+   * @return the {@link DequeueResult}
    */
   DequeueResult<byte[]> dequeue(int maxBatchSize) throws IOException;
 }

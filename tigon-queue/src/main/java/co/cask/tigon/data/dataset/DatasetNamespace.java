@@ -19,7 +19,7 @@ package co.cask.tigon.data.dataset;
 import javax.annotation.Nullable;
 
 /**
- * Performs namespacing for data set names.
+ * Performs namespacing for dataset names.
  */
 public interface DatasetNamespace {
   /**

@@ -43,16 +43,16 @@ public final class HBaseConsumerState {
   private final byte[] consumerStateColumn;
 
   /**
-   * Creates a list of {@link HBaseConsumerState} instance based on the given HBase result.
+   * Creates a list of {@link HBaseConsumerState} instances based on the given HBase result.
    */
   public static List<HBaseConsumerState> create(Result result) {
     return create(result.getFamilyMap(QueueEntryRow.COLUMN_FAMILY));
   }
 
   /**
-   * Creates a list of {@link HBaseConsumerState} instance based on the given state map.
+   * Creates a list of {@link HBaseConsumerState} instances based on the given state map.
    * @param stateMap
-   * @return
+   * @return the states
    */
   public static List<HBaseConsumerState> create(SortedMap<byte[], byte[]> stateMap) {
     List<HBaseConsumerState> states = new ArrayList<HBaseConsumerState>(stateMap.size());
