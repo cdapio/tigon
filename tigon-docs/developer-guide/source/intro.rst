@@ -31,8 +31,8 @@ There are many applications that can take advantage of these features:
 - Reads, writes, and tightly integrates with HDFS and HBase;
 - Supports a significant amount of parallelization;
 - Fault-tolerance and horizontal scalability without burdening the developer;
-- Enterprise security features with debugging, logging, and monitoring tools; and
-- Simpler programming model, tools and UI.
+- Enterprise security features with debugging, logging, and monitoring tools;
+- Simpler programming model, tools and UI; and 
 - Open-source software and development process.
 
 Getting Started
@@ -129,7 +129,7 @@ Setting up Your Development Environment
 Quick Start
 -----------
 
-Visit our web site for a [Quick Start](http://docs.cask.co/docs/tigon/current/quickstart.html)
+Visit our web site for a `Quick Start <http://docs.cask.co/docs/tigon/current/quickstart.html>`__
 that will guide you through installing Tigon, running an example that....  
 
 
@@ -142,4 +142,4 @@ Now that you've had an introduction to Tigon, take a look at:
 - `Concepts <concepts.html>`__, which covers the basic concepts behind Tigon.
 
 .. |(TM)| unicode:: U+2122 .. trademark sign
-   :trim:
+   :ltrim:
