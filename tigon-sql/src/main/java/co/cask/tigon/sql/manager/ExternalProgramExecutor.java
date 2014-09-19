@@ -168,7 +168,7 @@ public final class ExternalProgramExecutor extends AbstractExecutionThreadServic
 
           String line = reader.readLine();
           while (!Thread.currentThread().isInterrupted() && line != null) {
-            LOG.info(line);
+            LOG.trace(line);
             line = reader.readLine();
           }
         } catch (IOException e) {

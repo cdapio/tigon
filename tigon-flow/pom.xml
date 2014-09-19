@@ -57,6 +57,12 @@ the License.
       <artifactId>junit</artifactId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>co.cask.http</groupId>
+      <artifactId>netty-http</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
 </project>
+
