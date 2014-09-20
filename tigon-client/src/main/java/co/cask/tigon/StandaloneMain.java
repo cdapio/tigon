@@ -114,10 +114,7 @@ public class StandaloneMain {
     }
   }
 
-  public void startUp(File jarPath, String mainClassName) throws Exception {
-    txService.startAndWait();
-    metricsCollectionService.startAndWait();
-    controller = deployClient.deployFlow(jarPath, mainClassName, jarUnpackDir);
+  private void addShutDownHook() {
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
       public void run() {
@@ -128,6 +125,13 @@ public class StandaloneMain {
         }
       }
     });
+  }
+
+  public void startUp(File jarPath, String mainClassName) throws Exception {
+    txService.startAndWait();
+    metricsCollectionService.startAndWait();
+    addShutDownHook();
+    controller = deployClient.deployFlow(jarPath, mainClassName, jarUnpackDir);
     runLatch.await();
   }
 

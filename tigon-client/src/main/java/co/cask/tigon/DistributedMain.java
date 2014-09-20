@@ -120,10 +120,7 @@ public class DistributedMain {
     }
   }
 
-  public void startUp(File jarPath, String mainClassName) throws Exception {
-    twillRunnerService.startAndWait();
-    metricsCollectionService.startAndWait();
-    controller = deployClient.deployFlow(jarPath, mainClassName, jarUnpackDir);
+  private void addShutDownHook() {
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
       public void run() {
@@ -134,6 +131,14 @@ public class DistributedMain {
         }
       }
     });
+  }
+
+  public void startUp(File jarPath, String mainClassName) throws Exception {
+    twillRunnerService.startAndWait();
+    metricsCollectionService.startAndWait();
+    addShutDownHook();
+    controller = deployClient.deployFlow(jarPath, mainClassName, jarUnpackDir);
+
     runLatch.await();
   }
 
