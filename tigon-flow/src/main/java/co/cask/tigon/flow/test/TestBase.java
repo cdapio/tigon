@@ -86,6 +86,7 @@ public class TestBase {
     Configuration hConf = new Configuration();
 
     Injector injector = Guice.createInjector(
+      new DataFabricInMemoryModule(),
       new ConfigModule(cConf, hConf),
       new IOModule(),
       new LocationRuntimeModule().getInMemoryModules(),
