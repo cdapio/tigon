@@ -41,7 +41,7 @@ public class CompileStreamBinaries {
       "GENBINS", dir, Locations.getParent(Locations.getParent(dir)).append("bin").append("buildit"), "");
     LOG.info("Starting GENBINS : {}", executorService);
     executorService.startAndWait();
-    Services.getCompletionFuture(executorService).get(15, TimeUnit.SECONDS);
+    Services.getCompletionFuture(executorService).get(20, TimeUnit.SECONDS);
     //Returns query compilation's success condition
     if (executorService.getExitCode() != 0) {
       throw new RuntimeException("Stream Engine Binary Compilation Failed");
