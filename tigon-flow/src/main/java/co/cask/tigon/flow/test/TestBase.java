@@ -63,7 +63,7 @@ public class TestBase {
   private static DeployClient deployClient;
   private static ProgramRunnerFactory programRunnerFactory;
 
-  protected FlowManager deployFlow(Class<? extends Flow> flowClz, Map<String, String> runtimeArgs,
+  protected static FlowManager deployFlow(Class<? extends Flow> flowClz, Map<String, String> runtimeArgs,
                                    File...bundleEmbeddedJars) {
     Preconditions.checkNotNull(flowClz, "Flow class cannot be null");
     try {
@@ -86,7 +86,6 @@ public class TestBase {
     Configuration hConf = new Configuration();
 
     Injector injector = Guice.createInjector(
-      new DataFabricInMemoryModule(),
       new ConfigModule(cConf, hConf),
       new IOModule(),
       new LocationRuntimeModule().getInMemoryModules(),
