@@ -33,6 +33,11 @@ the License.
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>co.cask.tigon</groupId>
+      <artifactId>tigon-sql</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
     </dependency>
@@ -43,6 +48,10 @@ the License.
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>jline</groupId>
+      <artifactId>jline</artifactId>
     </dependency>
   </dependencies>
 </project>

@@ -84,6 +84,7 @@ public class OutputServerSocket extends StreamSocketServer {
     if (!eofRecordLatch.await(3, TimeUnit.SECONDS)) {
       LOG.warn(String.format("Output Stream %s : Didn't receive EOF Record. Proceeding with Shutdown", outputName));
     }
+    LOG.info("Shutting down OutputServer");
     dataSinkServer.shutdown();
   }
 

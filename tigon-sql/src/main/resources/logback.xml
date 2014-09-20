@@ -29,7 +29,7 @@
       Disabling some chatty loggers.
     -->
     <logger name="org.apache.commons.beanutils" level="ERROR"/>
-  <logger name="org.apache.http" level="ERROR"/>
+    <logger name="org.apache.http" level="ERROR"/>
 <!--
     <logger name="org.apache.zookeeper.server" level="ERROR"/>
     <logger name="org.apache.zookeeper" level="ERROR"/>

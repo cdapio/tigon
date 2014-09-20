@@ -21,6 +21,8 @@ package co.cask.tigon.conf;
  */
 public final class Constants {
 
+  public static final String ROOT_NAMESPACE = "root.namespace";
+
   /**
    * Global Service names.
    */

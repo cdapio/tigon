@@ -16,12 +16,14 @@
 
 package co.cask.tigon.api;
 
+import org.apache.twill.api.ServiceAnnouncer;
+
 import java.util.Map;
 
 /**
  * This interface represents a context for a processor or elements of a processor.
  */
-public interface RuntimeContext {
+public interface RuntimeContext extends ServiceAnnouncer {
   /**
    * @return A map of argument key and value.
    */

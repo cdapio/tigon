@@ -17,37 +17,42 @@
 package co.cask.tigon;
 
 import co.cask.tigon.app.guice.ProgramRunnerRuntimeModule;
+import co.cask.tigon.cli.DistributedFlowOperations;
+import co.cask.tigon.cli.FlowOperations;
 import co.cask.tigon.conf.CConfiguration;
 import co.cask.tigon.conf.Constants;
 import co.cask.tigon.data.runtime.DataFabricDistributedModule;
-import co.cask.tigon.flow.DeployClient;
 import co.cask.tigon.guice.ConfigModule;
 import co.cask.tigon.guice.DiscoveryRuntimeModule;
 import co.cask.tigon.guice.IOModule;
 import co.cask.tigon.guice.LocationRuntimeModule;
 import co.cask.tigon.guice.TwillModule;
 import co.cask.tigon.guice.ZKClientModule;
-import co.cask.tigon.internal.app.runtime.ProgramController;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import co.cask.tigon.metrics.NoOpMetricsCollectionService;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
 import com.google.inject.Scopes;
+import jline.TerminalFactory;
+import jline.console.ConsoleReader;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.twill.api.TwillRunnerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.PrintStream;
+import java.net.InetSocketAddress;
 import java.util.List;
-import java.util.concurrent.CountDownLatch;
 
 /**
  * Tigon Distributed Main.
@@ -55,27 +60,23 @@ import java.util.concurrent.CountDownLatch;
 public class DistributedMain {
   private static final Logger LOG = LoggerFactory.getLogger(DistributedMain.class);
 
-  private final CountDownLatch runLatch;
-  private final MetricsCollectionService metricsCollectionService;
-  private final DeployClient deployClient;
-  private final TwillRunnerService twillRunnerService;
-  private final File jarUnpackDir;
   private final File localDataDir;
-  private ProgramController controller;
+  private final FlowOperations flowOperations;
+  private final ConsoleReader consoleReader;
 
-  public DistributedMain() {
-    runLatch = new CountDownLatch(1);
-    jarUnpackDir = Files.createTempDir();
+  public DistributedMain(String zkQuorumString, String rootNamespace) throws IOException {
     localDataDir = Files.createTempDir();
 
     CConfiguration cConf = CConfiguration.create();
+    cConf.set(Constants.Zookeeper.QUORUM, zkQuorumString);
+    cConf.set(Constants.ROOT_NAMESPACE, rootNamespace);
     cConf.set(Constants.CFG_LOCAL_DATA_DIR, localDataDir.getAbsolutePath());
+    cConf.reloadConfiguration();
     Configuration hConf = HBaseConfiguration.create();
 
     Injector injector = Guice.createInjector(createModules(cConf, hConf));
-    metricsCollectionService = injector.getInstance(MetricsCollectionService.class);
-    twillRunnerService = injector.getInstance(TwillRunnerService.class);
-    deployClient = injector.getInstance(DeployClient.class);
+    flowOperations = injector.getInstance(FlowOperations.class);
+    consoleReader = new ConsoleReader();
   }
 
   static void usage(boolean error) {
@@ -91,8 +92,8 @@ public class DistributedMain {
     }
   }
 
-  public static DistributedMain createDistributedMain() {
-    return new DistributedMain();
+  public static DistributedMain createDistributedMain(String zkString, String rootNamespace) throws IOException {
+    return new DistributedMain(zkString, rootNamespace);
   }
 
   public static void main(String[] args) {
@@ -103,27 +104,33 @@ public class DistributedMain {
         return;
       }
 
-      if (args.length != 2) {
+      if (args.length < 2) {
         usage(true);
       }
 
-      File jarPath = new File(args[0]);
-      String mainClassName = args[1];
+      String zkQuorumString = args[0];
+      String rootNamespace = args[1];
 
       DistributedMain main = null;
       try {
-        main = createDistributedMain();
-        main.startUp(jarPath, mainClassName);
+        main = createDistributedMain(zkQuorumString, rootNamespace);
+        main.startUp(System.out);
       } catch (Exception e) {
         LOG.error(e.getMessage(), e);
+      } finally {
+        try {
+          if (main != null) {
+            main.shutDown();
+          }
+          TerminalFactory.get().restore();
+        } catch (Exception e) {
+          LOG.warn(e.getMessage(), e);
+        }
       }
     }
   }
 
-  public void startUp(File jarPath, String mainClassName) throws Exception {
-    twillRunnerService.startAndWait();
-    metricsCollectionService.startAndWait();
-    controller = deployClient.deployFlow(jarPath, mainClassName, jarUnpackDir);
+  private void registerShutDownHook() {
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
       public void run() {
@@ -134,19 +141,50 @@ public class DistributedMain {
         }
       }
     });
-    runLatch.await();
+  }
+
+  public void startUp(PrintStream out) throws Exception {
+    registerShutDownHook();
+    flowOperations.startAndWait();
+    consoleReader.setPrompt("tigon> ");
+    String line;
+    while ((line = consoleReader.readLine()) != null) {
+      String[] args = line.split(" ");
+      String command = args[0].toLowerCase();
+      if (command.equals("deploy")) {
+        Preconditions.checkArgument(args.length == 3);
+        flowOperations.deployFlow(new File(args[1]), args[2]);
+      } else if (command.equals("list")) {
+        out.println(StringUtils.join(flowOperations.listAllFlows(), ", "));
+      } else if (command.equals("stop")) {
+        Preconditions.checkArgument(args.length == 2);
+        flowOperations.stopFlow(args[1]);
+      } else if (command.equals("set")) {
+        Preconditions.checkArgument(args.length == 4);
+        flowOperations.setInstances(args[1], args[2], Integer.valueOf(args[3]));
+      } else if (command.equals("getinfo")) {
+        Preconditions.checkArgument(args.length == 2);
+        out.println(StringUtils.join(flowOperations.getFlowInfo(args[1]), "\n"));
+      } else if (command.equals("discover")) {
+        Preconditions.checkArgument(args.length == 3);
+        List<String> endpoints = Lists.newArrayList();
+        for (InetSocketAddress address : flowOperations.discover(args[1], args[2])) {
+          endpoints.add(address.getHostName() + ":" + address.getPort());
+        }
+        out.println(StringUtils.join(endpoints, "\n"));
+      } else if (command.equals("showlogs")) {
+        Preconditions.checkArgument(args.length == 2);
+        flowOperations.addLogHandler(args[1], System.out);
+      } else {
+        out.println("Available Commands : deploy, list, stop, set, discover, getinfo");
+      }
+    }
   }
 
   public void shutDown() {
     try {
-      if (controller != null) {
-        controller.stop().get();
-      }
-      twillRunnerService.stopAndWait();
-      metricsCollectionService.stopAndWait();
-      FileUtils.deleteDirectory(jarUnpackDir);
+      flowOperations.stopAndWait();
       FileUtils.deleteDirectory(localDataDir);
-      runLatch.countDown();
     } catch (Exception e) {
       LOG.warn(e.getMessage(), e);
     }
@@ -162,7 +200,13 @@ public class DistributedMain {
       new LocationRuntimeModule().getDistributedModules(),
       new DiscoveryRuntimeModule().getDistributedModules(),
       new ProgramRunnerRuntimeModule().getDistributedModules(),
-      new MetricsClientModule()
+      new MetricsClientModule(),
+      new AbstractModule() {
+        @Override
+        protected void configure() {
+          bind(FlowOperations.class).to(DistributedFlowOperations.class);
+        }
+      }
     );
   }
 
