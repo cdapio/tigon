@@ -138,7 +138,6 @@ public class DistributedMain {
     metricsCollectionService.startAndWait();
     addShutDownHook();
     controller = deployClient.deployFlow(jarPath, mainClassName, jarUnpackDir);
-
     runLatch.await();
   }
 
