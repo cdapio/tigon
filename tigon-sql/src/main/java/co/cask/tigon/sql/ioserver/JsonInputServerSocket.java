@@ -69,11 +69,11 @@ public class JsonInputServerSocket extends InputServerSocket {
   private static class JsonHandler extends SimpleChannelHandler {
     private static final Logger LOG = LoggerFactory.getLogger(JsonHandler.class);
     private final StreamSchema schema;
-    private final ByteArrayOutputStream outputStream;
+    private final OutStream outputStream;
 
     public JsonHandler(StreamSchema schema) {
       this.schema = schema;
-      this.outputStream = new ByteArrayOutputStream();
+      this.outputStream = new OutStream();
     }
 
     @Override
@@ -81,11 +81,25 @@ public class JsonInputServerSocket extends InputServerSocket {
       String json = (String) e.getMessage();
       Map<String, List<String>> jsonMap = GSON.fromJson(json, MAP_TYPE);
       GDATFormatUtil.encode(jsonMap.get("data"), schema, outputStream, false);
-      //TODO: Use OutStream in GDATEncoder to avoid making toByteArray call since it makes a copy.
-      ChannelBuffer dataRecordBuffer = ChannelBuffers.copiedBuffer(outputStream.toByteArray());
+      ChannelBuffer dataRecordBuffer = ChannelBuffers.copiedBuffer(outputStream.getByteArray(), 0,
+                                                                   outputStream.length());
       outputStream.reset();
       MessageEvent newMessageEvent = new UpstreamMessageEvent(ctx.getChannel(), dataRecordBuffer, e.getRemoteAddress());
       super.messageReceived(ctx, newMessageEvent);
+    }
+
+    static class OutStream extends ByteArrayOutputStream {
+
+      /**
+       * @return reference to the underlying byte array
+       */
+      public byte[] getByteArray() {
+        return buf;
+      }
+
+      public int length() {
+        return count;
+      }
     }
   }
 }
