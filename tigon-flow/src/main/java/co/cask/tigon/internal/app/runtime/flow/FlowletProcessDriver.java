@@ -512,9 +512,7 @@ final class FlowletProcessDriver extends AbstractExecutionThreadService {
 
   private TransactionContext createFlowletTransactionContext() {
     TransactionContext txContext = dataFabricFacade.createTransactionManager();
-    for (TransactionAware txAware : flowletContext.getTransactionAwares()) {
-      txContext.addTransactionAware(txAware);
-    }
+    flowletContext.addTransactionAwares(txContext);
     return txContext;
   }
 }

@@ -124,8 +124,10 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
     return flowletId;
   }
 
-  public List<TransactionAware> getTransactionAwares() {
-    return transactionAwares;
+  public void addTransactionAwares(TransactionContext transactionContext) {
+    for (TransactionAware transactionAware : transactionAwares) {
+      transactionContext.addTransactionAware(transactionAware);
+    }
   }
 
   @Override
