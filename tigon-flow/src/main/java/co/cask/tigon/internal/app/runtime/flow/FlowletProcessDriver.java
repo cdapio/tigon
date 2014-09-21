@@ -258,10 +258,11 @@ final class FlowletProcessDriver extends AbstractExecutionThreadService {
     }
 
     // Begin transaction and dequeue
-    final TransactionContext txContext = createFlowletTransactionContext();
+    final TransactionContext txContext = dataFabricFacade.createTransactionManager();
 
     try {
       txContext.start();
+      flowletContext.setTransactionContext(txContext);
 
       try {
         InputDatum<T> input = entry.getProcessSpec().getQueueReader().dequeue(0, TimeUnit.MILLISECONDS);
@@ -375,25 +376,11 @@ final class FlowletProcessDriver extends AbstractExecutionThreadService {
     final TransactionContext txContext = dataFabricFacade.createTransactionManager();
     try {
       txContext.start();
-
+      flowletContext.setTransactionContext(txContext);
       try {
         LOG.info("Initializing flowlet: " + flowletContext);
 
-        flowlet.initialize(new ForwardingFlowletContext(flowletContext) {
-          @Override
-          public void addTransactionAware(TransactionAware transactionAware) {
-            txContext.addTransactionAware(transactionAware);
-            delegate.addTransactionAware(transactionAware);
-          }
-
-          @Override
-          public void addTransactionAwares(Iterable<? extends TransactionAware> transactionAwares) {
-            for (TransactionAware txAware : transactionAwares) {
-              txContext.addTransactionAware(txAware);
-            }
-            delegate.addTransactionAwares(transactionAwares);
-          }
-        });
+        flowlet.initialize(flowletContext);
 
         LOG.info("Flowlet initialized: " + flowletContext);
       } catch (Throwable t) {
@@ -409,9 +396,10 @@ final class FlowletProcessDriver extends AbstractExecutionThreadService {
   }
 
   private void destroyFlowlet() {
-    final TransactionContext txContext = createFlowletTransactionContext();
+    final TransactionContext txContext = dataFabricFacade.createTransactionManager();
     try {
       txContext.start();
+      flowletContext.setTransactionContext(txContext);
       try {
         LOG.info("Destroying flowlet: " + flowletContext);
         flowlet.destroy();
@@ -508,11 +496,5 @@ final class FlowletProcessDriver extends AbstractExecutionThreadService {
         }
       }
     };
-  }
-
-  private TransactionContext createFlowletTransactionContext() {
-    TransactionContext txContext = dataFabricFacade.createTransactionManager();
-    flowletContext.addTransactionAwares(txContext);
-    return txContext;
   }
 }

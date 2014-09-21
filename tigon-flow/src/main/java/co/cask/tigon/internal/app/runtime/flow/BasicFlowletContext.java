@@ -51,6 +51,7 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
   private final FlowletMetrics flowletMetrics;
   private final Arguments runtimeArguments;
   private final List<TransactionAware> transactionAwares;
+  private TransactionContext transactionContext;
 
   BasicFlowletContext(Program program, String flowletId,
                       int instanceId, RunId runId,
@@ -93,11 +94,19 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
   @Override
   public void addTransactionAware(TransactionAware transactionAware) {
     transactionAwares.add(transactionAware);
+    if (transactionContext != null) {
+      transactionContext.addTransactionAware(transactionAware);
+    }
   }
 
   @Override
   public void addTransactionAwares(Iterable<? extends TransactionAware> transactionAwares) {
     Iterables.addAll(this.transactionAwares, transactionAwares);
+    if (transactionContext != null) {
+      for (TransactionAware transactionAware : transactionAwares) {
+        this.transactionContext.addTransactionAware(transactionAware);
+      }
+    }
   }
 
   /**
@@ -124,9 +133,10 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
     return flowletId;
   }
 
-  public void addTransactionAwares(TransactionContext transactionContext) {
+  public void setTransactionContext(TransactionContext transactionContext) {
+    this.transactionContext = transactionContext;
     for (TransactionAware transactionAware : transactionAwares) {
-      transactionContext.addTransactionAware(transactionAware);
+      this.transactionContext.addTransactionAware(transactionAware);
     }
   }
 
