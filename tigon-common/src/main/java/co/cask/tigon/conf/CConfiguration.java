@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Cask Data, Inc.
+ * Copyright © 2014 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -49,8 +49,8 @@ public class CConfiguration extends Configuration {
     // Create a new configuration instance, but do NOT initialize with
     // the Hadoop default properties.
     CConfiguration conf = new CConfiguration();
-    conf.addResource("cdap-default.xml");
-    conf.addResource("cdap-site.xml");
+    conf.addResource("tigon-default.xml");
+    conf.addResource("tigon-site.xml");
     return conf;
   }
 

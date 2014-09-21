@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Cask Data, Inc.
+ * Copyright © 2014 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -19,16 +19,30 @@ package co.cask.tigon.flow;
 import co.cask.tigon.api.flow.Flow;
 import co.cask.tigon.api.flow.FlowSpecification;
 import co.cask.tigon.app.program.ManifestFields;
+import co.cask.tigon.app.program.Program;
+import co.cask.tigon.app.program.Programs;
+import co.cask.tigon.conf.CConfiguration;
+import co.cask.tigon.conf.Constants;
 import co.cask.tigon.internal.app.FlowSpecificationAdapter;
+import co.cask.tigon.internal.app.runtime.BasicArguments;
+import co.cask.tigon.internal.app.runtime.ProgramController;
+import co.cask.tigon.internal.app.runtime.ProgramRunnerFactory;
+import co.cask.tigon.internal.app.runtime.SimpleProgramOptions;
 import co.cask.tigon.internal.flow.DefaultFlowSpecification;
 import co.cask.tigon.internal.io.ReflectionSchemaGenerator;
+import co.cask.tigon.lang.ApiResourceListHolder;
+import co.cask.tigon.lang.ClassLoaders;
+import co.cask.tigon.lang.jar.ProgramClassLoader;
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.common.io.InputSupplier;
 import com.google.gson.Gson;
+import com.google.inject.Inject;
+import org.apache.twill.filesystem.LocalLocationFactory;
 import org.apache.twill.filesystem.Location;
 import org.apache.twill.filesystem.LocationFactory;
 import org.apache.twill.internal.ApplicationBundler;
@@ -37,9 +51,14 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Enumeration;
 import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
@@ -52,9 +71,12 @@ public class DeployClient {
   private static final Gson GSON = new Gson();
 
   private final LocationFactory locationFactory;
+  private final ProgramRunnerFactory programRunnerFactory;
 
-  public DeployClient(LocationFactory locationFactory) {
-    this.locationFactory = locationFactory;
+  @Inject
+  public DeployClient(CConfiguration cConf, ProgramRunnerFactory programRunnerFactory) {
+    this.locationFactory = new LocalLocationFactory(new File(cConf.get(Constants.CFG_LOCAL_DATA_DIR)));
+    this.programRunnerFactory = programRunnerFactory;
   }
 
   /**
@@ -70,7 +92,57 @@ public class DeployClient {
     return manifest;
   }
 
-  public Location deployFlow(final String applicationId, Class<?> flowClz, File... bundleEmbeddedJars)
+  private static void expandJar(File jarPath, File unpackDir) throws Exception {
+    JarFile jar = new JarFile(jarPath);
+    Enumeration enumEntries = jar.entries();
+    while (enumEntries.hasMoreElements()) {
+      JarEntry file = (JarEntry) enumEntries.nextElement();
+      File f = new File(unpackDir + File.separator + file.getName());
+      if (file.isDirectory()) {
+        f.mkdirs();
+        continue;
+      } else {
+        f.getParentFile().mkdirs();
+      }
+      InputStream is = jar.getInputStream(file);
+      FileOutputStream fos = new FileOutputStream(f);
+      try {
+        while (is.available() > 0) {
+          fos.write(is.read());
+        }
+      } catch (IOException e) {
+        throw Throwables.propagate(e);
+      } finally {
+        fos.close();
+        is.close();
+      }
+    }
+  }
+
+  private Location createJar(File jarPath, String classToLoad, File jarUnpackDir) throws Exception {
+    expandJar(jarPath, jarUnpackDir);
+    URL jarURL = jarUnpackDir.toURI().toURL();
+    ProgramClassLoader filterClassLoader = ClassLoaders.newProgramClassLoader(jarUnpackDir,
+                                                                              ApiResourceListHolder.getResourceList(),
+                                                                              DeployClient.class.getClassLoader());
+    URLClassLoader classLoader = new URLClassLoader(new URL[]{jarURL}, filterClassLoader);
+    Class<?> clz = classLoader.loadClass(classToLoad);
+    if (!(clz.newInstance() instanceof Flow)) {
+      throw new Exception("Expected Flow class");
+    }
+    ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+    Thread.currentThread().setContextClassLoader(classLoader);
+    return deployFlow(clz);
+  }
+
+  public ProgramController deployFlow(File jarPath, String classToLoad, File jarUnpackDir) throws Exception {
+    Location deployedJar = createJar(jarPath, classToLoad, jarUnpackDir);
+    Program program = Programs.createWithUnpack(deployedJar, jarUnpackDir);
+    return programRunnerFactory.create(ProgramRunnerFactory.Type.FLOW).run(
+      program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments()));
+  }
+
+  public Location deployFlow(Class<?> flowClz, File... bundleEmbeddedJars)
     throws Exception {
     Preconditions.checkNotNull(flowClz, "Flow cannot be null.");
     Location deployedJar = locationFactory.create(createDeploymentJar(
@@ -116,7 +188,7 @@ public class DeployClient {
         while (jarEntry != null) {
           boolean isDir = jarEntry.isDirectory();
           String entryName = jarEntry.getName();
-          if (!entryName.equals("classes/")) {
+          if (!entryName.equals("classes/") && !entryName.endsWith("META-INF/MANIFEST.MF")) {
             if (entryName.startsWith("classes/")) {
               jarEntry = new JarEntry(entryName.substring("classes/".length()));
             } else {
