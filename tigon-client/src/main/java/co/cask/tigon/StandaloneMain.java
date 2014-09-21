@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Cask Data, Inc.
+ * Copyright © 2014 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,6 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package co.cask.tigon;
 
 import com.continuuity.tephra.TransactionManager;
@@ -73,7 +74,7 @@ public class StandaloneMain {
     deployClient = injector.getInstance(DeployClient.class);
   }
 
-  static void usage(boolean error) {
+  private static void usage(boolean error) {
     PrintStream out = (error ? System.err : System.out);
     out.println("java -cp .:lib/* co.cask.tigon.StandaloneMain <path-to-JAR> <FlowClassName>");
     out.println("Example: java -cp .:lib/* co.cask.tigon.StandaloneMain /home/user/tweetFlow-1.0.jar " +
@@ -104,12 +105,12 @@ public class StandaloneMain {
       File jarPath = new File(args[0]);
       String mainClassName = args[1];
 
-      StandaloneMain main = null;
       try {
+        StandaloneMain main;
         main = createStandaloneMain();
         main.startUp(jarPath, mainClassName);
       } catch (Exception e) {
-        e.printStackTrace();
+        LOG.error(e.getMessage(), e);
       }
     }
   }

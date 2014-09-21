@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Cask Data, Inc.
+ * Copyright © 2014 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -78,7 +78,7 @@ public class DistributedMain {
     deployClient = injector.getInstance(DeployClient.class);
   }
 
-  static void usage(boolean error) {
+  private static void usage(boolean error) {
     PrintStream out = (error ? System.err : System.out);
     out.println(
       "Usage:   java -cp lib/*:<hadoop/hbase classpath> co.cask.tigon.DistributedMain <path-to-JAR> <FlowClassName>");
@@ -110,8 +110,8 @@ public class DistributedMain {
       File jarPath = new File(args[0]);
       String mainClassName = args[1];
 
-      DistributedMain main = null;
       try {
+        DistributedMain main;
         main = createDistributedMain();
         main.startUp(jarPath, mainClassName);
       } catch (Exception e) {
