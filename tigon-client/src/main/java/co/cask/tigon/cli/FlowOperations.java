@@ -34,6 +34,8 @@ public interface FlowOperations extends Service {
 
   void stopFlow(String flowName);
 
+  void deleteFlow(String flowName);
+
   List<InetSocketAddress> discover(String flowName, String service);
 
   void setInstances(String flowName, String flowInstance, int instanceCount);

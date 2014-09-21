@@ -69,7 +69,7 @@ public class DistributedMain {
 
     CConfiguration cConf = CConfiguration.create();
     cConf.set(Constants.Zookeeper.QUORUM, zkQuorumString);
-    cConf.set(Constants.ROOT_NAMESPACE, rootNamespace);
+    cConf.set(Constants.Location.ROOT_NAMESPACE, rootNamespace);
     cConf.set(Constants.CFG_LOCAL_DATA_DIR, localDataDir.getAbsolutePath());
     cConf.reloadConfiguration();
     Configuration hConf = HBaseConfiguration.create();
@@ -159,6 +159,9 @@ public class DistributedMain {
       } else if (command.equals("stop")) {
         Preconditions.checkArgument(args.length == 2);
         flowOperations.stopFlow(args[1]);
+      } else if (command.equals("delete")) {
+        Preconditions.checkArgument(args.length == 2);
+        flowOperations.deleteFlow(args[1]);
       } else if (command.equals("set")) {
         Preconditions.checkArgument(args.length == 4);
         flowOperations.setInstances(args[1], args[2], Integer.valueOf(args[3]));

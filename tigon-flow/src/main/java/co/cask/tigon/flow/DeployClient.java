@@ -56,6 +56,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
@@ -113,7 +114,7 @@ public class DeployClient {
     }
   }
 
-  private Location createJar(File jarPath, String classToLoad, File jarUnpackDir) throws Exception {
+  public Location createFlowJar(File jarPath, String classToLoad, File jarUnpackDir) throws Exception {
     expandJar(jarPath, jarUnpackDir);
     URL jarURL = jarUnpackDir.toURI().toURL();
     ProgramClassLoader filterClassLoader = ClassLoaders.newProgramClassLoader(jarUnpackDir,
@@ -126,17 +127,21 @@ public class DeployClient {
     }
     ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
     Thread.currentThread().setContextClassLoader(classLoader);
-    return deployFlow(clz);
+    return jarForTestBase(clz);
   }
 
-  public ProgramController deployFlow(File jarPath, String classToLoad, File jarUnpackDir) throws Exception {
-    Location deployedJar = createJar(jarPath, classToLoad, jarUnpackDir);
-    Program program = Programs.createWithUnpack(deployedJar, jarUnpackDir);
+  public ProgramController startFlow(Program program, Map<String, String> userArgs) {
     return programRunnerFactory.create(ProgramRunnerFactory.Type.FLOW).run(
-      program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments()));
+      program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments(userArgs)));
   }
 
-  public Location deployFlow(Class<?> flowClz, File... bundleEmbeddedJars)
+  public ProgramController startFlow(Location deployJar, Map<String, String> runtimeArgs)
+    throws Exception {
+    Program program = Programs.create(deployJar);
+    return startFlow(program, runtimeArgs);
+  }
+
+  public Location jarForTestBase(Class<?> flowClz, File... bundleEmbeddedJars)
     throws Exception {
     Preconditions.checkNotNull(flowClz, "Flow cannot be null.");
     Location deployedJar = locationFactory.create(createDeploymentJar(
@@ -165,6 +170,9 @@ public class DeployClient {
     bundler.createBundle(jarLocation, clz);
 
     Location deployJar = locationFactory.create(clz.getName()).getTempFile(".jar");
+
+    Flow flow = (Flow) clz.newInstance();
+    FlowSpecification flowSpec = new DefaultFlowSpecification(clz.getClass().getName(), flow.configure());
 
     // Creates Manifest
     Manifest manifest = new Manifest();
@@ -209,8 +217,7 @@ public class DeployClient {
 
       JarEntry jarEntry = new JarEntry(ManifestFields.MANIFEST_SPEC_FILE);
       jarOutput.putNextEntry(jarEntry);
-      Flow flow = (Flow) clz.newInstance();
-      FlowSpecification flowSpec = new DefaultFlowSpecification(clz.getClass().getName(), flow.configure());
+
       ByteStreams.copy(getInputSupplier(flowSpec), jarOutput);
     } finally {
       jarOutput.close();

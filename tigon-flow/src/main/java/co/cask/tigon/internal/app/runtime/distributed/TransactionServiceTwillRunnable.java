@@ -22,6 +22,7 @@ import com.continuuity.tephra.persist.TransactionStateStorage;
 import com.continuuity.tephra.runtime.TransactionStateStorageProvider;
 import co.cask.tigon.app.guice.MetricsClientRuntimeModule;
 import co.cask.tigon.conf.CConfiguration;
+import co.cask.tigon.conf.Constants;
 import co.cask.tigon.data.runtime.DataFabricModules;
 import co.cask.tigon.data.runtime.HDFSTransactionStateStorageProvider;
 import co.cask.tigon.data.runtime.TransactionManagerProvider;
@@ -64,6 +65,8 @@ public class TransactionServiceTwillRunnable extends AbstractMasterTwillRunnable
   @Override
   protected void doInit(TwillContext context) {
     try {
+      getCConfiguration().set(Constants.Transaction.ADDRESS, context.getHost().getCanonicalHostName());
+
       LOG.info("Initializing runnable {}", name);
       Injector injector = createGuiceInjector(getCConfiguration(), getConfiguration());
 
