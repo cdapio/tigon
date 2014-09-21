@@ -21,6 +21,7 @@ import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Closeables;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
+import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.apache.twill.filesystem.Location;
 import org.slf4j.Logger;
@@ -75,6 +76,52 @@ public final class ExternalProgramExecutor extends AbstractExecutionThreadServic
                          Arrays.toString(args));
   }
 
+  private void killRTS() {
+    try {
+      Process killRTS = new ProcessBuilder("kill", "-9", "-" + pid).start();
+    } catch (IOException e) {
+      LOG.warn("Failed to shutdown RTS process");
+    }
+  }
+
+  /**
+   * Listener class for cleaning up after the RTS process has been terminated
+   */
+  class RTSGarbageCollector implements Listener {
+    @Override
+    public void terminated(State from) {
+      // RTS process changes its process group ID to its own pid and then spawns child processes
+      // Killing that process group to kill the RTS process and all its descendants
+      try {
+        TimeUnit.SECONDS.sleep(SHUTDOWN_TIMEOUT_SECONDS);
+      } catch (InterruptedException e) {
+        //no-op
+      }
+      killRTS();
+      process.destroy();
+    }
+
+    @Override
+    public void starting() {
+      //no-op
+    }
+
+    @Override
+    public void running() {
+      //no-op
+    }
+
+    @Override
+    public void stopping(State from) {
+      //no-op
+    }
+
+    @Override
+    public void failed(State from, Throwable failure) {
+      //no-op
+    }
+  }
+
   @Override
   protected void startUp() throws Exception {
     // We need two threads.
@@ -85,6 +132,10 @@ public final class ExternalProgramExecutor extends AbstractExecutionThreadServic
 
     // the Shutdown thread is to time the shutdown and kill the process if it timeout.
     shutdownThread = createShutdownThread();
+
+    if (name.toLowerCase().contains("rts")) {
+      this.addListener(new RTSGarbageCollector(), MoreExecutors.sameThreadExecutor());
+    }
 
     List<String> cmd = ImmutableList.<String>builder().add(executable.toURI().getPath()).add(args).build();
     process = new ProcessBuilder(cmd).directory(new File(workingDir.toURI().getPath())).start();
@@ -99,6 +150,23 @@ public final class ExternalProgramExecutor extends AbstractExecutionThreadServic
     } catch (Throwable e) {
       LOG.info("Cannot retrieve process ID of RTS process");
     }
+
+    // Shutdown hooks to clean up at the end of ALL executions (including erroneous termination)
+    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+      @Override
+      public void run() {
+        LOG.info("SHUTDOWN HOOK : Shutting down process - {}", name);
+        executor.shutdownNow();
+        if (shutdownThread.getState().equals(Thread.State.NEW)) {
+          shutdownThread.start();
+          try {
+            shutdownThread.join();
+          } catch (InterruptedException e) {
+            process.destroy();
+          }
+        }
+      }
+    }));
   }
 
   @Override
@@ -122,12 +190,13 @@ public final class ExternalProgramExecutor extends AbstractExecutionThreadServic
   @Override
   protected void triggerShutdown() {
     executor.shutdownNow();
-    shutdownThread.start();
+    if (shutdownThread.getState().equals(Thread.State.NEW)) {
+      shutdownThread.start();
+    }
   }
 
   @Override
   protected void shutDown() throws Exception {
-    shutdownThread.interrupt();
     shutdownThread.join();
   }
 
@@ -136,22 +205,16 @@ public final class ExternalProgramExecutor extends AbstractExecutionThreadServic
       @Override
       public void run() {
         try {
-          // Wait for at most SHUTDOWN_TIME and kill the process
+          LOG.info("Shutting down {}", name);
           TimeUnit.SECONDS.sleep(SHUTDOWN_TIMEOUT_SECONDS);
-          LOG.warn("Process {} took too long to stop. Killing it.", this);
-          if (name.toLowerCase().contains("rts")) {
-            // RTS process changes its process group ID to its own pid and then spawns child processes
-            // Killing that process group to kill the RTS process and all its descendants
-            try {
-              Process killRTS = new ProcessBuilder("kill", "-9", "-" + pid).start();
-            } catch (IOException e) {
-              LOG.warn("Failed to shutdown RTS process");
-            }
-          } else {
-            process.destroy();
-          }
         } catch (InterruptedException e) {
           // If interrupted, meaning the process has been shutdown nicely.
+        } finally {
+          if (name.toLowerCase().contains("rts")) {
+            killRTS();
+          }
+          process.destroy();
+          LOG.info("Process {} destroyed!", name);
         }
       }
     };
