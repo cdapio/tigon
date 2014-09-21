@@ -27,6 +27,7 @@ import co.cask.tigon.internal.app.runtime.Arguments;
 import co.cask.tigon.logging.FlowletLoggingContext;
 import co.cask.tigon.logging.LoggingContext;
 import co.cask.tigon.metrics.MetricsCollectionService;
+import com.continuuity.tephra.TransactionContext;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;

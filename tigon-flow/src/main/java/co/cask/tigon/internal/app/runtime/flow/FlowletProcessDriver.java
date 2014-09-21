@@ -378,15 +378,30 @@ final class FlowletProcessDriver extends AbstractExecutionThreadService {
 
       try {
         LOG.info("Initializing flowlet: " + flowletContext);
-        flowlet.initialize(new ForwardingFlowletContext(flowletContext, txContext));
-        LOG.info("Flowlet initialized: " + flowletContext);
 
-        txContext.finish();
-      } catch (Exception e) {
-        LOG.error("User code exception. Aborting transaction.", e);
-        txContext.abort(new TransactionFailureException("User code exception. Aborting transaction", e));
-        throw Throwables.propagate(e);
+        flowlet.initialize(new ForwardingFlowletContext(flowletContext) {
+          @Override
+          public void addTransactionAware(TransactionAware transactionAware) {
+            txContext.addTransactionAware(transactionAware);
+            delegate.addTransactionAware(transactionAware);
+          }
+
+          @Override
+          public void addTransactionAwares(Iterable<? extends TransactionAware> transactionAwares) {
+            for (TransactionAware txAware : transactionAwares) {
+              txContext.addTransactionAware(txAware);
+            }
+            delegate.addTransactionAwares(transactionAwares);
+          }
+        });
+
+        LOG.info("Flowlet initialized: " + flowletContext);
+      } catch (Throwable t) {
+        LOG.error("User code exception. Aborting transaction.", t);
+        txContext.abort(new TransactionFailureException("User code exception. Aborting transaction", t));
+        throw Throwables.propagate(t);
       }
+      txContext.finish();
     } catch (TransactionFailureException e) {
       LOG.error("Flowlet throws exception during flowlet initialize: " + flowletContext, e);
       throw Throwables.propagate(e);
@@ -401,13 +416,12 @@ final class FlowletProcessDriver extends AbstractExecutionThreadService {
         LOG.info("Destroying flowlet: " + flowletContext);
         flowlet.destroy();
         LOG.info("Flowlet destroyed: " + flowletContext);
-
-        txContext.finish();
-      } catch (Exception e) {
-        LOG.error("User code exception. Aborting transaction.", e);
-        txContext.abort(new TransactionFailureException("User code exception. Aborting transaction", e));
+      } catch (Throwable t) {
+        LOG.error("User code exception. Aborting transaction.", t);
+        txContext.abort(new TransactionFailureException("User code exception. Aborting transaction", t));
         // No need to propagate, as it is shutting down.
       }
+      txContext.finish();
     } catch (TransactionFailureException e) {
       LOG.error("Flowlet throws exception during flowlet destroy: " + flowletContext, e);
       // No need to propagate, as it is shutting down.

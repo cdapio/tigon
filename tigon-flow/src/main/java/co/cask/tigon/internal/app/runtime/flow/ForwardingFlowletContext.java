@@ -16,8 +16,6 @@
 
 package co.cask.tigon.internal.app.runtime.flow;
 
-import com.continuuity.tephra.TransactionAware;
-import com.continuuity.tephra.TransactionContext;
 import co.cask.tigon.api.flow.flowlet.FlowletContext;
 import co.cask.tigon.api.flow.flowlet.FlowletSpecification;
 
@@ -25,20 +23,16 @@ import java.util.Map;
 
 /**
  * A forwarding {@link FlowletContext} that delegates to the underlying instance.
- * It adds any {@link TransactionAware}s to the current {@link TransactionContext}.
  */
-public class ForwardingFlowletContext implements FlowletContext {
-  private final FlowletContext delegate;
-  private final TransactionContext transactionContext;
+public abstract class ForwardingFlowletContext implements FlowletContext {
+  protected final FlowletContext delegate;
 
   /**
    * Create a FlowletContext that delegates to the underlying delegate.
    * @param flowletContext to delegate to.
-   * @param transactionContext to add TransactionAwares to.
    */
-  public ForwardingFlowletContext(FlowletContext flowletContext, TransactionContext transactionContext) {
+  public ForwardingFlowletContext(FlowletContext flowletContext) {
     this.delegate = flowletContext;
-    this.transactionContext = transactionContext;
   }
 
   @Override
@@ -59,20 +53,6 @@ public class ForwardingFlowletContext implements FlowletContext {
   @Override
   public FlowletSpecification getSpecification() {
     return delegate.getSpecification();
-  }
-
-  @Override
-  public void addTransactionAware(TransactionAware transactionAware) {
-    transactionContext.addTransactionAware(transactionAware);
-    delegate.addTransactionAware(transactionAware);
-  }
-
-  @Override
-  public void addTransactionAwares(Iterable<? extends TransactionAware> transactionAwares) {
-    for (TransactionAware txAware : transactionAwares) {
-      transactionContext.addTransactionAware(txAware);
-    }
-    delegate.addTransactionAwares(transactionAwares);
   }
 
   @Override

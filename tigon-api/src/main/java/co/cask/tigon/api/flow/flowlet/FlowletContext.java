@@ -51,7 +51,7 @@ public interface FlowletContext extends RuntimeContext {
 
   /**
    * Add a list of {@link TransactionAware}s to the context.
-   * @param transactionAware to add to the context.
+   * @param transactionAwares to add to the context.
    */
-  void addTransactionAwares(Iterable<? extends TransactionAware> transactionAware);
+  void addTransactionAwares(Iterable<? extends TransactionAware> transactionAwares);
 }
