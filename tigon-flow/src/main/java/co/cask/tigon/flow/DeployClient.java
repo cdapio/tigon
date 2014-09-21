@@ -36,6 +36,7 @@ import co.cask.tigon.lang.jar.ProgramClassLoader;
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Sets;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.common.io.InputSupplier;
@@ -57,6 +58,7 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Enumeration;
 import java.util.Map;
+import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarInputStream;
@@ -187,17 +189,19 @@ public class DeployClient {
       JarInputStream jarInput = new JarInputStream(jarLocation.getInputStream());
       try {
         JarEntry jarEntry = jarInput.getNextJarEntry();
+        Set<String> entriesAdded = Sets.newHashSet();
         while (jarEntry != null) {
           boolean isDir = jarEntry.isDirectory();
           String entryName = jarEntry.getName();
-          if (!entryName.equals("classes/") && !entryName.endsWith("META-INF/MANIFEST.MF")) {
+          if (!entryName.equals("classes/") && !entryName.endsWith("META-INF/MANIFEST.MF") &&
+            !entriesAdded.contains(entryName)) {
             if (entryName.startsWith("classes/")) {
               jarEntry = new JarEntry(entryName.substring("classes/".length()));
             } else {
               jarEntry = new JarEntry(entryName);
             }
             jarOutput.putNextEntry(jarEntry);
-
+            entriesAdded.add(jarEntry.getName());
             if (!isDir) {
               ByteStreams.copy(jarInput, jarOutput);
             }
