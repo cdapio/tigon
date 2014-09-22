@@ -82,7 +82,7 @@
     <http.component.version>4.2.5</http.component.version>
     <junit.version>4.11</junit.version>
     <slf4j.version>1.7.5</slf4j.version>
-    <tephra.version>0.2.1</tephra.version>
+    <tephra.version>0.3.0</tephra.version>
     <thrift.version>0.9.0</thrift.version>
     <twill.version>0.4.0-incubating-SNAPSHOT</twill.version>
   </properties>
@@ -95,17 +95,17 @@
         <version>${nettyhttp.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.continuuity.tephra</groupId>
+        <groupId>co.cask.tephra</groupId>
         <artifactId>tephra-core</artifactId>
         <version>${tephra.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.continuuity.tephra</groupId>
+        <groupId>co.cask.tephra</groupId>
         <artifactId>tephra-hbase-compat-0.94</artifactId>
         <version>${tephra.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.continuuity.tephra</groupId>
+        <groupId>co.cask.tephra</groupId>
         <artifactId>tephra-hbase-compat-0.96</artifactId>
         <version>${tephra.version}</version>
       </dependency>

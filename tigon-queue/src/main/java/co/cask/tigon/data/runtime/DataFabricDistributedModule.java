@@ -16,12 +16,12 @@
 
 package co.cask.tigon.data.runtime;
 
-import com.continuuity.tephra.TxConstants;
-import com.continuuity.tephra.distributed.PooledClientProvider;
-import com.continuuity.tephra.distributed.ThreadLocalClientProvider;
-import com.continuuity.tephra.distributed.ThriftClientProvider;
-import com.continuuity.tephra.metrics.TxMetricsCollector;
-import com.continuuity.tephra.runtime.TransactionModules;
+import co.cask.tephra.TxConstants;
+import co.cask.tephra.distributed.PooledClientProvider;
+import co.cask.tephra.distributed.ThreadLocalClientProvider;
+import co.cask.tephra.distributed.ThriftClientProvider;
+import co.cask.tephra.metrics.TxMetricsCollector;
+import co.cask.tephra.runtime.TransactionModules;
 import co.cask.tigon.conf.CConfiguration;
 import co.cask.tigon.data.queue.QueueClientFactory;
 import co.cask.tigon.data.transaction.metrics.TransactionManagerMetricsCollector;
@@ -64,7 +64,7 @@ public class DataFabricDistributedModule extends AbstractModule {
   }
 
   /**
-   * Provides implementation of {@link com.continuuity.tephra.distributed.ThriftClientProvider} based on configuration.
+   * Provides implementation of {@link ThriftClientProvider} based on configuration.
    */
   @Singleton
   private static final class ThriftClientProviderSupplier implements Provider<ThriftClientProvider> {

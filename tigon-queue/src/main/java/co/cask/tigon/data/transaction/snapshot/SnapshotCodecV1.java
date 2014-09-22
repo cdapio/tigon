@@ -16,9 +16,10 @@
 
 package co.cask.tigon.data.transaction.snapshot;
 
-import com.continuuity.tephra.TransactionManager;
-import com.continuuity.tephra.snapshot.BinaryDecoder;
-import com.continuuity.tephra.snapshot.BinaryEncoder;
+import co.cask.tephra.TransactionManager;
+import co.cask.tephra.persist.TransactionSnapshot;
+import co.cask.tephra.snapshot.BinaryDecoder;
+import co.cask.tephra.snapshot.BinaryEncoder;
 import com.google.common.collect.Maps;
 
 import java.io.IOException;
@@ -26,7 +27,7 @@ import java.util.Map;
 import java.util.NavigableMap;
 
 /**
- * Handles serialization/deserialization of a {@link com.continuuity.tephra.persist.TransactionSnapshot} and
+ * Handles serialization/deserialization of a {@link TransactionSnapshot} and
  * its elements to {@code byte[]}.
  */
 public class SnapshotCodecV1 extends AbstractSnapshotCodec {

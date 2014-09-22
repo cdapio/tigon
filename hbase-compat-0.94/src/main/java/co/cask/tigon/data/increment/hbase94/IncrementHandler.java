@@ -16,9 +16,9 @@
 
 package co.cask.tigon.data.increment.hbase94;
 
-import com.continuuity.tephra.coprocessor.TransactionStateCache;
-import com.continuuity.tephra.hbase94.Filters;
-import com.continuuity.tephra.persist.TransactionSnapshot;
+import co.cask.tephra.coprocessor.TransactionStateCache;
+import co.cask.tephra.hbase94.Filters;
+import co.cask.tephra.persist.TransactionSnapshot;
 import co.cask.tigon.conf.Constants;
 import co.cask.tigon.data.transaction.coprocessor.DefaultTransactionStateCacheSupplier;
 import com.google.common.base.Supplier;

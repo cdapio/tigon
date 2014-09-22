@@ -16,7 +16,7 @@
 
 package co.cask.tigon.data.transaction.queue.hbase;
 
-import com.continuuity.tephra.Transaction;
+import co.cask.tephra.Transaction;
 import co.cask.tigon.data.queue.ConsumerConfig;
 import co.cask.tigon.data.queue.DequeueStrategy;
 import co.cask.tigon.data.queue.QueueName;

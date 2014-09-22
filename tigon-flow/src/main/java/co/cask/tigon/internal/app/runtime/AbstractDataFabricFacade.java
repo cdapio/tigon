@@ -16,11 +16,11 @@
 
 package co.cask.tigon.internal.app.runtime;
 
-import com.continuuity.tephra.TransactionAware;
-import com.continuuity.tephra.TransactionContext;
-import com.continuuity.tephra.TransactionExecutor;
-import com.continuuity.tephra.TransactionExecutorFactory;
-import com.continuuity.tephra.TransactionSystemClient;
+import co.cask.tephra.TransactionAware;
+import co.cask.tephra.TransactionContext;
+import co.cask.tephra.TransactionExecutor;
+import co.cask.tephra.TransactionExecutorFactory;
+import co.cask.tephra.TransactionSystemClient;
 import co.cask.tigon.data.queue.ConsumerConfig;
 import co.cask.tigon.data.queue.QueueClientFactory;
 import co.cask.tigon.data.queue.QueueConsumer;
