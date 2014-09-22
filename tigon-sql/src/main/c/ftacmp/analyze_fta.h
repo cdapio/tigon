@@ -233,7 +233,7 @@ struct aggr_table_entry{
 			rdt = new data_type();
 			rdt->set_aggr_data_type(o,se->get_data_type());
 		}else{
-			rdt = new data_type("Uint");
+			rdt = new data_type("INT");
 		}
 		is_superag = s;
 		is_running = false;
