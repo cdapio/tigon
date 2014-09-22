@@ -2756,7 +2756,7 @@ void generate_makefile(vector<string> &input_file_names, int nfiles,
 ("#!/bin/sh\n"
 "./stopit\n"
 +root_path+"/bin/gshub.py&\n"
-"sleep 1\n"
+"sleep 5\n"
 "if [ ! -f gshub.log ]\n"
 "then\n"
 "\techo \"Failed to start bin/gshub.py\"\n"
