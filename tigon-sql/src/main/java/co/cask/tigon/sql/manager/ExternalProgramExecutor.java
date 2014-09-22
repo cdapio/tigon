@@ -79,7 +79,8 @@ public final class ExternalProgramExecutor extends AbstractExecutionThreadServic
   private void killRTS() {
     try {
       Process killRTS = new ProcessBuilder("kill", "-9", "-" + pid).start();
-    } catch (IOException e) {
+      killRTS.waitFor();
+    } catch (Exception e) {
       LOG.warn("Failed to shutdown RTS process");
     }
   }
@@ -205,7 +206,7 @@ public final class ExternalProgramExecutor extends AbstractExecutionThreadServic
       @Override
       public void run() {
         try {
-          LOG.info("Shutting down {}", name);
+          LOG.info("Process {} preparing for shutdown. Waiting for EOF record.", name);
           TimeUnit.SECONDS.sleep(SHUTDOWN_TIMEOUT_SECONDS);
         } catch (InterruptedException e) {
           // If interrupted, meaning the process has been shutdown nicely.
