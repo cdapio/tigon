@@ -1,3 +1,17 @@
+/* ------------------------------------------------
+Copyright 2014 AT&T Intellectual Property
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+     http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+ ------------------------------------------- */
 
 #ifndef MERGE_OPERATOR_OOP_H
 #define MERGE_OPERATOR_OOP_H
@@ -52,7 +66,7 @@ private :
 	}
 
 
-	// purge tuples in the queue, which are from stream channel -- Jin	
+	// purge tuples in the queue, which are from stream channel -- Jin
 	void purge_queue(int channel, list<host_tuple>& result){
 		if (merge_queue.empty())
 			return;
@@ -95,7 +109,7 @@ public:
 			fprintf(stderr, "Illegal channel number %d for two-way merge\n", tup.channel);
 			return 0;
 		}
-	
+
 		func.get_timestamp(tup);
 		func.compare_with_temp_status(tup.channel);
 		bool is_temp_tuple = func.temp_status_received(tup);
@@ -103,8 +117,8 @@ public:
 	 	if (!is_temp_tuple) {
 			result.push_back(tup);
 		} else {
-			func.update_temp_status(tup); 	
-			
+			func.update_temp_status(tup);
+
 			host_tuple temp_tup;
 			if (!func.create_temp_status_tuple(temp_tup)) {
 				temp_tup.channel = output_channel;
@@ -113,9 +127,9 @@ public:
 			// clear memory of heap-resident temporal tuples
 			tup.free_tuple();
 		}
-	
-		
-	} 	
+
+		return 0;
+	}
 
 
 
