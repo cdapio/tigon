@@ -9551,7 +9551,7 @@ ret +=
 "			last_posted_timestamp_1=timestamp;\n"
 //"			first_execution_1 = false;\n"
 "		}\n"
-"		return 0\n";
+"		return 0\n"
 "   }\n"
 ;
 	ret+=
@@ -9569,7 +9569,7 @@ ret+=
 "			last_posted_timestamp_1=l_timestamp;\n"
 //"			first_execution_1 = false;\n"
 "		}\n"
-"		return 0;\n";
+"		return 0;\n"
 "   }\n"
 ;
 /*
@@ -9624,7 +9624,7 @@ ret +=
 "				last_posted_timestamp_1 = timestamp-slack;\n"
 "		}\n"
 "	}\n"
-"	return 0\n";
+"	return 0\n"
 "    }\n\n";
 	}else{
 	ret +=
