@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Cask Data, Inc.
+ * Copyright © 2014 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,6 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package co.cask.tigon.internal.app.runtime.distributed;
 
 import co.cask.tigon.api.flow.FlowSpecification;
@@ -20,12 +21,15 @@ import co.cask.tigon.api.flow.FlowletDefinition;
 import co.cask.tigon.api.flow.flowlet.FlowletSpecification;
 import co.cask.tigon.app.program.Program;
 import co.cask.tigon.app.program.ProgramType;
+import co.cask.tigon.conf.Constants;
 import com.google.common.base.Preconditions;
 import org.apache.twill.api.EventHandler;
 import org.apache.twill.api.ResourceSpecification;
 import org.apache.twill.api.TwillApplication;
 import org.apache.twill.api.TwillSpecification;
 import org.apache.twill.filesystem.Location;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.util.Map;
@@ -35,6 +39,7 @@ import java.util.Map;
  */
 public final class FlowTwillApplication implements TwillApplication {
 
+  private static final Logger LOG = LoggerFactory.getLogger(FlowTwillApplication.class);
   private final FlowSpecification spec;
   private final Program program;
   private final File hConfig;
@@ -53,8 +58,7 @@ public final class FlowTwillApplication implements TwillApplication {
   @Override
   public TwillSpecification configure() {
     TwillSpecification.Builder.MoreRunnable moreRunnable = TwillSpecification.Builder.with()
-      .setName(String.format("%s.%s",
-                             ProgramType.FLOW.name().toLowerCase(), spec.getName()))
+      .setName(String.format("%s.%s", ProgramType.FLOW.name().toLowerCase(), spec.getName()))
       .withRunnable();
 
     Location programLocation = program.getJarLocation();
@@ -78,6 +82,14 @@ public final class FlowTwillApplication implements TwillApplication {
     }
 
     Preconditions.checkState(runnableSetter != null, "No flowlet for the flow.");
+    //TODO: What if the flowlet name is named "txManager"?
+    runnableSetter = moreRunnable
+      .add("txManager", new TransactionServiceTwillRunnable(Constants.Service.TRANSACTION, "cConf.xml", "hConf.xml"))
+      .withLocalFiles()
+      .add(programName, programLocation.toURI())
+      .add("cConf.xml", cConfig.toURI())
+      .add("hConf.xml", hConfig.toURI())
+      .apply();
     return runnableSetter.anyOrder().withEventHandler(eventHandler).build();
   }
 }

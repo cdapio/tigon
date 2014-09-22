@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Cask Data, Inc.
+ * Copyright © 2014 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -63,7 +63,6 @@ public final class ClassLoaders {
 
   public static ProgramClassLoader newProgramClassLoader(File unpackedJarDir, Iterable<String> apiResourceList,
                                                          ClassLoader parentClassLoader) throws IOException {
-    // TODO: Unify the creation of FilterClassLoader REACTOR-760
     Predicate<String> predicate = Predicates.in(Sets.newHashSet(apiResourceList));
     ClassLoader filterParent = Objects.firstNonNull(Thread.currentThread().getContextClassLoader(),
                                                     ClassLoaders.class.getClassLoader());

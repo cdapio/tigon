@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Cask, Inc.
+ * Copyright © 2014 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -34,8 +34,8 @@ import co.cask.tigon.sql.io.GDATDecoder;
 import co.cask.tigon.sql.io.MethodsDriver;
 import co.cask.tigon.sql.util.MetaInformationParser;
 import com.google.common.base.Stopwatch;
-import com.google.common.base.Throwables;
 import com.google.common.io.Files;
+import org.apache.commons.io.FileUtils;
 import org.apache.twill.common.Services;
 import org.apache.twill.filesystem.LocalLocationFactory;
 import org.apache.twill.filesystem.Location;
@@ -44,6 +44,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import java.util.Set;
@@ -54,7 +55,7 @@ import javax.annotation.Nullable;
  * Abstract class to implement InputFlowlet.
  */
 public abstract class AbstractInputFlowlet extends AbstractFlowlet implements ProcessMonitor {
-
+  private static final Logger LOG = LoggerFactory.getLogger(AbstractInputFlowlet.class);
   private File tmpFolder;
   private Metrics metrics;
   private InputFlowletConfigurer configurer;
@@ -125,21 +126,12 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
   @Override
   public void initialize(FlowletContext ctx) throws Exception {
 
-    // TODO : Remove after setting up Big Flow Driver
-    metrics = new Metrics() {
-      @Override
-      public void count(String counterName, int delta) {
-        //LOG.info("[MetricsCounter]" + counterName + " : " + delta);
-      }
-    };
-
     DefaultInputFlowletConfigurer configurer = new DefaultInputFlowletConfigurer(this);
     create(configurer);
     InputFlowletSpecification spec = configurer.createInputFlowletSpec();
 
     // Setup temporary directory structure
     tmpFolder = Files.createTempDir();
-    tmpFolder.deleteOnExit();
     LocationFactory locationFactory = new LocalLocationFactory(tmpFolder);
 
     Location baseDir = locationFactory.create("baseDir");
@@ -168,19 +160,6 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
     //Initialize stopwatch and retry counter
     stopwatch = new Stopwatch();
     retryCounter = 0;
-  }
-
-  // TODO : Remove after setting up Big Flow Driver
-  private static final Logger LOG = LoggerFactory.getLogger(AbstractInputFlowlet.class);
-
-  @Tick(delay = 200L, unit = TimeUnit.MILLISECONDS)
-  public void processGDATRecordsDemo() {
-    LOG.info("Processing Data Queue");
-    try {
-      processGDATRecords();
-    } catch (Exception e) {
-      Throwables.propagate(e);
-    }
   }
 
   /**
@@ -233,6 +212,11 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
 
   @Override
   public void destroy() {
+    try {
+      FileUtils.deleteDirectory(tmpFolder);
+    } catch (IOException e) {
+      LOG.warn("Failed to delete {}", tmpFolder.toURI().toString());
+    }
     Services.chainStop(healthInspector, inputFlowletService);
     super.destroy();
   }
@@ -245,7 +229,8 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
   public void notifyFailure(Set<String> errorProcessNames) {
     LOG.info("Missing Pings From : " + errorProcessNames.toString());
     healthInspector.stopAndWait();
-    inputFlowletService.restartService();
+    healthInspector = new HealthInspector(this);
+    inputFlowletService.restartService(healthInspector);
     healthInspector.startAndWait();
   }
 }

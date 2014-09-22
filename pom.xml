@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- Copyright 2014 Cask Data, Inc.
+  Copyright © 2014 Cask Data, Inc.
 
- Licensed under the Apache License, Version 2.0 (the "License"); you may not
- use this file except in compliance with the License. You may obtain a copy of
- the License at
+  Licensed under the Apache License, Version 2.0 (the "License"); you may not
+  use this file except in compliance with the License. You may obtain a copy of
+  the License at
 
- http://www.apache.org/licenses/LICENSE-2.0
+  http://www.apache.org/licenses/LICENSE-2.0
 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- License for the specific language governing permissions and limitations under
- the License.
--->
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+  License for the specific language governing permissions and limitations under
+  the License.
+  -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -36,6 +36,7 @@
     <module>hbase-compat-0.94</module>
     <module>hbase-compat-0.96</module>
     <module>tigon-flow</module>
+    <module>tigon-distribution</module>
   </modules>
 
   <repositories>
@@ -81,7 +82,7 @@
     <http.component.version>4.2.5</http.component.version>
     <junit.version>4.11</junit.version>
     <slf4j.version>1.7.5</slf4j.version>
-    <tephra.version>0.2.1</tephra.version>
+    <tephra.version>0.3.0</tephra.version>
     <thrift.version>0.9.0</thrift.version>
     <twill.version>0.4.0-incubating-SNAPSHOT</twill.version>
   </properties>
@@ -94,17 +95,17 @@
         <version>${nettyhttp.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.continuuity.tephra</groupId>
+        <groupId>co.cask.tephra</groupId>
         <artifactId>tephra-core</artifactId>
         <version>${tephra.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.continuuity.tephra</groupId>
+        <groupId>co.cask.tephra</groupId>
         <artifactId>tephra-hbase-compat-0.94</artifactId>
         <version>${tephra.version}</version>
       </dependency>
       <dependency>
-        <groupId>com.continuuity.tephra</groupId>
+        <groupId>co.cask.tephra</groupId>
         <artifactId>tephra-hbase-compat-0.96</artifactId>
         <version>${tephra.version}</version>
       </dependency>
@@ -193,10 +194,6 @@
         <artifactId>twill-core</artifactId>
         <version>${twill.version}</version>
         <exclusions>
-          <exclusion>
-            <groupId>org.apache.kafka</groupId>
-            <artifactId>kafka_2.10</artifactId>
-          </exclusion>
           <exclusion>
             <groupId>io.netty</groupId>
             <artifactId>netty</artifactId>
@@ -302,6 +299,7 @@
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-mapreduce-client-core</artifactId>
         <version>${hadoop.version}</version>
+        <scope>provided</scope>
         <exclusions>
           <exclusion>
             <groupId>org.slf4j</groupId>
@@ -343,6 +341,7 @@
         <groupId>org.apache.hbase</groupId>
         <artifactId>hbase</artifactId>
         <version>${hbase94.version}</version>
+        <scope>provided</scope>
         <exclusions>
           <exclusion>
             <groupId>junit</groupId>
@@ -428,11 +427,13 @@
         <groupId>org.apache.hbase</groupId>
         <artifactId>hbase-common</artifactId>
         <version>${hbase96.version}</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.hbase</groupId>
         <artifactId>hbase-client</artifactId>
         <version>${hbase96.version}</version>
+        <scope>provided</scope>
         <exclusions>
           <exclusion>
             <groupId>io.netty</groupId>
@@ -444,11 +445,13 @@
         <groupId>org.apache.hbase</groupId>
         <artifactId>hbase-protocol</artifactId>
         <version>${hbase96.version}</version>
+        <scope>provided</scope>
       </dependency>
       <dependency>
         <groupId>org.apache.hbase</groupId>
         <artifactId>hbase-server</artifactId>
         <version>${hbase96.version}</version>
+        <scope>provided</scope>
         <exclusions>
           <exclusion>
             <groupId>org.mortbay.jetty</groupId>
@@ -696,17 +699,7 @@
           </executions>
         </plugin>
 
-        <!-- Maven assembly -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <version>2.4</version>
-          <configuration>
-            <descriptors>
-              <descriptor>src/assemble/bin.xml</descriptor>
-            </descriptors>
-          </configuration>
-        </plugin>
+
 
         <!-- Deploy plugin -->
         <plugin>
@@ -807,5 +800,7 @@
         </plugins>
       </build>
     </profile>
+
+
   </profiles>
 </project>
