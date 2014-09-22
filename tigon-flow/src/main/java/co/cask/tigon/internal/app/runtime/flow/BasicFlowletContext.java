@@ -17,6 +17,7 @@
 package co.cask.tigon.internal.app.runtime.flow;
 
 import com.continuuity.tephra.TransactionAware;
+import com.continuuity.tephra.TransactionContext;
 import co.cask.tigon.api.flow.flowlet.FlowletContext;
 import co.cask.tigon.api.flow.flowlet.FlowletSpecification;
 import co.cask.tigon.api.metrics.Metrics;
@@ -27,7 +28,6 @@ import co.cask.tigon.internal.app.runtime.Arguments;
 import co.cask.tigon.logging.FlowletLoggingContext;
 import co.cask.tigon.logging.LoggingContext;
 import co.cask.tigon.metrics.MetricsCollectionService;
-import com.continuuity.tephra.TransactionContext;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
@@ -94,18 +94,14 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
   @Override
   public void addTransactionAware(TransactionAware transactionAware) {
     transactionAwares.add(transactionAware);
-    if (transactionContext != null) {
-      transactionContext.addTransactionAware(transactionAware);
-    }
+    transactionContext.addTransactionAware(transactionAware);
   }
 
   @Override
   public void addTransactionAwares(Iterable<? extends TransactionAware> transactionAwares) {
     Iterables.addAll(this.transactionAwares, transactionAwares);
-    if (transactionContext != null) {
-      for (TransactionAware transactionAware : transactionAwares) {
-        this.transactionContext.addTransactionAware(transactionAware);
-      }
+    for (TransactionAware transactionAware : transactionAwares) {
+      this.transactionContext.addTransactionAware(transactionAware);
     }
   }
 
