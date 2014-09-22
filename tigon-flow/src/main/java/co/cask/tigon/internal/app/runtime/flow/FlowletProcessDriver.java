@@ -259,8 +259,8 @@ final class FlowletProcessDriver extends AbstractExecutionThreadService {
     // Begin transaction and dequeue
     final TransactionContext txContext = dataFabricFacade.createTransactionManager();
     try {
-      txContext.start();
       flowletContext.setTransactionContext(txContext);
+      txContext.start();
 
       try {
         InputDatum<T> input = entry.getProcessSpec().getQueueReader().dequeue(0, TimeUnit.MILLISECONDS);
