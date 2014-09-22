@@ -16,8 +16,8 @@
 
 package co.cask.tigon.data.transaction.coprocessor;
 
-import com.continuuity.tephra.coprocessor.TransactionStateCache;
-import com.continuuity.tephra.coprocessor.TransactionStateCacheSupplier;
+import co.cask.tephra.coprocessor.TransactionStateCache;
+import co.cask.tephra.coprocessor.TransactionStateCacheSupplier;
 import org.apache.hadoop.conf.Configuration;
 
 /**

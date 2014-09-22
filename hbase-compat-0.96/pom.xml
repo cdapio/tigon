@@ -45,7 +45,7 @@
       <artifactId>hbase-server</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.continuuity.tephra</groupId>
+      <groupId>co.cask.tephra</groupId>
       <artifactId>tephra-hbase-compat-0.96</artifactId>
     </dependency>
     <dependency>

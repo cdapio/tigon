@@ -16,7 +16,7 @@
 
 package co.cask.tigon.data.transaction.queue.inmemory;
 
-import com.continuuity.tephra.Transaction;
+import co.cask.tephra.Transaction;
 import co.cask.tigon.data.queue.QueueEntry;
 import co.cask.tigon.data.queue.QueueName;
 import co.cask.tigon.data.transaction.queue.AbstractQueueProducer;

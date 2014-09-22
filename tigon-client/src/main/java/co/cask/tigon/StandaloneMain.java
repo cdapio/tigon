@@ -16,7 +16,7 @@
 
 package co.cask.tigon;
 
-import com.continuuity.tephra.TransactionManager;
+import co.cask.tephra.TransactionManager;
 import co.cask.tigon.app.guice.ProgramRunnerRuntimeModule;
 import co.cask.tigon.conf.CConfiguration;
 import co.cask.tigon.conf.Constants;

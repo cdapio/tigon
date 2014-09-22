@@ -16,8 +16,8 @@
 
 package co.cask.tigon.internal.app.runtime.flow;
 
-import com.continuuity.tephra.TransactionContext;
-import com.continuuity.tephra.TransactionFailureException;
+import co.cask.tephra.TransactionContext;
+import co.cask.tephra.TransactionFailureException;
 import co.cask.tigon.data.queue.ConsumerConfig;
 import co.cask.tigon.data.queue.QueueConsumer;
 import co.cask.tigon.data.queue.QueueName;

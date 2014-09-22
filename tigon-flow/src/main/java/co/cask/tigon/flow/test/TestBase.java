@@ -16,7 +16,7 @@
 
 package co.cask.tigon.flow.test;
 
-import com.continuuity.tephra.TransactionManager;
+import co.cask.tephra.TransactionManager;
 import co.cask.tigon.api.flow.Flow;
 import co.cask.tigon.app.guice.ProgramRunnerRuntimeModule;
 import co.cask.tigon.app.program.Program;

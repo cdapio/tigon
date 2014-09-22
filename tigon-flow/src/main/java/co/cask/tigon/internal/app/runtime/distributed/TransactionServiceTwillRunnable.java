@@ -16,10 +16,10 @@
 
 package co.cask.tigon.internal.app.runtime.distributed;
 
-import com.continuuity.tephra.TransactionManager;
-import com.continuuity.tephra.distributed.TransactionService;
-import com.continuuity.tephra.persist.TransactionStateStorage;
-import com.continuuity.tephra.runtime.TransactionStateStorageProvider;
+import co.cask.tephra.TransactionManager;
+import co.cask.tephra.distributed.TransactionService;
+import co.cask.tephra.persist.TransactionStateStorage;
+import co.cask.tephra.runtime.TransactionStateStorageProvider;
 import co.cask.tigon.app.guice.MetricsClientRuntimeModule;
 import co.cask.tigon.conf.CConfiguration;
 import co.cask.tigon.data.runtime.DataFabricModules;

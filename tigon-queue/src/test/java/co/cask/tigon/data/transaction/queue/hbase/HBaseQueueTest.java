@@ -16,12 +16,12 @@
 
 package co.cask.tigon.data.transaction.queue.hbase;
 
-import com.continuuity.tephra.TransactionExecutorFactory;
-import com.continuuity.tephra.TransactionSystemClient;
-import com.continuuity.tephra.TxConstants;
-import com.continuuity.tephra.distributed.TransactionService;
-import com.continuuity.tephra.persist.NoOpTransactionStateStorage;
-import com.continuuity.tephra.persist.TransactionStateStorage;
+import co.cask.tephra.TransactionExecutorFactory;
+import co.cask.tephra.TransactionSystemClient;
+import co.cask.tephra.TxConstants;
+import co.cask.tephra.distributed.TransactionService;
+import co.cask.tephra.persist.NoOpTransactionStateStorage;
+import co.cask.tephra.persist.TransactionStateStorage;
 import co.cask.tigon.api.common.Bytes;
 import co.cask.tigon.conf.CConfiguration;
 import co.cask.tigon.conf.Constants;

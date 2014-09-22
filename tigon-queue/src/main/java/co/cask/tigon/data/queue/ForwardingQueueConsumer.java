@@ -16,8 +16,8 @@
 
 package co.cask.tigon.data.queue;
 
-import com.continuuity.tephra.Transaction;
-import com.continuuity.tephra.TransactionAware;
+import co.cask.tephra.Transaction;
+import co.cask.tephra.TransactionAware;
 import com.google.common.collect.ImmutableList;
 
 import java.io.IOException;
