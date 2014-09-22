@@ -229,7 +229,8 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
   public void notifyFailure(Set<String> errorProcessNames) {
     LOG.info("Missing Pings From : " + errorProcessNames.toString());
     healthInspector.stopAndWait();
-    inputFlowletService.restartService();
+    healthInspector = new HealthInspector(this);
+    inputFlowletService.restartService(healthInspector);
     healthInspector.startAndWait();
   }
 }
