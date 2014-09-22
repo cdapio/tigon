@@ -91,7 +91,6 @@ public final class FlowTwillApplication implements TwillApplication {
     runnableSetter = moreRunnable
       .add(TXMANAGERNAME, new TransactionServiceTwillRunnable(Constants.Service.TRANSACTION, "cConf.xml", "hConf.xml"))
       .withLocalFiles()
-      .add(programName, programLocation.toURI())
       .add("cConf.xml", cConfig.toURI())
       .add("hConf.xml", hConfig.toURI())
       .apply();
