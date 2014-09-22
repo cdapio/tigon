@@ -1,5 +1,5 @@
 .. :author: Cask Data, Inc.
-   :description: Index document
+   :description: Introduction
    :copyright: Copyright © 2014 Cask Data, Inc.
 
 ============================================
@@ -139,7 +139,7 @@ Where to Go Next
 
 Now that you've had an introduction to Tigon, take a look at:
 
-- `Concepts <concepts.html>`__, which covers the basic concepts behind Tigon.
+- `Getting Started with Tigon <getting-started.html>`__.
 
 .. |(TM)| unicode:: U+2122 .. trademark sign
    :ltrim:

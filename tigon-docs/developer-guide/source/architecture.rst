@@ -1,8 +1,15 @@
 .. :author: Cask Data, Inc.
-   :description: Index document
+   :description: Concepts and architecture
    :copyright: Copyright © 2014 Cask Data, Inc.
 
 ============================================
+Tigon Concepts and Architecture
+============================================
+
+
+Tigon Concepts
+============================================
+
 Tigon Architecture
 ============================================
 
@@ -437,4 +444,10 @@ surveyed the two-level architecture for early data reduction and describe severa
 streaming query optimizations that Tigon uses for efficient processing of high-rate
 streams.
 
+Where to Go Next
+================
+
+Now that you're familiar with the basic concept and architecture of Tigon, take a look at:
+
+- `Developer <developer.html>`__, which covers writing applications using Tigon.
 

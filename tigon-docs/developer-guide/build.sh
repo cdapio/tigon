@@ -31,9 +31,12 @@ BUILD="build"
 BUILD_PDF="build-pdf"
 HTML="html"
 
-# TIGON-API="tigon-api"
-# TIGON-FLOW="tigon-flow"
-# TIGON-SQL="tigon-sql"
+TIGON_API="tigon-api"
+TIGON_FLOW="tigon-flow"
+TIGON_SQL="tigon-sql"
+TIGON_API_JAVADOCS="tigon-api-javadocs"
+TIGON_FLOW_JAVADOCS="tigon-flow-javadocs"
+TIGON_SQL_JAVADOCS="tigon-sql-javadocs"
 
 API="tigon-api"
 APIS="apis"
@@ -65,8 +68,6 @@ fi
 PROJECT_JAVADOCS="$PROJECT_PATH/target/site/apidocs"
 SDK_JAVADOCS="$PROJECT_PATH/$API/target/site/$APIDOCS"
 
-ZIP_FILE_NAME=$HTML
-ZIP="$ZIP_FILE_NAME.zip"
 
 function usage() {
   cd $PROJECT_PATH
@@ -80,7 +81,7 @@ function usage() {
   echo "    docs          Clean build of docs"
   echo "    javadocs      Clean build of javadocs (selected modules only) for SDK and website"
   echo "    javadocs-full Clean build of javadocs for all modules"
-  echo "    zip           Zips docs into $ZIP"
+  echo "    zip           Zips docs into an archive"
   echo ""
   echo "    depends       Build Site listing dependencies"
   echo "    sdk           Build SDK"
@@ -118,21 +119,24 @@ function copy_javadocs_selected() {
   mv -f $APIDOCS $JAVADOCS
 }
 
-# function copy_javadocs_selected() {
-#   copy_a_javadoc $TIGON-API
-#   copy_a_javadoc $TIGON-FLOW
-#   copy_a_javadoc $TIGON-SQL
-# }
-# 
-# function copy_a_javadoc() {
-#   cd $BUILD_APIS/$JAVADOCS
-#   rm -rf *
-#   cp -r $SDK_JAVADOCS .
-#   mv -f $APIDOCS $JAVADOCS
-#   
-# }
+function copy_javadocs_selected() {
+  copy_javadoc_set $TIGON_API
+  copy_javadoc_set $TIGON_FLOW
+  copy_javadoc_set $TIGON_SQL
+}
+
+function copy_javadoc_set() {
+  JAVADOC_SET="$1-$JAVADOCS"
+  SDK_JAVADOCS="$PROJECT_PATH/$1/target/site/$APIDOCS"
+  cd $BUILD_APIS/
+  rm -rf $JAVADOC_SET
+  cp -r $SDK_JAVADOCS .
+  mv -f $APIDOCS $JAVADOC_SET
+}
 
 function make_zip() {
+  version
+  ZIP_FILE_NAME="$PROJECT-$HTML-docs-$PROJECT_VERSION.zip"
   cd $SCRIPT_PATH/$BUILD
   zip -r $ZIP_FILE_NAME $HTML/*
 }

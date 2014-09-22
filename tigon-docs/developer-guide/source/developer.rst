@@ -1,9 +1,9 @@
 .. :author: Cask Data, Inc.
-   :description: Index document
+   :description: Guide for developers writing Tigon Applications
    :copyright: Copyright © 2014 Cask Data, Inc.
 
 ============================================
-Tigon Developers Guide
+Tigon Developer Guide
 ============================================
 
 Tigon Flows
@@ -610,3 +610,13 @@ reference can be found in the `Tigon SQL User Manual <_downloads/User_Manual_201
 
 For developers who are writing extensions to Tigon SQL, please refer to the
 `Tigon SQL Contributor Manual <_downloads/Contributor_Manual_2014_rev1.html>`__.
+
+
+Where to Go Next
+================
+
+Now that you're familiar with the components and concepts of Tigon, take a look at:
+
+- `Examples <examples.html>`__, with a complete example demonstrating Tigon.
+
+

@@ -10,14 +10,13 @@ Tigon Documentation
    :maxdepth: 2
    
    Introduction </intro>
-   Concepts </concepts>
-   Architecture </architecture>
-   Developers Guide </developers>
-   Administration </administration>
-   Troubleshooting </troubleshooting>
-   APIs </apis/apis>
+   Getting Started </getting-started>
+   Concepts and Architecture </architecture>
+   Developer Guide </developer>
    Examples </examples>
-   Contributing </contributing>
+   APIs </apis/apis>
+   Tools <tools>
+   Admin </admin>
    Licenses and Copyrights </licenses>
    Release Notes </releasenotes>
    FAQ </faq>

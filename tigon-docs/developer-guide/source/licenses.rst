@@ -1,5 +1,5 @@
 .. :author: Cask Data, Inc.
-   :description: Index document
+   :description: Licenses and copyrights governing Tigon
    :copyright: Copyright © 2014 Cask Data, Inc.
 
 ============================================
@@ -30,3 +30,10 @@ either express or implied. See the License for the specific language governing p
 and limitations under the License.
 
 Tigon is a trademark of Cask Data, Inc. All rights reserved.
+
+Where to Go Next
+================
+
+Now that you're seen the Tigon license, take a look at:
+
+- `Release Notes <releasenotes.html>`__, with a summary for this version.
