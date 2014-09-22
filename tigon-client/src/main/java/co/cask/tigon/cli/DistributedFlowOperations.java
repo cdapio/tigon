@@ -59,7 +59,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
- *
+ * Flow Operations Implementation for Distributed Mode.
  */
 public class DistributedFlowOperations extends AbstractIdleService implements FlowOperations {
   private static final Logger LOG = LoggerFactory.getLogger(DistributedFlowOperations.class);
@@ -87,11 +87,15 @@ public class DistributedFlowOperations extends AbstractIdleService implements Fl
   }
 
   @Override
-  public void deployFlow(File jarPath, String className) {
+  public void startFlow(File jarPath, String className) {
     try {
       Location flowJar = deployClient.createFlowJar(jarPath, className, jarUnpackDir);
       Program program = Programs.createWithUnpack(flowJar, jarUnpackDir);
       String flowName = program.getSpecification().getName();
+      if (listAllFlows().contains(flowName)) {
+        throw new Exception("Flow with the same name is running! Stop or Delete the Flow before starting again");
+      }
+
       Location jarInHDFS = location.append(flowName);
       //Delete any existing JAR with the same flowName.
       jarInHDFS.delete();
@@ -180,15 +184,17 @@ public class DistributedFlowOperations extends AbstractIdleService implements Fl
   }
 
   @Override
-  public List<String> getFlowInfo(String flowName) {
-    List<String> info = Lists.newArrayList();
+  public List<Map<String, Integer>> getFlowInfo(String flowName) {
+    List<Map<String, Integer>> info = Lists.newArrayList();
     Iterable<TwillController> controllers = lookupFlow(flowName);
     for (TwillController controller : controllers) {
       ResourceReport report = controller.getResourceReport();
       sleepForZK();
+      Map<String, Integer> flowletInfo = Maps.newHashMap();
       for (Map.Entry<String, Collection<TwillRunResources>> entry : report.getResources().entrySet()) {
-        info.add(entry.getKey() + "\t" + entry.getValue().size());
+        flowletInfo.put(entry.getKey(), entry.getValue().size());
       }
+      info.add(flowletInfo);
     }
     return info;
   }

@@ -29,7 +29,7 @@
   <dependencies>
     <dependency>
       <groupId>co.cask.tigon</groupId>
-      <artifactId>tigon-flow</artifactId>
+      <artifactId>tigon-common</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

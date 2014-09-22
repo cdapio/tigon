@@ -63,6 +63,9 @@ public class DistributedMain {
   private final File localDataDir;
   private final FlowOperations flowOperations;
   private final ConsoleReader consoleReader;
+  private enum Commands {
+    START, LIST, STOP, DELETE, DISCOVER, SET, GETINFO, SHOWLOGS
+  }
 
   public DistributedMain(String zkQuorumString, String rootNamespace) throws IOException {
     localDataDir = Files.createTempDir();
@@ -151,36 +154,39 @@ public class DistributedMain {
     String line;
     while ((line = consoleReader.readLine()) != null) {
       String[] args = line.split(" ");
-      String command = args[0].toLowerCase();
-      if (command.equals("deploy")) {
+      String command = args[0].toUpperCase();
+      if (command.equals(Commands.START.toString())) {
         Preconditions.checkArgument(args.length == 3);
-        flowOperations.deployFlow(new File(args[1]), args[2]);
-      } else if (command.equals("list")) {
+        flowOperations.startFlow(new File(args[1]), args[2]);
+      } else if (command.equals(Commands.LIST.toString())) {
         out.println(StringUtils.join(flowOperations.listAllFlows(), ", "));
-      } else if (command.equals("stop")) {
+      } else if (command.equals(Commands.STOP.toString())) {
         Preconditions.checkArgument(args.length == 2);
         flowOperations.stopFlow(args[1]);
-      } else if (command.equals("delete")) {
+      } else if (command.equals(Commands.DELETE.toString())) {
         Preconditions.checkArgument(args.length == 2);
         flowOperations.deleteFlow(args[1]);
-      } else if (command.equals("set")) {
+      } else if (command.equals(Commands.SET.toString())) {
         Preconditions.checkArgument(args.length == 4);
         flowOperations.setInstances(args[1], args[2], Integer.valueOf(args[3]));
-      } else if (command.equals("getinfo")) {
+      } else if (command.equals(Commands.GETINFO.toString())) {
         Preconditions.checkArgument(args.length == 2);
         out.println(StringUtils.join(flowOperations.getFlowInfo(args[1]), "\n"));
-      } else if (command.equals("discover")) {
+      } else if (command.equals(Commands.DISCOVER.toString())) {
         Preconditions.checkArgument(args.length == 3);
         List<String> endpoints = Lists.newArrayList();
         for (InetSocketAddress address : flowOperations.discover(args[1], args[2])) {
           endpoints.add(address.getHostName() + ":" + address.getPort());
         }
         out.println(StringUtils.join(endpoints, "\n"));
-      } else if (command.equals("showlogs")) {
+      } else if (command.equals(Commands.SHOWLOGS.toString())) {
         Preconditions.checkArgument(args.length == 2);
         flowOperations.addLogHandler(args[1], System.out);
       } else {
-        out.println("Available Commands : deploy, list, stop, set, discover, getinfo");
+        out.println("Available Commands : ");
+        for (Commands cmd : Commands.values()) {
+          out.println(cmd.toString());
+        }
       }
     }
   }
