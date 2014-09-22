@@ -53,7 +53,7 @@
       <artifactId>hadoop-common</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.continuuity.tephra</groupId>
+      <groupId>co.cask.tephra</groupId>
       <artifactId>tephra-core</artifactId>
     </dependency>
     <dependency>
@@ -62,7 +62,7 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>com.continuuity.tephra</groupId>
+      <groupId>co.cask.tephra</groupId>
       <artifactId>tephra-hbase-compat-0.96</artifactId>
       <scope>test</scope>
     </dependency>

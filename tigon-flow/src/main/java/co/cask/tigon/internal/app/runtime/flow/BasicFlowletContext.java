@@ -16,8 +16,8 @@
 
 package co.cask.tigon.internal.app.runtime.flow;
 
-import com.continuuity.tephra.TransactionAware;
-import com.continuuity.tephra.TransactionContext;
+import co.cask.tephra.TransactionAware;
+import co.cask.tephra.TransactionContext;
 import co.cask.tigon.api.flow.flowlet.FlowletContext;
 import co.cask.tigon.api.flow.flowlet.FlowletSpecification;
 import co.cask.tigon.api.metrics.Metrics;

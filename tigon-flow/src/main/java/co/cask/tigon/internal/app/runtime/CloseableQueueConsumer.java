@@ -16,6 +16,7 @@
 
 package co.cask.tigon.internal.app.runtime;
 
+import co.cask.tephra.TransactionAware;
 import co.cask.tigon.data.queue.ForwardingQueueConsumer;
 import co.cask.tigon.data.queue.QueueConsumer;
 
@@ -23,7 +24,7 @@ import java.io.Closeable;
 import java.io.IOException;
 
 /**
- * A {@link com.continuuity.tephra.TransactionAware} {@link QueueConsumer} that removes itself from dataset context
+ * A {@link TransactionAware} {@link QueueConsumer} that removes itself from dataset context
  * when closed. All queue operations are forwarded to another {@link QueueConsumer}.
  */
 final class CloseableQueueConsumer extends ForwardingQueueConsumer implements Closeable {
