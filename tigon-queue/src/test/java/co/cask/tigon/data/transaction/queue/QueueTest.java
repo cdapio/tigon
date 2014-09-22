@@ -136,8 +136,6 @@ public abstract class QueueTest {
       });
   }
 
-  // TODO: (REACTOR-87) Temporarily disable.
-  @Ignore
   @Test
   public void testDropAllStreams() throws Exception {
     // create a queue and a stream and enqueue one entry each
