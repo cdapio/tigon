@@ -158,6 +158,18 @@ public class DistributedFlowOperations extends AbstractIdleService implements Fl
   }
 
   @Override
+  public List<String> getServices(String flowName) {
+    Iterable<TwillController> controllers = lookupFlow(flowName);
+    List<String> services = Lists.newArrayList();
+    for (TwillController controller : controllers) {
+      ResourceReport report = controller.getResourceReport();
+      sleepForZK();
+      services.addAll(report.getServices());
+    }
+    return services;
+  }
+
+  @Override
   public void setInstances(String flowName, String flowletName, int instanceCount) {
     Iterable<TwillController> controllers = lookupFlow(flowName);
     for (TwillController controller : controllers) {
@@ -184,19 +196,17 @@ public class DistributedFlowOperations extends AbstractIdleService implements Fl
   }
 
   @Override
-  public List<Map<String, Integer>> getFlowInfo(String flowName) {
-    List<Map<String, Integer>> info = Lists.newArrayList();
+  public Map<String, Integer> getFlowInfo(String flowName) {
+    Map<String, Integer> flowletInfo = Maps.newHashMap();
     Iterable<TwillController> controllers = lookupFlow(flowName);
     for (TwillController controller : controllers) {
       ResourceReport report = controller.getResourceReport();
       sleepForZK();
-      Map<String, Integer> flowletInfo = Maps.newHashMap();
       for (Map.Entry<String, Collection<TwillRunResources>> entry : report.getResources().entrySet()) {
         flowletInfo.put(entry.getKey(), entry.getValue().size());
       }
-      info.add(flowletInfo);
     }
-    return info;
+    return flowletInfo;
   }
 
   @Override

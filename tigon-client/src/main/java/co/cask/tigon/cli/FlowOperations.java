@@ -55,6 +55,13 @@ public interface FlowOperations extends Service {
   void deleteFlow(String flowName);
 
   /**
+   * Returns the List of services announced in the Flow.
+   * @param flowName Name of the Flow.
+   * @return List of Service Names.
+   */
+  List<String> getServices(String flowName);
+
+  /**
    * Discover the Service endpoints announced in the Flow.
    * @param flowName Name of the Flow.
    * @param service Name of the Service used while announcing the endpoint.
@@ -73,9 +80,9 @@ public interface FlowOperations extends Service {
   /**
    * Returns the Flowlets in the Flow and the number of instances of each Flowlet.
    * @param flowName Name of the Flow.
-   * @return List of Flowlet Names and the number of instances of each Flowlet.
+   * @return Map of Flowlet Names and the number of instances of each Flowlet.
    */
-  List<Map<String, Integer>> getFlowInfo(String flowName);
+  Map<String, Integer> getFlowInfo(String flowName);
 
   /**
    * Adds a Log Handler to the PrintStream for receiving live logs from the Flow.

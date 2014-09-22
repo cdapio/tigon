@@ -17,8 +17,10 @@
 package co.cask.tigon;
 
 import co.cask.tigon.app.guice.ProgramRunnerRuntimeModule;
+import co.cask.tigon.cli.CLICommands;
 import co.cask.tigon.cli.DistributedFlowOperations;
 import co.cask.tigon.cli.FlowOperations;
+import co.cask.tigon.cli.InvalidCLIArgumentException;
 import co.cask.tigon.conf.CConfiguration;
 import co.cask.tigon.conf.Constants;
 import co.cask.tigon.data.runtime.DataFabricDistributedModule;
@@ -30,9 +32,7 @@ import co.cask.tigon.guice.TwillModule;
 import co.cask.tigon.guice.ZKClientModule;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import co.cask.tigon.metrics.NoOpMetricsCollectionService;
-import com.google.common.base.Preconditions;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -53,6 +53,7 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.InetSocketAddress;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Tigon Distributed Main.
@@ -63,9 +64,6 @@ public class DistributedMain {
   private final File localDataDir;
   private final FlowOperations flowOperations;
   private final ConsoleReader consoleReader;
-  private enum Commands {
-    START, LIST, STOP, DELETE, DISCOVER, SET, GETINFO, SHOWLOGS
-  }
 
   public DistributedMain(String zkQuorumString, String rootNamespace) throws IOException {
     localDataDir = Files.createTempDir();
@@ -155,38 +153,46 @@ public class DistributedMain {
     while ((line = consoleReader.readLine()) != null) {
       String[] args = line.split(" ");
       String command = args[0].toUpperCase();
-      if (command.equals(Commands.START.toString())) {
-        Preconditions.checkArgument(args.length == 3);
-        flowOperations.startFlow(new File(args[1]), args[2]);
-      } else if (command.equals(Commands.LIST.toString())) {
-        out.println(StringUtils.join(flowOperations.listAllFlows(), ", "));
-      } else if (command.equals(Commands.STOP.toString())) {
-        Preconditions.checkArgument(args.length == 2);
-        flowOperations.stopFlow(args[1]);
-      } else if (command.equals(Commands.DELETE.toString())) {
-        Preconditions.checkArgument(args.length == 2);
-        flowOperations.deleteFlow(args[1]);
-      } else if (command.equals(Commands.SET.toString())) {
-        Preconditions.checkArgument(args.length == 4);
-        flowOperations.setInstances(args[1], args[2], Integer.valueOf(args[3]));
-      } else if (command.equals(Commands.GETINFO.toString())) {
-        Preconditions.checkArgument(args.length == 2);
-        out.println(StringUtils.join(flowOperations.getFlowInfo(args[1]), "\n"));
-      } else if (command.equals(Commands.DISCOVER.toString())) {
-        Preconditions.checkArgument(args.length == 3);
-        List<String> endpoints = Lists.newArrayList();
-        for (InetSocketAddress address : flowOperations.discover(args[1], args[2])) {
-          endpoints.add(address.getHostName() + ":" + address.getPort());
+      CLICommands cmd = null;
+      try {
+        cmd = CLICommands.valueOf(command);
+        if (args.length != cmd.getArgCount()) {
+          throw new InvalidCLIArgumentException(cmd.printHelp());
         }
-        out.println(StringUtils.join(endpoints, "\n"));
-      } else if (command.equals(Commands.SHOWLOGS.toString())) {
-        Preconditions.checkArgument(args.length == 2);
-        flowOperations.addLogHandler(args[1], System.out);
-      } else {
+        if (cmd.equals(CLICommands.START)) {
+          flowOperations.startFlow(new File(args[1]), args[2]);
+        } else if (cmd.equals(CLICommands.LIST)) {
+          out.println(StringUtils.join(flowOperations.listAllFlows(), ", "));
+        } else if (cmd.equals(CLICommands.STOP)) {
+          flowOperations.stopFlow(args[1]);
+        } else if (cmd.equals(CLICommands.DELETE)) {
+          flowOperations.deleteFlow(args[1]);
+        } else if (cmd.equals(CLICommands.SET)) {
+          flowOperations.setInstances(args[1], args[2], Integer.valueOf(args[3]));
+        } else if (cmd.equals(CLICommands.FLOWLETINFO)) {
+          Map<String, Integer> flowletInfoMap = flowOperations.getFlowInfo(args[1]);
+          for (Map.Entry<String, Integer> flowletInfo : flowletInfoMap.entrySet()) {
+            out.println(String.format("%s\t%s", flowletInfo.getKey(), flowletInfo.getValue()));
+          }
+        } else if (cmd.equals(CLICommands.DISCOVER)) {
+          for (InetSocketAddress socketAddress : flowOperations.discover(args[1], args[2])) {
+            out.println(String.format("%s:%s", socketAddress.getHostName(), socketAddress.getPort()));
+          }
+        } else if (cmd.equals(CLICommands.SERVICEINFO)) {
+          out.println(StringUtils.join(flowOperations.getServices(args[1]), "\n"));
+        } else if (cmd.equals(CLICommands.SHOWLOGS)) {
+          flowOperations.addLogHandler(args[1], System.out);
+        } else {
+          //QUIT Command
+          break;
+        }
+      } catch (IllegalArgumentException e) {
         out.println("Available Commands : ");
-        for (Commands cmd : Commands.values()) {
-          out.println(cmd.toString());
+        for (CLICommands cliCommand : CLICommands.values()) {
+          out.println(cliCommand.toString());
         }
+      } catch (InvalidCLIArgumentException e) {
+        out.println(e.getMessage());
       }
     }
   }
