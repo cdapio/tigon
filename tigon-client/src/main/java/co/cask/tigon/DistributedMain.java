@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Cask Data, Inc.
+ * Copyright © 2014 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -79,13 +79,14 @@ public class DistributedMain {
     consoleReader = new ConsoleReader();
   }
 
-  static void usage(boolean error) {
+  private static void usage(boolean error) {
     PrintStream out = (error ? System.err : System.out);
     out.println(
-      "Usage:   java -cp lib/*:<hadoop/hbase classpath> co.cask.tigon.DistributedMain <path-to-JAR> <FlowClassName>");
+      "Usage:   java -cp lib/*:<hadoop/hbase classpath> co.cask.tigon.DistributedMain <ZooKeeperQuorum> " +
+        "<HDFSNamespace>");
     out.println(
-      "Example: java -cp lib/*:$HBASE_CLASSPATH co.cask.tigon.DistributedMain /home/user/tweetFlow-1.0.jar " +
-        "com.cname.main.TweetFlow");
+      "Example: java -cp lib/*:$HBASE_CLASSPATH co.cask.tigon.DistributedMain 165.238.239.12:1234/tigon " +
+        "tigon");
     out.println("");
     if (error) {
       throw new IllegalArgumentException();

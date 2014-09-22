@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Cask Data, Inc.
+ * Copyright © 2014 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -35,6 +35,7 @@ import co.cask.tigon.lang.ClassLoaders;
 import co.cask.tigon.lang.jar.ProgramClassLoader;
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.google.common.io.ByteStreams;
@@ -108,11 +109,16 @@ public class DeployClient {
       }
       InputStream is = jar.getInputStream(file);
       FileOutputStream fos = new FileOutputStream(f);
-      while (is.available() > 0) {
-        fos.write(is.read());
+      try {
+        while (is.available() > 0) {
+          fos.write(is.read());
+        }
+      } catch (IOException e) {
+        throw Throwables.propagate(e);
+      } finally {
+        fos.close();
+        is.close();
       }
-      fos.close();
-      is.close();
     }
   }
 

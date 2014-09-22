@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Cask, Inc.
+ * Copyright © 2014 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -41,7 +41,7 @@ public class CompileStreamBinaries {
       "GENBINS", dir, Locations.getParent(Locations.getParent(dir)).append("bin").append("buildit"), "");
     LOG.info("Starting GENBINS : {}", executorService);
     executorService.startAndWait();
-    Services.getCompletionFuture(executorService).get(15, TimeUnit.SECONDS);
+    Services.getCompletionFuture(executorService).get(20, TimeUnit.SECONDS);
     //Returns query compilation's success condition
     if (executorService.getExitCode() != 0) {
       throw new RuntimeException("Stream Engine Binary Compilation Failed");

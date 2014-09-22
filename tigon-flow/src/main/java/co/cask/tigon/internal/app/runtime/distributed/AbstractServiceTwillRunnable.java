@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Cask Data, Inc.
+ * Copyright © 2014 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -42,10 +42,10 @@ import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 /**
- * Abstract TwillRunnable class for Master system service.
+ * Abstract TwillRunnable class for Transaction Manager Service.
  */
-public abstract class AbstractMasterTwillRunnable extends AbstractTwillRunnable {
-  private static final Logger LOG = LoggerFactory.getLogger(AbstractMasterTwillRunnable.class);
+public abstract class AbstractServiceTwillRunnable extends AbstractTwillRunnable {
+  private static final Logger LOG = LoggerFactory.getLogger(AbstractServiceTwillRunnable.class);
 
   protected String name;
   private String cConfName;
@@ -55,7 +55,7 @@ public abstract class AbstractMasterTwillRunnable extends AbstractTwillRunnable 
   private List<Service> services;
   private volatile Thread runThread;
 
-  public AbstractMasterTwillRunnable(String name, String cConfName, String hConfName) {
+  public AbstractServiceTwillRunnable(String name, String cConfName, String hConfName) {
     this.name = name;
     this.cConfName = cConfName;
     this.hConfName = hConfName;
@@ -163,7 +163,7 @@ public abstract class AbstractMasterTwillRunnable extends AbstractTwillRunnable 
   }
 
   /**
-   * Class extending {@link AbstractMasterTwillRunnable} should populate services
+   * Class extending {@link AbstractServiceTwillRunnable} should populate services
    * with a list of Services which will be started in increasing order of index.
    * The services will be stopped in the reverse order.
    */
