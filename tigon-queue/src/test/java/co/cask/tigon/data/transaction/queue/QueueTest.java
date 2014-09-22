@@ -136,6 +136,7 @@ public abstract class QueueTest {
       });
   }
 
+  @Ignore
   @Test
   public void testDropAllStreams() throws Exception {
     // create a queue and a stream and enqueue one entry each
