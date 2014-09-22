@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Cask, Inc.
+ * Copyright © 2014 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -27,6 +27,7 @@ import com.google.common.io.Files;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.io.FileUtils;
 import org.apache.twill.filesystem.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -101,6 +102,9 @@ public class StreamBinaryGenerator {
     workDir.mkdirs();
     Location queryDir = workDir.append("query");
     queryDir.mkdirs();
+    File qDir = new File(queryDir.toURI().getPath());
+    FileUtils.copyFileToDirectory(new File(dir.append("cfg").append("external_fcns.def").toURI().getPath()), qDir);
+    FileUtils.copyFileToDirectory(new File(dir.append("cfg").append("internal_fcn.def").toURI().getPath()), qDir);
     return queryDir;
   }
 

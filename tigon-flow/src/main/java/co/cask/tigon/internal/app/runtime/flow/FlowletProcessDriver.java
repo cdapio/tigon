@@ -16,10 +16,9 @@
 
 package co.cask.tigon.internal.app.runtime.flow;
 
-import com.continuuity.tephra.TransactionAware;
-import com.continuuity.tephra.TransactionContext;
-import com.continuuity.tephra.TransactionExecutor;
-import com.continuuity.tephra.TransactionFailureException;
+import co.cask.tephra.TransactionContext;
+import co.cask.tephra.TransactionExecutor;
+import co.cask.tephra.TransactionFailureException;
 import co.cask.tigon.api.flow.flowlet.Callback;
 import co.cask.tigon.api.flow.flowlet.FailurePolicy;
 import co.cask.tigon.api.flow.flowlet.FailureReason;
@@ -259,7 +258,6 @@ final class FlowletProcessDriver extends AbstractExecutionThreadService {
 
     // Begin transaction and dequeue
     final TransactionContext txContext = dataFabricFacade.createTransactionManager();
-
     try {
       txContext.start();
       flowletContext.setTransactionContext(txContext);

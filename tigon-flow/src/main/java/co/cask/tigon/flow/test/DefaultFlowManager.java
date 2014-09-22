@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Cask Data, Inc.
+ * Copyright © 2014 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,19 +14,21 @@
  * the License.
  */
 
-package co.cask.tigon.flow;
+package co.cask.tigon.flow.test;
 
 import co.cask.tigon.internal.app.runtime.ProgramController;
 import co.cask.tigon.internal.app.runtime.ProgramOptionConstants;
 import com.google.common.collect.Maps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
- *
+ * Default Flow Manager.
  */
 public class DefaultFlowManager implements FlowManager {
+  private static final Logger LOG = LoggerFactory.getLogger(DefaultFlowManager.class);
   private final ProgramController controller;
 
   public DefaultFlowManager(ProgramController controller) {
@@ -43,11 +45,10 @@ public class DefaultFlowManager implements FlowManager {
 
   @Override
   public void stop() {
-    controller.stop();
     try {
-      TimeUnit.SECONDS.sleep(5);
+      controller.stop().get();
     } catch (Exception e) {
-
+      LOG.warn(e.getMessage(), e);
     }
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Cask Data, Inc.
+ * Copyright © 2014 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -32,7 +32,6 @@ public interface DatasetNamespace {
    * @param name namespaced name of the dataset
    * @return original name of the dataset or null if name is not within this namespace
    */
-  // TODO: possible design issue, see REACTOR-217
   @Nullable
   String fromNamespaced(String name);
 }

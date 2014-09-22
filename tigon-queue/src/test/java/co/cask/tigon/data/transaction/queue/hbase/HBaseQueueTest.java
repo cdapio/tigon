@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Cask Data, Inc.
+ * Copyright © 2014 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,14 +13,15 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package co.cask.tigon.data.transaction.queue.hbase;
 
-import com.continuuity.tephra.TransactionExecutorFactory;
-import com.continuuity.tephra.TransactionSystemClient;
-import com.continuuity.tephra.TxConstants;
-import com.continuuity.tephra.distributed.TransactionService;
-import com.continuuity.tephra.persist.NoOpTransactionStateStorage;
-import com.continuuity.tephra.persist.TransactionStateStorage;
+import co.cask.tephra.TransactionExecutorFactory;
+import co.cask.tephra.TransactionSystemClient;
+import co.cask.tephra.TxConstants;
+import co.cask.tephra.distributed.TransactionService;
+import co.cask.tephra.persist.NoOpTransactionStateStorage;
+import co.cask.tephra.persist.TransactionStateStorage;
 import co.cask.tigon.api.common.Bytes;
 import co.cask.tigon.conf.CConfiguration;
 import co.cask.tigon.conf.Constants;
