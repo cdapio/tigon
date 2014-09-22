@@ -136,7 +136,6 @@ public abstract class QueueTest {
       });
   }
 
-  // TODO: (REACTOR-87) Temporarily disable.
   @Ignore
   @Test
   public void testDropAllStreams() throws Exception {
