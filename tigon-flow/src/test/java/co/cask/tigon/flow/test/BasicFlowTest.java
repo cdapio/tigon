@@ -151,6 +151,13 @@ public class BasicFlowTest extends TestBase {
     Assert.assertEquals(3, sinkInstances);
   }
 
+  @Test(expected=IllegalArgumentException.class)
+  public void testInvalidConfigurationFlow() {
+    // The Flow is configured to have 5 instances of the Sink flowlet, which allows a maximum of 3 instances.
+    // It should fail at deploy.
+    deployFlow(InvalidConfigurationFlow.class, Maps.<String, String>newHashMap());
+  }
+
   public static final class TestFlow implements Flow {
 
     @Override
@@ -161,6 +168,22 @@ public class BasicFlowTest extends TestBase {
         .withFlowlets()
         .add(GENERATOR_FLOWLET_ID, new GeneratorFlowlet(), 1)
         .add(SINK_FLOWLET_ID, new SinkFlowlet(), 1)
+        .connect()
+        .from(GENERATOR_FLOWLET_ID).to(SINK_FLOWLET_ID)
+        .build();
+    }
+  }
+
+  public static final class InvalidConfigurationFlow implements Flow {
+
+    @Override
+    public FlowSpecification configure() {
+      return FlowSpecification.Builder.with()
+        .setName("invalidTestFlow")
+        .setDescription("")
+        .withFlowlets()
+        .add(GENERATOR_FLOWLET_ID, new GeneratorFlowlet(), 1)
+        .add(SINK_FLOWLET_ID, new SinkFlowlet(), 5)
         .connect()
         .from(GENERATOR_FLOWLET_ID).to(SINK_FLOWLET_ID)
         .build();

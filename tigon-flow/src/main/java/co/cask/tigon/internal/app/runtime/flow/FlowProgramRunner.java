@@ -81,6 +81,13 @@ public final class FlowProgramRunner implements ProgramRunner {
     Preconditions.checkArgument(processorType == ProgramType.FLOW, "Only FLOW process type is supported.");
     Preconditions.checkNotNull(flowSpec, "Missing FlowSpecification for %s", program.getName());
 
+    for (FlowletDefinition flowletDefinition : flowSpec.getFlowlets().values()) {
+      int maxInstances = flowletDefinition.getFlowletSpec().getMaxInstances();
+      Preconditions.checkArgument(flowletDefinition.getInstances() <= maxInstances,
+                                  "Flowlet %s can have a maximum of %s instances",
+                                  flowletDefinition.getFlowletSpec().getName(), maxInstances);
+    }
+
     try {
       // Launch flowlet program runners
       RunId runId = RunIds.generate();
