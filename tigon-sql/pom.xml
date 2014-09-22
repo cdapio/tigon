@@ -162,6 +162,37 @@ the License.
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.rat</groupId>
+        <artifactId>apache-rat-plugin</artifactId>
+        <version>0.10</version>
+        <executions>
+          <execution>
+            <id>rat-check</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>check</goal>
+            </goals>
+            <configuration>
+              <excludes>
+                <exclude>build-number.txt</exclude>
+                <exclude>**/README.md</exclude>
+                <exclude>**/pom.xml</exclude>
+                <!--tigon-sql library files-->
+                <exclude>**/cfg/**</exclude>
+                <exclude>**/c/*/*.tab*</exclude>
+                <exclude>**/c/**/*lexer.cc</exclude>
+                <exclude>**/gscpaux/*block_allocator*</exclude>
+                <exclude>**/gscpaux/*json*</exclude>
+                <!--tigon sql library test data-->
+                <exclude>**/scripts/**/packet_schema_test.txt</exclude>
+                <exclude>**/scripts/**/Expected*.txt</exclude>
+                <exclude>**/scripts/**/Input*.txt</exclude>
+              </excludes>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 
