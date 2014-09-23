@@ -63,7 +63,8 @@ public class TestBase {
     Preconditions.checkNotNull(flowClz, "Flow class cannot be null");
     try {
       Location deployJar = deployClient.jarForTestBase(flowClz, bundleEmbeddedJars);
-      ProgramController controller = deployClient.startFlow(deployJar, runtimeArgs);
+      ProgramController controller = deployClient.startFlow(new File(deployJar.toURI()), flowClz.getName(),
+                                                            tmpFolder.newFolder());
       return new DefaultFlowManager(controller);
     } catch (Exception e) {
       throw Throwables.propagate(e);

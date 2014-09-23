@@ -37,6 +37,13 @@ public interface FlowOperations extends Service {
   void startFlow(File jarPath, String className);
 
   /**
+   * Get the status of a Flow.
+   * @param flowName Name of the Flow.
+   * @return {@link State} of Flow.
+   */
+  State getStatus(String flowName);
+
+  /**
    * List the names of all the Flows currently running.
    * @return List of Flow names.
    */

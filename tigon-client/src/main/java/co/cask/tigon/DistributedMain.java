@@ -33,7 +33,9 @@ import co.cask.tigon.guice.ZKClientModule;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import co.cask.tigon.metrics.NoOpMetricsCollectionService;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.google.common.io.Files;
+import com.google.common.util.concurrent.Service;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -148,17 +150,29 @@ public class DistributedMain {
   public void startUp(PrintStream out) throws Exception {
     registerShutDownHook();
     flowOperations.startAndWait();
+    List<String> commandList = Lists.newArrayList();
+    for (CLICommands cliCommand : CLICommands.values()) {
+      commandList.add(cliCommand.toString());
+    }
     consoleReader.setPrompt("tigon> ");
     String line;
     while ((line = consoleReader.readLine()) != null) {
       String[] args = line.split(" ");
       String command = args[0].toUpperCase();
-      CLICommands cmd = null;
       try {
-        cmd = CLICommands.valueOf(command);
+        CLICommands cmd = null;
+        try {
+          cmd = CLICommands.valueOf(command);
+        } catch (IllegalArgumentException e) {
+          out.println("Available Comands : ");
+          out.println(StringUtils.join(commandList, ", "));
+          continue;
+        }
+
         if (args.length != cmd.getArgCount()) {
           throw new InvalidCLIArgumentException(cmd.printHelp());
         }
+
         if (cmd.equals(CLICommands.START)) {
           flowOperations.startFlow(new File(args[1]), args[2]);
         } else if (cmd.equals(CLICommands.LIST)) {
@@ -169,10 +183,15 @@ public class DistributedMain {
           flowOperations.deleteFlow(args[1]);
         } else if (cmd.equals(CLICommands.SET)) {
           flowOperations.setInstances(args[1], args[2], Integer.valueOf(args[3]));
+        } else if (cmd.equals(CLICommands.STATUS)) {
+          Service.State state = flowOperations.getStatus(args[1]);
+          String status = (state != null) ? state.toString() : "NOT FOUND";
+          out.println(status);
         } else if (cmd.equals(CLICommands.FLOWLETINFO)) {
+          out.println(String.format("%-20s %s", "Flowlet Name", "Instance Count"));
           Map<String, Integer> flowletInfoMap = flowOperations.getFlowInfo(args[1]);
           for (Map.Entry<String, Integer> flowletInfo : flowletInfoMap.entrySet()) {
-            out.println(String.format("%s\t%s", flowletInfo.getKey(), flowletInfo.getValue()));
+            out.println(String.format("%-20s %s", flowletInfo.getKey(), flowletInfo.getValue()));
           }
         } else if (cmd.equals(CLICommands.DISCOVER)) {
           for (InetSocketAddress socketAddress : flowOperations.discover(args[1], args[2])) {
@@ -185,11 +204,6 @@ public class DistributedMain {
         } else {
           //QUIT Command
           break;
-        }
-      } catch (IllegalArgumentException e) {
-        out.println("Available Commands : ");
-        for (CLICommands cliCommand : CLICommands.values()) {
-          out.println(cliCommand.toString());
         }
       } catch (InvalidCLIArgumentException e) {
         out.println(e.getMessage());

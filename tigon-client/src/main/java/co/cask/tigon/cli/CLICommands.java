@@ -21,16 +21,17 @@ package co.cask.tigon.cli;
  */
 public enum CLICommands {
 
-  START (2, "Starts a Flow", "<Path-to-Jar> <FlowClassName>"),
-  LIST (0, "Lists all Flows which are currently running", ""),
-  STOP (1, "Stops a Flow", "<FlowName>"),
-  DELETE (1, "Stops and Deletes the Queues for a Flow", "<FlowName>"),
-  SERVICEINFO (1, "Prints all Services announced in a Flow", "<FlowName>"),
-  DISCOVER (2, "Discovers a service endpoint for a Flow", "<FlowName> <ServiceName>"),
-  SET (3, "Set Flowlet instances for a Flow", "<FlowName> <FlowletName> <Instances>"),
-  FLOWLETINFO (1, "Prints Flowlet Names and corresponding Instances", "<FlowName>"),
-  SHOWLOGS (1, "Shows live logs for the Flow", "<FlowName>"),
-  QUIT (0, "Quit Tigon Client", "");
+  START (2, "Starts a Flow", "<path-to-jar> <flow-classname>"),
+  LIST (0, "Lists all the Flows which are currently running", ""),
+  STOP (1, "Stops a Flow", "<flowname>"),
+  DELETE (1, "Stops and Deletes the Queues for a Flow", "<flowname>"),
+  SERVICEINFO (1, "Prints all Services announced in a Flow", "<flowname>"),
+  DISCOVER (2, "Discovers a Service endpoint for a Flow", "<flowname> <servicename>"),
+  SET (3, "Set the number of Flowlet Instances for a Flow", "<flowname> <flowletname> <instance-count>"),
+  FLOWLETINFO (1, "Prints the Flowlet Names and the corresponding Instance Count", "<flowname>"),
+  SHOWLOGS (1, "Shows the live logs for the Flow", "<flowname>"),
+  STATUS (1, "Shows the Status of the Flow", "<flowname>"),
+  QUIT (0, "Quit the Tigon Client", "");
 
   private int argCount;
   private String description;

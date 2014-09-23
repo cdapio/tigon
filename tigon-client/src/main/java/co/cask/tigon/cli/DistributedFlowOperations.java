@@ -26,11 +26,9 @@ import co.cask.tigon.internal.app.runtime.ProgramOptionConstants;
 import co.cask.tigon.internal.app.runtime.distributed.DistributedFlowletInstanceUpdater;
 import co.cask.tigon.internal.app.runtime.distributed.FlowTwillProgramController;
 import co.cask.tigon.internal.app.runtime.flow.FlowUtils;
-import co.cask.tigon.io.Locations;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
-import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.AbstractIdleService;
 import com.google.inject.Inject;
@@ -53,7 +51,6 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -88,26 +85,38 @@ public class DistributedFlowOperations extends AbstractIdleService implements Fl
 
   @Override
   public void startFlow(File jarPath, String className) {
-    try {
-      Location flowJar = deployClient.createFlowJar(jarPath, className, jarUnpackDir);
-      Program program = Programs.createWithUnpack(flowJar, jarUnpackDir);
-      String flowName = program.getSpecification().getName();
-      if (listAllFlows().contains(flowName)) {
-        throw new Exception("Flow with the same name is running! Stop or Delete the Flow before starting again");
-      }
+//    try {
+//      Location flowJar = deployClient.createFlowJar(jarPath, className, jarUnpackDir);
+//      Program program = Programs.createWithUnpack(flowJar, jarUnpackDir);
+//      String flowName = program.getSpecification().getName();
+//      if (listAllFlows().contains(flowName)) {
+//        throw new Exception("Flow with the same name is running! Stop or Delete the Flow before starting again");
+//      }
+//
+//      Location jarInHDFS = location.append(flowName);
+//      //Delete any existing JAR with the same flowName.
+//      jarInHDFS.delete();
+//      jarInHDFS.createNew();
+//
+//      //Copy the JAR to HDFS.
+//      ByteStreams.copy(Locations.newInputSupplier(flowJar), Locations.newOutputSupplier(jarInHDFS));
+//      //Start the Flow.
+//      deployClient.startFlow(program, new HashMap<String, String>());
+//    } catch (Exception e) {
+//      LOG.error(e.getMessage(), e);
+//    }
+  }
 
-      Location jarInHDFS = location.append(flowName);
-      //Delete any existing JAR with the same flowName.
-      jarInHDFS.delete();
-      jarInHDFS.createNew();
-
-      //Copy the JAR to HDFS.
-      ByteStreams.copy(Locations.newInputSupplier(flowJar), Locations.newOutputSupplier(jarInHDFS));
-      //Start the Flow.
-      deployClient.startFlow(program, new HashMap<String, String>());
-    } catch (Exception e) {
-      LOG.error(e.getMessage(), e);
+  @Override
+  public State getStatus(String flowName) {
+    Iterable<TwillController> controllers = lookupFlow(flowName);
+    sleepForZK(controllers);
+    if (controllers.iterator().hasNext()) {
+      State state = controllers.iterator().next().state();
+      sleepForZK(state);
+      return state;
     }
+    return null;
   }
 
   @Override
@@ -127,7 +136,7 @@ public class DistributedFlowOperations extends AbstractIdleService implements Fl
     Iterable<TwillController> controllers = lookupFlow(flowName);
     for (TwillController controller : controllers) {
       Iterable<Discoverable> iterable = controller.discoverService(service);
-      sleepForZK();
+      sleepForZK(iterable);
       for (Discoverable discoverable : iterable) {
         endPoints.add(discoverable.getSocketAddress());
       }
@@ -163,7 +172,7 @@ public class DistributedFlowOperations extends AbstractIdleService implements Fl
     List<String> services = Lists.newArrayList();
     for (TwillController controller : controllers) {
       ResourceReport report = controller.getResourceReport();
-      sleepForZK();
+      sleepForZK(report);
       services.addAll(report.getServices());
     }
     return services;
@@ -175,7 +184,7 @@ public class DistributedFlowOperations extends AbstractIdleService implements Fl
     for (TwillController controller : controllers) {
       try {
         ResourceReport report = controller.getResourceReport();
-        sleepForZK();
+        sleepForZK(report);
         int oldInstances = report.getResources().get(flowletName).size();
         Program program = Programs.create(location.append(flowName));
         Multimap<String, QueueName> consumerQueues = FlowUtils.configureQueue(program, program.getSpecification(),
@@ -201,7 +210,7 @@ public class DistributedFlowOperations extends AbstractIdleService implements Fl
     Iterable<TwillController> controllers = lookupFlow(flowName);
     for (TwillController controller : controllers) {
       ResourceReport report = controller.getResourceReport();
-      sleepForZK();
+      sleepForZK(report);
       for (Map.Entry<String, Collection<TwillRunResources>> entry : report.getResources().entrySet()) {
         flowletInfo.put(entry.getKey(), entry.getValue().size());
       }
@@ -220,19 +229,26 @@ public class DistributedFlowOperations extends AbstractIdleService implements Fl
 
   private Iterable<TwillRunner.LiveInfo> lookupService() {
     Iterable<TwillRunner.LiveInfo> iterable = runnerService.lookupLive();
-    sleepForZK();
+    sleepForZK(iterable);
     return iterable;
   }
 
   private Iterable<TwillController> lookupFlow(String flowName) {
     Iterable<TwillController> iterable = runnerService.lookup(String.format("flow.%s", flowName));
-    sleepForZK();
+    sleepForZK(iterable);
     return iterable;
   }
 
-  private void sleepForZK() {
+  private void sleepForZK(Object obj) {
+    int count = 100;
     try {
-      TimeUnit.SECONDS.sleep(2);
+      for (int i = 0; i < count; i++) {
+        if (obj != null) {
+          TimeUnit.MILLISECONDS.sleep(250);
+          return;
+        }
+        TimeUnit.MILLISECONDS.sleep(250);
+      }
     } catch (InterruptedException e) {
       LOG.warn("Caught interrupted exception", e);
       Thread.currentThread().interrupt();

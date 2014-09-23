@@ -38,13 +38,11 @@ import com.google.inject.Module;
 import com.google.inject.Scopes;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.twill.filesystem.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.PrintStream;
-import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -121,8 +119,7 @@ public class StandaloneMain {
     txService.startAndWait();
     metricsCollectionService.startAndWait();
     addShutDownHook();
-    Location deployJar = deployClient.createFlowJar(jarPath, mainClassName, jarUnpackDir);
-    controller = deployClient.startFlow(deployJar, new HashMap<String, String>());
+    controller = deployClient.startFlow(jarPath, mainClassName, jarUnpackDir);
     runLatch.await();
   }
 
