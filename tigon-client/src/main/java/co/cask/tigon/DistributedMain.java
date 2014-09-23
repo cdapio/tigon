@@ -201,8 +201,16 @@ public class DistributedMain {
           out.println(StringUtils.join(flowOperations.getServices(args[1]), "\n"));
         } else if (cmd.equals(CLICommands.SHOWLOGS)) {
           flowOperations.addLogHandler(args[1], System.out);
+        } else if (cmd.equals(CLICommands.VERSION)) {
+          out.println(Constants.VERSION);
+        } else if (cmd.equals(CLICommands.HELP)) {
+          try {
+            out.println(CLICommands.valueOf(command).printHelp());
+          } catch (IllegalArgumentException e) {
+            out.println("Command Not Found");
+          }
         } else {
-          //QUIT Command
+          //EXIT Command
           break;
         }
       } catch (InvalidCLIArgumentException e) {
