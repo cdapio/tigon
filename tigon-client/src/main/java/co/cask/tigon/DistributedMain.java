@@ -152,7 +152,7 @@ public class DistributedMain {
     flowOperations.startAndWait();
     List<String> commandList = Lists.newArrayList();
     for (CLICommands cliCommand : CLICommands.values()) {
-      commandList.add(cliCommand.toString());
+      commandList.add(cliCommand.toString().toLowerCase());
     }
     consoleReader.setPrompt("tigon> ");
     String line;
@@ -164,7 +164,7 @@ public class DistributedMain {
         try {
           cmd = CLICommands.valueOf(command);
         } catch (IllegalArgumentException e) {
-          out.println("Available Comands : ");
+          out.println("Available Commands : ");
           out.println(StringUtils.join(commandList, ", "));
           continue;
         }
@@ -205,7 +205,7 @@ public class DistributedMain {
           out.println(Constants.VERSION);
         } else if (cmd.equals(CLICommands.HELP)) {
           try {
-            out.println(CLICommands.valueOf(command).printHelp());
+            out.println(CLICommands.valueOf(args[1].toUpperCase()).printHelp());
           } catch (IllegalArgumentException e) {
             out.println("Command Not Found");
           }

@@ -51,6 +51,6 @@ public enum CLICommands {
   }
 
   public String printHelp() {
-    return String.format("Command Description : %s\nUsage : %s %s\n", description, this.toString(), args);
+    return String.format("Command Description : %s\nUsage : %s %s\n", description, this.toString().toLowerCase(), args);
   }
 }
