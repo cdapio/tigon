@@ -35,7 +35,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
- *
+ * Poll for tweets and batch them to the next flowlet.
  */
 public class TweetCollector extends AbstractFlowlet {
   private static final Logger LOG = LoggerFactory.getLogger(TweetCollector.class);

@@ -28,9 +28,8 @@ import java.io.ObjectInputStream;
  * Comments: has no vectorization strategy beyond using the default
  * implementation
  *
- *
  */
-public class TextClassifier{
+public class TextClassifier {
 
   private final LMClassifier classifier;
 

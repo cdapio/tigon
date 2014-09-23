@@ -26,6 +26,12 @@ public class ClassificationResult {
   private double confidence;
   private Sentiment sentiment;
 
+  /**
+   * Create a new ClassificationResult with a value and it's confidence. An appropriate sentiment is assigned.
+   * @param value Value of the classification.
+   * @param confidence Confidence of the classification.
+   * @throws ClassifierResultException
+   */
   public ClassificationResult(String value, double confidence) throws ClassifierResultException {
     this.value = value;
     this.confidence = confidence;
@@ -49,6 +55,9 @@ public class ClassificationResult {
       .add("confidence", confidence).toString();
   }
 
+  /**
+   * Enum of possible sentiments.
+   */
   public static enum Sentiment {
     positive, neutral, negative;
   }

@@ -20,6 +20,11 @@ package co.cask.tigon.sentiment;
  * Exception when the Classifier couldn't classify correctly.
  */
 public class ClassifierResultException extends Exception {
+
+  /**
+   * Create a new ClassificationResultException with the given message.
+   * @param message of the exception.
+   */
   public ClassifierResultException(String message) {
     super(message);
   }

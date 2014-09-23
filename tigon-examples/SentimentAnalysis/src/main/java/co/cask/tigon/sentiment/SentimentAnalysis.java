@@ -19,22 +19,20 @@ import co.cask.tigon.api.flow.Flow;
 import co.cask.tigon.api.flow.FlowSpecification;
 
 /**
- *
+ * A {@link Flow} that collects Tweets and runs a Sentiment analysis algorithm on them.
  */
 public class SentimentAnalysis implements Flow {
 
   @Override
   public FlowSpecification configure() {
     return FlowSpecification.Builder.with()
-      .setName("analysis")
-      .setDescription("Analysis of text to generate sentiments")
+      .setName("SentimentAnalysis")
+      .setDescription("Analysis of tweets to generate sentiments.")
       .withFlowlets()
-      .add(new TweetCollector())
-      .add(new Normalization())
-      .add(new Analysis())
+      .add("collector", new TweetCollector())
+      .add("analyzer", new Analysis())
       .connect()
-      .from(new TweetCollector()).to(new Normalization())
-      .from(new Normalization()).to(new Analysis())
+      .from("collector").to("analyzer")
       .build();
   }
 }

@@ -32,16 +32,17 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
+import java.util.Iterator;
 
 /**
- * Basic java-based sentiment classifier.
+ * Sentiment analysis flowlet.
  */
 public class Analysis extends AbstractFlowlet {
 
   private static final Logger LOG = LoggerFactory.getLogger(Analysis.class);
   private static final String LOCALIZED_FILENAME = "localized.txt";
 
-  TextClassifier classifierModel = null;
+  private TextClassifier classifierModel = null;
 
   @Override
   public void initialize(FlowletContext context) throws Exception {
@@ -74,11 +75,10 @@ public class Analysis extends AbstractFlowlet {
 
   @Batch(100)
   @ProcessInput
-  public void classifyTweet(String tweet) throws FileNotFoundException, ClassifierResultException {
-//    while (tweetIterator.hasNext()) {
-//      System.out.println(classify(tweetIterator.next()));
-//    }
-    System.out.println(classify(tweet).toString());
+  public void classifyTweet(Iterator<String> tweets) throws FileNotFoundException, ClassifierResultException {
+    while (tweets.hasNext()) {
+      System.out.println(classify(tweets.next()).toString());
+    }
   }
 
   public ClassificationResult classify(String text) throws FileNotFoundException, ClassifierResultException {

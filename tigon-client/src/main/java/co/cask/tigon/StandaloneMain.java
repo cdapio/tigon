@@ -92,11 +92,6 @@ public class StandaloneMain {
   }
 
   public static void main(String[] args) {
-    List<String> arguments = Lists.newArrayList();
-    arguments.add("/Users/gandu/workspace/tigon/tigon-examples/SentimentAnalysis/target/" +
-                  "SentimentAnalysis-0.1.0-SNAPSHOT.jar");
-    arguments.add("co.cask.tigon.sentiment.SentimentAnalysis");
-    args = arguments.toArray(new String[arguments.size()]);
     System.out.println("Tigon Standalone Client");
     if (args.length > 0) {
       if ("--help".equals(args[0]) || "-h".equals(args[0])) {
