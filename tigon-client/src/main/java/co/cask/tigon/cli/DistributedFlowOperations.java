@@ -26,9 +26,11 @@ import co.cask.tigon.internal.app.runtime.ProgramOptionConstants;
 import co.cask.tigon.internal.app.runtime.distributed.DistributedFlowletInstanceUpdater;
 import co.cask.tigon.internal.app.runtime.distributed.FlowTwillProgramController;
 import co.cask.tigon.internal.app.runtime.flow.FlowUtils;
+import co.cask.tigon.io.Locations;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
+import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.AbstractIdleService;
 import com.google.inject.Inject;
@@ -51,6 +53,7 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -85,26 +88,25 @@ public class DistributedFlowOperations extends AbstractIdleService implements Fl
 
   @Override
   public void startFlow(File jarPath, String className) {
-//    try {
-//      Location flowJar = deployClient.createFlowJar(jarPath, className, jarUnpackDir);
-//      Program program = Programs.createWithUnpack(flowJar, jarUnpackDir);
-//      String flowName = program.getSpecification().getName();
-//      if (listAllFlows().contains(flowName)) {
-//        throw new Exception("Flow with the same name is running! Stop or Delete the Flow before starting again");
-//      }
-//
-//      Location jarInHDFS = location.append(flowName);
-//      //Delete any existing JAR with the same flowName.
-//      jarInHDFS.delete();
-//      jarInHDFS.createNew();
-//
-//      //Copy the JAR to HDFS.
-//      ByteStreams.copy(Locations.newInputSupplier(flowJar), Locations.newOutputSupplier(jarInHDFS));
-//      //Start the Flow.
-//      deployClient.startFlow(program, new HashMap<String, String>());
-//    } catch (Exception e) {
-//      LOG.error(e.getMessage(), e);
-//    }
+    try {
+      Program program = deployClient.createProgram(jarPath, className, jarUnpackDir);
+      String flowName = program.getSpecification().getName();
+      if (listAllFlows().contains(flowName)) {
+        throw new Exception("Flow with the same name is running! Stop or Delete the Flow before starting again");
+      }
+
+      Location jarInHDFS = location.append(flowName);
+      //Delete any existing JAR with the same flowName.
+      jarInHDFS.delete();
+      jarInHDFS.createNew();
+
+      //Copy the JAR to HDFS.
+      ByteStreams.copy(Locations.newInputSupplier(program.getJarLocation()), Locations.newOutputSupplier(jarInHDFS));
+      //Start the Flow.
+      deployClient.startFlow(program, new HashMap<String, String>());
+    } catch (Exception e) {
+      LOG.error(e.getMessage(), e);
+    }
   }
 
   @Override

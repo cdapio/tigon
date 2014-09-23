@@ -43,6 +43,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -119,7 +120,7 @@ public class StandaloneMain {
     txService.startAndWait();
     metricsCollectionService.startAndWait();
     addShutDownHook();
-    controller = deployClient.startFlow(jarPath, mainClassName, jarUnpackDir);
+    controller = deployClient.startFlow(jarPath, mainClassName, jarUnpackDir, new HashMap<String, String>());
     runLatch.await();
   }
 

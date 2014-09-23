@@ -55,6 +55,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
+import java.util.Map;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -112,7 +113,7 @@ public class DeployClient {
     }
   }
 
-  private Program createProgram(File jarPath, String classToLoad, File jarUnpackDir) throws Exception {
+  public Program createProgram(File jarPath, String classToLoad, File jarUnpackDir) throws Exception {
     expandJar(jarPath, jarUnpackDir);
     ProgramClassLoader classLoader = ClassLoaders.newProgramClassLoader(jarUnpackDir,
                                                                         ApiResourceListHolder.getResourceList());
@@ -127,12 +128,16 @@ public class DeployClient {
     return Programs.create(deployJar, classLoader);
   }
 
-  public ProgramController startFlow(File jarPath, String classToLoad, File jarUnpackDir) throws Exception {
-    Program program = createProgram(jarPath, classToLoad, jarUnpackDir);
-    //TimeUnit.MINUTES.sleep(10);
-
+  public ProgramController startFlow(Program program, Map<String, String> userArgs) throws Exception {
     return programRunnerFactory.create(ProgramRunnerFactory.Type.FLOW).run(
-      program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments()));
+      program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments(userArgs)));
+  }
+
+  public ProgramController startFlow(File jarPath, String classToLoad, File jarUnpackDir, Map<String, String> userArgs)
+    throws Exception {
+    Program program = createProgram(jarPath, classToLoad, jarUnpackDir);
+    return programRunnerFactory.create(ProgramRunnerFactory.Type.FLOW).run(
+      program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments(userArgs)));
   }
 
   public Location jarForTestBase(Class<?> flowClz, File... bundleEmbeddedJars)

@@ -64,7 +64,7 @@ public class TestBase {
     try {
       Location deployJar = deployClient.jarForTestBase(flowClz, bundleEmbeddedJars);
       ProgramController controller = deployClient.startFlow(new File(deployJar.toURI()), flowClz.getName(),
-                                                            tmpFolder.newFolder());
+                                                            tmpFolder.newFolder(), runtimeArgs);
       return new DefaultFlowManager(controller);
     } catch (Exception e) {
       throw Throwables.propagate(e);
