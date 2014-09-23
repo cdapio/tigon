@@ -28,8 +28,10 @@ import co.cask.tigon.internal.app.runtime.ProgramRunner;
 import co.cask.tigon.twill.AbortOnTimeoutEventHandler;
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
+import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import com.google.common.io.InputSupplier;
+import com.google.common.io.Resources;
 import com.google.common.util.concurrent.Service;
 import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
@@ -40,7 +42,6 @@ import org.apache.twill.api.TwillApplication;
 import org.apache.twill.api.TwillController;
 import org.apache.twill.api.TwillPreparer;
 import org.apache.twill.api.TwillRunner;
-import org.apache.twill.api.logging.PrinterLogHandler;
 import org.apache.twill.common.ServiceListenerAdapter;
 import org.apache.twill.common.Threads;
 import org.apache.twill.filesystem.LocalLocationFactory;
@@ -52,8 +53,12 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.PrintWriter;
 import java.io.Writer;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.Collection;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
@@ -119,10 +124,15 @@ public abstract class AbstractDistributedProgramRunner implements ProgramRunner 
           LOG.info("Starting {} with debugging enabled.", program.getId());
           twillPreparer.enableDebugging();
         }
+
+        List<URI> containerResources = addLogbackConfig(Lists.<URI>newArrayList());
+
         TwillController twillController = twillPreparer
           .withDependencies(new HBaseTableUtilFactory().get().getClass())
-          .addLogHandler(new PrinterLogHandler(new PrintWriter(System.out)))
+          //TODO: Fix Logging in Distributed Mode.
+          //.addLogHandler(new PrinterLogHandler(new PrintWriter(System.out, true)))
           .addSecureStore(YarnSecureStore.create(HBaseTokenUtils.obtainToken(hConf, new Credentials())))
+          .withResources(containerResources)
           .withApplicationArguments(
             String.format("--%s", RunnableOptions.JAR), copiedProgram.getJarLocation().getName(),
             String.format("--%s", RunnableOptions.RUNTIME_ARGS), runtimeArgs
@@ -130,6 +140,18 @@ public abstract class AbstractDistributedProgramRunner implements ProgramRunner 
         return addCleanupListener(twillController, hConfFile, cConfFile, copiedProgram, programDir);
       }
     });
+  }
+
+  private <T extends Collection<? super URI>> T addLogbackConfig(T resources) {
+    try {
+      URL logbackResource = Resources.getResource("logback.xml");
+      if (logbackResource != null) {
+        resources.add(logbackResource.toURI());
+      }
+    } catch (URISyntaxException e) {
+      LOG.warn("Failed to add logback.xml to resources.", e);
+    }
+    return resources;
   }
 
   /**

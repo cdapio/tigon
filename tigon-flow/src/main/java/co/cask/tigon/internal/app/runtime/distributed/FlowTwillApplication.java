@@ -42,7 +42,7 @@ import java.util.Map;
 public final class FlowTwillApplication implements TwillApplication {
 
   private static final Logger LOG = LoggerFactory.getLogger(FlowTwillApplication.class);
-  private static final String TXMANAGERNAME = "txManager";
+  private static final String TXMANAGER = "txManager";
   private final FlowSpecification spec;
   private final Program program;
   private final File hConfig;
@@ -89,7 +89,7 @@ public final class FlowTwillApplication implements TwillApplication {
     Preconditions.checkState(runnableSetter != null, "No flowlet for the flow.");
     //TODO: What if the flowlet name is named "txManager"?
     runnableSetter = moreRunnable
-      .add(TXMANAGERNAME, new TransactionServiceTwillRunnable(Constants.Service.TRANSACTION, "cConf.xml", "hConf.xml"))
+      .add(TXMANAGER, new TransactionServiceTwillRunnable(Constants.Service.TRANSACTION, "cConf.xml", "hConf.xml"))
       .withLocalFiles()
       .add("cConf.xml", cConfig.toURI())
       .add("hConf.xml", hConfig.toURI())
@@ -98,7 +98,7 @@ public final class FlowTwillApplication implements TwillApplication {
     String firstFlowlet = flowletNames.remove(0);
     String[] flowletArray = new String[flowletNames.size()];
     flowletArray = flowletNames.toArray(flowletArray);
-    return runnableSetter.withOrder().begin(TXMANAGERNAME).nextWhenStarted(firstFlowlet, flowletArray)
+    return runnableSetter.withOrder().begin(TXMANAGER).nextWhenStarted(firstFlowlet, flowletArray)
       .withEventHandler(eventHandler).build();
   }
 }
