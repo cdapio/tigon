@@ -93,7 +93,6 @@ public class DataRouterTest {
     DataIngestionRouter router = new DataIngestionRouter(serverMap, port);
     try {
       router.startAndWait();
-      socket.close();
       TimeUnit.SECONDS.sleep(1);
       InetSocketAddress routerAddress = new InetSocketAddress("127.0.0.1", port);
       HttpHost routerHost = new HttpHost(routerAddress.getHostName(), routerAddress.getPort());
@@ -108,8 +107,8 @@ public class DataRouterTest {
       Assert.assertEquals(1, testMap.get("stream3").intValue());
       Assert.assertTrue(!testMap.containsKey("stream4"));
     } finally {
-      router.stopAndWait();
       socket.close();
+      router.stopAndWait();
     }
   }
 
