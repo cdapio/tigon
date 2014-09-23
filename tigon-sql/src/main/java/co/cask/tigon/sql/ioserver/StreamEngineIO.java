@@ -50,12 +50,14 @@ public class StreamEngineIO extends AbstractIdleService {
   private final InMemoryDiscoveryService discoveryService;
   private final GDATRecordQueue recordQueue;
   private DataIngestionRouter router;
+  private final Map<String, Integer> portMap;
 
   //TODO Remove GDATRecordQueue parameter from this constructor. Use Guice to inject it directly to OutputServerSocket
-  public StreamEngineIO(InputFlowletSpecification spec, GDATRecordQueue recordQueue) {
+  public StreamEngineIO(InputFlowletSpecification spec, GDATRecordQueue recordQueue, Map<String, Integer> portMap) {
     this.spec = spec;
     this.discoveryService = new InMemoryDiscoveryService();
     this.recordQueue = recordQueue;
+    this.portMap = portMap;
   }
 
   @Override
@@ -67,11 +69,13 @@ public class StreamEngineIO extends AbstractIdleService {
       StreamSocketServer service;
       switch(streamInfo.getKey()) {
         case GDAT:
-          service = new InputServerSocket(factory, inputName, streamInfo.getValue());
+          service = new InputServerSocket(factory, inputName, streamInfo.getValue(),
+                                          portMap.get(Constants.TCP_PORT + "_" + inputName));
           break;
 
         case JSON:
-          service = new JsonInputServerSocket(factory, inputName, streamInfo.getValue());
+          service = new JsonInputServerSocket(factory, inputName, streamInfo.getValue(),
+                                              portMap.get(Constants.TCP_PORT + "_" + inputName));
           break;
 
         default:
@@ -95,7 +99,7 @@ public class StreamEngineIO extends AbstractIdleService {
       outputServerSocketServies.add(service);
     }
 
-    router = new DataIngestionRouter(discoveryService, dataIngressServerMap);
+    router = new DataIngestionRouter(discoveryService, dataIngressServerMap, portMap.get(Constants.HTTP_PORT));
     router.startAndWait();
   }
 

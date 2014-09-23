@@ -49,12 +49,15 @@ public final class InputFlowletService extends AbstractIdleService {
   private final HealthInspector healthInspector;
   private final MetricsRecorder metricsRecorder;
   private ProcessInitiator processInitiator;
+  private final Map<String, Integer> portMap;
 
   //TODO Remove GDATRecordQueue parameter from this constructor. Use Guice to inject it directly to OutputServerSocket
   public InputFlowletService(Location dir, InputFlowletSpecification spec, HealthInspector healthInspector,
-                             MetricsRecorder metricsRecorder, GDATRecordQueue recordQueue) {
+                             MetricsRecorder metricsRecorder, GDATRecordQueue recordQueue,
+                             Map<String, Integer> portMap) {
     this.dir = dir;
-    this.ioService = new StreamEngineIO(spec, recordQueue);
+    this.portMap = portMap;
+    this.ioService = new StreamEngineIO(spec, recordQueue, portMap);
     this.healthInspector = healthInspector;
     this.metricsRecorder = metricsRecorder;
   }

@@ -45,17 +45,25 @@ public class DataIngestionRouter extends AbstractIdleService {
   private static final Logger LOG = LoggerFactory.getLogger(DataIngestionRouter.class);
   private final DiscoveryService discoveryService;
   private final HttpRouterClientService clientService;
+  private int httpPort;
   private NettyHttpService httpService;
 
   public DataIngestionRouter(DiscoveryService discoveryService, Map<String, InetSocketAddress> ingestionServerMap) {
+    this(discoveryService, ingestionServerMap, 0);
+  }
+
+  public DataIngestionRouter(DiscoveryService discoveryService, Map<String, InetSocketAddress> ingestionServerMap,
+                             int httpPort) {
     this.discoveryService = discoveryService;
     this.clientService = new HttpRouterClientService(ingestionServerMap);
+    this.httpPort = httpPort;
   }
 
   @Override
   protected void startUp() throws Exception {
     httpService = NettyHttpService.builder()
       .addHttpHandlers(ImmutableList.of(new ForwardingHandler(clientService)))
+      .setPort(httpPort)
       .build();
     httpService.addListener(new ServiceListenerAdapter() {
       private Cancellable cancellable;

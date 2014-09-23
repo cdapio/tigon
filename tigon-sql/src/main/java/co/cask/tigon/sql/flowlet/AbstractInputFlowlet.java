@@ -34,6 +34,7 @@ import co.cask.tigon.sql.io.GDATDecoder;
 import co.cask.tigon.sql.io.MethodsDriver;
 import co.cask.tigon.sql.util.MetaInformationParser;
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import org.apache.commons.io.FileUtils;
 import org.apache.twill.common.Services;
@@ -130,6 +131,22 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
     create(configurer);
     InputFlowletSpecification spec = configurer.createInputFlowletSpec();
 
+    Map<String, Integer> dataIngestionPortsMap = Maps.newHashMap();
+    if (ctx.getRuntimeArguments().get(Constants.HTTP_PORT) != null) {
+      // Get data ingestion ports from runtime args
+      dataIngestionPortsMap.put(Constants.HTTP_PORT, Integer.parseInt(ctx.getRuntimeArguments().get(Constants.HTTP_PORT)));
+      for (String inputName : spec.getInputSchemas().keySet()) {
+        dataIngestionPortsMap.put(Constants.TCP_PORT + "_" + inputName,
+                    Integer.parseInt(ctx.getRuntimeArguments().get(Constants.TCP_PORT + "_" + inputName)));
+      }
+    } else {
+      // Setting port values to 0, so that the system identifies and allocates available ports
+      dataIngestionPortsMap.put(Constants.HTTP_PORT, 0);
+      for (String inputName : spec.getInputSchemas().keySet()) {
+        dataIngestionPortsMap.put(Constants.TCP_PORT + "_" + inputName, 0);
+      }
+    }
+
     // Setup temporary directory structure
     tmpFolder = Files.createTempDir();
     LocationFactory locationFactory = new LocalLocationFactory(tmpFolder);
@@ -147,7 +164,8 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
     recordQueue = new GDATRecordQueue();
 
     //Initiating Netty TCP I/O ports
-    inputFlowletService = new InputFlowletService(binDir, spec, healthInspector, metricsRecorder, recordQueue);
+    inputFlowletService = new InputFlowletService(binDir, spec, healthInspector, metricsRecorder, recordQueue,
+                                                  dataIngestionPortsMap);
     inputFlowletService.startAndWait();
 
     //Starting health monitor service
