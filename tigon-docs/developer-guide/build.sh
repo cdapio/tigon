@@ -67,7 +67,7 @@ else
 fi
 PROJECT_JAVADOCS="$PROJECT_PATH/target/site/apidocs"
 SDK_JAVADOCS="$PROJECT_PATH/$API/target/site/$APIDOCS"
-
+SDK_FULL_JAVADOCS="$PROJECT_PATH/$API/target/site/$APIDOCS"
 
 function usage() {
   cd $PROJECT_PATH
@@ -104,7 +104,7 @@ function build_docs() {
 
 function build_javadocs_full() {
   cd $PROJECT_PATH
-  mvn clean install
+  mvn clean install -DskipTests
   mvn site -DskipTests
 }
 
@@ -124,6 +124,13 @@ function copy_javadocs_selected() {
   copy_javadoc_set $TIGON_API
   copy_javadoc_set $TIGON_FLOW
   copy_javadoc_set $TIGON_SQL
+}
+
+function copy_javadocs_full() {
+  cd $BUILD_APIS
+  rm -rf $JAVADOCS
+  cp -r $SDK_FULL_JAVADOCS .
+  mv -f $APIDOCS $JAVADOCS
 }
 
 function copy_javadoc_set() {
@@ -146,6 +153,13 @@ function build() {
   build_docs
   build_javadocs_selected
   copy_javadocs_selected
+  make_zip
+}
+
+function build() {
+  build_docs
+  build_javadocs_full
+  copy_javadocs_full
   make_zip
 }
 
@@ -197,6 +211,7 @@ if [ $# -lt 1 ]; then
 fi
 
 case "$1" in
+  clean )             clean; exit 1;;
   build )             build; exit 1;;
   docs )              build_docs; exit 1;;
   build-standalone )  build_standalone; exit 1;;
