@@ -83,6 +83,7 @@ import com.google.common.util.concurrent.AbstractService;
 import com.google.common.util.concurrent.Service;
 import com.google.inject.Inject;
 import org.apache.twill.api.RunId;
+import org.apache.twill.api.ServiceAnnouncer;
 import org.apache.twill.common.Cancellable;
 import org.apache.twill.common.Threads;
 import org.apache.twill.discovery.DiscoveryServiceClient;
@@ -119,6 +120,7 @@ public final class FlowletProgramRunner implements ProgramRunner {
   private final MetricsCollectionService metricsCollectionService;
   private final DiscoveryServiceClient discoveryServiceClient;
   private final CConfiguration configuration;
+  private final ServiceAnnouncer serviceAnnouncer;
 
   @Inject
   public FlowletProgramRunner(SchemaGenerator schemaGenerator,
@@ -127,7 +129,7 @@ public final class FlowletProgramRunner implements ProgramRunner {
                               QueueReaderFactory queueReaderFactory,
                               MetricsCollectionService metricsCollectionService,
                               DiscoveryServiceClient discoveryServiceClient,
-                              CConfiguration configuration) {
+                              CConfiguration configuration, ServiceAnnouncer serviceAnnouncer) {
     this.schemaGenerator = schemaGenerator;
     this.datumWriterFactory = datumWriterFactory;
     this.dataFabricFacadeFactory = dataFabricFacadeFactory;
@@ -135,6 +137,7 @@ public final class FlowletProgramRunner implements ProgramRunner {
     this.metricsCollectionService = metricsCollectionService;
     this.discoveryServiceClient = discoveryServiceClient;
     this.configuration = configuration;
+    this.serviceAnnouncer = serviceAnnouncer;
   }
 
   @SuppressWarnings("unused")
@@ -184,7 +187,7 @@ public final class FlowletProgramRunner implements ProgramRunner {
       // Creates flowlet context
       flowletContext = new BasicFlowletContext(program, flowletName, instanceId, runId, instanceCount,
                                                options.getUserArguments(), flowletDef.getFlowletSpec(),
-                                               metricsCollectionService, dataFabricFacade);
+                                               metricsCollectionService, dataFabricFacade, serviceAnnouncer);
 
 
 

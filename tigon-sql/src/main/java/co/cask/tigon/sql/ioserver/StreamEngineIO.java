@@ -25,7 +25,6 @@ import co.cask.tigon.sql.io.DataIngestionRouter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.AbstractIdleService;
-import org.apache.twill.discovery.InMemoryDiscoveryService;
 import org.jboss.netty.channel.ChannelFactory;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
@@ -47,14 +46,12 @@ public class StreamEngineIO extends AbstractIdleService {
   private final Map<String, InetSocketAddress> dataIngressServerMap = Maps.newHashMap();
   private final Map<String, InetSocketAddress> dataEgressServerMap = Maps.newHashMap();
   private final Map<String, InetSocketAddress> dataSourceServerMap = Maps.newHashMap();
-  private final InMemoryDiscoveryService discoveryService;
   private final GDATRecordQueue recordQueue;
   private DataIngestionRouter router;
 
   //TODO Remove GDATRecordQueue parameter from this constructor. Use Guice to inject it directly to OutputServerSocket
   public StreamEngineIO(InputFlowletSpecification spec, GDATRecordQueue recordQueue) {
     this.spec = spec;
-    this.discoveryService = new InMemoryDiscoveryService();
     this.recordQueue = recordQueue;
   }
 
@@ -95,7 +92,7 @@ public class StreamEngineIO extends AbstractIdleService {
       outputServerSocketServies.add(service);
     }
 
-    router = new DataIngestionRouter(discoveryService, dataIngressServerMap);
+    router = new DataIngestionRouter(dataIngressServerMap, 0);
     router.startAndWait();
   }
 

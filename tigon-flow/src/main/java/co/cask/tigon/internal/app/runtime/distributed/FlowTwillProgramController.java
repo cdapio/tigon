@@ -28,14 +28,14 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * A ProgramController for flow program that are launched through Twill.
  */
-final class FlowTwillProgramController extends AbstractTwillProgramController {
+public final class FlowTwillProgramController extends AbstractTwillProgramController {
 
   private static final Logger LOG = LoggerFactory.getLogger(FlowTwillProgramController.class);
 
   private final Lock lock;
   private final DistributedFlowletInstanceUpdater instanceUpdater;
 
-  FlowTwillProgramController(String programId, TwillController controller,
+  public FlowTwillProgramController(String programId, TwillController controller,
                              DistributedFlowletInstanceUpdater instanceUpdater) {
     super(programId, controller);
     this.lock = new ReentrantLock();

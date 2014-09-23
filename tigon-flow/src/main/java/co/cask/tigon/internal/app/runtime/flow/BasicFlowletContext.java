@@ -33,6 +33,8 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import org.apache.twill.api.RunId;
+import org.apache.twill.api.ServiceAnnouncer;
+import org.apache.twill.common.Cancellable;
 
 import java.util.List;
 import java.util.Map;
@@ -54,12 +56,14 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
   private final List<TransactionAware> transactionAwares;
   private final DataFabricFacade dataFabricFacade;
   private TransactionContext transactionContext;
+  private final ServiceAnnouncer serviceAnnouncer;
 
   BasicFlowletContext(Program program, String flowletId,
                       int instanceId, RunId runId,
                       int instanceCount,
                       Arguments runtimeArguments, FlowletSpecification flowletSpec,
-                      MetricsCollectionService metricsCollectionService, DataFabricFacade dataFabricFacade) {
+                      MetricsCollectionService metricsCollectionService, DataFabricFacade dataFabricFacade,
+                      ServiceAnnouncer serviceAnnouncer) {
     super(program, runId, getMetricContext(program, flowletId, instanceId), metricsCollectionService);
     this.flowId = program.getName();
     this.flowletId = flowletId;
@@ -71,6 +75,7 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
     this.flowletMetrics = new FlowletMetrics(metricsCollectionService, flowId, flowletId);
     this.transactionAwares = Lists.newArrayList();
     this.dataFabricFacade = dataFabricFacade;
+    this.serviceAnnouncer = serviceAnnouncer;
   }
 
   @Override
@@ -164,5 +169,10 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
 
   private static String getMetricContext(Program program, String flowletId, int instanceId) {
     return String.format("%s.%s.%d", program.getName(), flowletId, instanceId);
+  }
+
+  @Override
+  public Cancellable announce(String s, int i) {
+    return serviceAnnouncer.announce(s, i);
   }
 }

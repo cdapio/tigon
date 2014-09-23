@@ -23,6 +23,7 @@ import com.google.common.io.Closeables;
 import com.google.common.util.concurrent.Service;
 import org.apache.twill.common.ServiceListenerAdapter;
 import org.apache.twill.common.Threads;
+import org.apache.twill.discovery.ServiceDiscovered;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -132,5 +133,10 @@ final class FlowletProgramController extends AbstractProgramController {
         }
       }
     }, Threads.SAME_THREAD_EXECUTOR);
+  }
+
+  @Override
+  public ServiceDiscovered discover(String service) {
+    return null;
   }
 }
