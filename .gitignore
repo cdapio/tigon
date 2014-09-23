@@ -27,14 +27,14 @@ hs_err_pid*
 *.iws
 *.iml
 *.ipr
-.idea
+.idea/
 
 # Maven build directory
-target
+target/
 
 # Generated binaries
-tigon-sql/bin
-tigon-sql/lib
+tigon-sql/bin/
+tigon-sql/lib/
 *.a
 *.o
 tigon-sql/src/main/c/ftacmp/gen_tuple_access

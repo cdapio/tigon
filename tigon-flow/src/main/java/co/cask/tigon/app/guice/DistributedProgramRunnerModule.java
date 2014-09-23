@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Cask Data, Inc.
+ * Copyright © 2014 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,13 +13,14 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package co.cask.tigon.app.guice;
 
 import co.cask.tigon.internal.app.runtime.ProgramRunner;
 import co.cask.tigon.internal.app.runtime.ProgramRunnerFactory;
 import co.cask.tigon.internal.app.runtime.distributed.DistributedFlowProgramRunner;
 import com.google.common.base.Preconditions;
-import com.google.inject.PrivateModule;
+import com.google.inject.AbstractModule;
 import com.google.inject.Provider;
 import com.google.inject.Provides;
 import com.google.inject.Singleton;
@@ -28,9 +29,9 @@ import com.google.inject.multibindings.MapBinder;
 import java.util.Map;
 
 /**
- * Guice module for distributed AppFabric. Used by the app-fabric server, not for distributed containers.
+ * Guice module for distributed Flow Program Runner.
  */
-final class DistributedProgramRunnerModule extends PrivateModule {
+final class DistributedProgramRunnerModule extends AbstractModule {
 
   @Override
   protected void configure() {
