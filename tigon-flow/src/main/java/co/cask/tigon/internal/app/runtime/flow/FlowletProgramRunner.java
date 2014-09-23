@@ -178,13 +178,15 @@ public final class FlowletProgramRunner implements ProgramRunner {
 
       Class<? extends Flowlet> flowletClass = (Class<? extends Flowlet>) clz;
 
+      // Creates tx related objects
+      DataFabricFacade dataFabricFacade = dataFabricFacadeFactory.create(program);
+
       // Creates flowlet context
       flowletContext = new BasicFlowletContext(program, flowletName, instanceId, runId, instanceCount,
                                                options.getUserArguments(), flowletDef.getFlowletSpec(),
-                                               metricsCollectionService);
+                                               metricsCollectionService, dataFabricFacade);
 
-      // Creates tx related objects
-      DataFabricFacade dataFabricFacade = dataFabricFacadeFactory.create(program);
+
 
       // Creates QueueSpecification
       Table<Node, String, Set<QueueSpecification>> queueSpecs = new SimpleQueueSpecificationGenerator().create(

@@ -25,6 +25,7 @@ import co.cask.tigon.app.metrics.FlowletMetrics;
 import co.cask.tigon.app.program.Program;
 import co.cask.tigon.internal.app.runtime.AbstractContext;
 import co.cask.tigon.internal.app.runtime.Arguments;
+import co.cask.tigon.internal.app.runtime.DataFabricFacade;
 import co.cask.tigon.logging.FlowletLoggingContext;
 import co.cask.tigon.logging.LoggingContext;
 import co.cask.tigon.metrics.MetricsCollectionService;
@@ -51,13 +52,14 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
   private final FlowletMetrics flowletMetrics;
   private final Arguments runtimeArguments;
   private final List<TransactionAware> transactionAwares;
+  private final DataFabricFacade dataFabricFacade;
   private TransactionContext transactionContext;
 
   BasicFlowletContext(Program program, String flowletId,
                       int instanceId, RunId runId,
                       int instanceCount,
                       Arguments runtimeArguments, FlowletSpecification flowletSpec,
-                      MetricsCollectionService metricsCollectionService) {
+                      MetricsCollectionService metricsCollectionService, DataFabricFacade dataFabricFacade) {
     super(program, runId, getMetricContext(program, flowletId, instanceId), metricsCollectionService);
     this.flowId = program.getName();
     this.flowletId = flowletId;
@@ -68,6 +70,7 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
     this.flowletSpec = flowletSpec;
     this.flowletMetrics = new FlowletMetrics(metricsCollectionService, flowId, flowletId);
     this.transactionAwares = Lists.newArrayList();
+    this.dataFabricFacade = dataFabricFacade;
   }
 
   @Override
@@ -129,11 +132,16 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
     return flowletId;
   }
 
-  public void setTransactionContext(TransactionContext transactionContext) {
-    this.transactionContext = transactionContext;
+  /**
+   * Create a new {@link TransactionContext} for this flowlet. Add all {@link TransactionAware}s to the context.
+   * @return a new TransactionContext.
+   */
+  public TransactionContext createTransactionContext() {
+    transactionContext = dataFabricFacade.createTransactionManager();
     for (TransactionAware transactionAware : transactionAwares) {
       this.transactionContext.addTransactionAware(transactionAware);
     }
+    return transactionContext;
   }
 
   @Override

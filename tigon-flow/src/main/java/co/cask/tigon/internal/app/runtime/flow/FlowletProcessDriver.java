@@ -257,9 +257,8 @@ final class FlowletProcessDriver extends AbstractExecutionThreadService {
     }
 
     // Begin transaction and dequeue
-    final TransactionContext txContext = dataFabricFacade.createTransactionManager();
+    final TransactionContext txContext = flowletContext.createTransactionContext();
     try {
-      flowletContext.setTransactionContext(txContext);
       txContext.start();
 
       try {
@@ -371,9 +370,8 @@ final class FlowletProcessDriver extends AbstractExecutionThreadService {
   }
 
   private void initFlowlet() throws InterruptedException {
-    final TransactionContext txContext = dataFabricFacade.createTransactionManager();
+    final TransactionContext txContext = flowletContext.createTransactionContext();
     try {
-      flowletContext.setTransactionContext(txContext);
       txContext.start();
       try {
         LOG.info("Initializing flowlet: " + flowletContext);
@@ -394,9 +392,8 @@ final class FlowletProcessDriver extends AbstractExecutionThreadService {
   }
 
   private void destroyFlowlet() {
-    final TransactionContext txContext = dataFabricFacade.createTransactionManager();
+    final TransactionContext txContext = flowletContext.createTransactionContext();
     try {
-      flowletContext.setTransactionContext(txContext);
       txContext.start();
       try {
         LOG.info("Destroying flowlet: " + flowletContext);
