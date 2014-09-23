@@ -136,7 +136,7 @@ function copy_javadoc_set() {
 
 function make_zip() {
   version
-  ZIP_FILE_NAME="$PROJECT-$HTML-docs-$PROJECT_VERSION.zip"
+  ZIP_FILE_NAME="$PROJECT-docs-$PROJECT_VERSION.zip"
   cd $SCRIPT_PATH/$BUILD
   zip -r $ZIP_FILE_NAME $HTML/*
 }
@@ -164,7 +164,10 @@ function build_dependencies() {
 
 function version() {
   cd $PROJECT_PATH
-  PROJECT_VERSION=`mvn help:evaluate -o -Dexpression=project.version | grep -v '^\['`
+#   PROJECT_VERSION=`mvn help:evaluate -o -Dexpression=project.version | grep -v '^\['`
+  PROJECT_VERSION=`grep "<version>" pom.xml`
+  PROJECT_VERSION=${PROJECT_VERSION#*<version>}
+  PROJECT_VERSION=${PROJECT_VERSION%%</version>*}
   IFS=/ read -a branch <<< "`git rev-parse --abbrev-ref HEAD`"
   GIT_BRANCH="${branch[1]}"
 }
