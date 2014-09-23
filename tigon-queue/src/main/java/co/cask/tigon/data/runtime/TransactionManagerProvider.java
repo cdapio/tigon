@@ -16,16 +16,16 @@
 
 package co.cask.tigon.data.runtime;
 
-import com.continuuity.tephra.TransactionManager;
-import com.continuuity.tephra.metrics.TxMetricsCollector;
-import com.continuuity.tephra.persist.TransactionStateStorage;
+import co.cask.tephra.TransactionManager;
+import co.cask.tephra.metrics.TxMetricsCollector;
+import co.cask.tephra.persist.TransactionStateStorage;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import org.apache.hadoop.conf.Configuration;
 
 /**
- * Google Guice Provider for {@link com.continuuity.tephra.TransactionManager} instances.
- * Each call to {@link #get()} will return a new {@link com.continuuity.tephra.TransactionManager} instance.
+ * Google Guice Provider for {@link TransactionManager} instances.
+ * Each call to {@link #get()} will return a new {@link TransactionManager} instance.
  */
 public class TransactionManagerProvider implements Provider<TransactionManager> {
   private final Configuration conf;

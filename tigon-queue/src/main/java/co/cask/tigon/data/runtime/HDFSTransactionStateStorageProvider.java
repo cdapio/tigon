@@ -16,14 +16,14 @@
 
 package co.cask.tigon.data.runtime;
 
-import com.continuuity.tephra.persist.HDFSTransactionStateStorage;
-import com.continuuity.tephra.snapshot.SnapshotCodecProvider;
+import co.cask.tephra.persist.HDFSTransactionStateStorage;
+import co.cask.tephra.snapshot.SnapshotCodecProvider;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import org.apache.hadoop.conf.Configuration;
 
 /**
- * Google Guice Provider for the {@link com.continuuity.tephra.persist.HDFSTransactionStateStorage} class.
+ * Google Guice Provider for the {@link HDFSTransactionStateStorage} class.
  * Each call to {@link #get()} will return a new instance of the storage provider.
  */
 public class HDFSTransactionStateStorageProvider implements Provider<HDFSTransactionStateStorage> {

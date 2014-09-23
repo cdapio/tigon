@@ -16,7 +16,7 @@
 
 package co.cask.tigon.flow.test;
 
-import com.continuuity.tephra.TransactionManager;
+import co.cask.tephra.TransactionManager;
 import co.cask.tigon.api.flow.Flow;
 import co.cask.tigon.app.guice.ProgramRunnerRuntimeModule;
 import co.cask.tigon.conf.CConfiguration;
@@ -63,7 +63,8 @@ public class TestBase {
     Preconditions.checkNotNull(flowClz, "Flow class cannot be null");
     try {
       Location deployJar = deployClient.jarForTestBase(flowClz, bundleEmbeddedJars);
-      ProgramController controller = deployClient.startFlow(deployJar, runtimeArgs);
+      ProgramController controller = deployClient.startFlow(new File(deployJar.toURI()), flowClz.getName(),
+                                                            tmpFolder.newFolder(), runtimeArgs);
       return new DefaultFlowManager(controller);
     } catch (Exception e) {
       throw Throwables.propagate(e);

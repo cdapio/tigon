@@ -89,8 +89,7 @@ public class DistributedFlowOperations extends AbstractIdleService implements Fl
   @Override
   public void startFlow(File jarPath, String className) {
     try {
-      Location flowJar = deployClient.createFlowJar(jarPath, className, jarUnpackDir);
-      Program program = Programs.createWithUnpack(flowJar, jarUnpackDir);
+      Program program = deployClient.createProgram(jarPath, className, jarUnpackDir);
       String flowName = program.getSpecification().getName();
       if (listAllFlows().contains(flowName)) {
         throw new Exception("Flow with the same name is running! Stop or Delete the Flow before starting again");
@@ -102,7 +101,7 @@ public class DistributedFlowOperations extends AbstractIdleService implements Fl
       jarInHDFS.createNew();
 
       //Copy the JAR to HDFS.
-      ByteStreams.copy(Locations.newInputSupplier(flowJar), Locations.newOutputSupplier(jarInHDFS));
+      ByteStreams.copy(Locations.newInputSupplier(program.getJarLocation()), Locations.newOutputSupplier(jarInHDFS));
       //Start the Flow.
       deployClient.startFlow(program, new HashMap<String, String>());
     } catch (Exception e) {
@@ -111,12 +110,32 @@ public class DistributedFlowOperations extends AbstractIdleService implements Fl
   }
 
   @Override
+  public State getStatus(String flowName) {
+    try {
+      Iterable<TwillController> controllers = lookupFlow(flowName);
+      sleepForZK(controllers);
+      if (controllers.iterator().hasNext()) {
+        State state = controllers.iterator().next().state();
+        sleepForZK(state);
+        return state;
+      }
+    } catch (Exception e) {
+      LOG.warn(e.getMessage(), e);
+    }
+    return null;
+  }
+
+  @Override
   public List<String> listAllFlows() {
     List<String> flowNames = Lists.newArrayList();
-    for (TwillRunner.LiveInfo liveInfo : lookupService()) {
-      String appName = liveInfo.getApplicationName();
-      appName = appName.substring(appName.indexOf('.') + 1);
-      flowNames.add(appName);
+    try {
+      for (TwillRunner.LiveInfo liveInfo : lookupService()) {
+        String appName = liveInfo.getApplicationName();
+        appName = appName.substring(appName.indexOf('.') + 1);
+        flowNames.add(appName);
+      }
+    } catch (Exception e) {
+      LOG.warn(e.getMessage(), e);
     }
     return flowNames;
   }
@@ -124,22 +143,30 @@ public class DistributedFlowOperations extends AbstractIdleService implements Fl
   @Override
   public List<InetSocketAddress> discover(String flowName, String service) {
     List<InetSocketAddress> endPoints = Lists.newArrayList();
-    Iterable<TwillController> controllers = lookupFlow(flowName);
-    for (TwillController controller : controllers) {
-      Iterable<Discoverable> iterable = controller.discoverService(service);
-      sleepForZK();
-      for (Discoverable discoverable : iterable) {
-        endPoints.add(discoverable.getSocketAddress());
+    try {
+      Iterable<TwillController> controllers = lookupFlow(flowName);
+      for (TwillController controller : controllers) {
+        Iterable<Discoverable> iterable = controller.discoverService(service);
+        sleepForZK(iterable);
+        for (Discoverable discoverable : iterable) {
+          endPoints.add(discoverable.getSocketAddress());
+        }
       }
+    } catch (Exception e) {
+      LOG.warn(e.getMessage(), e);
     }
     return endPoints;
   }
 
   @Override
   public void stopFlow(String flowName) {
-    Iterable<TwillController> controllers = lookupFlow(flowName);
-    for (TwillController controller : controllers) {
-      controller.stopAndWait();
+    try {
+      Iterable<TwillController> controllers = lookupFlow(flowName);
+      for (TwillController controller : controllers) {
+        controller.stopAndWait();
+      }
+    } catch (Exception e) {
+      LOG.warn(e.getMessage(), e);
     }
   }
 
@@ -159,27 +186,31 @@ public class DistributedFlowOperations extends AbstractIdleService implements Fl
 
   @Override
   public List<String> getServices(String flowName) {
-    Iterable<TwillController> controllers = lookupFlow(flowName);
     List<String> services = Lists.newArrayList();
-    for (TwillController controller : controllers) {
-      ResourceReport report = controller.getResourceReport();
-      sleepForZK();
-      services.addAll(report.getServices());
+    try {
+      Iterable<TwillController> controllers = lookupFlow(flowName);
+      for (TwillController controller : controllers) {
+        ResourceReport report = controller.getResourceReport();
+        sleepForZK(report);
+        services.addAll(report.getServices());
+      }
+    } catch (Exception e) {
+      LOG.warn(e.getMessage(), e);
     }
     return services;
   }
 
   @Override
   public void setInstances(String flowName, String flowletName, int instanceCount) {
-    Iterable<TwillController> controllers = lookupFlow(flowName);
-    for (TwillController controller : controllers) {
-      try {
+    try {
+      Iterable<TwillController> controllers = lookupFlow(flowName);
+      for (TwillController controller : controllers) {
         ResourceReport report = controller.getResourceReport();
-        sleepForZK();
+        sleepForZK(report);
         int oldInstances = report.getResources().get(flowletName).size();
         Program program = Programs.create(location.append(flowName));
         Multimap<String, QueueName> consumerQueues = FlowUtils.configureQueue(program, program.getSpecification(),
-                                                                           queueAdmin);
+                                                                              queueAdmin);
         DistributedFlowletInstanceUpdater instanceUpdater = new DistributedFlowletInstanceUpdater(
           program, controller, queueAdmin, consumerQueues);
         FlowTwillProgramController flowController = new FlowTwillProgramController(program.getName(), controller,
@@ -189,50 +220,66 @@ public class DistributedFlowOperations extends AbstractIdleService implements Fl
         instanceOptions.put("newInstances", String.valueOf(instanceCount));
         instanceOptions.put("oldInstances", String.valueOf(oldInstances));
         flowController.command(ProgramOptionConstants.FLOWLET_INSTANCES, instanceOptions).get();
-      } catch (Exception e) {
-        LOG.warn(e.getMessage(), e);
       }
+    } catch (Exception e) {
+      LOG.warn(e.getMessage(), e);
     }
   }
 
   @Override
   public Map<String, Integer> getFlowInfo(String flowName) {
     Map<String, Integer> flowletInfo = Maps.newHashMap();
-    Iterable<TwillController> controllers = lookupFlow(flowName);
-    for (TwillController controller : controllers) {
-      ResourceReport report = controller.getResourceReport();
-      sleepForZK();
-      for (Map.Entry<String, Collection<TwillRunResources>> entry : report.getResources().entrySet()) {
-        flowletInfo.put(entry.getKey(), entry.getValue().size());
+    try {
+      Iterable<TwillController> controllers = lookupFlow(flowName);
+      for (TwillController controller : controllers) {
+        ResourceReport report = controller.getResourceReport();
+        sleepForZK(report);
+        for (Map.Entry<String, Collection<TwillRunResources>> entry : report.getResources().entrySet()) {
+          flowletInfo.put(entry.getKey(), entry.getValue().size());
+        }
       }
+    } catch (Exception e) {
+      LOG.warn(e.getMessage(), e);
     }
     return flowletInfo;
   }
 
   @Override
   public void addLogHandler(String flowName, PrintStream out) {
-    Iterable<TwillController> iterable = lookupFlow(flowName);
-    if (iterable.iterator().hasNext()) {
-      TwillController controller = iterable.iterator().next();
-      controller.addLogHandler(new PrinterLogHandler(new PrintWriter(out)));
+    try {
+      Iterable<TwillController> iterable = lookupFlow(flowName);
+      if (iterable.iterator().hasNext()) {
+        TwillController controller = iterable.iterator().next();
+        controller.addLogHandler(new PrinterLogHandler(new PrintWriter(out, true)));
+      }
+    } catch (Exception e) {
+      LOG.warn(e.getMessage(), e);
     }
   }
 
-  private Iterable<TwillRunner.LiveInfo> lookupService() {
+  private Iterable<TwillRunner.LiveInfo> lookupService() throws Exception {
     Iterable<TwillRunner.LiveInfo> iterable = runnerService.lookupLive();
-    sleepForZK();
+    sleepForZK(iterable);
     return iterable;
   }
 
-  private Iterable<TwillController> lookupFlow(String flowName) {
+  private Iterable<TwillController> lookupFlow(String flowName) throws Exception {
     Iterable<TwillController> iterable = runnerService.lookup(String.format("flow.%s", flowName));
-    sleepForZK();
+    sleepForZK(iterable);
     return iterable;
   }
 
-  private void sleepForZK() {
+  private void sleepForZK(Object obj) throws Exception {
+    int count = 100;
     try {
-      TimeUnit.SECONDS.sleep(2);
+      for (int i = 0; i < count; i++) {
+        if (obj != null) {
+          TimeUnit.MILLISECONDS.sleep(250);
+          return;
+        }
+        TimeUnit.MILLISECONDS.sleep(25);
+      }
+      throw new Exception("Didn't receive data from ZK");
     } catch (InterruptedException e) {
       LOG.warn("Caught interrupted exception", e);
       Thread.currentThread().interrupt();

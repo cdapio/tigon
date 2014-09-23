@@ -52,10 +52,6 @@
     </dependency>
     <dependency>
       <groupId>org.apache.twill</groupId>
-      <artifactId>twill-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.twill</groupId>
       <artifactId>twill-core</artifactId>
     </dependency>
     <dependency>

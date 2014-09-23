@@ -16,7 +16,7 @@
 
 package co.cask.tigon.data.transaction.metrics;
 
-import com.continuuity.tephra.metrics.TxMetricsCollector;
+import co.cask.tephra.metrics.TxMetricsCollector;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import co.cask.tigon.metrics.MetricsCollector;
 import co.cask.tigon.metrics.MetricsScope;

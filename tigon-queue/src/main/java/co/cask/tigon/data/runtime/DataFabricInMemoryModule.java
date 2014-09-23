@@ -16,8 +16,8 @@
 
 package co.cask.tigon.data.runtime;
 
-import com.continuuity.tephra.metrics.TxMetricsCollector;
-import com.continuuity.tephra.runtime.TransactionModules;
+import co.cask.tephra.metrics.TxMetricsCollector;
+import co.cask.tephra.runtime.TransactionModules;
 import co.cask.tigon.data.queue.QueueClientFactory;
 import co.cask.tigon.data.transaction.metrics.TransactionManagerMetricsCollector;
 import co.cask.tigon.data.transaction.queue.QueueAdmin;

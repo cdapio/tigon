@@ -16,7 +16,7 @@
 
 package co.cask.tigon;
 
-import com.continuuity.tephra.TransactionManager;
+import co.cask.tephra.TransactionManager;
 import co.cask.tigon.app.guice.ProgramRunnerRuntimeModule;
 import co.cask.tigon.conf.CConfiguration;
 import co.cask.tigon.conf.Constants;
@@ -132,8 +132,7 @@ public class StandaloneMain {
     txService.startAndWait();
     metricsCollectionService.startAndWait();
     addShutDownHook();
-    Location deployJar = deployClient.createFlowJar(jarPath, mainClassName, jarUnpackDir);
-    controller = deployClient.startFlow(deployJar, runtimeArgs);
+    controller = deployClient.startFlow(jarPath, mainClassName, jarUnpackDir, new HashMap<String, String>());
     runLatch.await();
   }
 

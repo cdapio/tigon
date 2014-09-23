@@ -35,10 +35,10 @@ import co.cask.tigon.lang.ClassLoaders;
 import co.cask.tigon.lang.jar.ProgramClassLoader;
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
-import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
 import com.google.common.io.ByteStreams;
+import com.google.common.io.Closeables;
 import com.google.common.io.Files;
 import com.google.common.io.InputSupplier;
 import com.google.gson.Gson;
@@ -52,11 +52,8 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.Set;
@@ -108,45 +105,43 @@ public class DeployClient {
         f.getParentFile().mkdirs();
       }
       InputStream is = jar.getInputStream(file);
-      FileOutputStream fos = new FileOutputStream(f);
       try {
-        while (is.available() > 0) {
-          fos.write(is.read());
-        }
-      } catch (IOException e) {
-        throw Throwables.propagate(e);
+        ByteStreams.copy(is, Files.newOutputStreamSupplier(f));
       } finally {
-        fos.close();
-        is.close();
+        Closeables.closeQuietly(is);
       }
     }
   }
 
-  public Location createFlowJar(File jarPath, String classToLoad, File jarUnpackDir) throws Exception {
+  public Program createProgram(File jarPath, String classToLoad, File jarUnpackDir) throws Exception {
     expandJar(jarPath, jarUnpackDir);
-    URL jarURL = jarUnpackDir.toURI().toURL();
-    ProgramClassLoader filterClassLoader = ClassLoaders.newProgramClassLoader(jarUnpackDir,
-                                                                              ApiResourceListHolder.getResourceList(),
-                                                                              DeployClient.class.getClassLoader());
-    URLClassLoader classLoader = new URLClassLoader(new URL[]{jarURL}, filterClassLoader);
+    ProgramClassLoader classLoader = ClassLoaders.newProgramClassLoader(jarUnpackDir,
+                                                                        ApiResourceListHolder.getResourceList());
     Class<?> clz = classLoader.loadClass(classToLoad);
     if (!(clz.newInstance() instanceof Flow)) {
       throw new Exception("Expected Flow class");
     }
     ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
     Thread.currentThread().setContextClassLoader(classLoader);
-    return jarForTestBase(clz);
+    Location deployJar = jarForTestBase(clz);
+    LOG.info("Deloy Jar location : {}", deployJar.toURI());
+    try {
+      return Programs.create(deployJar, classLoader);
+    } finally {
+      Thread.currentThread().setContextClassLoader(contextClassLoader);
+    }
   }
 
-  public ProgramController startFlow(Program program, Map<String, String> userArgs) {
+  public ProgramController startFlow(Program program, Map<String, String> userArgs) throws Exception {
     return programRunnerFactory.create(ProgramRunnerFactory.Type.FLOW).run(
       program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments(userArgs)));
   }
 
-  public ProgramController startFlow(Location deployJar, Map<String, String> runtimeArgs)
+  public ProgramController startFlow(File jarPath, String classToLoad, File jarUnpackDir, Map<String, String> userArgs)
     throws Exception {
-    Program program = Programs.create(deployJar);
-    return startFlow(program, runtimeArgs);
+    Program program = createProgram(jarPath, classToLoad, jarUnpackDir);
+    return programRunnerFactory.create(ProgramRunnerFactory.Type.FLOW).run(
+      program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments(userArgs)));
   }
 
   public Location jarForTestBase(Class<?> flowClz, File... bundleEmbeddedJars)

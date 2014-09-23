@@ -16,8 +16,8 @@
 
 package co.cask.tigon.data.transaction.queue;
 
-import com.continuuity.tephra.Transaction;
-import com.continuuity.tephra.TransactionAware;
+import co.cask.tephra.Transaction;
+import co.cask.tephra.TransactionAware;
 import co.cask.tigon.data.queue.QueueEntry;
 import co.cask.tigon.data.queue.QueueName;
 import co.cask.tigon.data.queue.QueueProducer;
