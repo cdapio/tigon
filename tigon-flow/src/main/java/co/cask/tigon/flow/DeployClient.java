@@ -125,7 +125,11 @@ public class DeployClient {
     Thread.currentThread().setContextClassLoader(classLoader);
     Location deployJar = jarForTestBase(clz);
     LOG.info("Deloy Jar location : {}", deployJar.toURI());
-    return Programs.create(deployJar, classLoader);
+    try {
+      return Programs.create(deployJar, classLoader);
+    } finally {
+      Thread.currentThread().setContextClassLoader(contextClassLoader);
+    }
   }
 
   public ProgramController startFlow(Program program, Map<String, String> userArgs) throws Exception {

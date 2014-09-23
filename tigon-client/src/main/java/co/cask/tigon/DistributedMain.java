@@ -152,19 +152,19 @@ public class DistributedMain {
     flowOperations.startAndWait();
     List<String> commandList = Lists.newArrayList();
     for (CLICommands cliCommand : CLICommands.values()) {
-      commandList.add(cliCommand.toString());
+      commandList.add(cliCommand.toString().toLowerCase());
     }
     consoleReader.setPrompt("tigon> ");
     String line;
     while ((line = consoleReader.readLine()) != null) {
-      String[] args = line.split(" ");
+      String[] args = line.split("\\s+");
       String command = args[0].toUpperCase();
       try {
         CLICommands cmd = null;
         try {
           cmd = CLICommands.valueOf(command);
         } catch (IllegalArgumentException e) {
-          out.println("Available Comands : ");
+          out.println("Available Commands : ");
           out.println(StringUtils.join(commandList, ", "));
           continue;
         }
@@ -199,8 +199,14 @@ public class DistributedMain {
           }
         } else if (cmd.equals(CLICommands.SERVICEINFO)) {
           out.println(StringUtils.join(flowOperations.getServices(args[1]), "\n"));
-        } else if (cmd.equals(CLICommands.SHOWLOGS)) {
-          flowOperations.addLogHandler(args[1], System.out);
+        } else if (cmd.equals(CLICommands.VERSION)) {
+          out.println(Constants.VERSION);
+        } else if (cmd.equals(CLICommands.HELP)) {
+          try {
+            out.println(CLICommands.valueOf(args[1].toUpperCase()).printHelp());
+          } catch (IllegalArgumentException e) {
+            out.println("Command Not Found");
+          }
         } else {
           //QUIT Command
           break;

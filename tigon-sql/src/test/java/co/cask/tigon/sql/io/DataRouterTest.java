@@ -88,8 +88,12 @@ public class DataRouterTest {
   @Test
   public void testDataRouter() throws Exception {
     ServerSocket socket = new ServerSocket(0);
-    socket.setReuseAddress(true);
-    int port = socket.getLocalPort();
+    int port = -1;
+    try {
+      port = socket.getLocalPort();
+    } finally {
+      socket.close();
+    }
     DataIngestionRouter router = new DataIngestionRouter(serverMap, port);
     try {
       router.startAndWait();

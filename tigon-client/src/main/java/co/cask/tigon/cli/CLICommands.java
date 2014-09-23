@@ -29,9 +29,10 @@ public enum CLICommands {
   DISCOVER (2, "Discovers a Service endpoint for a Flow", "<flowname> <servicename>"),
   SET (3, "Set the number of Flowlet Instances for a Flow", "<flowname> <flowletname> <instance-count>"),
   FLOWLETINFO (1, "Prints the Flowlet Names and the corresponding Instance Count", "<flowname>"),
-  SHOWLOGS (1, "Shows the live logs for the Flow", "<flowname>"),
   STATUS (1, "Shows the Status of the Flow", "<flowname>"),
-  QUIT (0, "Quit the Tigon Client", "");
+  VERSION (0, "Shows the Version of Tigon", ""),
+  HELP (1, "Shows the usage for that given command", "<command>"),
+  QUIT(0, "Quit the Tigon Client", "");
 
   private int argCount;
   private String description;
@@ -49,6 +50,6 @@ public enum CLICommands {
   }
 
   public String printHelp() {
-    return String.format("Command Description : %s\nUsage : %s %s\n", description, this.toString(), args);
+    return String.format("Command Description : %s\nUsage : %s %s\n", description, this.toString().toLowerCase(), args);
   }
 }
