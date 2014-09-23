@@ -23,6 +23,7 @@ import co.cask.tigon.app.program.Program;
 import co.cask.tigon.app.program.ProgramType;
 import co.cask.tigon.conf.Constants;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Lists;
 import org.apache.twill.api.EventHandler;
 import org.apache.twill.api.ResourceSpecification;
 import org.apache.twill.api.TwillApplication;
@@ -32,6 +33,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,6 +42,7 @@ import java.util.Map;
 public final class FlowTwillApplication implements TwillApplication {
 
   private static final Logger LOG = LoggerFactory.getLogger(FlowTwillApplication.class);
+  private static final String TXMANAGER = "txManager";
   private final FlowSpecification spec;
   private final Program program;
   private final File hConfig;
@@ -63,6 +66,7 @@ public final class FlowTwillApplication implements TwillApplication {
 
     Location programLocation = program.getJarLocation();
     String programName = programLocation.getName();
+    List<String> flowletNames = Lists.newArrayList();
     TwillSpecification.Builder.RunnableSetter runnableSetter = null;
     for (Map.Entry<String, FlowletDefinition> entry  : spec.getFlowlets().entrySet()) {
       FlowletDefinition flowletDefinition = entry.getValue();
@@ -74,6 +78,7 @@ public final class FlowTwillApplication implements TwillApplication {
         .build();
 
       String flowletName = entry.getKey();
+      flowletNames.add(flowletName);
       runnableSetter = moreRunnable
         .add(flowletName, new FlowletTwillRunnable(flowletName, "hConf.xml", "cConf.xml"), resourceSpec)
         .withLocalFiles().add(programName, programLocation.toURI())
@@ -84,12 +89,16 @@ public final class FlowTwillApplication implements TwillApplication {
     Preconditions.checkState(runnableSetter != null, "No flowlet for the flow.");
     //TODO: What if the flowlet name is named "txManager"?
     runnableSetter = moreRunnable
-      .add("txManager", new TransactionServiceTwillRunnable(Constants.Service.TRANSACTION, "cConf.xml", "hConf.xml"))
+      .add(TXMANAGER, new TransactionServiceTwillRunnable(Constants.Service.TRANSACTION, "cConf.xml", "hConf.xml"))
       .withLocalFiles()
-      .add(programName, programLocation.toURI())
       .add("cConf.xml", cConfig.toURI())
       .add("hConf.xml", hConfig.toURI())
       .apply();
-    return runnableSetter.anyOrder().withEventHandler(eventHandler).build();
+
+    String firstFlowlet = flowletNames.remove(0);
+    String[] flowletArray = new String[flowletNames.size()];
+    flowletArray = flowletNames.toArray(flowletArray);
+    return runnableSetter.withOrder().begin(TXMANAGER).nextWhenStarted(firstFlowlet, flowletArray)
+      .withEventHandler(eventHandler).build();
   }
 }

@@ -29,8 +29,30 @@
   <dependencies>
     <dependency>
       <groupId>co.cask.tigon</groupId>
-      <artifactId>tigon-flow</artifactId>
+      <artifactId>tigon-common</artifactId>
       <version>${project.version}</version>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-common</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hbase</groupId>
+          <artifactId>hbase</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.hadoop</groupId>
+          <artifactId>hadoop-mapreduce-client-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.twill</groupId>
+          <artifactId>twill-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>org.apache.twill</groupId>
+          <artifactId>twill-yarn</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <dependency>
       <groupId>co.cask.http</groupId>
@@ -65,48 +87,16 @@
       <artifactId>logback-core</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-compress</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>commons-io</groupId>
+      <artifactId>commons-io</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.thrift</groupId>
-      <artifactId>libthrift</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>it.unimi.dsi</groupId>
-      <artifactId>fastutil</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.twill</groupId>
-      <artifactId>twill-common</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.twill</groupId>
-      <artifactId>twill-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.twill</groupId>
-      <artifactId>twill-discovery-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.twill</groupId>
-      <artifactId>twill-discovery-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.twill</groupId>
-      <artifactId>twill-zookeeper</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-common</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-hdfs</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.hbase</groupId>
-      <artifactId>hbase</artifactId>
     </dependency>
 
     <!-- Test dependencies -->

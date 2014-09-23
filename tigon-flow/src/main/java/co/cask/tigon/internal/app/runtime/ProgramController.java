@@ -19,6 +19,7 @@ package co.cask.tigon.internal.app.runtime;
 import com.google.common.util.concurrent.ListenableFuture;
 import org.apache.twill.api.RunId;
 import org.apache.twill.common.Cancellable;
+import org.apache.twill.discovery.ServiceDiscovered;
 
 import java.util.concurrent.Executor;
 
@@ -129,6 +130,13 @@ public interface ProgramController {
    * handled or ignored.
    */
   ListenableFuture<ProgramController> command(String name, Object value);
+
+  /**
+   * Discover a service announced by the Program.
+   * @param service Name of the Service.
+   * @return A {@link ServiceDiscovered}
+   */
+  ServiceDiscovered discover(String service);
 
   /**
    * Listener for getting callbacks on state changed on {@link ProgramController}.

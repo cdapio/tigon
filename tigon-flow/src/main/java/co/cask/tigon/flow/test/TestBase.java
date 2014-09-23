@@ -19,8 +19,6 @@ package co.cask.tigon.flow.test;
 import co.cask.tephra.TransactionManager;
 import co.cask.tigon.api.flow.Flow;
 import co.cask.tigon.app.guice.ProgramRunnerRuntimeModule;
-import co.cask.tigon.app.program.Program;
-import co.cask.tigon.app.program.Programs;
 import co.cask.tigon.conf.CConfiguration;
 import co.cask.tigon.conf.Constants;
 import co.cask.tigon.data.runtime.DataFabricInMemoryModule;
@@ -29,10 +27,7 @@ import co.cask.tigon.guice.ConfigModule;
 import co.cask.tigon.guice.DiscoveryRuntimeModule;
 import co.cask.tigon.guice.IOModule;
 import co.cask.tigon.guice.LocationRuntimeModule;
-import co.cask.tigon.internal.app.runtime.BasicArguments;
 import co.cask.tigon.internal.app.runtime.ProgramController;
-import co.cask.tigon.internal.app.runtime.ProgramRunnerFactory;
-import co.cask.tigon.internal.app.runtime.SimpleProgramOptions;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import co.cask.tigon.metrics.NoOpMetricsCollectionService;
 import com.google.common.base.Preconditions;
@@ -62,16 +57,14 @@ public class TestBase {
   private static MetricsCollectionService metricsCollectionService;
   private static TransactionManager txService;
   private static DeployClient deployClient;
-  private static ProgramRunnerFactory programRunnerFactory;
 
   protected static FlowManager deployFlow(Class<? extends Flow> flowClz, Map<String, String> runtimeArgs,
                                    File...bundleEmbeddedJars) {
     Preconditions.checkNotNull(flowClz, "Flow class cannot be null");
     try {
-      Location deployedJar = deployClient.deployFlow(flowClz, bundleEmbeddedJars);
-      Program program = Programs.createWithUnpack(deployedJar, tmpFolder.newFolder());
-      ProgramController controller = programRunnerFactory.create(ProgramRunnerFactory.Type.FLOW).run(
-        program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments(runtimeArgs)));
+      Location deployJar = deployClient.jarForTestBase(flowClz, bundleEmbeddedJars);
+      ProgramController controller = deployClient.startFlow(new File(deployJar.toURI()), flowClz.getName(),
+                                                            tmpFolder.newFolder(), runtimeArgs);
       return new DefaultFlowManager(controller);
     } catch (Exception e) {
       throw Throwables.propagate(e);
@@ -101,7 +94,6 @@ public class TestBase {
     metricsCollectionService = injector.getInstance(MetricsCollectionService.class);
     metricsCollectionService.startAndWait();
     deployClient = injector.getInstance(DeployClient.class);
-    programRunnerFactory = injector.getInstance(ProgramRunnerFactory.class);
   }
 
   @AfterClass

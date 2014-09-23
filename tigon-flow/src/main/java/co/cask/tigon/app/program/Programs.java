@@ -27,13 +27,8 @@ import java.io.IOException;
  */
 public final class Programs {
 
-  public static Program createWithUnpack(Location location, File destinationUnpackedJarDir,
-                                         ClassLoader parentClassLoader) throws IOException {
-    return new DefaultProgram(location, destinationUnpackedJarDir, parentClassLoader);
-  }
-
   public static Program createWithUnpack(Location location, File destinationUnpackedJarDir) throws IOException {
-    return Programs.createWithUnpack(location, destinationUnpackedJarDir, getClassLoader());
+    return new DefaultProgram(location, destinationUnpackedJarDir);
   }
 
   /**
