@@ -20,5 +20,5 @@ from [csv].CSV_TEST_PREDICATES
 ---where boolField <> TRUE
 ---where boolField = TRUE
 ---where intField = 456
-where strField1 = 'ABCD'
+where strField1 <> 'ABCD'
 

@@ -26,15 +26,28 @@ use constant { SUCCESS => 0, FAILURE => 1, SYSERROR => 2, TIMESTAMP => 3, NO_TIM
                   0 => "Success", 1 => "Failure", 2 => "SystemError" );
 $ID=`id -un`;
 chomp $ID;
-$PWD = cwd();
-($STREAMING) = $PWD =~ /^(.*\/STREAMING\b)/;
-$STREAMING="$ENV{HOME}/STREAMING" if ( ! defined $STREAMING );
-if ( ! -d "$STREAMING/test" )
+
+
+#$PWD = cwd();
+#($STREAMING) = $PWD =~ /^(.*\/STREAMING\b)/;
+#$STREAMING="$ENV{HOME}/STREAMING" if ( ! defined $STREAMING );
+
+$curr_path = getcwd();
+if($curr_path =~ /^(.*\/tigon)\//){
+	$prefix = "$1/tigon-sql";
+}else{
+	print "didn't find prefix.\n";
+	exit(1);
+}
+$STREAMING = $prefix . "/src/test/scripts";
+#$STREAMING="$STREAMING/tigon-sql/src/test/scripts";
+
+
+if ( ! -d "$STREAMING" )
 {
-    LogMessage( "Could not locate STREAMING directory.", SYSERROR );
+    LogMessage( "Could not locate test directory.", SYSERROR );
     exit SYSERROR;    
 }
-$STREAMING="$STREAMING/test";
 
 %Months = ( 1 => "Jan",
             2 => "Feb",

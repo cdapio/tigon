@@ -37,12 +37,26 @@ chomp $ID;
 
 $TestName = "TestPredicates";
 
-$PWD = cwd();
-($STREAMING) = $PWD =~ /^(.*\/STREAMING\b)/;
-$STREAMING="$ENV{HOME}/STREAMING" if ( ! defined $STREAMING );
+#$PWD = cwd();
+#($STREAMING) = $PWD =~ /^(.*\/STREAMING\b)/;
+#$STREAMING="$ENV{HOME}/STREAMING" if ( ! defined $STREAMING );
+
+$curr_path = getcwd();
+if($curr_path =~ /^(.*\/tigon)\//){
+	$prefix = "$1/tigon-sql";
+}else{
+	print "didn't find prefix.\n";
+	exit(1);
+}
+$STREAMING = $prefix ;
+
 Die "Could not identify STREAMING directory." if ( ! -d $STREAMING );
-$STREAMING_TEST="$STREAMING/test";
+
+$STREAMING_TEST = $STREAMING . "/src/test/scripts";
+#$STREAMING_TEST="$STREAMING/test";
+
 $ROOT="$STREAMING_TEST/$TestName";
+
 %Months = ( 1 => "Jan",
             2 => "Feb",
             3 => "Mar",
@@ -68,7 +82,7 @@ my $LogFile;
     my ($Second,$Minute,$Hour,$DayOfMonth,$Month,$Year) = localtime();
     $Year += 1900;
     $Month += 1;
-    $LogFile= sprintf("$STREAMING/test/test_results_%04d-%02d-%02d.txt",
+    $LogFile= sprintf("$STREAMING_TEST/test_results_%04d-%02d-%02d.txt",
                       $Year , $Month, $DayOfMonth);
 }
 
@@ -272,8 +286,11 @@ sleep 2;
 
         sleep 10;
         system("./gen_feed 2>&1&");
-        sleep 1;
-        Die "Could not run gen_feed." unless Ps("gen_feed") == 1;
+        sleep 2;
+		system($STREAMING."/bin/start_processing");
+		sleep 2;
+
+   #     Die "Could not run gen_feed." unless Ps("gen_feed") == 1;
         Ps;
 
         if ( ! -f "Expected_${QueryName}.txt" )

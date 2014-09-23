@@ -18,14 +18,14 @@
 use Cwd;
 
 $curr_path = getcwd();
-if($curr_path =~ /^(.*\/STREAMING)\//){
+if($curr_path =~ /^(.*\/tigon)\//){
         $prefix = $1;
 }else{
         print "didn't find prefix.\n";
         exit(1);
 }
 
-$glob_str = "$prefix/src/ftacmp/*.gcda";
+$glob_str = $prefix . "/tigon-sql/src/main/c/ftacmp/*.gcda";
 @gcda_files = sort {$a cmp $b} glob($glob_str);
 
 unlink @gcda_files;

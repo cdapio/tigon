@@ -34,11 +34,26 @@ chomp $ID;
 
 $TestName = "TestTypes";
 
-$PWD = cwd();
-($STREAMING) = $PWD =~ /^(.*\/STREAMING\b)/;
-$STREAMING="$ENV{HOME}/STREAMING" if ( ! defined $STREAMING );
+#$PWD = cwd();
+#($STREAMING) = $PWD =~ /^(.*\/tigon-sql\b)/;
+#$STREAMING="$ENV{HOME}/STREAMING" if ( ! defined $STREAMING );
+
+$curr_path = getcwd();
+if($curr_path =~ /^(.*\/tigon)\//){
+	$prefix = "$1/tigon-sql";
+}else{
+	print "didn't find prefix.\n";
+	exit(1);
+}
+$STREAMING = $prefix ;
+
+
 Die "Could not identify STREAMING directory." if ( ! -d $STREAMING );
-$STREAMING_TEST="$STREAMING/test";
+
+#$STREAMING_TEST="$STREAMING/test";
+
+$STREAMING_TEST = $STREAMING . "/src/test/scripts";
+
 $ROOT="$STREAMING_TEST/$TestName";
 %Months = ( 1 => "Jan",
             2 => "Feb",
@@ -250,8 +265,9 @@ sleep 1;
     close FILE;
     Die "Could not chmod on $ROOT/$DataType/gen_feed." unless chmod(0777, "gen_feed") == 1;
     system("./gen_feed 2>&1&");
-    sleep 1;
-    Die "Could not run gen_feed." unless Ps("gen_feed") == 1;
+    sleep 2;
+	system($STREAMING."/bin/start_processing");
+#    Die "Could not run gen_feed." unless Ps("gen_feed") == 1;
     Ps;
     sleep 60;
     KillAll;

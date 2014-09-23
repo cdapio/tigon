@@ -43,21 +43,21 @@ foreach $x (@exclude_list){
 }
 
 $curr_path = getcwd();
-if($curr_path =~ /^(.*\/STREAMING)\//){
+if($curr_path =~ /^(.*\/tigon)\//){
         $prefix = $1;
 }else{
         print "didn't find prefix.\n";
         exit(1);
 }
 
-$new_path = "$prefix/src/ftacmp/";
+$new_path = "$prefix/tigon-sql/src/main/c/ftacmp/";
 $ret=chdir($new_path);
 if($ret==0){
 	print "Can't cd into $new_path.\n";
 	exit(2);
 }
 
-$glob_str = "$prefix/src/ftacmp/*.gcda";
+$glob_str = "$prefix/tigon-sql/src/main/c/ftacmp/*.gcda";
 @gcda_files = sort {$a cmp $b} glob($glob_str);
 
 foreach $gfile (@gcda_files){
