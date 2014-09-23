@@ -71,7 +71,7 @@ public class SQLFlowTest extends TestBase {
     runtimeArgs.put(Constants.HTTP_PORT, Integer.toString(port));
     runtimeArgs.put(Constants.TCP_INGESTION_PORT_PREFIX + "intInput", Integer.toString(tcpPort));
     flowManager = deployFlow(SQLFlow.class, runtimeArgs);
-    TimeUnit.SECONDS.sleep(15);
+    TimeUnit.SECONDS.sleep(30);
     ingestData = new Thread(new Runnable() {
       @Override
       public void run() {
@@ -104,7 +104,7 @@ public class SQLFlowTest extends TestBase {
   public void testSQLFlow() throws Exception {
     ingestData.start();
     ingestData.join();
-    TimeUnit.SECONDS.sleep(15);
+    TimeUnit.SECONDS.sleep(30);
     int dataPacketCounter = MAX_TIMESTAMP;
     while (sharedDataQueue.size() > 0) {
       DataPacket dataPacket = sharedDataQueue.poll();
