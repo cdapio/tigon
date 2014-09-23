@@ -9,13 +9,7 @@ Tigon APIs
 Tigon Java API
 ==============
 
-.. `Tigon Java API Javadocs <javadocs/index.html>`__
-
-`Tigon-API Java API Javadocs <tigon-api-javadocs/index.html>`__
-
-`Tigon-Flow Java API Javadocs <tigon-flow-javadocs/index.html>`__
-
-`Tigon-SQL Java API Javadocs <tigon-sql-javadocs/index.html>`__
+`Tigon Java API Javadocs <javadocs/index.html>`__
 
 
 Tigon SQL
@@ -23,13 +17,13 @@ Tigon SQL
 
 - Details of the language, its theory of operation, quick start guide and complete reference:
 
-  `Tigon SQL User Manual <../_downloads/User_Manual_2014_rev1.html>`__
+  `Tigon SQL User Manual <../_downloads/Tigon_SQL_User_Manual_2014_v4.pdf>`__
 
 - For developers who are writing extensions to Tigon SQL:
 
   `Tigon SQL Contributor Manual <../_downloads/Contributor_Manual_2014_rev1.html>`__
 
-:download:`  </apis/sql/User_Manual_2014_rev1.html>`
+:download:`  </apis/sql/Tigon_SQL_User_Manual_2014_v4.pdf>`
 :download:`  </apis/sql/Contributor_Manual_2014_rev1.html>`
 
 

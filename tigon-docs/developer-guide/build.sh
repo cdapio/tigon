@@ -67,7 +67,7 @@ else
 fi
 PROJECT_JAVADOCS="$PROJECT_PATH/target/site/apidocs"
 SDK_JAVADOCS="$PROJECT_PATH/$API/target/site/$APIDOCS"
-SDK_FULL_JAVADOCS="$PROJECT_PATH/$API/target/site/$APIDOCS"
+FULL_JAVADOCS="$PROJECT_PATH/target/site/$APIDOCS"
 
 function usage() {
   cd $PROJECT_PATH
@@ -108,6 +108,13 @@ function build_javadocs_full() {
   mvn site -DskipTests
 }
 
+function copy_javadocs_full() {
+  cd $BUILD_APIS
+  rm -rf $JAVADOCS
+  cp -r $FULL_JAVADOCS .
+  mv -f $APIDOCS $JAVADOCS
+}
+
 function build_javadocs_selected() {
   cd $PROJECT_PATH
   mvn clean package javadoc:javadoc -pl tigon-api -pl tigon-flow -pl tigon-sql -am -DskipTests -P release
@@ -126,13 +133,6 @@ function copy_javadocs_selected() {
   copy_javadoc_set $TIGON_SQL
 }
 
-function copy_javadocs_full() {
-  cd $BUILD_APIS
-  rm -rf $JAVADOCS
-  cp -r $SDK_FULL_JAVADOCS .
-  mv -f $APIDOCS $JAVADOCS
-}
-
 function copy_javadoc_set() {
   JAVADOC_SET="$1-$JAVADOCS"
   SDK_JAVADOCS="$PROJECT_PATH/$1/target/site/$APIDOCS"
@@ -149,6 +149,15 @@ function make_zip() {
   zip -r $ZIP_FILE_NAME $HTML/*
 }
 
+function make_zip_full() {
+# This creates a zip that unpacks to the same name, but it breaks the current staging directory
+  version
+  ZIP_DIR_NAME="$PROJECT-docs-$PROJECT_VERSION"
+  cd $SCRIPT_PATH/$BUILD
+  mv $HTML $ZIP_DIR_NAME
+  zip -r $ZIP_DIR_NAME.zip $ZIP_DIR_NAME/*
+}
+
 function build() {
   build_docs
   build_javadocs_selected
@@ -156,12 +165,13 @@ function build() {
   make_zip
 }
 
-function build() {
+function build_full() {
   build_docs
   build_javadocs_full
   copy_javadocs_full
-  make_zip
+  make_zip_full
 }
+
 
 function build_standalone() {
   cd $PROJECT_PATH
@@ -211,17 +221,18 @@ if [ $# -lt 1 ]; then
 fi
 
 case "$1" in
-  clean )             clean; exit 1;;
-  build )             build; exit 1;;
-  docs )              build_docs; exit 1;;
-  build-standalone )  build_standalone; exit 1;;
-  copy-javadocs )     copy_javadocs_selected; exit 1;;
-  javadocs )          build_javadocs_selected; exit 1;;
-  javadocs-full )     build_javadocs_full; exit 1;;
-  depends )           build_dependencies; exit 1;;
-  sdk )               build_sdk; exit 1;;
-  version )           print_version; exit 1;;
-  test )              test; exit 1;;
-  zip )               make_zip; exit 1;;
-  * )                 usage; exit 1;;
+  build )              build; exit 1;;
+  clean )              clean; exit 1;;
+  docs )               build_docs; exit 1;;
+  build-standalone )   build_standalone; exit 1;;
+  copy-javadocs )      copy_javadocs_selected; exit 1;;
+  copy-javadocs-full ) copy_javadocs_full; exit 1;;
+  javadocs )           build_javadocs_selected; exit 1;;
+  javadocs-full )      build_javadocs_full; exit 1;;
+  depends )            build_dependencies; exit 1;;
+  sdk )                build_sdk; exit 1;;
+  version )            print_version; exit 1;;
+  test )               test; exit 1;;
+  zip )                make_zip; exit 1;;
+  * )                  usage; exit 1;;
 esac
