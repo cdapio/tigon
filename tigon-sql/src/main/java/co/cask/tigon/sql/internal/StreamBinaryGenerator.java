@@ -27,6 +27,7 @@ import com.google.common.io.Files;
 import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.io.FileUtils;
 import org.apache.twill.filesystem.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -102,8 +103,8 @@ public class StreamBinaryGenerator {
     Location queryDir = workDir.append("query");
     queryDir.mkdirs();
     File qDir = new File(queryDir.toURI().getPath());
-    Files.copy(new File(dir.append("cfg").append("external_fcns.def").toURI().getPath()), qDir);
-    Files.copy(new File(dir.append("cfg").append("internal_fcn.def").toURI().getPath()), qDir);
+    FileUtils.copyFileToDirectory(new File(dir.append("cfg").append("external_fcns.def").toURI().getPath()), qDir);
+    FileUtils.copyFileToDirectory(new File(dir.append("cfg").append("internal_fcn.def").toURI().getPath()), qDir);
     return queryDir;
   }
 
