@@ -28,6 +28,8 @@ import co.cask.tigon.logging.LoggingContext;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import com.google.common.collect.ImmutableMap;
 import org.apache.twill.api.RunId;
+import org.apache.twill.api.ServiceAnnouncer;
+import org.apache.twill.common.Cancellable;
 
 import java.util.Map;
 
@@ -45,12 +47,13 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
   private volatile int instanceCount;
   private final FlowletMetrics flowletMetrics;
   private final Arguments runtimeArguments;
+  private final ServiceAnnouncer serviceAnnouncer;
 
   BasicFlowletContext(Program program, String flowletId,
                       int instanceId, RunId runId,
                       int instanceCount,
                       Arguments runtimeArguments, FlowletSpecification flowletSpec,
-                      MetricsCollectionService metricsCollectionService) {
+                      MetricsCollectionService metricsCollectionService, ServiceAnnouncer serviceAnnouncer) {
     super(program, runId, getMetricContext(program, flowletId, instanceId), metricsCollectionService);
     this.flowId = program.getName();
     this.flowletId = flowletId;
@@ -60,6 +63,7 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
     this.runtimeArguments = runtimeArguments;
     this.flowletSpec = flowletSpec;
     this.flowletMetrics = new FlowletMetrics(metricsCollectionService, flowId, flowletId);
+    this.serviceAnnouncer = serviceAnnouncer;
   }
 
   @Override
@@ -127,5 +131,10 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
 
   private static String getMetricContext(Program program, String flowletId, int instanceId) {
     return String.format("%s.%s.%d", program.getName(), flowletId, instanceId);
+  }
+
+  @Override
+  public Cancellable announce(String s, int i) {
+    return serviceAnnouncer.announce(s, i);
   }
 }

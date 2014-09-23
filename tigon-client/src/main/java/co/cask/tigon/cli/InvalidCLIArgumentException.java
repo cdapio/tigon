@@ -14,18 +14,13 @@
  * the License.
  */
 
-package co.cask.tigon.api;
-
-import org.apache.twill.api.ServiceAnnouncer;
-
-import java.util.Map;
+package co.cask.tigon.cli;
 
 /**
- * This interface represents a context for a processor or elements of a processor.
+ * Captures Invalid CLI command Arguments case.
  */
-public interface RuntimeContext extends ServiceAnnouncer {
-  /**
-   * @return A map of argument key and value.
-   */
-  Map<String, String> getRuntimeArguments();
+public class InvalidCLIArgumentException extends Exception {
+  public InvalidCLIArgumentException(String message) {
+    super(message);
+  }
 }

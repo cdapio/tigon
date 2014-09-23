@@ -16,10 +16,12 @@
 
 package co.cask.tigon.internal.app.runtime.distributed;
 
+import co.cask.tigon.api.flow.FlowletDefinition;
 import co.cask.tigon.app.program.Program;
 import co.cask.tigon.data.queue.QueueName;
 import co.cask.tigon.data.transaction.queue.QueueAdmin;
 import co.cask.tigon.internal.app.runtime.flow.FlowUtils;
+import com.google.common.base.Preconditions;
 import com.google.common.collect.Multimap;
 import org.apache.twill.api.TwillController;
 import org.slf4j.Logger;
@@ -31,7 +33,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * For updating number of flowlet instances
  */
-final class DistributedFlowletInstanceUpdater {
+public final class DistributedFlowletInstanceUpdater {
   private static final Logger LOG = LoggerFactory.getLogger(DistributedFlowletInstanceUpdater.class);
   private static final int MAX_WAIT_SECONDS = 30;
   private static final int SECONDS_PER_WAIT = 1;
@@ -41,7 +43,7 @@ final class DistributedFlowletInstanceUpdater {
   private final QueueAdmin queueAdmin;
   private final Multimap<String, QueueName> consumerQueues;
 
-  DistributedFlowletInstanceUpdater(Program program, TwillController twillController, QueueAdmin queueAdmin,
+  public DistributedFlowletInstanceUpdater(Program program, TwillController twillController, QueueAdmin queueAdmin,
                                     Multimap<String, QueueName> consumerQueues) {
     this.program = program;
     this.twillController = twillController;
@@ -50,6 +52,12 @@ final class DistributedFlowletInstanceUpdater {
   }
 
   void update(String flowletId, int newInstanceCount, int oldInstanceCount) throws Exception {
+
+    FlowletDefinition flowletDefinition = program.getSpecification().getFlowlets().get(flowletId);
+    int maxInstances = flowletDefinition.getFlowletSpec().getMaxInstances();
+    Preconditions.checkArgument(newInstanceCount <= maxInstances,
+                                "Flowlet %s can have a maximum of %s instances", flowletId, maxInstances);
+
     waitForInstances(flowletId, oldInstanceCount);
     twillController.sendCommand(flowletId, ProgramCommands.SUSPEND).get();
 

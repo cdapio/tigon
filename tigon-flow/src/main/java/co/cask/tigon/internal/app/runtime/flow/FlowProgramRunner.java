@@ -18,6 +18,7 @@ package co.cask.tigon.internal.app.runtime.flow;
 
 import co.cask.tigon.api.flow.FlowSpecification;
 import co.cask.tigon.api.flow.FlowletDefinition;
+import co.cask.tigon.api.flow.flowlet.FlowletSpecification;
 import co.cask.tigon.app.program.Program;
 import co.cask.tigon.app.program.ProgramType;
 import co.cask.tigon.data.queue.QueueName;
@@ -45,6 +46,8 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Inject;
 import org.apache.twill.api.RunId;
+import org.apache.twill.discovery.DiscoveryServiceClient;
+import org.apache.twill.discovery.ServiceDiscovered;
 import org.apache.twill.internal.RunIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,11 +67,14 @@ public final class FlowProgramRunner implements ProgramRunner {
   private final ProgramRunnerFactory programRunnerFactory;
   private final Map<RunId, ProgramOptions> programOptions = Maps.newHashMap();
   private final QueueAdmin queueAdmin;
+  private final DiscoveryServiceClient discoveryServiceClient;
 
   @Inject
-  public FlowProgramRunner(ProgramRunnerFactory programRunnerFactory, QueueAdmin queueAdmin) {
+  public FlowProgramRunner(ProgramRunnerFactory programRunnerFactory, QueueAdmin queueAdmin,
+                           DiscoveryServiceClient discoveryServiceClient) {
     this.programRunnerFactory = programRunnerFactory;
     this.queueAdmin = queueAdmin;
+    this.discoveryServiceClient = discoveryServiceClient;
   }
 
   @Override
@@ -80,13 +86,20 @@ public final class FlowProgramRunner implements ProgramRunner {
     Preconditions.checkArgument(processorType == ProgramType.FLOW, "Only FLOW process type is supported.");
     Preconditions.checkNotNull(flowSpec, "Missing FlowSpecification for %s", program.getName());
 
+    for (FlowletDefinition flowletDefinition : flowSpec.getFlowlets().values()) {
+      int maxInstances = flowletDefinition.getFlowletSpec().getMaxInstances();
+      Preconditions.checkArgument(flowletDefinition.getInstances() <= maxInstances,
+                                  "Flowlet %s can have a maximum of %s instances",
+                                  flowletDefinition.getFlowletSpec().getName(), maxInstances);
+    }
+
     try {
       // Launch flowlet program runners
       RunId runId = RunIds.generate();
       programOptions.put(runId, options);
       Multimap<String, QueueName> consumerQueues = FlowUtils.configureQueue(program, flowSpec, queueAdmin);
       final Table<String, Integer, ProgramController> flowlets = createFlowlets(program, runId, flowSpec);
-      return new FlowProgramController(flowlets, runId, program, flowSpec, consumerQueues);
+      return new FlowProgramController(flowlets, runId, program, flowSpec, consumerQueues, discoveryServiceClient);
     } catch (Exception e) {
       throw Throwables.propagate(e);
     }
@@ -158,14 +171,17 @@ public final class FlowProgramRunner implements ProgramRunner {
     private final FlowSpecification flowSpec;
     private final Lock lock = new ReentrantLock();
     private final Multimap<String, QueueName> consumerQueues;
+    private final DiscoveryServiceClient discoveryServiceClient;
 
     FlowProgramController(Table<String, Integer, ProgramController> flowlets, RunId runId,
-                          Program program, FlowSpecification flowSpec, Multimap<String, QueueName> consumerQueues) {
+                          Program program, FlowSpecification flowSpec, Multimap<String, QueueName> consumerQueues,
+                          DiscoveryServiceClient discoveryServiceClient) {
       super(program.getName(), runId);
       this.flowlets = flowlets;
       this.program = program;
       this.flowSpec = flowSpec;
       this.consumerQueues = consumerQueues;
+      this.discoveryServiceClient = discoveryServiceClient;
       started();
     }
 
@@ -268,6 +284,17 @@ public final class FlowProgramRunner implements ProgramRunner {
     private synchronized void increaseInstances(String flowletName, final int newInstanceCount,
                                                 Map<Integer, ProgramController> liveFlowlets,
                                                 int liveCount) throws Exception {
+
+      FlowletProgramController flowletProgramController =
+        (FlowletProgramController) Iterables.getFirst(liveFlowlets.values(), null);
+
+      FlowletSpecification flowletSpecification = flowletProgramController.getFlowletContext().getSpecification();
+
+      int flowletMaxInstances = flowletSpecification.getMaxInstances();
+      Preconditions.checkArgument(newInstanceCount <= flowletMaxInstances,
+                                  "Flowlet %s can have a maximum of %s instances",
+                                  flowletSpecification.getName(), flowletMaxInstances);
+
       // First pause all flowlets
       Futures.successfulAsList(Iterables.transform(
         liveFlowlets.values(),
@@ -355,6 +382,11 @@ public final class FlowProgramRunner implements ProgramRunner {
             return controller.resume();
           }
         })).get();
+    }
+
+    @Override
+    public ServiceDiscovered discover(String service) {
+      return discoveryServiceClient.discover(service);
     }
   }
 }
