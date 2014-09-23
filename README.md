@@ -90,6 +90,15 @@ Take the `tigon-<version>.tar.gz` file and unzip it into a suitable location.
 
 For more build options, please refer to the [build instructions](BUILD.md).
 
+### Skip build and test of SQL libraries (Default is to both build and test the SQL libraries)
+    mvn ... -DskipSQLLib
+    
+### Skip build of SQL libraries
+    mvn ... -DskipSQLBuild
+
+### Skip SQL tests
+    mvn ... -DskipSQLTests
+
 
 ## Quick Start
 
