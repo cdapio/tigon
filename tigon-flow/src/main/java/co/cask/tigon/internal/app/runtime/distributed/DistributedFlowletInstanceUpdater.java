@@ -31,7 +31,7 @@ import java.util.concurrent.TimeoutException;
 /**
  * For updating number of flowlet instances
  */
-final class DistributedFlowletInstanceUpdater {
+public final class DistributedFlowletInstanceUpdater {
   private static final Logger LOG = LoggerFactory.getLogger(DistributedFlowletInstanceUpdater.class);
   private static final int MAX_WAIT_SECONDS = 30;
   private static final int SECONDS_PER_WAIT = 1;
@@ -41,7 +41,7 @@ final class DistributedFlowletInstanceUpdater {
   private final QueueAdmin queueAdmin;
   private final Multimap<String, QueueName> consumerQueues;
 
-  DistributedFlowletInstanceUpdater(Program program, TwillController twillController, QueueAdmin queueAdmin,
+  public DistributedFlowletInstanceUpdater(Program program, TwillController twillController, QueueAdmin queueAdmin,
                                     Multimap<String, QueueName> consumerQueues) {
     this.program = program;
     this.twillController = twillController;

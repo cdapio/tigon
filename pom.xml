@@ -85,6 +85,9 @@
     <slf4j.version>1.7.5</slf4j.version>
     <tephra.version>0.3.0</tephra.version>
     <thrift.version>0.9.0</thrift.version>
+    <jline.version>2.12</jline.version>
+    <commons.version>1.4.1</commons.version>
+    <iocommons.version>2.1</iocommons.version>
     <twill.version>0.4.0-incubating-SNAPSHOT</twill.version>
   </properties>
 
@@ -126,9 +129,24 @@
         <version>${http.component.version}</version>
       </dependency>
       <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-compress</artifactId>
+        <version>${commons.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-io</groupId>
+        <artifactId>commons-io</artifactId>
+        <version>${iocommons.version}</version>
+      </dependency>
+      <dependency>
         <groupId>com.google.guava</groupId>
         <artifactId>guava</artifactId>
         <version>${guava.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>jline</groupId>
+        <artifactId>jline</artifactId>
+        <version>${jline.version}</version>
       </dependency>
       <dependency>
         <groupId>com.google.inject</groupId>

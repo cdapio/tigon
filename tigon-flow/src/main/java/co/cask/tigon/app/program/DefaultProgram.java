@@ -44,7 +44,6 @@ public final class DefaultProgram implements Program {
 
   private final Location programJarLocation;
   private final File expandFolder;
-  private final ClassLoader parentClassLoader;
   private final File specFile;
   private boolean expanded;
   private ClassLoader classLoader;
@@ -56,13 +55,10 @@ public final class DefaultProgram implements Program {
    * @param programJarLocation Location of the program jar file.
    * @param expandFolder Local directory for expanding the jar file into. If it is {@code null},
    *                     the {@link #getClassLoader()} methods would throw exception.
-   * @param parentClassLoader Parent classloader for the program class.
    */
-  DefaultProgram(Location programJarLocation,
-                 @Nullable File expandFolder, ClassLoader parentClassLoader) throws IOException {
+  DefaultProgram(Location programJarLocation, @Nullable File expandFolder) throws IOException {
     this.programJarLocation = programJarLocation;
     this.expandFolder = expandFolder;
-    this.parentClassLoader = parentClassLoader;
     this.processorType = ProgramType.FLOW;
 
     Manifest manifest = BundleJarUtil.getManifest(programJarLocation);
@@ -85,7 +81,7 @@ public final class DefaultProgram implements Program {
   }
 
   public DefaultProgram(Location programJarLocation, ClassLoader classLoader) throws IOException {
-    this(programJarLocation, null, null);
+    this(programJarLocation, (File) null);
     this.classLoader = classLoader;
   }
 
@@ -139,8 +135,7 @@ public final class DefaultProgram implements Program {
     if (classLoader == null) {
       expandIfNeeded();
       try {
-        classLoader = ClassLoaders.newProgramClassLoader(
-          expandFolder, ApiResourceListHolder.getResourceList(), parentClassLoader);
+        classLoader = ClassLoaders.newProgramClassLoader(expandFolder, ApiResourceListHolder.getResourceList());
       } catch (IOException e) {
         throw Throwables.propagate(e);
       }

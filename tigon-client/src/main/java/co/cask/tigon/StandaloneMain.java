@@ -44,6 +44,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 
@@ -120,6 +121,14 @@ public class StandaloneMain {
     }
   }
 
+  public void startUp(File jarPath, String mainClassName) throws Exception {
+    txService.startAndWait();
+    metricsCollectionService.startAndWait();
+    addShutDownHook();
+    controller = deployClient.startFlow(jarPath, mainClassName, jarUnpackDir, new HashMap<String, String>());
+    runLatch.await();
+  }
+
   private void addShutDownHook() {
     Runtime.getRuntime().addShutdownHook(new Thread() {
       @Override
@@ -131,14 +140,6 @@ public class StandaloneMain {
         }
       }
     });
-  }
-
-  public void startUp(File jarPath, String mainClassName) throws Exception {
-    txService.startAndWait();
-    metricsCollectionService.startAndWait();
-    addShutDownHook();
-    controller = deployClient.deployFlow(jarPath, mainClassName, jarUnpackDir);
-    runLatch.await();
   }
 
   public void shutDown() {

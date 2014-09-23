@@ -22,10 +22,25 @@ package co.cask.tigon.conf;
 public final class Constants {
 
   /**
+   * HDFS Namespaces used in Distributed Mode.
+   */
+  public static final class Location {
+    public static final String ROOT_NAMESPACE = "root.namespace";
+    public static final String FLOWJAR = "flowjars";
+  }
+
+  /**
    * Global Service names.
    */
   public static final class Service {
     public static final String TRANSACTION = "transaction";
+  }
+
+  /**
+   * Transaction Configration.
+   */
+  public static final class Transaction {
+    public static final String ADDRESS = "data.tx.bind.address";
   }
 
   /**

@@ -45,6 +45,8 @@ import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.inject.Inject;
 import org.apache.twill.api.RunId;
+import org.apache.twill.discovery.DiscoveryServiceClient;
+import org.apache.twill.discovery.ServiceDiscovered;
 import org.apache.twill.internal.RunIds;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,11 +66,14 @@ public final class FlowProgramRunner implements ProgramRunner {
   private final ProgramRunnerFactory programRunnerFactory;
   private final Map<RunId, ProgramOptions> programOptions = Maps.newHashMap();
   private final QueueAdmin queueAdmin;
+  private final DiscoveryServiceClient discoveryServiceClient;
 
   @Inject
-  public FlowProgramRunner(ProgramRunnerFactory programRunnerFactory, QueueAdmin queueAdmin) {
+  public FlowProgramRunner(ProgramRunnerFactory programRunnerFactory, QueueAdmin queueAdmin,
+                           DiscoveryServiceClient discoveryServiceClient) {
     this.programRunnerFactory = programRunnerFactory;
     this.queueAdmin = queueAdmin;
+    this.discoveryServiceClient = discoveryServiceClient;
   }
 
   @Override
@@ -86,7 +91,7 @@ public final class FlowProgramRunner implements ProgramRunner {
       programOptions.put(runId, options);
       Multimap<String, QueueName> consumerQueues = FlowUtils.configureQueue(program, flowSpec, queueAdmin);
       final Table<String, Integer, ProgramController> flowlets = createFlowlets(program, runId, flowSpec);
-      return new FlowProgramController(flowlets, runId, program, flowSpec, consumerQueues);
+      return new FlowProgramController(flowlets, runId, program, flowSpec, consumerQueues, discoveryServiceClient);
     } catch (Exception e) {
       throw Throwables.propagate(e);
     }
@@ -158,14 +163,17 @@ public final class FlowProgramRunner implements ProgramRunner {
     private final FlowSpecification flowSpec;
     private final Lock lock = new ReentrantLock();
     private final Multimap<String, QueueName> consumerQueues;
+    private final DiscoveryServiceClient discoveryServiceClient;
 
     FlowProgramController(Table<String, Integer, ProgramController> flowlets, RunId runId,
-                          Program program, FlowSpecification flowSpec, Multimap<String, QueueName> consumerQueues) {
+                          Program program, FlowSpecification flowSpec, Multimap<String, QueueName> consumerQueues,
+                          DiscoveryServiceClient discoveryServiceClient) {
       super(program.getName(), runId);
       this.flowlets = flowlets;
       this.program = program;
       this.flowSpec = flowSpec;
       this.consumerQueues = consumerQueues;
+      this.discoveryServiceClient = discoveryServiceClient;
       started();
     }
 
@@ -355,6 +363,11 @@ public final class FlowProgramRunner implements ProgramRunner {
             return controller.resume();
           }
         })).get();
+    }
+
+    @Override
+    public ServiceDiscovered discover(String service) {
+      return discoveryServiceClient.discover(service);
     }
   }
 }
