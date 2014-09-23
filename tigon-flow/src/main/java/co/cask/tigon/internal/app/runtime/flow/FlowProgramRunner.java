@@ -18,6 +18,7 @@ package co.cask.tigon.internal.app.runtime.flow;
 
 import co.cask.tigon.api.flow.FlowSpecification;
 import co.cask.tigon.api.flow.FlowletDefinition;
+import co.cask.tigon.api.flow.flowlet.FlowletSpecification;
 import co.cask.tigon.app.program.Program;
 import co.cask.tigon.app.program.ProgramType;
 import co.cask.tigon.data.queue.QueueName;
@@ -84,6 +85,13 @@ public final class FlowProgramRunner implements ProgramRunner {
     Preconditions.checkNotNull(processorType, "Missing processor type.");
     Preconditions.checkArgument(processorType == ProgramType.FLOW, "Only FLOW process type is supported.");
     Preconditions.checkNotNull(flowSpec, "Missing FlowSpecification for %s", program.getName());
+
+    for (FlowletDefinition flowletDefinition : flowSpec.getFlowlets().values()) {
+      int maxInstances = flowletDefinition.getFlowletSpec().getMaxInstances();
+      Preconditions.checkArgument(flowletDefinition.getInstances() <= maxInstances,
+                                  "Flowlet %s can have a maximum of %s instances",
+                                  flowletDefinition.getFlowletSpec().getName(), maxInstances);
+    }
 
     try {
       // Launch flowlet program runners
@@ -276,6 +284,17 @@ public final class FlowProgramRunner implements ProgramRunner {
     private synchronized void increaseInstances(String flowletName, final int newInstanceCount,
                                                 Map<Integer, ProgramController> liveFlowlets,
                                                 int liveCount) throws Exception {
+
+      FlowletProgramController flowletProgramController =
+        (FlowletProgramController) Iterables.getFirst(liveFlowlets.values(), null);
+
+      FlowletSpecification flowletSpecification = flowletProgramController.getFlowletContext().getSpecification();
+
+      int flowletMaxInstances = flowletSpecification.getMaxInstances();
+      Preconditions.checkArgument(newInstanceCount <= flowletMaxInstances,
+                                  "Flowlet %s can have a maximum of %s instances",
+                                  flowletSpecification.getName(), flowletMaxInstances);
+
       // First pause all flowlets
       Futures.successfulAsList(Iterables.transform(
         liveFlowlets.values(),

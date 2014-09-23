@@ -17,6 +17,7 @@
 package co.cask.tigon.internal.app.runtime.distributed;
 
 import co.cask.tigon.api.flow.FlowSpecification;
+import co.cask.tigon.api.flow.FlowletDefinition;
 import co.cask.tigon.app.program.Program;
 import co.cask.tigon.app.program.ProgramType;
 import co.cask.tigon.conf.CConfiguration;
@@ -66,6 +67,14 @@ public final class DistributedFlowProgramRunner extends AbstractDistributedProgr
 
     try {
       Preconditions.checkNotNull(flowSpec, "Missing FlowSpecification for %s", program.getName());
+
+      for (FlowletDefinition flowletDefinition : flowSpec.getFlowlets().values()) {
+        int maxInstances = flowletDefinition.getFlowletSpec().getMaxInstances();
+        Preconditions.checkArgument(flowletDefinition.getInstances() <= maxInstances,
+                                    "Flowlet %s can have a maximum of %s instances",
+                                    flowletDefinition.getFlowletSpec().getName(), maxInstances);
+      }
+
       LOG.info("Configuring flowlets queues");
       Multimap<String, QueueName> flowletQueues = FlowUtils.configureQueue(program, flowSpec, queueAdmin);
 

@@ -29,8 +29,9 @@ import co.cask.tigon.guice.LocationRuntimeModule;
 import co.cask.tigon.internal.app.runtime.ProgramController;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import co.cask.tigon.metrics.NoOpMetricsCollectionService;
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -44,8 +45,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -78,9 +81,9 @@ public class StandaloneMain {
 
   private static void usage(boolean error) {
     PrintStream out = (error ? System.err : System.out);
-    out.println("java -cp .:lib/* co.cask.tigon.StandaloneMain <path-to-JAR> <FlowClassName>");
+    out.println("java -cp .:lib/* co.cask.tigon.StandaloneMain <path-to-JAR> <FlowClassName> [arguments]");
     out.println("Example: java -cp .:lib/* co.cask.tigon.StandaloneMain /home/user/tweetFlow-1.0.jar " +
-                  "com.cname.main.TweetFlow");
+                  "com.cname.main.TweetFlow --runtimeKey=value");
     out.println("");
     if (error) {
       throw new IllegalArgumentException();
@@ -99,24 +102,31 @@ public class StandaloneMain {
         return;
       }
 
-      if (args.length != 2) {
+      if (args.length < 2) {
         usage(true);
       }
 
       File jarPath = new File(args[0]);
       String mainClassName = args[1];
 
+      Map<String, String> runtimeArgs = null;
+      try {
+         runtimeArgs = fromPosixArray(Arrays.copyOfRange(args, 2, args.length));
+      } catch (IllegalArgumentException e) {
+        usage(true);
+      }
+
       try {
         StandaloneMain main;
         main = createStandaloneMain();
-        main.startUp(jarPath, mainClassName);
+        main.startUp(jarPath, mainClassName, runtimeArgs);
       } catch (Exception e) {
         LOG.error(e.getMessage(), e);
       }
     }
   }
 
-  public void startUp(File jarPath, String mainClassName) throws Exception {
+  public void startUp(File jarPath, String mainClassName, Map<String, String> runtimeArgs) throws Exception {
     txService.startAndWait();
     metricsCollectionService.startAndWait();
     addShutDownHook();
@@ -169,5 +179,18 @@ public class StandaloneMain {
     protected void configure() {
       bind(MetricsCollectionService.class).to(NoOpMetricsCollectionService.class).in(Scopes.SINGLETON);
     }
+  }
+
+  /**
+   * Converts a POSIX compliant program argument array to a String-to-String Map.
+   * @param args Array of Strings where each element is a POSIX compliant program argument (Ex: "--os=Linux" ).
+   * @return Map of argument Keys and Values (Ex: Key = "os" and Value = "Linux").
+   */
+  private static Map<String, String> fromPosixArray(String[] args) {
+    Map<String, String> kvMap = Maps.newHashMap();
+    for (String arg : args) {
+      kvMap.putAll(Splitter.on("--").omitEmptyStrings().trimResults().withKeyValueSeparator("=").split(arg));
+    }
+    return kvMap;
   }
 }
