@@ -71,7 +71,6 @@ public final class DistributedFlowProgramRunner extends AbstractDistributedProgr
 
       // Launch flowlet program runners
       LOG.info("Launching distributed flow: " + program.getName() + ":" + flowSpec.getName());
-
       TwillController controller = launcher.launch(new FlowTwillApplication(program, flowSpec,
                                                                             hConfFile, cConfFile, eventHandler));
       DistributedFlowletInstanceUpdater instanceUpdater = new DistributedFlowletInstanceUpdater(program, controller,
