@@ -13,6 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package co.cask.tigon.sentiment;
 
 import co.cask.tigon.api.flow.Flow;
 import co.cask.tigon.api.flow.FlowSpecification;
@@ -30,8 +31,10 @@ public class SentimentAnalysis implements Flow {
       .withFlowlets()
       .add(new TweetCollector())
       .add(new Normalization())
+      .add(new Analysis())
       .connect()
       .from(new TweetCollector()).to(new Normalization())
+      .from(new Normalization()).to(new Analysis())
       .build();
   }
 }

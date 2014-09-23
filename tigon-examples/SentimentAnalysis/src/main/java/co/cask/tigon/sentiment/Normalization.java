@@ -13,6 +13,8 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+package co.cask.tigon.sentiment;
+
 
 import co.cask.tigon.api.annotation.Batch;
 import co.cask.tigon.api.annotation.ProcessInput;
@@ -27,16 +29,13 @@ import org.slf4j.LoggerFactory;
 public class Normalization extends AbstractFlowlet {
   private static final Logger LOG = LoggerFactory.getLogger(Normalization.class);
 
-  /**
-   * Emitter for emitting sentences from this Flowlet.
-   */
   private OutputEmitter<String> out;
 
   @ProcessInput
   @Batch(100)
   public void process(String text) {
     if (text != null) {
-      LOG.info(text);
+      LOG.info("Received tweet: " + text);
       out.emit(text);
     }
   }
