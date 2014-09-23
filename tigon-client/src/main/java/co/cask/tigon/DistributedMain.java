@@ -157,7 +157,7 @@ public class DistributedMain {
     consoleReader.setPrompt("tigon> ");
     String line;
     while ((line = consoleReader.readLine()) != null) {
-      String[] args = line.split(" ");
+      String[] args = line.split("\\s+");
       String command = args[0].toUpperCase();
       try {
         CLICommands cmd = null;
