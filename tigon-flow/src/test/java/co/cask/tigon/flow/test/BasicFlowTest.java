@@ -151,7 +151,7 @@ public class BasicFlowTest extends TestBase {
     Assert.assertEquals(3, sinkInstances);
   }
 
-  @Test(expected=IllegalArgumentException.class)
+  @Test(expected = IllegalArgumentException.class)
   public void testInvalidConfigurationFlow() {
     // The Flow is configured to have 5 instances of the Sink flowlet, which allows a maximum of 3 instances.
     // It should fail at deploy.
@@ -192,7 +192,7 @@ public class BasicFlowTest extends TestBase {
 
   private static final class GeneratorFlowlet extends AbstractFlowlet {
 
-    private final static Logger LOG = LoggerFactory.getLogger(GeneratorFlowlet.class);
+    private static final Logger LOG = LoggerFactory.getLogger(GeneratorFlowlet.class);
     private OutputEmitter<Integer> intEmitter;
     private int i = 0;
     private HttpClient client;

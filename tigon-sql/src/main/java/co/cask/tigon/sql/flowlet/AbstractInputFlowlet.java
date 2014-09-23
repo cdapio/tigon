@@ -168,7 +168,7 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
     return failurePolicy;
   }
 
-  protected ResourceSpecification getResourceSpecification() {
+  private ResourceSpecification getResourceSpecification() {
     return resourceSpecification;
   }
 
