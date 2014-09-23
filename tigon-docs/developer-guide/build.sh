@@ -31,13 +31,6 @@ BUILD="build"
 BUILD_PDF="build-pdf"
 HTML="html"
 
-TIGON_API="tigon-api"
-TIGON_FLOW="tigon-flow"
-TIGON_SQL="tigon-sql"
-TIGON_API_JAVADOCS="tigon-api-javadocs"
-TIGON_FLOW_JAVADOCS="tigon-flow-javadocs"
-TIGON_SQL_JAVADOCS="tigon-sql-javadocs"
-
 API="tigon-api"
 APIS="apis"
 APIDOCS="apidocs"
@@ -68,6 +61,12 @@ fi
 PROJECT_JAVADOCS="$PROJECT_PATH/target/site/apidocs"
 SDK_JAVADOCS="$PROJECT_PATH/$API/target/site/$APIDOCS"
 FULL_JAVADOCS="$PROJECT_PATH/target/site/$APIDOCS"
+
+# Set Google Analytics Codes
+GOOGLE_ANALYTICS_WEB="UA-999-999-999"
+WEB="web"
+GOOGLE_ANALYTICS_GITHUB="UA-123-123-123"
+GITHUB="github"
 
 function usage() {
   cd $PROJECT_PATH
@@ -102,13 +101,19 @@ function build_docs() {
   sphinx-build -b html -d build/doctrees source build/html
 }
 
-function build_javadocs_full() {
+function build_docs_google() {
+  clean
+  cd $SCRIPT_PATH
+  sphinx-build -D googleanalytics_id=$1 -D googleanalytics_enabled=1 -b html -d build/doctrees source build/html
+}
+
+function build_javadocs() {
   cd $PROJECT_PATH
   mvn clean install -DskipTests
   mvn site -DskipTests
 }
 
-function copy_javadocs_full() {
+function copy_javadocs() {
   cd $BUILD_APIS
   rm -rf $JAVADOCS
   cp -r $FULL_JAVADOCS .
@@ -120,36 +125,14 @@ function build_javadocs_selected() {
   mvn clean package javadoc:javadoc -pl tigon-api -pl tigon-flow -pl tigon-sql -am -DskipTests -P release
 }
 
-function copy_javadocs_selected() {
-  cd $BUILD_APIS
-  rm -rf $JAVADOCS
-  cp -r $SDK_JAVADOCS .
-  mv -f $APIDOCS $JAVADOCS
-}
-
-function copy_javadocs_selected() {
-  copy_javadoc_set $TIGON_API
-  copy_javadoc_set $TIGON_FLOW
-  copy_javadoc_set $TIGON_SQL
-}
-
-function copy_javadoc_set() {
-  JAVADOC_SET="$1-$JAVADOCS"
-  SDK_JAVADOCS="$PROJECT_PATH/$1/target/site/$APIDOCS"
-  cd $BUILD_APIS/
-  rm -rf $JAVADOC_SET
-  cp -r $SDK_JAVADOCS .
-  mv -f $APIDOCS $JAVADOC_SET
-}
-
-function make_zip() {
+function make_zip_html() {
   version
   ZIP_FILE_NAME="$PROJECT-docs-$PROJECT_VERSION.zip"
   cd $SCRIPT_PATH/$BUILD
   zip -r $ZIP_FILE_NAME $HTML/*
 }
 
-function make_zip_full() {
+function make_zip() {
 # This creates a zip that unpacks to the same name, but it breaks the current staging directory
   version
   ZIP_DIR_NAME="$PROJECT-docs-$PROJECT_VERSION"
@@ -158,20 +141,40 @@ function make_zip_full() {
   zip -r $ZIP_DIR_NAME.zip $ZIP_DIR_NAME/*
 }
 
+function make_zip_named() {
+# This creates a zip that unpacks to the same name, but it breaks the current staging directory
+  version
+  ZIP_DIR_NAME="$PROJECT-docs-$PROJECT_VERSION-$1"
+  cd $SCRIPT_PATH/$BUILD
+  mv $HTML $ZIP_DIR_NAME
+  zip -r $ZIP_DIR_NAME.zip $ZIP_DIR_NAME/*
+}
+
 function build() {
   build_docs
-  build_javadocs_selected
-  copy_javadocs_selected
+  build_javadocs
+  copy_javadocs
   make_zip
 }
 
-function build_full() {
-  build_docs
-  build_javadocs_full
-  copy_javadocs_full
-  make_zip_full
+function build_web() {
+  build_docs_google $GOOGLE_ANALYTICS_WEB
+  build_javadocs
+  copy_javadocs
+  make_zip_named $WEB
 }
 
+function build_github() {
+  # GitHub requires a .nojekyll file at the root to allow for Sphinx's directories beginning with underscores
+  build_docs_google $GOOGLE_ANALYTICS_GITHUB
+  build_javadocs
+  copy_javadocs
+  make_zip_named $GITHUB
+  ZIP_DIR_NAME="$PROJECT-docs-$PROJECT_VERSION-$GITHUB"
+  cd $SCRIPT_PATH/$BUILD
+  touch $ZIP_DIR_NAME/.nojekyll
+  zip $ZIP_DIR_NAME.zip $ZIP_DIR_NAME/.nojekyll
+}
 
 function build_standalone() {
   cd $PROJECT_PATH
@@ -222,13 +225,13 @@ fi
 
 case "$1" in
   build )              build; exit 1;;
+  build-web )          build_web; exit 1;;
+  build-github )       build_github; exit 1;;
   clean )              clean; exit 1;;
   docs )               build_docs; exit 1;;
   build-standalone )   build_standalone; exit 1;;
-  copy-javadocs )      copy_javadocs_selected; exit 1;;
-  copy-javadocs-full ) copy_javadocs_full; exit 1;;
-  javadocs )           build_javadocs_selected; exit 1;;
-  javadocs-full )      build_javadocs_full; exit 1;;
+  copy-javadocs )      copy_javadocs; exit 1;;
+  javadocs )           build_javadocs; exit 1;;
   depends )            build_dependencies; exit 1;;
   sdk )                build_sdk; exit 1;;
   version )            print_version; exit 1;;
