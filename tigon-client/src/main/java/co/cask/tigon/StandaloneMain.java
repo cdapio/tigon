@@ -30,6 +30,7 @@ import co.cask.tigon.internal.app.runtime.ProgramController;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import co.cask.tigon.metrics.NoOpMetricsCollectionService;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -89,8 +90,12 @@ public class StandaloneMain {
     return new StandaloneMain();
   }
 
-  //TODO: Add Runtime args, ZooKeeper Ctx String to the list
   public static void main(String[] args) {
+    List<String> arguments = Lists.newArrayList();
+    arguments.add("/Users/gandu/workspace/tigon/tigon-examples/SentimentAnalysis/target/" +
+                  "SentimentAnalysis-0.1.0-SNAPSHOT.jar");
+    arguments.add("co.cask.tigon.SentimentAnalysis");
+    args = arguments.toArray(new String[arguments.size()]);
     System.out.println("Tigon Standalone Client");
     if (args.length > 0) {
       if ("--help".equals(args[0]) || "-h".equals(args[0])) {

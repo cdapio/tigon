@@ -36,6 +36,7 @@
     <module>hbase-compat-0.94</module>
     <module>hbase-compat-0.96</module>
     <module>tigon-flow</module>
+    <module>tigon-examples</module>
     <module>tigon-distribution</module>
   </modules>
 
@@ -738,6 +739,13 @@
   </build>
 
   <profiles>
+
+    <profile>
+      <id>examples</id>
+      <modules>
+        <module>tigon-examples</module>
+      </modules>
+    </profile>
     <!-- Profile for release. Generates extra artifacts -->
     <profile>
       <id>release</id>
