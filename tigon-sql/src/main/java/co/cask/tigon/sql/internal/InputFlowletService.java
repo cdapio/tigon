@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Cask, Inc.
+ * Copyright © 2014 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -86,7 +86,7 @@ public final class InputFlowletService extends AbstractIdleService {
       .setBinaryLocation(dir)
       .build();
 
-    startService();
+    startService(healthInspector);
   }
 
   @Override
@@ -95,7 +95,7 @@ public final class InputFlowletService extends AbstractIdleService {
     Services.chainStop(ioService, processInitiator, discoveryServer);
   }
 
-  public void startService() {
+  public void startService(HealthInspector healthInspector) {
     //Initializing discovery server
     discoveryServer = new DiscoveryServer(hubDataStore, healthInspector, metricsRecorder);
     discoveryServer.startAndWait();
@@ -107,8 +107,8 @@ public final class InputFlowletService extends AbstractIdleService {
     processInitiator.startAndWait();
   }
 
-  public void restartService() {
+  public void restartService(HealthInspector healthInspector) {
     Services.chainStop(processInitiator, discoveryServer);
-    startService();
+    startService(healthInspector);
   }
 }

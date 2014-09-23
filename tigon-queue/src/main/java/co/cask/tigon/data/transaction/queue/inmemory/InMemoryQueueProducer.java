@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Cask Data, Inc.
+ * Copyright © 2014 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -16,7 +16,7 @@
 
 package co.cask.tigon.data.transaction.queue.inmemory;
 
-import com.continuuity.tephra.Transaction;
+import co.cask.tephra.Transaction;
 import co.cask.tigon.data.queue.QueueEntry;
 import co.cask.tigon.data.queue.QueueName;
 import co.cask.tigon.data.transaction.queue.AbstractQueueProducer;

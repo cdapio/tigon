@@ -1,5 +1,5 @@
 /*
- * Copyright 2014 Cask Data, Inc.
+ * Copyright © 2014 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -47,7 +47,6 @@ public class LogAppenderInitializer implements Closeable {
 
   public void initialize(String rootLoggerName) {
     ILoggerFactory loggerFactory = LoggerFactory.getILoggerFactory();
-    // TODO: fix logging issue in mapreduce:  ENG-3279
     if (!(loggerFactory instanceof LoggerContext)) {
       LOG.warn("LoggerFactory is not a logback LoggerContext. No log appender is added. " +
                  "Logback might not be in the classpath");
