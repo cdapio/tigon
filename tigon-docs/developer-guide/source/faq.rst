@@ -78,10 +78,10 @@ Applications that use Tigon currently need to be written in Java.
 Tigon Support
 =========================
 
-**Where can I find more information?**
+**Where can I find more information about Tigon?**
 
-Our resources, include this website, our parent website (`cask.co <http://cask.co>`__),
-mailing lists, IRC channel and a `GitHub repository <https://github.com/caskco/tigon>`__.
+Our resources include this website, our parent website (`cask.co <http://cask.co>`__),
+a mailing list, an IRC channel and a `GitHub repository. <https://github.com/caskco/tigon>`__
 
 **What mailing lists are available for additional help?**
 
@@ -100,15 +100,17 @@ Bugs and tasks are tracked in a public JIRA issue tracker. Details on access wil
 
 Contact Cask Data for information on `commercial Tigon support. <http:cask.co/support>`__
 
-**How can I help make Tigon better?**
 
-*Contributing to Tigon*
+Contributing to Tigon
+=========================
+
+**How can I help make Tigon better?**
 
 We welcome all contributions, whether in filing detailed
 bug reports, submitting pull requests for code changes and improvements, or by asking questions and
 assisting others on the mailing list.
 
-*How can I contribute?*
+**How can I contribute?**
 
 Are you interested in making Tigon better? We have a simple pull-based development model
 with a consensus-building phase, similar to Apache's voting process. If you’d like to help

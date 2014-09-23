@@ -104,7 +104,8 @@ function build_docs() {
 
 function build_javadocs_full() {
   cd $PROJECT_PATH
-  mvn clean install site -DskipTests
+  mvn clean install
+  mvn site -DskipTests
 }
 
 function build_javadocs_selected() {

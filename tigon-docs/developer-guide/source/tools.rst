@@ -13,7 +13,7 @@ Introduction
 ------------
 
 The Command-Line Interface (CLI) provides methods to interact with Tigon from within a shell,
-similar to HBase shell or ``bash``. It is located within the SDK, at ``bin/tigon-cli`` as a Bash
+similar to HBase shell or ``bash``. It is located within the SDK, at ``bin/tigon-cli.sh`` as a Bash
 script file. It is also packaged in the SDK as a JAR file, at ``bin/tigon-cli.jar``.
 
 Usage
@@ -26,9 +26,9 @@ Interactive Mode
 
 .. highlight:: console
 
-To run the CLI in interactive mode, run the ``tigon-cli`` executable with no arguments from the terminal::
+To run the CLI in interactive mode, run the ``tigon-cli.sh`` executable with no arguments from the terminal::
 
-  $ /bin/tigon-cli
+  $ /bin/tigon-cli.sh
 
 The executable should bring you into a shell, with this prompt::
 
