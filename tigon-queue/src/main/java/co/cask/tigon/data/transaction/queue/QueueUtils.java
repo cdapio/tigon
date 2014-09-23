@@ -22,8 +22,8 @@ package co.cask.tigon.data.transaction.queue;
 public final class QueueUtils {
 
   public static String determineQueueConfigTableName(String queueTableName) {
-    // the name of this table has the form: <reactor name space>.<system name space>.(queue|stream).*
-    // beware that the reactor name space may also contain ., but there must be at least two .
+    // the name of this table has the form: <tigon name space>.<system name space>.(queue|stream).*
+    // beware that the Tigon name space may also contain ., but there must be at least two .
 
     int firstDot = queueTableName.indexOf('.');
     if (firstDot < 0) {

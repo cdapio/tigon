@@ -50,7 +50,7 @@ public interface InputFlowletConfigurer {
   /**
    * Adds a Query query to the InputFlowlet.
    * @param outputName Name of the Query Query (also the name of the output stream).
-   * @param gsql Query query.
+   * @param sql Query query.
    */
-  void addQuery(String outputName, String gsql);
+  void addQuery(String outputName, String sql);
 }

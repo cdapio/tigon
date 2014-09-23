@@ -70,11 +70,11 @@ public class StreamBinaryGenerator {
       writeToLocation(ifresXml, generator.generateIfresXML());
       writeToLocation(hostIfq, generator.generateHostIfq().getValue());
 
-      Map<String, String> gsqlFiles = generator.generateQueryFiles();
-      for (Map.Entry<String, String> gsqlFile : gsqlFiles.entrySet()) {
-        String fileName = String.format("%s.gsql", gsqlFile.getKey());
+      Map<String, String> sqlFiles = generator.generateQueryFiles();
+      for (Map.Entry<String, String> sqlFile : sqlFiles.entrySet()) {
+        String fileName = String.format("%s.sql", sqlFile.getKey());
         Location file = createFile(configDir, fileName);
-        writeToLocation(file, gsqlFile.getValue());
+        writeToLocation(file, sqlFile.getValue());
       }
 
       compileBinaries.generateBinaries();

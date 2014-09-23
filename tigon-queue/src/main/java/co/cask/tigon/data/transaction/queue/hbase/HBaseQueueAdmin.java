@@ -135,7 +135,7 @@ public class HBaseQueueAdmin implements QueueAdmin {
    */
   public String getActualTableName(QueueName queueName) {
     if (queueName.isQueue()) {
-      // <reactor namespace>.system.queue.<account>.<flow>
+      // <tigon namespace>.system.queue.<account>.<flow>
       return getTableNameForFlow(queueName.getFirstComponent(), queueName.getSecondComponent());
     } else {
       throw new IllegalArgumentException("'" + queueName + "' is not a valid name for a queue.");

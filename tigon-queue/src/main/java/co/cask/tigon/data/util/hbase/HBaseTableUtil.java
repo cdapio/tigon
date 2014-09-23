@@ -179,8 +179,7 @@ public abstract class HBaseTableUtil {
 
 
   // This is a workaround for unit-tests which should run even if compression is not supported
-  // todo: this should be addressed on a general level: Reactor may use HBase cluster (or multiple at a time some of)
-  //       which doesn't support certain compression type
+  // which doesn't support certain compression type
   private void setDefaultConfiguration(HTableDescriptor tableDescriptor, Configuration conf) {
     String compression = conf.get(CFG_HBASE_TABLE_COMPRESSION, DEFAULT_COMPRESSION_TYPE.name());
     CompressionType compressionAlgo = CompressionType.valueOf(compression);
@@ -261,7 +260,7 @@ public abstract class HBaseTableUtil {
         public boolean accept(String className, final URL classUrl, URL classPathUrl) {
           // Assuming the endpoint and protocol class doesn't have dependencies
           // other than those comes with HBase and Java.
-          if (className.startsWith("co.cask.tigon") || className.startsWith("com.continuuity")) {
+          if (className.startsWith("co.cask.tigon")) {
             if (!dependentClasses.containsKey(className)) {
               dependentClasses.put(className, classUrl);
             }

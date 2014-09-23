@@ -63,7 +63,7 @@ public class OutputServerSocket extends StreamSocketServer {
   private long dataRecordsReceived = 0;
 
   @SuppressWarnings("unused")
-  public OutputServerSocket(ChannelFactory factory, String outputName, String gsql, GDATRecordQueue recordQueue) {
+  public OutputServerSocket(ChannelFactory factory, String outputName, String sql, GDATRecordQueue recordQueue) {
     this.outputName = outputName;
     this.eofRecordLatch = new CountDownLatch(1);
     this.recordQueue = recordQueue;
