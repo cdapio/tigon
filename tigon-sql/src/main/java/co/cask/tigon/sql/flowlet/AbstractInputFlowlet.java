@@ -132,19 +132,17 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
     InputFlowletSpecification spec = configurer.createInputFlowletSpec();
 
     Map<String, Integer> dataIngestionPortsMap = Maps.newHashMap();
+    int httpPort = 0;
     if (ctx.getRuntimeArguments().get(Constants.HTTP_PORT) != null) {
-      // Get data ingestion ports from runtime args
-      dataIngestionPortsMap.put(Constants.HTTP_PORT, Integer.parseInt(ctx.getRuntimeArguments().get(Constants.HTTP_PORT)));
-      for (String inputName : spec.getInputSchemas().keySet()) {
-        dataIngestionPortsMap.put(Constants.TCP_PORT + "_" + inputName,
-                    Integer.parseInt(ctx.getRuntimeArguments().get(Constants.TCP_PORT + "_" + inputName)));
+      httpPort = Integer.parseInt(ctx.getRuntimeArguments().get(Constants.HTTP_PORT));
+    }
+    dataIngestionPortsMap.put(Constants.HTTP_PORT, httpPort);
+    for (String inputName : spec.getInputSchemas().keySet()) {
+      int tcpPort = 0;
+      if (ctx.getRuntimeArguments().get(Constants.TCP_INGESTION_PORT_PREFIX + inputName) != null) {
+        tcpPort = Integer.parseInt(ctx.getRuntimeArguments().get(Constants.TCP_INGESTION_PORT_PREFIX + inputName));
       }
-    } else {
-      // Setting port values to 0, so that the system identifies and allocates available ports
-      dataIngestionPortsMap.put(Constants.HTTP_PORT, 0);
-      for (String inputName : spec.getInputSchemas().keySet()) {
-        dataIngestionPortsMap.put(Constants.TCP_PORT + "_" + inputName, 0);
-      }
+      dataIngestionPortsMap.put(Constants.TCP_INGESTION_PORT_PREFIX + inputName, tcpPort);
     }
 
     // Setup temporary directory structure

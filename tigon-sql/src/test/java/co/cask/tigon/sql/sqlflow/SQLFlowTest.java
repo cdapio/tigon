@@ -32,16 +32,13 @@ import co.cask.tigon.sql.flowlet.GDATFieldType;
 import co.cask.tigon.sql.flowlet.GDATSlidingWindowAttribute;
 import co.cask.tigon.sql.flowlet.StreamSchema;
 import co.cask.tigon.sql.flowlet.annotation.QueryOutput;
+import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Queues;
+import com.google.common.io.ByteStreams;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -50,8 +47,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.ServerSocket;
+import java.net.URL;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.TimeUnit;
@@ -68,42 +66,35 @@ public class SQLFlowTest extends TestBase {
   public static void beforeClass() throws Exception {
     Map<String, String> runtimeArgs = Maps.newHashMap();
     //Identifying free port
-    ServerSocket serverSocket = new ServerSocket(0);
-    final int port = serverSocket.getLocalPort();
-    serverSocket.close();
-    serverSocket = new ServerSocket(0);
-    int tcpPort = serverSocket.getLocalPort();
-    serverSocket.close();
+    final int port = getRandomPort();
+    int tcpPort = getRandomPort();
     runtimeArgs.put(Constants.HTTP_PORT, Integer.toString(port));
-    runtimeArgs.put(Constants.TCP_PORT + "_intInput", Integer.toString(tcpPort));
+    runtimeArgs.put(Constants.TCP_INGESTION_PORT_PREFIX + "intInput", Integer.toString(tcpPort));
     flowManager = deployFlow(SQLFlow.class, runtimeArgs);
     TimeUnit.SECONDS.sleep(15);
     ingestData = new Thread(new Runnable() {
       @Override
       public void run() {
-        HttpClient httpClient = new DefaultHttpClient();
-        for (int i = 1; i <= MAX_TIMESTAMP; i++) {
-          for (int j = 1; j <= i; j++) {
-            JsonObject bodyJson = new JsonObject();
-            JsonArray dataArray = new JsonArray();
-            dataArray.add(new JsonPrimitive(i));
-            dataArray.add(new JsonPrimitive(j));
-            bodyJson.add("data", dataArray);
-            HttpPost httpPost = new HttpPost("http://localhost:" + port + "/v1/tigon/intInput");
-            StringEntity params = null;
-            try {
-              params = new StringEntity(bodyJson.toString());
-            } catch (UnsupportedEncodingException e) {
-              e.printStackTrace();
-            }
-            httpPost.addHeader("Content-Type", "application/json");
-            httpPost.setEntity(params);
-            try {
-              EntityUtils.consumeQuietly(httpClient.execute(httpPost).getEntity());
-            } catch (IOException e) {
-              // no-op
+        try {
+          for (int i = 1; i <= MAX_TIMESTAMP; i++) {
+            for (int j = 1; j <= i; j++) {
+              HttpURLConnection urlConn =
+                (HttpURLConnection) new URL("http://localhost:" + port + "/v1/tigon/intInput").openConnection();
+              urlConn.setReadTimeout(2000);
+              urlConn.setDoOutput(true);
+              urlConn.setRequestProperty("Content-Type", "application/json");
+              JsonObject bodyJson = new JsonObject();
+              JsonArray dataArray = new JsonArray();
+              dataArray.add(new JsonPrimitive(i));
+              dataArray.add(new JsonPrimitive(j));
+              bodyJson.add("data", dataArray);
+              ByteStreams.copy(ByteStreams.newInputStreamSupplier(bodyJson.toString().
+                getBytes(com.google.common.base.Charsets.UTF_8)), urlConn.getOutputStream());
+              urlConn.getResponseCode();
             }
           }
+        } catch (Exception e) {
+          Throwables.propagate(e);
         }
       }
     });
@@ -198,6 +189,19 @@ public class SQLFlowTest extends TestBase {
 
     public String toString() {
       return "timestamp : " + timestamp + "\tsumValue : " + sumValue;
+    }
+  }
+
+  public static int getRandomPort() {
+    try {
+      ServerSocket socket = new ServerSocket(0);
+      try {
+        return socket.getLocalPort();
+      } finally {
+        socket.close();
+      }
+    } catch (IOException e) {
+      return -1;
     }
   }
 }

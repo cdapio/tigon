@@ -70,12 +70,12 @@ public class StreamEngineIO extends AbstractIdleService {
       switch(streamInfo.getKey()) {
         case GDAT:
           service = new InputServerSocket(factory, inputName, streamInfo.getValue(),
-                                          portMap.get(Constants.TCP_PORT + "_" + inputName));
+                                          portMap.get(Constants.TCP_INGESTION_PORT_PREFIX + inputName));
           break;
 
         case JSON:
           service = new JsonInputServerSocket(factory, inputName, streamInfo.getValue(),
-                                              portMap.get(Constants.TCP_PORT + "_" + inputName));
+                                              portMap.get(Constants.TCP_INGESTION_PORT_PREFIX + inputName));
           break;
 
         default:

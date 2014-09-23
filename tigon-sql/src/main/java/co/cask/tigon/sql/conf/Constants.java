@@ -61,8 +61,8 @@ public final class Constants {
   public static final String OUTPUT_SPEC = "output_spec.cfg";
 
   /**
-   * Ports Map Keys
+   * Data Ingestion Ports Map Keys
    */
   public static final String HTTP_PORT = "httpPort";
-  public static final String TCP_PORT = "tcpPort";
+  public static final String TCP_INGESTION_PORT_PREFIX = "tcpPort_";
 }
