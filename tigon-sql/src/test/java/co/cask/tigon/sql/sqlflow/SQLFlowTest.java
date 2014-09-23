@@ -143,7 +143,7 @@ public class SQLFlowTest extends TestBase {
 
   private static final class SQLFlowlet extends AbstractInputFlowlet {
     private OutputEmitter<DataPacket> dataEmitter;
-    private final Logger LOG = LoggerFactory.getLogger(SQLFlowlet.class);
+    private final Logger flowletLOG = LoggerFactory.getLogger(SQLFlowlet.class);
 
     @Override
     public void create() {
@@ -159,14 +159,14 @@ public class SQLFlowTest extends TestBase {
 
     @QueryOutput("sumOut")
     public void emitData(DataPacket dataPacket) {
-      LOG.info("Emitting data to next flowlet");
+      flowletLOG.info("Emitting data to next flowlet");
       //Each data packet is forwarded to the next flowlet
       dataEmitter.emit(dataPacket);
     }
   }
 
   private static final class SinkFlowlet extends AbstractFlowlet {
-    private final Logger LOG = LoggerFactory.getLogger(SinkFlowlet.class);
+    private final Logger flowletLOG = LoggerFactory.getLogger(SinkFlowlet.class);
     private String flowletName;
 
     @Override
@@ -177,7 +177,7 @@ public class SQLFlowTest extends TestBase {
     @RoundRobin
     @ProcessInput
     public void process(DataPacket value) throws Exception {
-      LOG.info("{} got {}", flowletName, value.toString());
+      flowletLOG.info("{} got {}", flowletName, value.toString());
       sharedDataQueue.add(value);
     }
   }
