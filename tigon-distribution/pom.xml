@@ -90,4 +90,95 @@
     </plugins>
   </build>
 
+  <profiles>
+    <!--
+      Profile to generate aggregated coverage report.
+      Piggy-back on the distribution module as it already has dependency on all other modules.
+    -->
+    <profile>
+      <id>coverage</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <executions>
+              <!-- Copy the ant tasks jar. Needed for ts.jacoco.report-ant . -->
+              <execution>
+                <id>jacoco-dependency-ant</id>
+                <goals>
+                  <goal>copy</goal>
+                </goals>
+                <phase>process-test-resources</phase>
+                <inherited>false</inherited>
+                <configuration>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>org.jacoco</groupId>
+                      <artifactId>org.jacoco.ant</artifactId>
+                      <version>${jacoco.version}</version>
+                    </artifactItem>
+                  </artifactItems>
+                  <stripVersion>true</stripVersion>
+                  <outputDirectory>${project.build.directory}/jacoco-jars</outputDirectory>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-antrun-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+              <execution>
+                <phase>package</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+                <configuration>
+                  <target>
+                    <taskdef name="report" classname="org.jacoco.ant.ReportTask">
+                      <classpath path="${project.build.directory}/jacoco-jars/org.jacoco.ant.jar" />
+                    </taskdef>
+                    <mkdir dir="${project.build.directory}/coverage-report" />
+                    <report>
+                      <executiondata>
+                        <fileset dir="../">
+                          <include name="**/jacoco.exec" />
+                        </fileset>
+                      </executiondata>
+                      <structure name="Tigon Coverage Project">
+                        <group name="Tigon">
+                          <classfiles>
+                            <fileset dir="../">
+                              <include name="**/*.class" />
+                              <exclude name="**/thrift/*" />
+                            </fileset>
+                          </classfiles>
+                          <sourcefiles encoding="UTF-8">
+                            <fileset dir="../">
+                              <include name="**/*.java" />
+                            </fileset>
+                          </sourcefiles>
+                        </group>
+                      </structure>
+                      <html destdir="${project.build.directory}/coverage-report" />
+                    </report>
+                  </target>
+                </configuration>
+              </execution>
+            </executions>
+            <dependencies>
+              <dependency>
+                <groupId>org.jacoco</groupId>
+                <artifactId>org.jacoco.ant</artifactId>
+                <version>${jacoco.version}</version>
+              </dependency>
+            </dependencies>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

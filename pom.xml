@@ -705,6 +705,7 @@
         </plugin>
 
 
+
         <!-- Deploy plugin -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -804,5 +805,63 @@
         </plugins>
       </build>
     </profile>
+
+    <!-- Profile for generating coverage report -->
+    <profile>
+      <id>coverage</id>
+      <properties>
+        <jacoco.version>0.7.1.201405082137</jacoco.version>
+      </properties>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-surefire-plugin</artifactId>
+              <version>2.14.1</version>
+              <configuration>
+                <argLine>${argLine} -Xmx4096m -Djava.awt.headless=true -XX:MaxPermSize=256m</argLine>
+              </configuration>
+            </plugin>
+
+            <plugin>
+              <groupId>org.jacoco</groupId>
+              <artifactId>jacoco-maven-plugin</artifactId>
+              <version>${jacoco.version}</version>
+              <executions>
+                <execution>
+                  <id>prepare-agent</id>
+                  <goals>
+                    <goal>prepare-agent</goal>
+                  </goals>
+                  <configuration>
+                    <excludes>
+                      <exclude>**/thrift/*</exclude>
+                    </excludes>
+                  </configuration>
+                </execution>
+                <execution>
+                  <id>report</id>
+                  <phase>prepare-package</phase>
+                  <goals>
+                    <goal>report</goal>
+                  </goals>
+                </execution>
+              </executions>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+
+        <plugins>
+          <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>${jacoco.version}</version>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+
   </profiles>
 </project>
