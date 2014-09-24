@@ -79,13 +79,17 @@
 
   <distributionManagement>
     <repository>
-      <id>continuuity-release</id>
-      <url>https://repository.continuuity.com/content/repositories/releases-public</url>
+      <id>sonatype.release</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
     </repository>
     <snapshotRepository>
-      <id>continuuity-snapshots</id>
-      <url>https://repository.continuuity.com/content/repositories/snapshots/</url>
+      <id>sonatype.snapshots</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
+    <site>
+      <id>cask</id>
+      <url>http://cask.co</url>
+    </site>
   </distributionManagement>
 
   <properties>
