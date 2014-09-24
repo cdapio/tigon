@@ -1,0 +1,4 @@
+default : Contains[InterfaceType,GDAT] and Equals[Host,'localhost'];
+csv : Contains[InterfaceType,CSV] and Equals[Host,'localhost'];
+csvtcp : Contains[InterfaceType,CSVTCP] and Equals[Host,'localhost'];
+gdat: Contains[InterfaceType,GDAT] and Equals[Host,'localhost']
