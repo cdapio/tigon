@@ -193,9 +193,7 @@ public class HubHttpHandler extends AbstractHttpHandler {
         hds = new HubDataStore.Builder(current).outputReady().build();
       } while (!hubDataStoreReference.compareAndSet(current, hds));
       // Invokes Event Listener. All GSEXIT processes have completed /announce-stream-processing
-      if (listener != null) {
-        listener.announceReady();
-      }
+      listener.announceReady();
     }
     responder.sendStatus(HttpResponseStatus.OK);
   }

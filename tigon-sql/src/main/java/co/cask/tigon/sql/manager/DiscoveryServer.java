@@ -57,8 +57,8 @@ public class DiscoveryServer extends AbstractIdleService {
     service.stopAndWait();
   }
 
-  public DiscoveryServer(HubDataStore ds, HealthInspector inspector, MetricsRecorder metricsRecorder
-    , ProcessMonitor monitor) {
+  public DiscoveryServer(HubDataStore ds, HealthInspector inspector, MetricsRecorder metricsRecorder,
+                         ProcessMonitor monitor) {
     hubDataStore = ds;
     this.inspector = inspector;
     this.metricsRecorder = metricsRecorder;

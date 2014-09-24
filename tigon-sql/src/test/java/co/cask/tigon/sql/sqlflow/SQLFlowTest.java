@@ -44,7 +44,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -65,6 +67,7 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
@@ -78,13 +81,13 @@ public class SQLFlowTest extends TestBase {
   static CountDownLatch latch;
   private static TestHandler handler;
   private static NettyHttpService service;
+  private static String serviceURL;
 
   @BeforeClass
   public static void beforeClass() throws Exception {
     latch = new CountDownLatch(MAX_TIMESTAMP);
     Map<String, String> runtimeArgs = Maps.newHashMap();
     //Identifying free port
-    String baseURL;
     handler = new TestHandler();
     service = NettyHttpService.builder()
       .addHttpHandlers(ImmutableList.of(handler))
@@ -92,8 +95,8 @@ public class SQLFlowTest extends TestBase {
       .build();
     service.startAndWait();
     InetSocketAddress address = service.getBindAddress();
-    baseURL = "http://" + address.getHostName() + ":" + address.getPort();
-    runtimeArgs.put("baseURL", baseURL);
+    serviceURL = "http://" + address.getHostName() + ":" + address.getPort();
+    runtimeArgs.put("baseURL", serviceURL);
     final int port = getRandomPort();
     int tcpPort = getRandomPort();
     runtimeArgs.put(Constants.HTTP_PORT, Integer.toString(port));
@@ -107,13 +110,14 @@ public class SQLFlowTest extends TestBase {
         for (int i = 1; i <= MAX_TIMESTAMP; i++) {
           for (int j = 1; j <= i; j++) {
             try {
+              // TODO eliminate org.apache.http dependency TIGON-5
               HttpPost httpPost = new HttpPost("http://localhost:" + port + "/v1/tigon/intInput");
               JsonObject bodyJson = new JsonObject();
               JsonArray dataArray = new JsonArray();
               dataArray.add(new JsonPrimitive(Integer.toString(i)));
               dataArray.add(new JsonPrimitive(Integer.toString(j)));
               bodyJson.add("data", dataArray);
-              StringEntity params = new StringEntity(bodyJson.toString());
+              StringEntity params = new StringEntity(bodyJson.toString(), Charsets.UTF_8);
               httpPost.addHeader("Content-Type", "application/json");
               httpPost.setEntity(params);
               EntityUtils.consumeQuietly(httpClient.execute(httpPost).getEntity());
@@ -127,14 +131,25 @@ public class SQLFlowTest extends TestBase {
     });
   }
 
+  private static DataPacket getDataPacket() throws IOException {
+    HttpClient httpClient = new DefaultHttpClient();
+    HttpGet httpGet = new HttpGet(serviceURL + "/poll-data");
+    HttpResponse response = httpClient.execute(httpGet);
+    if (response.getStatusLine().getStatusCode() != 200) {
+      return null;
+    }
+    String[] requestData = EntityUtils.toString(response.getEntity(), Charsets.UTF_8).replace("\"", "").split(":");
+    return new DataPacket(Long.parseLong(requestData[0]), Integer.parseInt(requestData[1]));
+  }
+
   @Test
   public void testSQLFlow() throws Exception {
     ingestData.start();
     ingestData.join();
-    latch.await(60, TimeUnit.SECONDS);
+    latch.await();
     int dataPacketCounter = MAX_TIMESTAMP;
     DataPacket dataPacket;
-    while ((dataPacket = handler.getData()) != null) {
+    while ((dataPacket = getDataPacket()) != null) {
       Assert.assertEquals(evalSum(dataPacket.timestamp), dataPacket.sumValue);
       dataPacketCounter = dataPacketCounter - 1;
     }
@@ -195,14 +210,15 @@ public class SQLFlowTest extends TestBase {
   private static final class SinkFlowlet extends AbstractFlowlet {
     private final Logger flowletLOG = LoggerFactory.getLogger(SinkFlowlet.class);
     private String flowletName;
-    private String bURL;
+    private String baseURL;
+    // TODO eliminate org.apache.http dependency TIGON-5
     private HttpClient httpClient;
 
 
     @Override
     public void initialize(FlowletContext context) throws Exception {
       flowletName = context.getName() + "_" + context.getInstanceId();
-      bURL = context.getRuntimeArguments().get("baseURL");
+      baseURL = context.getRuntimeArguments().get("baseURL");
       httpClient = new DefaultHttpClient();
     }
 
@@ -214,8 +230,8 @@ public class SQLFlowTest extends TestBase {
         JsonObject bodyJson = new JsonObject();
         bodyJson.addProperty("time", value.getTime());
         bodyJson.addProperty("sum", value.getSum());
-        HttpPost httpPost = new HttpPost(bURL + "/ping");
-        StringEntity params = new StringEntity(bodyJson.toString());
+        HttpPost httpPost = new HttpPost(baseURL + "/ping");
+        StringEntity params = new StringEntity(bodyJson.toString(), Charsets.UTF_8);
         httpPost.addHeader("Content-Type", "application/json");
         httpPost.setEntity(params);
         EntityUtils.consumeQuietly(httpClient.execute(httpPost).getEntity());
@@ -244,12 +260,16 @@ public class SQLFlowTest extends TestBase {
     private static JsonObject requestData;
     private static Queue<DataPacket> queue = Queues.newConcurrentLinkedQueue();
 
-    public static DataPacket getData() {
-      if (queue.size() > 0) {
-        return queue.poll();
+    @Path("/poll-data")
+    @GET
+    public void getDataPacket(HttpRequest request, HttpResponder responder) {
+      if (queue.size() == 0) {
+        responder.sendStatus(HttpResponseStatus.NO_CONTENT);
       }
-      return null;
+      DataPacket dataPacket = queue.poll();
+      responder.sendJson(HttpResponseStatus.OK, dataPacket.timestamp + ":" + dataPacket.sumValue);
     }
+
 
     @Path("/ping")
     @POST
