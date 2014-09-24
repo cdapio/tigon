@@ -36,10 +36,6 @@ public class SQLLibraryBuild {
   private static final Logger LOG = LoggerFactory.getLogger(SQLLibraryBuild.class);
 
   public static void main(String[] args) throws IOException, InterruptedException {
-    if ((System.getProperty("SQLLib") == null) && (System.getProperty("SQLBuild") == null)) {
-      LOG.info("Skipping SQL library build");
-      return;
-    }
     LOG.info("Starting SQL library build");
     ProcessBuilder makeCleanBuilder = new ProcessBuilder("make", "clean").redirectErrorStream(true);
     makeCleanBuilder.directory(new File(System.getProperty("user.dir") + "/tigon-sql/src/main/c"));

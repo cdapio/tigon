@@ -193,11 +193,9 @@
                 <exclude>**/gscpaux/*block_allocator*</exclude>
                 <exclude>**/gscpaux/*json*</exclude>
                 <exclude>**/ftacmp/translate_fta.gcov.gcno</exclude>
+                <exclude>**/ftacmp/*.gcov.gcda</exclude>
                 <!--tigon sql library test data-->
-                <exclude>**/scripts/**/*.txt</exclude>
-                <exclude>**/scripts/**/*.out</exclude>
-                <exclude>**/scripts/**/*.cfg</exclude>
-                <exclude>**/scripts/**/gen_feed</exclude>
+                <exclude>**/scripts/**/*</exclude>
               </excludes>
             </configuration>
           </execution>
@@ -205,6 +203,58 @@
       </plugin>
     </plugins>
   </build>
+
+  <!--Profile to run SQL library build and tests-->
+  <profiles>
+    <profile>
+      <id>SQLLib</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-jar-plugin</artifactId>
+            <version>2.4</version>
+            <executions>
+              <execution>
+                <id>test-jar</id>
+                <goals>
+                  <goal>test-jar</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.1</version>
+            <executions>
+              <execution>
+                <id>build-sql-binaries</id>
+                <phase>compile</phase>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+                <configuration>
+                  <mainClass>co.cask.tigon.sql.buildsql.SQLLibraryBuild</mainClass>
+                </configuration>
+              </execution>
+              <execution>
+                <id>test-sql-library</id>
+                <phase>test</phase>
+                <goals>
+                  <goal>java</goal>
+                </goals>
+                <configuration>
+                  <mainClass>co.cask.tigon.sql.buildsql.SQLLibraryTest</mainClass>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
+
 
 
 </project>

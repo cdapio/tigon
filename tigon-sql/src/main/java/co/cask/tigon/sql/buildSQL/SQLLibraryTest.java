@@ -34,7 +34,7 @@ public class SQLLibraryTest {
 
   public static void main(String[] args) throws IOException {
     // Skipping all SQL library tests for now
-    if ((System.getProperty("SQLLib") == null) && (System.getProperty("SQLTests") == null)) {
+    if ((System.getProperty("skipTests") != null) || (System.getProperty("maven.test.skip") != null) || true) {
       LOG.info("Skipping SQL library tests");
       return;
     }
