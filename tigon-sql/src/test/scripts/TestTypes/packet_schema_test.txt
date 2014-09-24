@@ -1,0 +1,126 @@
+PROTOCOL base{
+	uint systemTime get_system_time (low_cardinality,required,increasing, snap_len 0);
+}
+
+PROTOCOL CSV_EXAMPLE (base) {
+	uint uintInPosition1  get_csv_uint_pos1;
+	ullong ullongInPosition2 get_csv_ullong_pos2;
+	IP ipInPosition3 get_csv_ip_pos3;
+	IPV6 ipv6InPosition4 get_csv_ipv6_pos4;
+	string stringInPosition5 get_csv_string_pos5;
+	bool boolInPosition6 get_csv_bool_pos6;
+	int intInPosition7 get_csv_int_pos7;
+	llong llongInPosition8 get_csv_llong_pos8;
+	float floatInPosition9 get_csv_float_pos9;
+}
+
+
+PROTOCOL CSV_TCPEXAMPLE (base) {
+	uint ivalue get_csv_uint_pos1 (increasing);
+	uint value get_csv_uint_pos2;
+}
+
+PROTOCOL GDAT_EXAMPLE (base) {
+	uint uintOldTime get_gdat_uint_pos1;
+        uint uintInPosition1  get_gdat_uint_pos2;
+        ullong ullongInPosition2 get_gdat_ullong_pos3;
+        IP ipInPosition3 get_gdat_ip_pos4;
+        IPV6 ipv6InPosition4 get_gdat_ipv6_pos5;
+        string stringInPosition5 get_gdat_string_pos6;
+        bool boolInPosition6 get_gdat_bool_pos7;
+        int intInPosition7 get_gdat_int_pos8;
+        llong llongInPosition8 get_gdat_llong_pos9;
+        float floatInPosition9 get_gdat_float_pos10;
+}
+
+PROTOCOL CSV_EXAMPLE_bool (base) {
+        bool boolKey get_csv_bool_pos1;
+        bool boolValue get_csv_bool_pos2;
+}
+PROTOCOL CSV_EXAMPLE_float (base) {
+        float floatKey get_csv_float_pos1;
+        float floatValue get_csv_float_pos2;
+}
+PROTOCOL CSV_EXAMPLE_int (base) {
+        int intKey get_csv_int_pos1;
+        int intValue get_csv_int_pos2;
+}
+PROTOCOL CSV_EXAMPLE_IP (base) {
+        IP IPKey get_csv_ip_pos1;
+        IP IPValue get_csv_ip_pos2;
+}
+PROTOCOL CSV_EXAMPLE_IPV6 (base) {
+        IPV6 IPV6Key get_csv_ipv6_pos1;
+        IPV6 IPV6Value get_csv_ipv6_pos2;
+}
+PROTOCOL CSV_EXAMPLE_llong (base) {
+        llong llongKey get_csv_llong_pos1;
+        llong llongValue get_csv_llong_pos2;
+}
+PROTOCOL CSV_EXAMPLE_string (base) {
+        string stringKey get_csv_string_pos1;
+        string stringValue get_csv_string_pos2;
+}
+PROTOCOL CSV_EXAMPLE_uint (base) {
+        uint uintKey get_csv_uint_pos1;
+        uint uintValue get_csv_uint_pos2;
+}
+PROTOCOL CSV_EXAMPLE_ullong (base) {
+        ullong ullongKey get_csv_ullong_pos1;
+        ullong ullongValue get_csv_ullong_pos2;
+}
+PROTOCOL CSV_EXAMPLE_ushort (base) {
+        ushort ushortKey get_csv_ushort_pos1;
+        ushort ushortValue get_csv_ushort_pos2;
+}
+
+PROTOCOL CSV_TIMESTAMP_bool (base) {
+        uint timestamp get_csv_uint_pos1(increasing);
+        bool boolKey get_csv_bool_pos2;
+        bool boolValue get_csv_bool_pos3;
+}
+PROTOCOL CSV_TIMESTAMP_float (base) {
+        uint timestamp get_csv_uint_pos1(increasing);
+        float floatKey get_csv_float_pos2;
+        float floatValue get_csv_float_pos3;
+}
+PROTOCOL CSV_TIMESTAMP_int (base) {
+        uint timestamp get_csv_uint_pos1(increasing);
+        int intKey get_csv_int_pos2;
+        int intValue get_csv_int_pos3;
+}
+PROTOCOL CSV_TIMESTAMP_IP (base) {
+        uint timestamp get_csv_uint_pos1(increasing);
+        IP IPKey get_csv_ip_pos2;
+        IP IPValue get_csv_ip_pos3;
+}
+PROTOCOL CSV_TIMESTAMP_IPV6 (base) {
+        uint timestamp get_csv_uint_pos1(increasing);
+        IPV6 IPV6Key get_csv_ipv6_pos2;
+        IPV6 IPV6Value get_csv_ipv6_pos3;
+}
+PROTOCOL CSV_TIMESTAMP_llong (base) {
+        uint timestamp get_csv_uint_pos1(increasing);
+        llong llongKey get_csv_llong_pos2;
+        llong llongValue get_csv_llong_pos3;
+}
+PROTOCOL CSV_TIMESTAMP_string (base) {
+        uint timestamp get_csv_uint_pos1(increasing);
+        string stringKey get_csv_string_pos2;
+        string stringValue get_csv_string_pos3;
+}
+PROTOCOL CSV_TIMESTAMP_uint (base) {
+        uint timestamp get_csv_uint_pos1(increasing);
+        uint uintKey get_csv_uint_pos2;
+        uint uintValue get_csv_uint_pos3;
+}
+PROTOCOL CSV_TIMESTAMP_ullong (base) {
+        uint timestamp get_csv_uint_pos1(increasing);
+        ullong ullongKey get_csv_ullong_pos2;
+        ullong ullongValue get_csv_ullong_pos3;
+}
+PROTOCOL CSV_TIMESTAMP_ushort (base) {
+        uint timestamp get_csv_uint_pos1(increasing);
+        ushort ushortKey get_csv_ushort_pos2;
+        ushort ushortValue get_csv_ushort_pos3;
+}

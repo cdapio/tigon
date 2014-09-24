@@ -21,6 +21,7 @@ import co.cask.http.HttpResponder;
 import co.cask.http.NettyHttpService;
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.AbstractIdleService;
+import org.apache.twill.common.Cancellable;
 import org.apache.twill.common.ServiceListenerAdapter;
 import org.apache.twill.common.Threads;
 import org.jboss.netty.handler.codec.http.HttpRequest;
@@ -40,21 +41,27 @@ import javax.ws.rs.PathParam;
 public class DataIngestionRouter extends AbstractIdleService {
   private static final Logger LOG = LoggerFactory.getLogger(DataIngestionRouter.class);
   private final HttpRouterClientService clientService;
+  private int httpPort;
   private NettyHttpService httpService;
-  private final int port;
 
-  public DataIngestionRouter(Map<String, InetSocketAddress> ingestionServerMap, int port) {
+  public DataIngestionRouter(Map<String, InetSocketAddress> ingestionServerMap) {
+    this(ingestionServerMap, 0);
+  }
+
+  public DataIngestionRouter(Map<String, InetSocketAddress> ingestionServerMap,
+                             int httpPort) {
     this.clientService = new HttpRouterClientService(ingestionServerMap);
-    this.port = port;
+    this.httpPort = httpPort;
   }
 
   @Override
   protected void startUp() throws Exception {
     httpService = NettyHttpService.builder()
       .addHttpHandlers(ImmutableList.of(new ForwardingHandler(clientService)))
-      .setPort(port)
+      .setPort(httpPort)
       .build();
     httpService.addListener(new ServiceListenerAdapter() {
+      private Cancellable cancellable;
 
       @Override
       public void running() {
@@ -65,11 +72,17 @@ public class DataIngestionRouter extends AbstractIdleService {
       @Override
       public void terminated(State from) {
         LOG.info("Data Ingestion Router HTTP Service stopped");
+        if (cancellable != null) {
+          cancellable.cancel();
+        }
       }
 
       @Override
       public void failed(State from, Throwable failure) {
         LOG.info("Data Ingestion Router HTTP Service stopped with failure", failure);
+        if (cancellable != null) {
+          cancellable.cancel();
+        }
       }
     }, Threads.SAME_THREAD_EXECUTOR);
     clientService.startAndWait();

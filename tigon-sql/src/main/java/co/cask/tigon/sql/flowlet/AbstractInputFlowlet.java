@@ -69,6 +69,7 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
   private GDATRecordQueue recordQueue;
   private Stopwatch stopwatch;
   private int retryCounter;
+  private Map<String, Integer> dataIngestionPortsMap;
 
   // Default values for runnable configurables.
   private FailurePolicy failurePolicy = FailurePolicy.RETRY;
@@ -186,6 +187,20 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
     create(configurer);
     InputFlowletSpecification spec = configurer.createInputFlowletSpec();
 
+    dataIngestionPortsMap = Maps.newHashMap();
+    int httpPort = 0;
+    if (ctx.getRuntimeArguments().get(Constants.HTTP_PORT) != null) {
+      httpPort = Integer.parseInt(ctx.getRuntimeArguments().get(Constants.HTTP_PORT));
+    }
+    dataIngestionPortsMap.put(Constants.HTTP_PORT, httpPort);
+    for (String inputName : spec.getInputSchemas().keySet()) {
+      int tcpPort = 0;
+      if (ctx.getRuntimeArguments().get(Constants.TCP_INGESTION_PORT_PREFIX + inputName) != null) {
+        tcpPort = Integer.parseInt(ctx.getRuntimeArguments().get(Constants.TCP_INGESTION_PORT_PREFIX + inputName));
+      }
+      dataIngestionPortsMap.put(Constants.TCP_INGESTION_PORT_PREFIX + inputName, tcpPort);
+    }
+
     // Setup temporary directory structure
     tmpFolder = Files.createTempDir();
     LocationFactory locationFactory = new LocalLocationFactory(tmpFolder);
@@ -203,7 +218,8 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
     recordQueue = new GDATRecordQueue();
 
     //Initiating Netty TCP I/O ports
-    inputFlowletService = new InputFlowletService(binDir, spec, healthInspector, metricsRecorder, recordQueue);
+    inputFlowletService = new InputFlowletService(binDir, spec, healthInspector, metricsRecorder, recordQueue,
+                                                  dataIngestionPortsMap, this);
     inputFlowletService.startAndWait();
 
     //Starting health monitor service
@@ -288,5 +304,16 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
     healthInspector = new HealthInspector(this);
     inputFlowletService.restartService(healthInspector);
     healthInspector.startAndWait();
+  }
+
+  @Override
+  public void announceReady() {
+    FlowletContext ctx = getContext();
+    if (ctx == null) {
+      return;
+    }
+    for (Map.Entry<String, Integer> portEntry : dataIngestionPortsMap.entrySet()) {
+      ctx.announce(portEntry.getKey(), portEntry.getValue());
+    }
   }
 }

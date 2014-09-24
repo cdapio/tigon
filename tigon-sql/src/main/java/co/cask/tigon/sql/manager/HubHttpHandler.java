@@ -20,6 +20,7 @@ import co.cask.http.AbstractHttpHandler;
 import co.cask.http.HttpResponder;
 import co.cask.tigon.sql.internal.HealthInspector;
 import co.cask.tigon.sql.internal.MetricsRecorder;
+import co.cask.tigon.sql.internal.ProcessMonitor;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
@@ -73,15 +74,15 @@ public class HubHttpHandler extends AbstractHttpHandler {
   private static final Gson gsonObject = new Gson();
   private final AtomicReference<HubDataStore> hubDataStoreReference;
   private final AtomicInteger gsexitCount;
-  private final ProcessReadyListener listener;
+  private final ProcessMonitor listener;
   private final HealthInspector healthInspector;
   private final MetricsRecorder metricsRecorder;
   private final Map<String, String> processNameMap;
 
-  public HubHttpHandler(HubDataStore ds, HealthInspector inspector, MetricsRecorder recorder) {
+  public HubHttpHandler(HubDataStore ds, HealthInspector inspector, MetricsRecorder recorder, ProcessMonitor monitor) {
     hubDataStoreReference = new AtomicReference<HubDataStore>(ds);
     gsexitCount = new AtomicInteger(ds.getHubDataSinks().size());
-    listener = new ProcessReadyListener();
+    listener = monitor;
     healthInspector = inspector;
     metricsRecorder = recorder;
     processNameMap = Maps.newHashMap();

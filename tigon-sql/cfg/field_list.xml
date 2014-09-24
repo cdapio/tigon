@@ -1,0 +1,3 @@
+<doc:Project xmlns:xmi="http://www.omg.org/XMI" xmlns:doc="http://lynx.research.att.com/models/doc" xmi:version="2.0" title="todo" name="gs/fields" description="GS Probe Data Dictionary">
+    <field name="systemTime" type="uint" description="Unix time of system when data is processed"/>
+</doc:Project>
