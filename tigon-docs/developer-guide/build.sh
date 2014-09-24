@@ -77,7 +77,8 @@ function usage() {
   echo "Usage: $SCRIPT < option > [source]"
   echo ""
   echo "  Options (select one)"
-  echo "    build         Clean build of javadocs and HTML docs, copy javadocs and PDFs into place, zip results"
+  echo "    build         Clean build of javadocs and HTML docs, copy javadocs into place, zip results"
+  echo "    build-quick   Clean build of HTML docs, copy existing javadocs into place"
   echo "    build-github  Clean build and zip for placing on GitHub"
   echo "    build-web     Clean build and zip for placing on docs.cask.co webserver"
   echo ""
@@ -167,6 +168,11 @@ function build() {
   make_zip
 }
 
+function build_quick() {
+  build_docs
+  copy_javadocs
+}
+
 function build_web() {
 # This is used to stage files
 # desired path is 2.5.0-SNAPSHOT/en/*
@@ -237,6 +243,7 @@ fi
 
 case "$1" in
   build )              build; exit 1;;
+  build-quick )        build_quick; exit 1;;
   build-github )       build_github; exit 1;;
   build-web )          build_web; exit 1;;
   clean )              clean; exit 1;;

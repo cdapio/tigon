@@ -12,50 +12,29 @@ Tigon Command-Line Interface
 Introduction
 ------------
 
-The Command-Line Interface (CLI) provides methods to interact with Tigon from within a shell,
-similar to HBase shell or ``bash``. It is located within the SDK, at ``bin/tigon-cli.sh`` as a Bash
-script file. It is also packaged in the SDK as a JAR file, at ``bin/tigon-cli.jar``.
-
-Usage
------
-
-The CLI may be used in two ways: interactive mode and non-interactive mode.
-
-Interactive Mode
-----------------
+The Command-Line Interface (CLI) provides methods to interact with a running Tigon
+instance from within a shell, similar to HBase shell or ``bash``. It is automatically
+started once you start Tigon in `Distributed Mode </admin#distributed-mode>`__.
 
 .. highlight:: console
 
-To run the CLI in interactive mode, run the ``tigon-cli.sh`` executable with no arguments from the terminal::
-
-  $ /bin/tigon-cli.sh
-
 The executable should bring you into a shell, with this prompt::
 
-  tigon (localhost:10000)>
-
-This indicates that the CLI is currently set to interact with the Tigon server at ``localhost``.
-There are two ways to interact with a different Tigon server:
-
-- To interact with a different Tigon server by default, set the environment variable ``TIGON_HOST`` to a hostname.
-- To change the current Tigon server, run the command ``connect example.com``.
-
-For example, with ``TIGON_HOST`` set to ``example.com``, the Shell Client would be interacting with
-a Tigon instance at ``example.com``, port ``10000``::
-
-  tigon (example.com:10000)>
+  tigon >
 
 To list all of the available commands, enter ``help``::
 
-  tigon (localhost:10000)> help
+  tigon > help
 
-Non-Interactive Mode
---------------------
+To list all Flows currently running in Tigon, use::
 
-To run the CLI in non-interactive mode, run the ``tigon-cli`` executable, passing the command you want executed
-as the argument. For example, to list all Flows currently running in Tigon, execute::
+  tigon > list
+  
+To stop the Flow prior to shutting down distributed mode, use::
 
-  tigon list
+  tigon > delete <flow-name>
+
+You can then exit the command-line interface either with ``exit`` or ``Control-C``.
 
 Available Commands
 ------------------

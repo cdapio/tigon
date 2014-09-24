@@ -69,7 +69,6 @@ A Java Development Kit such as JDK 6 or JDK 7, and
 
 .. **Are there Tigon RPM or Debian packages available for download?**
 
-
 **Does Tigon run on Windows?**
 
 Currently, Tigon does not run on Windows.
