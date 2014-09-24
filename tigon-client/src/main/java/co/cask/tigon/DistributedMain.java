@@ -24,6 +24,7 @@ import co.cask.tigon.cli.InvalidCLIArgumentException;
 import co.cask.tigon.conf.CConfiguration;
 import co.cask.tigon.conf.Constants;
 import co.cask.tigon.data.runtime.DataFabricDistributedModule;
+import co.cask.tigon.flow.DeployClient;
 import co.cask.tigon.guice.ConfigModule;
 import co.cask.tigon.guice.DiscoveryRuntimeModule;
 import co.cask.tigon.guice.IOModule;
@@ -34,6 +35,7 @@ import co.cask.tigon.metrics.MetricsCollectionService;
 import co.cask.tigon.metrics.NoOpMetricsCollectionService;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.Service;
 import com.google.inject.AbstractModule;
@@ -54,6 +56,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.InetSocketAddress;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -169,12 +172,16 @@ public class DistributedMain {
           continue;
         }
 
-        if (args.length != cmd.getArgCount()) {
+        if (args.length < cmd.getArgCount()) {
           throw new InvalidCLIArgumentException(cmd.printHelp());
         }
 
         if (cmd.equals(CLICommands.START)) {
-          flowOperations.startFlow(new File(args[1]), args[2]);
+          Map<String, String> runtimeArgs = Maps.newHashMap();
+          if (args.length > cmd.getArgCount()) {
+            runtimeArgs = DeployClient.fromPosixArray(Arrays.copyOfRange(args, cmd.getArgCount(), args.length));
+          }
+          flowOperations.startFlow(new File(args[1]), args[2], runtimeArgs);
         } else if (cmd.equals(CLICommands.LIST)) {
           out.println(StringUtils.join(flowOperations.listAllFlows(), ", "));
         } else if (cmd.equals(CLICommands.STOP)) {
