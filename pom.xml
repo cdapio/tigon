@@ -109,11 +109,6 @@
       </dependency>
       <dependency>
         <groupId>co.cask.tephra</groupId>
-        <artifactId>tephra-api</artifactId>
-        <version>${tephra.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>co.cask.tephra</groupId>
         <artifactId>tephra-hbase-compat-0.94</artifactId>
         <version>${tephra.version}</version>
       </dependency>
