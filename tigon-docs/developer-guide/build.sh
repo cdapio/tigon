@@ -63,9 +63,11 @@ SDK_JAVADOCS="$PROJECT_PATH/$API/target/site/$APIDOCS"
 FULL_JAVADOCS="$PROJECT_PATH/target/site/$APIDOCS"
 
 # Set Google Analytics Codes
-GOOGLE_ANALYTICS_WEB="UA-999-999-999"
+# Corporate Docs Code
+GOOGLE_ANALYTICS_WEB="UA-55077523-3"
 WEB="web"
-GOOGLE_ANALYTICS_GITHUB="UA-123-123-123"
+# Tigon Project Code
+GOOGLE_ANALYTICS_GITHUB="UA-55081520-4"
 GITHUB="github"
 
 function usage() {
@@ -76,6 +78,8 @@ function usage() {
   echo ""
   echo "  Options (select one)"
   echo "    build         Clean build of javadocs and HTML docs, copy javadocs and PDFs into place, zip results"
+  echo "    build-github  Clean build and zip for placing on GitHub"
+  echo "    build-web     Clean build and zip for placing on docs.cask.co webserver"
   echo ""
   echo "    docs          Clean build of docs"
   echo "    javadocs      Clean build of javadocs (selected modules only) for SDK and website"
@@ -133,7 +137,7 @@ function make_zip_html() {
 }
 
 function make_zip() {
-# This creates a zip that unpacks to the same name, but it breaks the current staging directory
+# This creates a zip that unpacks to the same name
   version
   ZIP_DIR_NAME="$PROJECT-docs-$PROJECT_VERSION"
   cd $SCRIPT_PATH/$BUILD
@@ -141,14 +145,20 @@ function make_zip() {
   zip -r $ZIP_DIR_NAME.zip $ZIP_DIR_NAME/*
 }
 
-function make_zip_named() {
-# This creates a zip that unpacks to the same name, but it breaks the current staging directory
+function make_zip_localized() {
+# This creates a named zip that unpacks to the Project Version, localized to english
   version
   ZIP_DIR_NAME="$PROJECT-docs-$PROJECT_VERSION-$1"
   cd $SCRIPT_PATH/$BUILD
-  mv $HTML $ZIP_DIR_NAME
-  zip -r $ZIP_DIR_NAME.zip $ZIP_DIR_NAME/*
+  mkdir $PROJECT_VERSION
+  mv $HTML $PROJECT_VERSION/en
+  zip -r $ZIP_DIR_NAME.zip $PROJECT_VERSION/*
 }
+
+function make_zip_web() {
+  make_zip_localized $WEB
+}
+
 
 function build() {
   build_docs
@@ -157,11 +167,20 @@ function build() {
   make_zip
 }
 
+# function build_web() {
+#   build_docs_google $GOOGLE_ANALYTICS_WEB
+#   build_javadocs
+#   copy_javadocs
+#   make_zip_named $WEB
+# }
+
 function build_web() {
+# This is used to stage files at cdap-integration10031-1000.dev.continuuity.net
+# desired path is docs/cdap/2.5.0-SNAPSHOT/en/*
   build_docs_google $GOOGLE_ANALYTICS_WEB
   build_javadocs
   copy_javadocs
-  make_zip_named $WEB
+  make_zip_localized $WEB
 }
 
 function build_github() {
@@ -169,7 +188,7 @@ function build_github() {
   build_docs_google $GOOGLE_ANALYTICS_GITHUB
   build_javadocs
   copy_javadocs
-  make_zip_named $GITHUB
+  make_zip $GITHUB
   ZIP_DIR_NAME="$PROJECT-docs-$PROJECT_VERSION-$GITHUB"
   cd $SCRIPT_PATH/$BUILD
   touch $ZIP_DIR_NAME/.nojekyll
@@ -225,8 +244,8 @@ fi
 
 case "$1" in
   build )              build; exit 1;;
-  build-web )          build_web; exit 1;;
   build-github )       build_github; exit 1;;
+  build-web )          build_web; exit 1;;
   clean )              clean; exit 1;;
   docs )               build_docs; exit 1;;
   build-standalone )   build_standalone; exit 1;;
@@ -237,5 +256,6 @@ case "$1" in
   version )            print_version; exit 1;;
   test )               test; exit 1;;
   zip )                make_zip; exit 1;;
+  zip-web )            make_zip_web; exit 1;;
   * )                  usage; exit 1;;
 esac
