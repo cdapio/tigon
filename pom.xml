@@ -879,12 +879,6 @@
         </plugins>
       </build>
     </profile>
-
-    <!--Profile to run SQL library build and test-->
-    <profile>
-      <id>SQLLib</id>
-    </profile>
-
   </profiles>
 
 
