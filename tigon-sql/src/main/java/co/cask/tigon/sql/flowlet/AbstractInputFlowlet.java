@@ -36,9 +36,11 @@ import co.cask.tigon.sql.io.GDATDecoder;
 import co.cask.tigon.sql.io.MethodsDriver;
 import co.cask.tigon.sql.util.MetaInformationParser;
 import com.google.common.base.Stopwatch;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import org.apache.commons.io.FileUtils;
+import org.apache.twill.common.Cancellable;
 import org.apache.twill.common.Services;
 import org.apache.twill.filesystem.LocalLocationFactory;
 import org.apache.twill.filesystem.Location;
@@ -49,6 +51,7 @@ import org.slf4j.LoggerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
@@ -70,6 +73,7 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
   private Stopwatch stopwatch;
   private int retryCounter;
   private Map<String, Integer> dataIngestionPortsMap;
+  private List<Cancellable> portsAnnouncementList;
 
   // Default values for runnable configurables.
   private FailurePolicy failurePolicy = FailurePolicy.RETRY;
@@ -181,8 +185,9 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
    * This method initializes all the components required to setup the SQL Compiler environment.
    */
   @Override
-  public void initialize(FlowletContext ctx) throws Exception {
-
+  public final void initialize(FlowletContext ctx) throws Exception {
+    super.initialize(ctx);
+    portsAnnouncementList = Lists.newArrayList();
     DefaultInputFlowletConfigurer configurer = new DefaultInputFlowletConfigurer(this);
     create(configurer);
     InputFlowletSpecification spec = configurer.createInputFlowletSpec();
@@ -289,6 +294,9 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
     } catch (IOException e) {
       LOG.warn("Failed to delete {}", tmpFolder.toURI().toString());
     }
+    for (Cancellable portAnnouncement : portsAnnouncementList) {
+      portAnnouncement.cancel();
+    }
     Services.chainStop(healthInspector, inputFlowletService);
     super.destroy();
   }
@@ -309,11 +317,8 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
   @Override
   public void announceReady() {
     FlowletContext ctx = getContext();
-    if (ctx == null) {
-      return;
-    }
     for (Map.Entry<String, Integer> portEntry : dataIngestionPortsMap.entrySet()) {
-      ctx.announce(portEntry.getKey(), portEntry.getValue());
+      portsAnnouncementList.add(ctx.announce(portEntry.getKey(), portEntry.getValue()));
     }
   }
 }
