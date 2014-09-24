@@ -69,6 +69,7 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
   private GDATRecordQueue recordQueue;
   private Stopwatch stopwatch;
   private int retryCounter;
+  private Map<String, Integer> dataIngestionPortsMap;
 
   // Default values for runnable configurables.
   private FailurePolicy failurePolicy = FailurePolicy.RETRY;
@@ -186,7 +187,7 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
     create(configurer);
     InputFlowletSpecification spec = configurer.createInputFlowletSpec();
 
-    Map<String, Integer> dataIngestionPortsMap = Maps.newHashMap();
+    dataIngestionPortsMap = Maps.newHashMap();
     int httpPort = 0;
     if (ctx.getRuntimeArguments().get(Constants.HTTP_PORT) != null) {
       httpPort = Integer.parseInt(ctx.getRuntimeArguments().get(Constants.HTTP_PORT));
@@ -218,7 +219,7 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
 
     //Initiating Netty TCP I/O ports
     inputFlowletService = new InputFlowletService(binDir, spec, healthInspector, metricsRecorder, recordQueue,
-                                                  dataIngestionPortsMap);
+                                                  dataIngestionPortsMap, this);
     inputFlowletService.startAndWait();
 
     //Starting health monitor service
@@ -303,5 +304,16 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
     healthInspector = new HealthInspector(this);
     inputFlowletService.restartService(healthInspector);
     healthInspector.startAndWait();
+  }
+
+  @Override
+  public void announceReady() {
+    FlowletContext ctx = getContext();
+    if (ctx == null) {
+      return;
+    }
+    for (Map.Entry<String, Integer> portEntry : dataIngestionPortsMap.entrySet()) {
+      ctx.announce(portEntry.getKey(), portEntry.getValue());
+    }
   }
 }

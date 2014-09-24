@@ -17,6 +17,9 @@
 
 package co.cask.tigon.sql.sqlflow;
 
+import co.cask.http.AbstractHttpHandler;
+import co.cask.http.HttpResponder;
+import co.cask.http.NettyHttpService;
 import co.cask.tigon.api.annotation.ProcessInput;
 import co.cask.tigon.api.annotation.RoundRobin;
 import co.cask.tigon.api.flow.Flow;
@@ -32,13 +35,22 @@ import co.cask.tigon.sql.flowlet.GDATFieldType;
 import co.cask.tigon.sql.flowlet.GDATSlidingWindowAttribute;
 import co.cask.tigon.sql.flowlet.StreamSchema;
 import co.cask.tigon.sql.flowlet.annotation.QueryOutput;
+import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Queues;
-import com.google.common.io.ByteStreams;
+import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.jboss.netty.handler.codec.http.HttpRequest;
+import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -47,12 +59,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.net.HttpURLConnection;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
-import java.net.URL;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 
 /**
  * SQLFlowTest
@@ -61,11 +75,25 @@ public class SQLFlowTest extends TestBase {
   private static FlowManager flowManager;
   private static Thread ingestData;
   static final int MAX_TIMESTAMP = 10;
+  static CountDownLatch latch;
+  private static TestHandler handler;
+  private static NettyHttpService service;
 
   @BeforeClass
   public static void beforeClass() throws Exception {
+    latch = new CountDownLatch(MAX_TIMESTAMP);
     Map<String, String> runtimeArgs = Maps.newHashMap();
     //Identifying free port
+    String baseURL;
+    handler = new TestHandler();
+    service = NettyHttpService.builder()
+      .addHttpHandlers(ImmutableList.of(handler))
+      .setPort(getRandomPort())
+      .build();
+    service.startAndWait();
+    InetSocketAddress address = service.getBindAddress();
+    baseURL = "http://" + address.getHostName() + ":" + address.getPort();
+    runtimeArgs.put("baseURL", baseURL);
     final int port = getRandomPort();
     int tcpPort = getRandomPort();
     runtimeArgs.put(Constants.HTTP_PORT, Integer.toString(port));
@@ -75,29 +103,26 @@ public class SQLFlowTest extends TestBase {
     ingestData = new Thread(new Runnable() {
       @Override
       public void run() {
-        HttpURLConnection urlConn = null;
+        HttpClient httpClient = new DefaultHttpClient();
         for (int i = 1; i <= MAX_TIMESTAMP; i++) {
           for (int j = 1; j <= i; j++) {
             try {
-              urlConn = (HttpURLConnection) new URL("http://localhost:" + port + "/v1/tigon/intInput").openConnection();
-              urlConn.setReadTimeout(2000);
-              urlConn.setDoOutput(true);
-              urlConn.setRequestProperty("Content-Type", "application/json");
+              HttpPost httpPost = new HttpPost("http://localhost:" + port + "/v1/tigon/intInput");
               JsonObject bodyJson = new JsonObject();
               JsonArray dataArray = new JsonArray();
-              dataArray.add(new JsonPrimitive(i));
-              dataArray.add(new JsonPrimitive(j));
+              dataArray.add(new JsonPrimitive(Integer.toString(i)));
+              dataArray.add(new JsonPrimitive(Integer.toString(j)));
               bodyJson.add("data", dataArray);
-              ByteStreams.copy(ByteStreams.newInputStreamSupplier(bodyJson.toString().
-                getBytes(com.google.common.base.Charsets.UTF_8)), urlConn.getOutputStream());
-              urlConn.getResponseCode();
+              StringEntity params = new StringEntity(bodyJson.toString());
+              httpPost.addHeader("Content-Type", "application/json");
+              httpPost.setEntity(params);
+              EntityUtils.consumeQuietly(httpClient.execute(httpPost).getEntity());
             } catch (Exception e) {
               Throwables.propagate(e);
-            } finally {
-              urlConn.disconnect();
             }
           }
         }
+        latch.countDown();
       }
     });
   }
@@ -106,10 +131,10 @@ public class SQLFlowTest extends TestBase {
   public void testSQLFlow() throws Exception {
     ingestData.start();
     ingestData.join();
-    TimeUnit.SECONDS.sleep(30);
+    latch.await(60, TimeUnit.SECONDS);
     int dataPacketCounter = MAX_TIMESTAMP;
-    while (sharedDataQueue.size() > 0) {
-      DataPacket dataPacket = sharedDataQueue.poll();
+    DataPacket dataPacket;
+    while ((dataPacket = handler.getData()) != null) {
       Assert.assertEquals(evalSum(dataPacket.timestamp), dataPacket.sumValue);
       dataPacketCounter = dataPacketCounter - 1;
     }
@@ -119,6 +144,7 @@ public class SQLFlowTest extends TestBase {
   @AfterClass
   public static void afterClass() {
     flowManager.stop();
+    service.stopAndWait();
   }
 
   private int evalSum(long val) {
@@ -126,7 +152,6 @@ public class SQLFlowTest extends TestBase {
     return (int) val * ((int) val + 1) / 2;
   }
 
-  static Queue<DataPacket> sharedDataQueue = Queues.newConcurrentLinkedQueue();
 
   public static final class SQLFlow implements Flow {
     @Override
@@ -170,27 +195,33 @@ public class SQLFlowTest extends TestBase {
   private static final class SinkFlowlet extends AbstractFlowlet {
     private final Logger flowletLOG = LoggerFactory.getLogger(SinkFlowlet.class);
     private String flowletName;
+    private String bURL;
+    private HttpClient httpClient;
+
 
     @Override
     public void initialize(FlowletContext context) throws Exception {
       flowletName = context.getName() + "_" + context.getInstanceId();
+      bURL = context.getRuntimeArguments().get("baseURL");
+      httpClient = new DefaultHttpClient();
     }
 
     @RoundRobin
     @ProcessInput
     public void process(DataPacket value) throws Exception {
       flowletLOG.info("{} got {}", flowletName, value.toString());
-      sharedDataQueue.add(value);
-    }
-  }
-
-  class DataPacket {
-    //Using the same data type and variable name as specified in the query output
-    long timestamp;
-    int sumValue;
-
-    public String toString() {
-      return "timestamp : " + timestamp + "\tsumValue : " + sumValue;
+      try {
+        JsonObject bodyJson = new JsonObject();
+        bodyJson.addProperty("time", value.getTime());
+        bodyJson.addProperty("sum", value.getSum());
+        HttpPost httpPost = new HttpPost(bURL + "/ping");
+        StringEntity params = new StringEntity(bodyJson.toString());
+        httpPost.addHeader("Content-Type", "application/json");
+        httpPost.setEntity(params);
+        EntityUtils.consumeQuietly(httpClient.execute(httpPost).getEntity());
+      } catch (Exception e) {
+        Throwables.propagate(e);
+      }
     }
   }
 
@@ -206,4 +237,57 @@ public class SQLFlowTest extends TestBase {
       return -1;
     }
   }
+
+  public final static class TestHandler extends AbstractHttpHandler {
+    private static Gson gsonObject = new Gson();
+    private static JsonObject requestData;
+    private static Queue<DataPacket> queue = Queues.newConcurrentLinkedQueue();
+    private static final Logger LOG = LoggerFactory.getLogger(TestHandler.class);
+
+    public static DataPacket getData() {
+      if (queue.size() > 0) {
+        return queue.poll();
+      }
+      return null;
+    }
+
+    @Path("/ping")
+    @POST
+    public void getPing(HttpRequest request, HttpResponder responder) {
+      try {
+        requestData = gsonObject.fromJson(request.getContent().toString(Charsets.UTF_8), JsonObject.class);
+      } catch (Exception e) {
+        throw new RuntimeException("Cannot parse JSON data from the HTTP response");
+      }
+      DataPacket dataPacket = new DataPacket(requestData.get("time").getAsLong(), requestData.get("sum").getAsInt());
+      LOG.info("/ping Got Data {}", dataPacket.toString());
+      queue.add(dataPacket);
+      latch.countDown();
+      responder.sendStatus(HttpResponseStatus.OK);
+    }
+  }
 }
+
+class DataPacket {
+  //Using the same data type and variable name as specified in the query output
+  long timestamp;
+  int sumValue;
+
+  public String toString() {
+    return "timestamp : " + timestamp + "\tsumValue : " + sumValue;
+  }
+
+  public DataPacket(long timestamp, int sumValue) {
+    this.timestamp = timestamp;
+    this.sumValue = sumValue;
+  }
+
+  public String getTime() {
+    return Long.toString(timestamp);
+  }
+
+  public String getSum() {
+    return Integer.toString(sumValue);
+  }
+}
+
