@@ -139,7 +139,7 @@ function make_zip_html() {
 function make_zip() {
 # This creates a zip that unpacks to the same name
   version
-  ZIP_DIR_NAME="$PROJECT-docs-$PROJECT_VERSION"
+  ZIP_DIR_NAME="$PROJECT-docs-$PROJECT_VERSION-$1"
   cd $SCRIPT_PATH/$BUILD
   mv $HTML $ZIP_DIR_NAME
   zip -r $ZIP_DIR_NAME.zip $ZIP_DIR_NAME/*
@@ -167,16 +167,9 @@ function build() {
   make_zip
 }
 
-# function build_web() {
-#   build_docs_google $GOOGLE_ANALYTICS_WEB
-#   build_javadocs
-#   copy_javadocs
-#   make_zip_named $WEB
-# }
-
 function build_web() {
-# This is used to stage files at cdap-integration10031-1000.dev.continuuity.net
-# desired path is docs/cdap/2.5.0-SNAPSHOT/en/*
+# This is used to stage files
+# desired path is 2.5.0-SNAPSHOT/en/*
   build_docs_google $GOOGLE_ANALYTICS_WEB
   build_javadocs
   copy_javadocs
