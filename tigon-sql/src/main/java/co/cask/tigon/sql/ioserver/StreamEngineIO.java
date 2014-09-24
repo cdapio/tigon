@@ -51,6 +51,7 @@ public class StreamEngineIO extends AbstractIdleService {
   private final Map<String, Integer> portMap;
 
   //TODO Remove GDATRecordQueue parameter from this constructor. Use Guice to inject it directly to OutputServerSocket
+  //TODO Tracked by JIRA TIGON-4
   public StreamEngineIO(InputFlowletSpecification spec, GDATRecordQueue recordQueue, Map<String, Integer> portMap) {
     this.spec = spec;
     this.recordQueue = recordQueue;

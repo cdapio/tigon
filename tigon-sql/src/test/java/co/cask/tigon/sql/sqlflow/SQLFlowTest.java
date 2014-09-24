@@ -75,11 +75,11 @@ public class SQLFlowTest extends TestBase {
     ingestData = new Thread(new Runnable() {
       @Override
       public void run() {
-        try {
-          for (int i = 1; i <= MAX_TIMESTAMP; i++) {
-            for (int j = 1; j <= i; j++) {
-              HttpURLConnection urlConn =
-                (HttpURLConnection) new URL("http://localhost:" + port + "/v1/tigon/intInput").openConnection();
+        HttpURLConnection urlConn = null;
+        for (int i = 1; i <= MAX_TIMESTAMP; i++) {
+          for (int j = 1; j <= i; j++) {
+            try {
+              urlConn = (HttpURLConnection) new URL("http://localhost:" + port + "/v1/tigon/intInput").openConnection();
               urlConn.setReadTimeout(2000);
               urlConn.setDoOutput(true);
               urlConn.setRequestProperty("Content-Type", "application/json");
@@ -91,10 +91,12 @@ public class SQLFlowTest extends TestBase {
               ByteStreams.copy(ByteStreams.newInputStreamSupplier(bodyJson.toString().
                 getBytes(com.google.common.base.Charsets.UTF_8)), urlConn.getOutputStream());
               urlConn.getResponseCode();
+            } catch (Exception e) {
+              Throwables.propagate(e);
+            } finally {
+              urlConn.disconnect();
             }
           }
-        } catch (Exception e) {
-          Throwables.propagate(e);
         }
       }
     });
