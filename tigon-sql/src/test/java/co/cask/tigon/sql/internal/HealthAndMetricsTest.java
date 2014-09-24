@@ -169,8 +169,8 @@ public class HealthAndMetricsTest {
     new Thread(new MockPing()).start();
 
     LOG.info("Initiated 5 mock pings");
-    //Check state a second after the last mock ping
-    Assert.assertTrue(!latch.await(2, TimeUnit.SECONDS));
+    //Check state 250ms after the last mock ping
+    Assert.assertTrue(!latch.await(250, TimeUnit.MILLISECONDS));
     LOG.info("No failure Detected");
 
     LOG.info("Expecting heartbeat detection failure");
