@@ -11,41 +11,48 @@ General
 
 **What is Tigon?**
 
-**Tigon** is an open-source, real-time, low-latency, high-throughput stream processing framework.
+**Tigon** is an open-source, real-time stream processing framework built on top of Hadoop |(TM)| and HBase.
 
 **Who is Tigon intended for?**
 
-
+Developers who are interested in creating powerful, yet simple-to-develop stream processing
+applications that can handle large volumes of data.
 
 **What are some of the applications that can be built on Tigon?**
 
-
+- Processing stream sources such as Twitter, Webserver Logs
+- Rapid Joining, Filtering, and Aggregating of Streams
 
 **How does Tigon work?**
 
-This is explained in our `Tigon Concepts and Architecture <architecture>`__ guide.
+Tigon is built on top of Hadoop/HBase. It uses the 
+`Tephra Transaction Engine <https://github.com/caskco/tephra>`__ and Twill
+for spinning up YARN applications. For in-memory stream processing, it uses the TigonSQL
+in-memory stream processing engine developed by AT&T.
 
 **What is the difference between Tigon and Cask's other projects, such as CDAP?**
 
-Tigon is oriented around solving a specific problem: rapid ingestion of data.
-The `Cask Data Application Platform (CDAP) <http:cask.co/cdap>`__ is a generalized 
-data application platform designed for solving a wider range of problems. 
+Tigon is focused on solving the issues faced in real-time stream processing. 
+
+The `Cask Data Application Platform (CDAP) <http:cask.co/cdap>`__ is a generalized 'Big
+Data' application platform with additional features such as dataset abstractions, batch job
+integration, and security.
 
 **What's the vision for Tigon?**
 
+Enable every Java developer to create powerful, real-time stream processing applications.
 
+.. **How fast will Tigon import data?**
 
-**How fast will Tigon import data?**
-
-
-
-**How big a cluster has Tigon been run on?**
+.. **How big a cluster has Tigon been run on?**
 
 
 Running Tigon
 =============
 
 **How do I get started with Tigon?**
+
+Download the tar.gz, untar it and checkout the examples! 
 
 See our `Getting Started With Tigon <getting-started>`__ guide.
 
@@ -57,23 +64,27 @@ for a list of prerequisites.
 **What platforms and Java version does Tigon run on?**
 
 Tigon runs on \*NIX systems such as Linux and Macintosh OS X.
-A Java Development Kit such as JDK 6 or JDK 7 is required to run Tigon.
+A Java Development Kit such as JDK 6 or JDK 7, and
+ is required to run Tigon.
 
-**Are there Tigon RPM or Debian packages available for download?**
-
+.. **Are there Tigon RPM or Debian packages available for download?**
 
 
 **Does Tigon run on Windows?**
 
-Currently, Tigon is not supported on Windows.
+Currently, Tigon does not run on Windows.
 
 **What hardware do I need for Tigon?**
 
+Tigon runs on the same hardware that would support Hadoop/HBase.
 
 **What programming languages are supported by Tigon?**
 
-Applications that use Tigon currently need to be written in Java.
+Applications that use Tigon currently need to be written in Java. 
+If you are using TigonSQL, commands are written in an SQL dialect.
 
+If you are running TigonSQL in standalone mode or are running unit tests,
+certain elements are written in Perl and Python.
 
 Tigon Support
 =========================
@@ -129,3 +140,5 @@ here's how to do it:
 #. After we review and accept your request, we’ll commit your code to the 
    `cask/tigon <https://github.com/caskco/tigon>`__ repository.
    
+.. |(TM)| unicode:: U+2122 .. trademark sign
+   :ltrim:
