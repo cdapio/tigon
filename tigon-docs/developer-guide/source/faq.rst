@@ -64,8 +64,7 @@ for a list of prerequisites.
 **What platforms and Java version does Tigon run on?**
 
 Tigon runs on \*NIX systems such as Linux and Macintosh OS X.
-A Java Development Kit such as JDK 6 or JDK 7, and
- is required to run Tigon.
+A Java Development Kit such as JDK 6 or JDK 7 is required to run Tigon.
 
 .. **Are there Tigon RPM or Debian packages available for download?**
 
