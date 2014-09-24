@@ -33,8 +33,8 @@
     <module>tigon-yarn</module>
     <module>tigon-client</module>
     <module>tigon-sql</module>
-    <module>hbase-compat-0.94</module>
-    <module>hbase-compat-0.96</module>
+    <module>tigon-hbase-compat-0.94</module>
+    <module>tigon-hbase-compat-0.96</module>
     <module>tigon-flow</module>
     <module>tigon-distribution</module>
   </modules>
