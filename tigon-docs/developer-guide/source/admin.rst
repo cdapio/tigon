@@ -47,7 +47,7 @@ the YARN UI, located at ``http://<master-node>:8088``. For the example above, th
 
 The distributed mode has a command-line interface that can be used to control the Flow and
 its lifecycle. A complete list of available commands is documented in the `Tigon Tools <tools.html>`__;
-to list the running Flows, you can use:
+to list the running Flows, you can use::
 
   tigon > list
 
