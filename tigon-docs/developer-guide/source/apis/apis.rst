@@ -21,10 +21,10 @@ Tigon SQL
 
 - For developers who are writing extensions to Tigon SQL:
 
-  `Tigon SQL Contributor Manual <../_downloads/Contributor_Manual_2014_rev1.html>`__
+  `Tigon SQL Contributor Manual <../_downloads/Tigon_SQL_Contributor_Manual_2014_v2.pdf>`__
 
 :download:`  </apis/sql/Tigon_SQL_User_Manual_2014_v4.pdf>`
-:download:`  </apis/sql/Contributor_Manual_2014_rev1.html>`
+:download:`  </apis/sql/Tigon_SQL_Contributor_Manual_2014_v2.pdf>`
 
 
 Where to Go Next
