@@ -192,7 +192,7 @@
                 <exclude>**/c/**/*lexer.cc</exclude>
                 <exclude>**/gscpaux/*block_allocator*</exclude>
                 <exclude>**/gscpaux/*json*</exclude>
-		<exclude>**/ftacmp/translate_fta.gcov.gcno</exclude>
+		            <exclude>**/ftacmp/translate_fta.gcov.gcno</exclude>
                 <!--tigon sql library test data-->
                 <exclude>**/scripts/**/packet_schema_test.txt</exclude>
                 <exclude>**/scripts/**/Expected*.txt</exclude>
