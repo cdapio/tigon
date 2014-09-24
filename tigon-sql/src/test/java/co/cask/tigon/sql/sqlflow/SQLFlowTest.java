@@ -238,11 +238,11 @@ public class SQLFlowTest extends TestBase {
     }
   }
 
-  public final static class TestHandler extends AbstractHttpHandler {
+  public static final class TestHandler extends AbstractHttpHandler {
+    private static final Logger LOG = LoggerFactory.getLogger(TestHandler.class);
     private static Gson gsonObject = new Gson();
     private static JsonObject requestData;
     private static Queue<DataPacket> queue = Queues.newConcurrentLinkedQueue();
-    private static final Logger LOG = LoggerFactory.getLogger(TestHandler.class);
 
     public static DataPacket getData() {
       if (queue.size() > 0) {
