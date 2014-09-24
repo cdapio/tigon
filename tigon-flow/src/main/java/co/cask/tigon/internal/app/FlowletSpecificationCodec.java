@@ -47,6 +47,7 @@ final class FlowletSpecificationCodec extends AbstractSpecificationCodec<Flowlet
     jsonObj.add("properties", serializeMap(src.getProperties(), context, String.class));
     jsonObj.add("resources", context.serialize(src.getResources(),
                                                new TypeToken<ResourceSpecification>() { }.getType()));
+    jsonObj.add("maxInstances", new JsonPrimitive(src.getMaxInstances()));
 
     return jsonObj;
   }
@@ -63,7 +64,8 @@ final class FlowletSpecificationCodec extends AbstractSpecificationCodec<Flowlet
     Map<String, String> properties = deserializeMap(jsonObj.get("properties"), context, String.class);
     ResourceSpecification resources = context.deserialize(jsonObj.get("resources"),
                                                           new TypeToken<ResourceSpecification>() { }.getType());
+    int maxInstances = jsonObj.get("maxInstances").getAsInt();
 
-    return new DefaultFlowletSpecification(className, name, description, policy, properties, resources);
+    return new DefaultFlowletSpecification(className, name, description, policy, properties, resources, maxInstances);
   }
 }

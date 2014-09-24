@@ -1,0 +1,6 @@
+DEFINE {
+query_name 'example2';
+}
+select systemTime,uintInPosition1,sum(Cnt)
+from CSVEXAMPLELIB/ex2_src
+group by systemTime,uintInPosition1

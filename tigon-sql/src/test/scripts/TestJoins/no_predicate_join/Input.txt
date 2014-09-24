@@ -1,0 +1,4 @@
+ABC|VSC|21
+XYZ|DEF|11
+ABC|DEF|19
+abc|def|12
