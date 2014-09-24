@@ -102,14 +102,18 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
   @Override
   public void addTransactionAware(TransactionAware transactionAware) {
     transactionAwares.add(transactionAware);
-    transactionContext.addTransactionAware(transactionAware);
+    if (transactionContext != null) {
+      transactionContext.addTransactionAware(transactionAware);
+    }
   }
 
   @Override
   public void addTransactionAwares(Iterable<? extends TransactionAware> transactionAwares) {
     Iterables.addAll(this.transactionAwares, transactionAwares);
-    for (TransactionAware transactionAware : transactionAwares) {
-      this.transactionContext.addTransactionAware(transactionAware);
+    if (transactionContext != null) {
+      for (TransactionAware transactionAware : transactionAwares) {
+        transactionContext.addTransactionAware(transactionAware);
+      }
     }
   }
 
