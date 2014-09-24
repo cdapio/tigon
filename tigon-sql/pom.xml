@@ -194,9 +194,10 @@
                 <exclude>**/gscpaux/*json*</exclude>
                 <exclude>**/ftacmp/translate_fta.gcov.gcno</exclude>
                 <!--tigon sql library test data-->
-                <exclude>**/scripts/**/packet_schema_test.txt</exclude>
-                <exclude>**/scripts/**/Expected*.txt</exclude>
-                <exclude>**/scripts/**/Input*.txt</exclude>
+                <exclude>**/scripts/**/*.txt</exclude>
+                <exclude>**/scripts/**/*.out</exclude>
+                <exclude>**/scripts/**/*.cfg</exclude>
+                <exclude>**/scripts/**/gen_feed</exclude>
               </excludes>
             </configuration>
           </execution>

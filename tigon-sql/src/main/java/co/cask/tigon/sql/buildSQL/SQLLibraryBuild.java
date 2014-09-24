@@ -18,6 +18,8 @@
 package co.cask.tigon.sql.buildsql;
 
 import co.cask.tigon.sql.util.Platform;
+import org.apache.twill.filesystem.LocalLocationFactory;
+import org.apache.twill.filesystem.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -34,7 +36,7 @@ public class SQLLibraryBuild {
   private static final Logger LOG = LoggerFactory.getLogger(SQLLibraryBuild.class);
 
   public static void main(String[] args) throws IOException, InterruptedException {
-    if ((System.getProperty("skipSQLLib") != null) || (System.getProperty("skipSQLBuild") != null)) {
+    if ((System.getProperty("SQLLib") == null) && (System.getProperty("SQLBuild") == null)) {
       LOG.info("Skipping SQL library build");
       return;
     }
@@ -53,8 +55,11 @@ public class SQLLibraryBuild {
       throw new RuntimeException("Failed to compile SQL Library. Make process exited with exit value " +
                                    makeInstall.exitValue());
     }
+    Location target = new LocalLocationFactory().create(System.getProperty("user.dir") + "/tigon-sql/target");
+    target.mkdirs();
+    target.append("classes").mkdirs();
     ProcessBuilder createTarBuilder = new ProcessBuilder("tar",
-                                                         "cvfz", "src/main/resources/" + Platform.libraryResource(),
+                                                         "cvfz", "target/classes/" + Platform.libraryResource(),
                                                          "bin", "lib", "include", "cfg").redirectErrorStream(true);
     createTarBuilder.directory(new File(System.getProperty("user.dir") + "/tigon-sql/"));
     LOG.info("Creating tar ball");
