@@ -83,11 +83,26 @@ public class HealthAndMetricsTest {
         }
         latch.countDown();
       }
+
+      @Override
+      public void announceReady() {
+        //no-op
+      }
     });
 
     metrics = new SharedMetrics();
     MetricsRecorder metricsRecorder = new MetricsRecorder(metrics);
-    discoveryServer = new DiscoveryServer(hubDataStore, inspector, metricsRecorder);
+    discoveryServer = new DiscoveryServer(hubDataStore, inspector, metricsRecorder, new ProcessMonitor() {
+      @Override
+      public void notifyFailure(Set<String> errorProcessNames) {
+        //no-op
+      }
+
+      @Override
+      public void announceReady() {
+        //no-op
+      }
+    });
     discoveryServer.startAndWait();
   }
 

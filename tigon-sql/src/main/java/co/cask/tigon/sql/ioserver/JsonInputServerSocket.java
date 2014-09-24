@@ -50,9 +50,13 @@ public class JsonInputServerSocket extends InputServerSocket {
   private static final Type MAP_TYPE = new TypeToken<Map<String, List<String>>>() { }.getType();
   private final StreamSchema schema;
 
-  public JsonInputServerSocket(ChannelFactory factory, String name, StreamSchema inputSchema) {
-    super(factory, name, inputSchema);
+  public JsonInputServerSocket(ChannelFactory factory, String name, StreamSchema inputSchema, int port) {
+    super(factory, name, inputSchema, port);
     this.schema = inputSchema;
+  }
+
+  public JsonInputServerSocket(ChannelFactory factory, String name, StreamSchema inputSchema) {
+    this(factory, name, inputSchema, 0);
   }
 
   @Override
