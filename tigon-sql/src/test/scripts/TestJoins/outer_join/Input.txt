@@ -1,0 +1,10 @@
+ABC|CSV|17
+ABC|VSC|21
+ABC|xyz|18
+ZYX|DEF|21
+XYZ|DEF|11
+abc|DEF|19
+abc|def|15
+CSV|abc|16
+HHH|BBC|20
+abc|def|19

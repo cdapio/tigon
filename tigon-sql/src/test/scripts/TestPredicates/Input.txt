@@ -1,0 +1,5 @@
+ABCDabcd|56|398.21|TRUE
+dcbaDCAB|4546|678.43|FALSE
+TESTtestTEST|876|45.7345|TRUE
+SomeOtherString|9997878|90810.56|false
+string_with space etc|4555|0.43|true

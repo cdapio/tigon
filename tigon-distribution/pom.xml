@@ -51,12 +51,12 @@
     </dependency>
     <dependency>
       <groupId>co.cask.tigon</groupId>
-      <artifactId>hbase-compat-0.94</artifactId>
+      <artifactId>tigon-hbase-compat-0.94</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>co.cask.tigon</groupId>
-      <artifactId>hbase-compat-0.96</artifactId>
+      <artifactId>tigon-hbase-compat-0.96</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

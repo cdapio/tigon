@@ -113,7 +113,7 @@ public class HealthInspector extends AbstractIdleService {
             serviceFailed.notifyFailure(missingHeartbeatRecord);
           }
         }
-      }, Constants.HEARTBEAT_FREQUENCY
+      }, 2 * Constants.HEARTBEAT_FREQUENCY
       , Constants.HEARTBEAT_FREQUENCY
       , TimeUnit.SECONDS);
   }

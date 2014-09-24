@@ -28,4 +28,9 @@ public interface ProcessMonitor {
    * @param errorProcessNames Set of all processes for which no heartbeat was detected
    */
   public void notifyFailure(Set<String> errorProcessNames);
+
+  /**
+   * Method invoked when the program is ready for data ingestion
+   */
+  public void announceReady();
 }

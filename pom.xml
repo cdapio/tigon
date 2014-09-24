@@ -33,8 +33,8 @@
     <module>tigon-yarn</module>
     <module>tigon-client</module>
     <module>tigon-sql</module>
-    <module>hbase-compat-0.94</module>
-    <module>hbase-compat-0.96</module>
+    <module>tigon-hbase-compat-0.94</module>
+    <module>tigon-hbase-compat-0.96</module>
     <module>tigon-flow</module>
     <module>tigon-examples</module>
     <module>tigon-distribution</module>
@@ -97,6 +97,11 @@
         <groupId>co.cask.http</groupId>
         <artifactId>netty-http</artifactId>
         <version>${nettyhttp.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>co.cask.tephra</groupId>
+        <artifactId>tephra-api</artifactId>
+        <version>${tephra.version}</version>
       </dependency>
       <dependency>
         <groupId>co.cask.tephra</groupId>

@@ -20,6 +20,7 @@ import co.cask.tigon.api.metrics.Metrics;
 import co.cask.tigon.sql.conf.Constants;
 import co.cask.tigon.sql.manager.DiscoveryServer;
 import co.cask.tigon.sql.manager.HubDataStore;
+import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonObject;
 import org.apache.http.client.HttpClient;
@@ -48,8 +49,10 @@ public class HealthAndMetricsTest {
   private static final Logger LOG = LoggerFactory.getLogger(HealthInspector.class);
   private static HealthInspector inspector;
   private static DiscoveryServer discoveryServer;
-  private static CountDownLatch latch;
+  private static CountDownLatch failureLatch;
+  private static CountDownLatch pingLatch;
   private static Metrics metrics;
+  private static final int PING_COUNT = 5;
 
   static class SharedMetrics implements Metrics {
     private static Map<String, Integer> metricsValue = Maps.newHashMap();
@@ -70,7 +73,8 @@ public class HealthAndMetricsTest {
 
   @BeforeClass
   public static void setup() throws Exception {
-    latch = new CountDownLatch(1);
+    failureLatch = new CountDownLatch(1);
+    pingLatch = new CountDownLatch(PING_COUNT);
     HubDataStore hubDataStore = new HubDataStore.Builder()
       .setInstanceName("test")
       .build();
@@ -81,13 +85,28 @@ public class HealthAndMetricsTest {
         for (String error : errorProcessNames) {
           LOG.error("No Heartbeat received from " + error);
         }
-        latch.countDown();
+        failureLatch.countDown();
+      }
+
+      @Override
+      public void announceReady() {
+        //no-op
       }
     });
 
     metrics = new SharedMetrics();
     MetricsRecorder metricsRecorder = new MetricsRecorder(metrics);
-    discoveryServer = new DiscoveryServer(hubDataStore, inspector, metricsRecorder);
+    discoveryServer = new DiscoveryServer(hubDataStore, inspector, metricsRecorder, new ProcessMonitor() {
+      @Override
+      public void notifyFailure(Set<String> errorProcessNames) {
+        //no-op
+      }
+
+      @Override
+      public void announceReady() {
+        //no-op
+      }
+    });
     discoveryServer.startAndWait();
   }
 
@@ -125,7 +144,7 @@ public class HealthAndMetricsTest {
       @Override
       public void run() {
         HttpClient httpClient = new DefaultHttpClient();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < PING_COUNT; i++) {
           try {
             Thread.sleep(1000);
           } catch (InterruptedException e) {
@@ -141,15 +160,11 @@ public class HealthAndMetricsTest {
           StringEntity params = null;
           try {
             params = new StringEntity(bodyJson.toString());
-          } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-          }
-          httpPost.addHeader("Content-Type", "application/json");
-          httpPost.setEntity(params);
-          try {
+            httpPost.addHeader("Content-Type", "application/json");
+            httpPost.setEntity(params);
             EntityUtils.consumeQuietly(httpClient.execute(httpPost).getEntity());
           } catch (IOException e) {
-            e.printStackTrace();
+            Throwables.propagate(e);
           }
           LOG.info("Pinged with Metrics {}", bodyJson.toString());
         }
@@ -159,25 +174,27 @@ public class HealthAndMetricsTest {
     inspector.startAndWait();
     LOG.info("Started monitoring...");
 
-    TimeUnit.SECONDS.sleep(Constants.INITIALIZATION_TIMEOUT - 2);
+    TimeUnit.SECONDS.sleep(Constants.INITIALIZATION_TIMEOUT - 3);
     register("IronMan", "RobertDowneyJr", pingURL);
     LOG.info("IronMan Registered");
-    Assert.assertTrue(!latch.await(0, TimeUnit.SECONDS));
+    Assert.assertTrue(!failureLatch.await(0, TimeUnit.SECONDS));
     LOG.info("No failure detected");
 
-    //Initiate 5 mock pings. 1 per second
+    //Initiate PING_COUNT mock pings, 1 per second
     new Thread(new MockPing()).start();
 
-    LOG.info("Initiated 5 mock pings");
-    //Check state a second after the last mock ping
-    Assert.assertTrue(!latch.await(2, TimeUnit.SECONDS));
+    LOG.info("Initiated {} mock pings", PING_COUNT);
+    //Check state 250ms after the first mock ping
+    Assert.assertTrue(!failureLatch.await(250, TimeUnit.MILLISECONDS));
     LOG.info("No failure Detected");
 
     LOG.info("Expecting heartbeat detection failure");
-    //Check state >2 seconds after the last mock ping
-    Assert.assertTrue(latch.await(10, TimeUnit.SECONDS));
+    pingLatch.await(30, TimeUnit.SECONDS);
+    //Check state after the last mock ping (timeout > HEARTBEAT_FREQUENCY)
+    Assert.assertTrue(failureLatch.await(30, TimeUnit.SECONDS));
 
     //Check value of awesomeCounter at the end
-    Assert.assertTrue(SharedMetrics.getCounter("RobertDowneyJr.awesomeCounter").equals(10));
+    Assert.assertTrue(SharedMetrics.getCounter("RobertDowneyJr.awesomeCounter")
+                        .equals((PING_COUNT - 1) * PING_COUNT / 2));
   }
 }

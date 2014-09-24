@@ -73,6 +73,11 @@ public class DiscoveryServerTest {
           LOG.error("No Heartbeat received from " + error);
         }
       }
+
+      @Override
+      public void announceReady() {
+        //no-op
+      }
     });
     MetricsRecorder metricsRecorder = new MetricsRecorder(new Metrics() {
       @Override
@@ -80,7 +85,17 @@ public class DiscoveryServerTest {
         LOG.info("[METRICS] CounterName : {}\tValue last second : {}", counterName, delta);
       }
     });
-    discoveryServer = new DiscoveryServer(hubDataStore, inspector, metricsRecorder);
+    discoveryServer = new DiscoveryServer(hubDataStore, inspector, metricsRecorder, new ProcessMonitor() {
+      @Override
+      public void notifyFailure(Set<String> errorProcessNames) {
+        //no-op
+      }
+
+      @Override
+      public void announceReady() {
+        //no-op
+      }
+    });
     discoveryServer.startAndWait();
     baseURI = URI.create(String.format("http://" + discoveryServer.getHubAddress().getAddress().getHostAddress() +
                                          ":" + discoveryServer.getHubAddress().getPort()));

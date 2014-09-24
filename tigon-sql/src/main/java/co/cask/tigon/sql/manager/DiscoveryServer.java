@@ -19,6 +19,7 @@ package co.cask.tigon.sql.manager;
 import co.cask.http.NettyHttpService;
 import co.cask.tigon.sql.internal.HealthInspector;
 import co.cask.tigon.sql.internal.MetricsRecorder;
+import co.cask.tigon.sql.internal.ProcessMonitor;
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.AbstractIdleService;
 import org.slf4j.Logger;
@@ -34,13 +35,14 @@ public class DiscoveryServer extends AbstractIdleService {
   private final HubDataStore hubDataStore;
   private final HealthInspector inspector;
   private final MetricsRecorder metricsRecorder;
+  private final ProcessMonitor processMonitor;
 
   private NettyHttpService service;
   private InetSocketAddress serviceAddress;
 
   @Override
   public void startUp() {
-    HubHttpHandler handler = new HubHttpHandler(hubDataStore, inspector, metricsRecorder);
+    HubHttpHandler handler = new HubHttpHandler(hubDataStore, inspector, metricsRecorder, processMonitor);
     NettyHttpService.Builder builder = NettyHttpService.builder();
     builder.addHttpHandlers(ImmutableList.of(handler));
     service = builder.build();
@@ -55,10 +57,12 @@ public class DiscoveryServer extends AbstractIdleService {
     service.stopAndWait();
   }
 
-  public DiscoveryServer(HubDataStore ds, HealthInspector inspector, MetricsRecorder metricsRecorder) {
+  public DiscoveryServer(HubDataStore ds, HealthInspector inspector, MetricsRecorder metricsRecorder,
+                         ProcessMonitor monitor) {
     hubDataStore = ds;
     this.inspector = inspector;
     this.metricsRecorder = metricsRecorder;
+    this.processMonitor = monitor;
   }
 
   public InetSocketAddress getHubAddress() {
