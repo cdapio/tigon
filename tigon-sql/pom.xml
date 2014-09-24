@@ -55,11 +55,6 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>co.cask.tigon</groupId>
-      <artifactId>tigon-flow</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
       <groupId>co.cask.http</groupId>
       <artifactId>netty-http</artifactId>
     </dependency>
@@ -107,13 +102,13 @@
     <dependency>
       <groupId>co.cask.tephra</groupId>
       <artifactId>tephra-core</artifactId>
-      <version>0.3.0</version>
+      <version>${tephra.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>co.cask.tephra</groupId>
       <artifactId>tephra-api</artifactId>
-      <version>0.3.0</version>
+      <version>${tephra.version}</version>
       <scope>test</scope>
     </dependency>
 
