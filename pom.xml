@@ -36,9 +36,9 @@
     <module>hbase-compat-0.94</module>
     <module>hbase-compat-0.96</module>
     <module>tigon-flow</module>
+    <module>tigon-unit-test</module>
     <module>tigon-distribution</module>
     <module>tigon-archetypes</module>
-    <module>tigon-unit-test</module>
   </modules>
 
   <repositories>
