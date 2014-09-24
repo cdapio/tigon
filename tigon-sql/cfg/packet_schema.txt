@@ -1,0 +1,36 @@
+PROTOCOL base{
+	uint systemTime get_system_time (low_cardinality,required,increasing, snap_len 0);
+}
+
+PROTOCOL CSV_EXAMPLE (base) {
+	uint uintInPosition1  get_csv_uint_pos1;
+	ullong ullongInPosition2 get_csv_ullong_pos2;
+	IP ipInPosition3 get_csv_ip_pos3;
+	IPV6 ipv6InPosition4 get_csv_ipv6_pos4;
+	string stringInPosition5 get_csv_string_pos5;
+	bool boolInPosition6 get_csv_bool_pos6;
+	int intInPosition7 get_csv_int_pos7;
+	llong llongInPosition8 get_csv_llong_pos8;
+	float floatInPosition9 get_csv_float_pos9;
+}
+
+
+PROTOCOL CSV_TCPEXAMPLE (base) {
+	uint ivalue get_csv_uint_pos1 (increasing);
+	uint value get_csv_uint_pos2;
+}
+
+PROTOCOL GDAT_EXAMPLE (base) {
+	uint uintOldTime get_gdat_uint_pos1;
+        uint uintInPosition1  get_gdat_uint_pos2;
+        ullong ullongInPosition2 get_gdat_ullong_pos3;
+        IP ipInPosition3 get_gdat_ip_pos4;
+        IPV6 ipv6InPosition4 get_gdat_ipv6_pos5;
+        string stringInPosition5 get_gdat_string_pos6;
+        bool boolInPosition6 get_gdat_bool_pos7;
+        int intInPosition7 get_gdat_int_pos8;
+        llong llongInPosition8 get_gdat_llong_pos9;
+        float floatInPosition9 get_gdat_float_pos10;
+}
+
+

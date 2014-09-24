@@ -19,14 +19,11 @@ package co.cask.tigon.sql.io;
 import co.cask.http.AbstractHttpHandler;
 import co.cask.http.HttpResponder;
 import co.cask.http.NettyHttpService;
-import co.cask.tigon.sql.conf.Constants;
 import com.google.common.collect.ImmutableList;
 import com.google.common.util.concurrent.AbstractIdleService;
 import org.apache.twill.common.Cancellable;
 import org.apache.twill.common.ServiceListenerAdapter;
 import org.apache.twill.common.Threads;
-import org.apache.twill.discovery.Discoverable;
-import org.apache.twill.discovery.DiscoveryService;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.slf4j.Logger;
@@ -43,19 +40,25 @@ import javax.ws.rs.PathParam;
  */
 public class DataIngestionRouter extends AbstractIdleService {
   private static final Logger LOG = LoggerFactory.getLogger(DataIngestionRouter.class);
-  private final DiscoveryService discoveryService;
   private final HttpRouterClientService clientService;
+  private int httpPort;
   private NettyHttpService httpService;
 
-  public DataIngestionRouter(DiscoveryService discoveryService, Map<String, InetSocketAddress> ingestionServerMap) {
-    this.discoveryService = discoveryService;
+  public DataIngestionRouter(Map<String, InetSocketAddress> ingestionServerMap) {
+    this(ingestionServerMap, 0);
+  }
+
+  public DataIngestionRouter(Map<String, InetSocketAddress> ingestionServerMap,
+                             int httpPort) {
     this.clientService = new HttpRouterClientService(ingestionServerMap);
+    this.httpPort = httpPort;
   }
 
   @Override
   protected void startUp() throws Exception {
     httpService = NettyHttpService.builder()
       .addHttpHandlers(ImmutableList.of(new ForwardingHandler(clientService)))
+      .setPort(httpPort)
       .build();
     httpService.addListener(new ServiceListenerAdapter() {
       private Cancellable cancellable;
@@ -64,19 +67,6 @@ public class DataIngestionRouter extends AbstractIdleService {
       public void running() {
         final InetSocketAddress socketAddress = httpService.getBindAddress();
         LOG.info("Data Ingestion Router HTTP Service started at {}", socketAddress);
-
-        cancellable = discoveryService.register(new Discoverable() {
-
-          @Override
-          public String getName() {
-            return Constants.StreamIO.HTTP_DATA_INGESTION;
-          }
-
-          @Override
-          public InetSocketAddress getSocketAddress() {
-            return socketAddress;
-          }
-        });
       }
 
       @Override
