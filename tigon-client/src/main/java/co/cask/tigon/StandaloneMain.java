@@ -29,10 +29,7 @@ import co.cask.tigon.guice.LocationRuntimeModule;
 import co.cask.tigon.internal.app.runtime.ProgramController;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import co.cask.tigon.metrics.NoOpMetricsCollectionService;
-import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.io.Files;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -41,7 +38,6 @@ import com.google.inject.Module;
 import com.google.inject.Scopes;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.conf.Configuration;
-import org.apache.twill.filesystem.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -113,7 +109,7 @@ public class StandaloneMain {
 
       Map<String, String> runtimeArgs = null;
       try {
-         runtimeArgs = fromPosixArray(Arrays.copyOfRange(args, 2, args.length));
+         runtimeArgs = DeployClient.fromPosixArray(Arrays.copyOfRange(args, 2, args.length));
       } catch (IllegalArgumentException e) {
         usage(true);
       }
@@ -181,18 +177,5 @@ public class StandaloneMain {
     protected void configure() {
       bind(MetricsCollectionService.class).to(NoOpMetricsCollectionService.class).in(Scopes.SINGLETON);
     }
-  }
-
-  /**
-   * Converts a POSIX compliant program argument array to a String-to-String Map.
-   * @param args Array of Strings where each element is a POSIX compliant program argument (Ex: "--os=Linux" ).
-   * @return Map of argument Keys and Values (Ex: Key = "os" and Value = "Linux").
-   */
-  private static Map<String, String> fromPosixArray(String[] args) {
-    Map<String, String> kvMap = Maps.newHashMap();
-    for (String arg : args) {
-      kvMap.putAll(Splitter.on("--").omitEmptyStrings().trimResults().withKeyValueSeparator("=").split(arg));
-    }
-    return kvMap;
   }
 }

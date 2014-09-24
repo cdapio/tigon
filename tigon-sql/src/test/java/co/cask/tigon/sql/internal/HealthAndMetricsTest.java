@@ -83,11 +83,26 @@ public class HealthAndMetricsTest {
         }
         latch.countDown();
       }
+
+      @Override
+      public void announceReady() {
+        //no-op
+      }
     });
 
     metrics = new SharedMetrics();
     MetricsRecorder metricsRecorder = new MetricsRecorder(metrics);
-    discoveryServer = new DiscoveryServer(hubDataStore, inspector, metricsRecorder);
+    discoveryServer = new DiscoveryServer(hubDataStore, inspector, metricsRecorder, new ProcessMonitor() {
+      @Override
+      public void notifyFailure(Set<String> errorProcessNames) {
+        //no-op
+      }
+
+      @Override
+      public void announceReady() {
+        //no-op
+      }
+    });
     discoveryServer.startAndWait();
   }
 
@@ -169,8 +184,8 @@ public class HealthAndMetricsTest {
     new Thread(new MockPing()).start();
 
     LOG.info("Initiated 5 mock pings");
-    //Check state a second after the last mock ping
-    Assert.assertTrue(!latch.await(2, TimeUnit.SECONDS));
+    //Check state 250ms after the last mock ping
+    Assert.assertTrue(!latch.await(250, TimeUnit.MILLISECONDS));
     LOG.info("No failure Detected");
 
     LOG.info("Expecting heartbeat detection failure");
