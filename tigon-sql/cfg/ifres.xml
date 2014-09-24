@@ -1,0 +1,23 @@
+<Resources>
+     <Host Name='localhost'>
+	  <Interface Name='GDATO'>
+	    <InterfaceType value='GDAT'/><Filename value='exampleGdat'/>
+	    <StartupDelay value='10'/>
+	    <Verbose value='TRUE'/>
+	  </Interface>
+	  <Interface Name='CSV0'>
+	    <InterfaceType value='CSV'/>
+	    <CSVSeparator value='|'/>
+	    <Filename value='exampleCsv'/>
+	    <StartUpDelay value='10'/>
+	    <Verbose value='TRUE'/>
+	  </Interface>
+	  <Interface Name='CSV0TCP'>
+	    <InterfaceType value='CSVTCP'/>
+	    <CSVSeparator value='|'/>
+	    <TcpPort value='45678'/>
+	    <StartUpDelay value='10'/>
+	    <Verbose value='TRUE'/>
+	  </Interface>
+	 </Host>
+</Resources>
