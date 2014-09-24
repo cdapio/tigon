@@ -58,7 +58,8 @@ public class StreamSchemaCodec {
     for (String field : fieldArray) {
       Iterable<String> defnArray = Splitter.onPattern("\\s+").trimResults().omitEmptyStrings().split(field);
       List<String> defnList = Lists.newArrayList(defnArray);
-      Preconditions.checkArgument(defnList.size() >= 3);
+      //We expect FieldType, FieldName (optional : FieldAttribute)
+      Preconditions.checkArgument(defnList.size() >= 2);
       GDATFieldType type = GDATFieldType.getGDATFieldType(defnList.get(0).toUpperCase());
       String fieldName = defnList.get(1);
       builder.addField(fieldName, type);

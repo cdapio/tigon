@@ -1,0 +1,2 @@
+#!/bin/sh
+./simple.pl "I;uint uintInPosition1;ullong ullongInPosition2;IP ipInPosition3;IPV6 ipv6InPosition4;string stringInPosition5;bool boolInPosition6;int intInPosition7;llong llongInPosition8;float floatInPosition9" "select systemTime,uintInPosition1,ullongInPosition2,ipInPosition3,ipv6InPosition4,stringInPosition5,boolInPosition6,intInPosition7,llongInPosition8,floatInPosition9,count(*);from I;group by systemTime,uintInPosition1,ullongInPosition2,ipInPosition3,ipv6InPosition4,stringInPosition5,boolInPosition6,intInPosition7,llongInPosition8,floatInPosition9" exampleCsv

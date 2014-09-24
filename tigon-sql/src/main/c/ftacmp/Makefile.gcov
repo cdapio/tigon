@@ -1,0 +1,149 @@
+#!/bin/make
+
+# ------------------------------------------------
+#   Copyright 2014 AT&T Intellectual Property
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+# -------------------------------------------
+
+#SHELL = /bin/sh
+
+.SUFFIXES:.cpp .cc
+
+CXX=g++
+
+INCLUDES = -I../../../../include -I../../../../include/hfta
+LDLIBS = -L../../../../lib -lm  -fprofile-arcs # -lgscphostaux 
+C++OPTS = -ggdb -fprofile-arcs -ftest-coverage -D_BSD_SIGNALS $(INCLUDES) -DPREFILTER_OK -DGCOV 
+C++LDOPTS = -ggdb 
+
+# For Driver
+CC_ARGS = \
+	-g 
+#CC_OBJECT_FLAG = -o
+#CC_COMPILE_FLAG = -c
+#CC_EXECUTABLE_FLAG   = -o 
+
+CPPFLAGS= $(C++OPTS)
+
+TARGETS = translate_fta.gcov
+SRCS = $(TARGETS:=.cpp)
+
+# we need to suppress writable strings warnings on Mac for flex/bison generated C++ code
+OS= $(shell uname -s)
+ifeq ($(OS),Darwin)
+	WARN=-Wno-deprecated-writable-strings
+endif
+ifeq ($(OS),Linux)
+	WARN=-Wno-write-strings
+endif
+
+all: translate_fta.gcov 
+
+default_targets: $(TARGETS)
+
+# special rules for flex/bison generated files to suppress writable strings warnings
+%.tab.gcov.o: %.tab.cc
+	$(CXX) $(CPPFLAGS) $(WARN) $(INCLUDES) -c $< -o $@
+
+%lexer.gcov.o: %lexer.cc
+	$(CXX) $(CPPFLAGS) $(WARN) $(INCLUDES) -c $< -o $@
+
+%.gcov.o: %.cc
+	$(CXX) $(CPPFLAGS) $(INCLUDES) -c $< -o $@
+
+#FTA_OBJECTS:=analyze_fta.gcov.o ext_fcns.tab.gcov.o ext_fcnslexer.gcov.o fta.tab.gcov.o ftalexer.gcov.o generate_lfta_code.gcov.o generate_utils.gcov.o parse_schema.gcov.o query_plan.gcov.o stream_query.gcov.o translate_fta.gcov.o type_objects.gcov.o iface_q.gcov.o ifq.tab.gcov.o ifqlexer.gcov.o res.tab.gcov.o reslexer.gcov.o niclexer.gcov.o nic_def.gcov.o nic.tab.gcov.o generate_nic_code.gcov.o  partn.tab.gcov.o partnlexer.gcov.o niclexer.gcov.o parse_partn.gcov.o xmllexer.gcov.o xml.tab.gcov.o field_list.gcov.o
+
+# without niclexer.o
+FTA_OBJECTS:=analyze_fta.gcov.o ext_fcns.tab.gcov.o ext_fcnslexer.gcov.o fta.tab.gcov.o ftalexer.gcov.o generate_lfta_code.gcov.o generate_utils.gcov.o parse_schema.gcov.o query_plan.gcov.o stream_query.gcov.o translate_fta.gcov.o type_objects.gcov.o iface_q.gcov.o ifq.tab.gcov.o ifqlexer.gcov.o res.tab.gcov.o reslexer.gcov.o nic_def.gcov.o nic.tab.gcov.o generate_nic_code.gcov.o  partn.tab.gcov.o partnlexer.gcov.o niclexer.gcov.o parse_partn.gcov.o xmllexer.gcov.o xml.tab.gcov.o field_list.gcov.o
+
+
+GEN_OBJECTS:=fta.tab.gcov.o ftalexer.gcov.o generate_utils.gcov.o parse_schema.gcov.o gen_tuple_access.gcov.o type_objects.gcov.o
+
+LIB_OBJECTS:=fta.tab.gcov.o ftalexer.gcov.o parse_schema.gcov.o type_objects.gcov.o schemaparser.gcov.o
+
+translate_fta.gcov: $(FTA_OBJECTS)
+	$(CXX) $(CC_ARGS) $(LDLIBS) $(CC_EXECUTABLE_FLAG) $(FTA_OBJECTS) -o $@
+
+
+# translate_fta source files
+translate_fta.cc : parse_fta.h parse_schema.h parse_ext_fcns.h analyze_fta.h query_plan.h generate_lfta_code.h stream_query.h generate_utils.h nic_def.h generate_nic_code.h parse_partn.h print_plan.h
+
+analyze_fta.cc : parse_fta.h parse_schema.h parse_ext_fcns.h analyze_fta.h type_objects.h 
+
+ext_fcnslexer.cc : parse_ext_fcns.h ext_fcns.tab.cc.h 
+
+fta.tab.cc : parse_fta.h parse_schema.h
+
+ftalexer.cc : parse_fta.h parse_schema.h fta.tab.cc.h
+
+generate_lfta_code.cc : parse_fta.h parse_schema.h analyze_fta.h generate_utils.h query_plan.h generate_lfta_code.h generate_nic_code.h
+
+generate_utils.cc : generate_utils.h ../../../../include/lapp.h
+
+parse_schema.cc : parse_fta.h parse_schema.h type_objects.h
+
+query_plan.cc : query_plan.h analyze_fta.h generate_utils.h
+
+stream_query.cc : stream_query.h generate_utils.h analyze_fta.h 
+
+type_objects.cc : type_objects.h
+
+iface_q.cc : iface_q.h
+
+ifq.tab.cc : parse_fta.h
+
+ifqlexer.cc : parse_fta.h ifq.tab.cc.h
+
+res.tab.cc : iface_q.h
+
+reslexer.cc : parse_fta.h res.tab.cc.h
+
+niclexer.cc : nic_def.h nic.tab.cc.h
+
+nic_def.cc : nic_def.h 
+
+nic.tab.cc : nic_def.h 
+
+generate_nic_code.cc : parse_fta.h parse_schema.h analyze_fta.h generate_utils.h query_plan.h generate_nic_code.h analyze_fta.h
+
+partn.tab.cc : parse_partn.h
+
+partnlexer.cc : parse_partn.h partn.tab.cc.h 
+
+niclexer.cc : nic_def.h nic.tab.cc.h
+
+parse_partn.cc : parse_partn.h parse_schema.h analyze_fta.h
+
+xmllexer.cc : parse_fta.h xml.tab.hh 
+
+xml.tab.cc : xml_t.h
+
+field_list.cc : xml_t.h field_list.h
+
+# gen_tuple_access source files
+schemaparser.cc : schemaparser_impl.h ../../../../include/schemaparser.h parse_fta.h parse_schema.h generate_utils.h ../../../../include/hfta/host_tuple.h ../../../../include/lapp.h
+
+clean:
+	rm -f *.o core $(TARGETS) ./ii_files/*.ii
+
+del: 
+	rm -f core $(TARGETS)
+
+cleandrive:
+	rm -f *.o *.a core driver ./ii_files/*.ii
+
+install: all
+	cp translate_fta.gcov ../../../../bin/ 
+
+# DO NOT DELETE THIS LINE -- make depend depends on it.
+
