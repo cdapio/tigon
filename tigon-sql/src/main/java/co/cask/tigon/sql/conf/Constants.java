@@ -59,4 +59,10 @@ public final class Constants {
    */
   public static final String QTREE = "qtree.xml";
   public static final String OUTPUT_SPEC = "output_spec.cfg";
+
+  /**
+   * Data Ingestion Ports Map Keys
+   */
+  public static final String HTTP_PORT = "httpPort";
+  public static final String TCP_INGESTION_PORT_PREFIX = "tcpPort_";
 }
