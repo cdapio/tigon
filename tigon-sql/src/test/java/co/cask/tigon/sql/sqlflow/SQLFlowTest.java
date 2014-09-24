@@ -146,7 +146,7 @@ public class SQLFlowTest extends TestBase {
   public void testSQLFlow() throws Exception {
     ingestData.start();
     ingestData.join();
-    latch.await();
+    latch.await(600, TimeUnit.SECONDS);
     int dataPacketCounter = MAX_TIMESTAMP;
     DataPacket dataPacket;
     while ((dataPacket = getDataPacket()) != null) {
