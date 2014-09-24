@@ -53,7 +53,6 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.net.InetSocketAddress;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -87,7 +86,7 @@ public class DistributedFlowOperations extends AbstractIdleService implements Fl
   }
 
   @Override
-  public void startFlow(File jarPath, String className) {
+  public void startFlow(File jarPath, String className, Map<String, String> userArgs) {
     try {
       Program program = deployClient.createProgram(jarPath, className, jarUnpackDir);
       String flowName = program.getSpecification().getName();
@@ -103,7 +102,7 @@ public class DistributedFlowOperations extends AbstractIdleService implements Fl
       //Copy the JAR to HDFS.
       ByteStreams.copy(Locations.newInputSupplier(program.getJarLocation()), Locations.newOutputSupplier(jarInHDFS));
       //Start the Flow.
-      deployClient.startFlow(program, new HashMap<String, String>());
+      deployClient.startFlow(program, userArgs);
     } catch (Exception e) {
       LOG.error(e.getMessage(), e);
     }
