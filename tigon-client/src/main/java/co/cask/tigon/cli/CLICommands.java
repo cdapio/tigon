@@ -21,7 +21,7 @@ package co.cask.tigon.cli;
  */
 public enum CLICommands {
 
-  START (2, "Starts a Flow", "<path-to-jar> <flow-classname>"),
+  START (2, "Starts a Flow with Runtime Args (--key1=v1 --key2=v2)", "<path-to-jar> <flow-classname> <run-time-args>"),
   LIST (0, "Lists all the Flows which are currently running", ""),
   STOP (1, "Stops a Flow", "<flowname>"),
   DELETE (1, "Stops and Deletes the Queues for a Flow", "<flowname>"),
