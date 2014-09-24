@@ -44,6 +44,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -52,6 +53,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Test adding and using {@link TransactionAware}s via {@link FlowletContext}s.
  */
+@Ignore
 public class TransactionAwareFlowTest extends TestBase {
   private static HBaseTestingUtility testUtil;
   private static HBaseAdmin hBaseAdmin;
