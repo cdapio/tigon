@@ -182,7 +182,7 @@ public class DistributedMain {
             try {
               runtimeArgs = DeployClient.fromPosixArray(Arrays.copyOfRange(args, cmd.getArgCount(), args.length));
             } catch (IllegalArgumentException e) {
-              LOG.error("Runtime Args are not in the correct format [ --key1=val1, --key2=val2]");
+              LOG.error("Runtime Args are not in the correct format [ --key1=val1, --key2=val2 ]");
               continue;
             }
           }
