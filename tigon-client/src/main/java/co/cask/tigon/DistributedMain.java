@@ -179,7 +179,12 @@ public class DistributedMain {
         if (cmd.equals(CLICommands.START)) {
           Map<String, String> runtimeArgs = Maps.newHashMap();
           if (args.length > cmd.getArgCount()) {
-            runtimeArgs = DeployClient.fromPosixArray(Arrays.copyOfRange(args, cmd.getArgCount(), args.length));
+            try {
+              runtimeArgs = DeployClient.fromPosixArray(Arrays.copyOfRange(args, cmd.getArgCount(), args.length));
+            } catch (IllegalArgumentException e) {
+              LOG.error("Runtime Args are not in the correct format [ --key1=val1, --key2=val2]");
+              continue;
+            }
           }
           flowOperations.startFlow(new File(args[1]), args[2], runtimeArgs);
         } else if (cmd.equals(CLICommands.LIST)) {
