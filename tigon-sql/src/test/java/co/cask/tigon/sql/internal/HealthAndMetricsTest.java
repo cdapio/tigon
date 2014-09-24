@@ -174,7 +174,7 @@ public class HealthAndMetricsTest {
     inspector.startAndWait();
     LOG.info("Started monitoring...");
 
-    TimeUnit.SECONDS.sleep(Constants.INITIALIZATION_TIMEOUT - 2);
+    TimeUnit.SECONDS.sleep(Constants.INITIALIZATION_TIMEOUT - 3);
     register("IronMan", "RobertDowneyJr", pingURL);
     LOG.info("IronMan Registered");
     Assert.assertTrue(!failureLatch.await(0, TimeUnit.SECONDS));
@@ -188,17 +188,13 @@ public class HealthAndMetricsTest {
     Assert.assertTrue(!failureLatch.await(250, TimeUnit.MILLISECONDS));
     LOG.info("No failure Detected");
 
-    //Check state 250ms after the last mock ping
-    pingLatch.await(PING_COUNT - 1, TimeUnit.SECONDS);
-    Assert.assertTrue(!failureLatch.await(0, TimeUnit.SECONDS));
-    LOG.info("No failure Detected");
-
     LOG.info("Expecting heartbeat detection failure");
-    //Check state >2 seconds after the last mock ping
+    pingLatch.await(30, TimeUnit.SECONDS);
+    //Check state after the last mock ping (timeout > HEARTBEAT_FREQUENCY)
     Assert.assertTrue(failureLatch.await(30, TimeUnit.SECONDS));
 
     //Check value of awesomeCounter at the end
     Assert.assertTrue(SharedMetrics.getCounter("RobertDowneyJr.awesomeCounter")
-                        .equals((PING_COUNT - 1) * PING_COUNT / 2 ));
+                        .equals((PING_COUNT - 1) * PING_COUNT / 2));
   }
 }
