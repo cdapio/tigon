@@ -55,6 +55,11 @@
       </exclusions>
     </dependency>
     <dependency>
+      <groupId>co.cask.tigon</groupId>
+      <artifactId>tigon-flow</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>co.cask.http</groupId>
       <artifactId>netty-http</artifactId>
     </dependency>
@@ -97,6 +102,19 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
+    </dependency>
+
+    <dependency>
+      <groupId>co.cask.tephra</groupId>
+      <artifactId>tephra-core</artifactId>
+      <version>0.3.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>co.cask.tephra</groupId>
+      <artifactId>tephra-api</artifactId>
+      <version>0.3.0</version>
+      <scope>test</scope>
     </dependency>
 
     <!-- Test dependencies -->
@@ -174,7 +192,7 @@
                 <exclude>**/c/**/*lexer.cc</exclude>
                 <exclude>**/gscpaux/*block_allocator*</exclude>
                 <exclude>**/gscpaux/*json*</exclude>
-		<exclude>**/ftacmp/translate_fta.gcov.gcno</exclude>
+                <exclude>**/ftacmp/translate_fta.gcov.gcno</exclude>
                 <!--tigon sql library test data-->
                 <exclude>**/scripts/**/packet_schema_test.txt</exclude>
                 <exclude>**/scripts/**/Expected*.txt</exclude>

@@ -24,7 +24,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>hbase-compat-0.96</artifactId>
+  <artifactId>tigon-hbase-compat-0.96</artifactId>
   <packaging>jar</packaging>
 
   <dependencies>

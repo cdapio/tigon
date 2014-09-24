@@ -33,8 +33,9 @@ public interface FlowOperations extends Service {
    * Starts a Flow.
    * @param jarPath Path to the Flow Jar.
    * @param className Flow ClassName that needs to be started.
+   * @param userArgs Map of User Runtime Arguments that can be accessed in the Flow.
    */
-  void startFlow(File jarPath, String className);
+  void startFlow(File jarPath, String className, Map<String, String> userArgs);
 
   /**
    * Get the status of a Flow.

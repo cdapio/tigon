@@ -39,15 +39,15 @@ public final class Constants {
   public static final int TICKER_TIMEOUT = 10;
 
   /**
-   * The SQL Compiler process ping frequency is 1 ping per second. Hence using 2 seconds, to avoid boundary failure
+   * The SQL Compiler process ping frequency is 1 ping per second. Using value larger than 1 to avoid boundary failure
    */
-  public static final long HEARTBEAT_FREQUENCY = 2L;
+  public static final long HEARTBEAT_FREQUENCY = 5L;
 
   /**
    * The SQL Compiler processes require some setup time in the beginning before the ping the
    * {@link co.cask.tigon.sql.manager.DiscoveryServer} REST end-points to announce themselves
    */
-  public static final long INITIALIZATION_TIMEOUT = 10L;
+  public static final long INITIALIZATION_TIMEOUT = 15L;
 
   /**
    * Maximum number of retries for each transaction by the flowlet
@@ -59,4 +59,10 @@ public final class Constants {
    */
   public static final String QTREE = "qtree.xml";
   public static final String OUTPUT_SPEC = "output_spec.cfg";
+
+  /**
+   * Data Ingestion Ports Map Keys
+   */
+  public static final String HTTP_PORT = "httpPort";
+  public static final String TCP_INGESTION_PORT_PREFIX = "tcpPort_";
 }
