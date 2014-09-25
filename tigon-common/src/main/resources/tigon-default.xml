@@ -19,7 +19,7 @@
 
     <property>
         <name>root.namespace</name>
-        <value>cdap</value>
+        <value>tigon</value>
         <description>Specifies the root namespace</description>
     </property>
 

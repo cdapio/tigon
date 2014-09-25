@@ -260,7 +260,7 @@ public abstract class HBaseTableUtil {
         public boolean accept(String className, final URL classUrl, URL classPathUrl) {
           // Assuming the endpoint and protocol class doesn't have dependencies
           // other than those comes with HBase and Java.
-          if (className.startsWith("co.cask.tigon")) {
+          if (className.startsWith("co.cask")) {
             if (!dependentClasses.containsKey(className)) {
               dependentClasses.put(className, classUrl);
             }
