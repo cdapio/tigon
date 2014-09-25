@@ -59,15 +59,13 @@ Is It Building?
 ============================================================================= ==================
  Build                                                                         Status / Version
 ============================================================================= ==================
-`Travis Continuous Integration Build <https://travis-ci.org/caskco/tigon>`__   |travis-tigon|
+`Bamboo Build <https:////builds.cask.co/browse/TIG>`__
 `GitHub Version <https://github.com/caskco/tigon/releases/latest>`__           |github-tigon|
 ============================================================================= ==================
 
-.. |travis-tigon| image:: https://travis-ci.org/caskco/tigon.svg?branch=develop
-                  :height: 30px
-
 .. |github-tigon| image:: http://img.shields.io/github/release/caskco/tigon.svg
                   :height: 30px
+
 
 Configuration
 =============
