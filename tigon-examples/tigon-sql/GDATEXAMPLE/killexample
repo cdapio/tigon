@@ -1,6 +1,0 @@
-#!/bin/sh
-./stopit
-killall gsprintconsole 
-killall gen_feed 
-killall -9 gsprintconsole
-killall -9 gen_feed

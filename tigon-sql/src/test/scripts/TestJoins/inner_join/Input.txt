@@ -1,6 +1,0 @@
-xyz|DEF|15
-ABC|abc|16
-HHH|BBC|20
-abc|DEF|18
-abc|def|19
-ABC|xyz|17

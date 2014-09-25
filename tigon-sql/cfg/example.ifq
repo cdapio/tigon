@@ -1,3 +1,0 @@
-default : Contains[InterfaceType,GDAT] and Equals[Host,'example'];
-csv : Contains[InterfaceType,CSV] and Equals[Host,'example'];
-gdat: Contains[InterfaceType,GDAT] and Equals[Host,'example']

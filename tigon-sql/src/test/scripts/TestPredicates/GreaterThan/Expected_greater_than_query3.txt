@@ -1,3 +1,0 @@
-1|123|TRUE|String1|String2
-1|1|TRUE|xyz|abc
-1|156|TRUE|sTRING3|Other

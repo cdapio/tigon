@@ -1,2 +1,0 @@
-1|123|TRUE|String1|String2
-1|456|FALSE|ABCD|ABCD
