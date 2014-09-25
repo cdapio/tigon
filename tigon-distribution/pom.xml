@@ -66,29 +66,29 @@
     </dependency>
   </dependencies>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-assembly-plugin</artifactId>
-        <version>2.4</version>
-        <executions>
-          <execution>
-            <id>assembly</id>
-            <phase>package</phase>
-            <goals><goal>single</goal></goals>
-            <configuration>
-              <finalName>tigon-developer-release</finalName>
-              <formats><format>tar.gz</format></formats>
-              <descriptors>
-                <descriptor>src/assembly/tgz.xml</descriptor>
-              </descriptors>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
+  <!--<build>-->
+    <!--<plugins>-->
+      <!--<plugin>-->
+        <!--<groupId>org.apache.maven.plugins</groupId>-->
+        <!--<artifactId>maven-assembly-plugin</artifactId>-->
+        <!--<version>2.4</version>-->
+        <!--<executions>-->
+          <!--<execution>-->
+            <!--<id>assembly</id>-->
+            <!--<phase>package</phase>-->
+            <!--<goals><goal>single</goal></goals>-->
+            <!--<configuration>-->
+              <!--<finalName>tigon-developer-release</finalName>-->
+              <!--<formats><format>tar.gz</format></formats>-->
+              <!--<descriptors>-->
+                <!--<descriptor>src/assembly/tgz.xml</descriptor>-->
+              <!--</descriptors>-->
+            <!--</configuration>-->
+          <!--</execution>-->
+        <!--</executions>-->
+      <!--</plugin>-->
+    <!--</plugins>-->
+  <!--</build>-->
 
   <profiles>
     <!--
