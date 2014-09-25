@@ -14,5 +14,40 @@
   the License.
   -->
 <configuration>
+    <!--
+        Data Fabric configuration
+    -->
+    <property>
+        <name>data.local.storage.blocksize</name>
+        <value>1024</value>
+        <description>Specifies block size (in bytes)</description>
+    </property>
+
+    <property>
+        <name>data.local.storage.cachesize</name>
+        <value>104857600</value>
+        <description>Specifies cache size (in bytes)</description>
+    </property>
+
+    <!--
+        Logging Configuration
+    -->
+    <property>
+        <name>log.publish.num.partitions</name>
+        <value>1</value>
+        <description>Number of Kafka partitions to publish the logs to</description>
+    </property>
+
+    <property>
+        <name>log.base.dir</name>
+        <value>logs/avro</value>
+        <description>Base log directory</description>
+    </property>
+
+    <property>
+        <name>log.retention.duration.days</name>
+        <value>7</value>
+        <description>Log file retention duration (in days)</description>
+    </property>
 
 </configuration>
