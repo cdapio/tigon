@@ -64,7 +64,7 @@ public class StreamEngineIO extends AbstractIdleService {
       Map.Entry<InputStreamFormat, StreamSchema> streamInfo = spec.getInputSchemas().get(inputName);
       ChannelFactory factory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(),
                                                                  Executors.newCachedThreadPool());
-      StreamSocketServer service;
+      InputServerSocket service;
       switch(streamInfo.getKey()) {
         case GDAT:
           service = new InputServerSocket(factory, inputName, streamInfo.getValue(),
@@ -81,6 +81,7 @@ public class StreamEngineIO extends AbstractIdleService {
       }
 
       service.startAndWait();
+      portMap.put(Constants.TCP_INGESTION_PORT_PREFIX + inputName, service.getIngestionPort());
       inputServerMap.put(inputName, service.getSocketAddressMap());
       dataIngressServerMap.put(inputName, service.getSocketAddressMap().get(Constants.StreamIO.TCP_DATA_INGESTION));
       dataSourceServerMap.put(inputName, service.getSocketAddressMap().get(Constants.StreamIO.DATASOURCE));
@@ -99,6 +100,7 @@ public class StreamEngineIO extends AbstractIdleService {
 
     router = new DataIngestionRouter(dataIngressServerMap, portMap.get(Constants.HTTP_PORT));
     router.startAndWait();
+    portMap.put(Constants.HTTP_PORT, router.getAddress().getPort());
   }
 
   public Map<String, InetSocketAddress> getInputServerMap() {
@@ -127,6 +129,10 @@ public class StreamEngineIO extends AbstractIdleService {
     for (StreamSocketServer service : outputServerSocketServies) {
       service.stopAndWait();
     }
+  }
+
+  public int getDataPort(String key) {
+    return portMap.get(key);
   }
 }
 

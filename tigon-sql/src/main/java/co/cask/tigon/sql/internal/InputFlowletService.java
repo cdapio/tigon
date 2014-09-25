@@ -116,4 +116,8 @@ public final class InputFlowletService extends AbstractIdleService {
     Services.chainStop(processInitiator, discoveryServer);
     startService(healthInspector);
   }
+
+  public int getDataPort(String key) {
+    return ioService.getDataPort(key);
+  }
 }
