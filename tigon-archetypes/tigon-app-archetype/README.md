@@ -16,7 +16,7 @@ To create a project from the archetype, use this script as an example:
  mvn archetype:generate
   -DarchetypeGroupId=co.cask.tigon
   -DarchetypeArtifactId=tigon-app-archetype
-  -DarchetypeVersion=0.1.0-SNAPSHOT
+  -DarchetypeVersion=0.1.0
   -DgroupId=com.example
   -DartifactId=MyExample
   -Dversion=1.0
