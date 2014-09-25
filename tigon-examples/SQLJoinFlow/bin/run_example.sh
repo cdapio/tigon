@@ -49,7 +49,7 @@ set_classpath()
 run ()
 {
   port=$1
-  jar="../target/SQLJoinFlow-0.1.0-SNAPSHOT.jar"
+  jar="../target/SQLJoinFlow-0.1.0.jar"
   classname="co.cask.tigon.sqljoinflow.SQLJoinFlow"
   if [[ -z "$jar" ]] || [[ ! -f "$jar" ]]; then
       echo "ERROR: No jar was given or the jar doesn't exist."
