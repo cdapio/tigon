@@ -21,7 +21,7 @@
   <parent>
     <artifactId>tigon</artifactId>
     <groupId>co.cask.tigon</groupId>
-    <version>0.1.0-SNAPSHOT</version>
+    <version>0.1.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -29,6 +29,7 @@
   <packaging>pom</packaging>
   <modules>
     <module>TwitterAnalytics</module>
+    <module>SQLJoinFlow</module>
   </modules>
 
   <dependencies>
@@ -53,6 +54,11 @@
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>co.cask.tigon</groupId>
+        <artifactId>tigon-sql</artifactId>
+        <version>${project.version}</version>
+      </dependency>
       <dependency>
         <groupId>org.twitter4j</groupId>
         <artifactId>twitter4j-async</artifactId>
@@ -106,6 +112,7 @@
                   <exclude>**/resources/**/*.js</exclude>
                   <exclude>**/resources/**/*.svg</exclude>
                   <exclude>**/tigon-sql/**</exclude>
+                  <exclude>**/*.data</exclude>
                 </excludes>
               </configuration>
             </execution>
