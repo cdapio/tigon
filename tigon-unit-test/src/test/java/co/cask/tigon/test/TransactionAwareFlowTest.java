@@ -14,7 +14,7 @@
  * the License.
  */
 
-package co.cask.tigon.flow;
+package co.cask.tigon.test;
 
 import co.cask.tephra.TransactionAware;
 import co.cask.tephra.TransactionContext;
@@ -28,8 +28,6 @@ import co.cask.tigon.api.flow.FlowSpecification;
 import co.cask.tigon.api.flow.flowlet.AbstractFlowlet;
 import co.cask.tigon.api.flow.flowlet.FlowletContext;
 import co.cask.tigon.api.flow.flowlet.OutputEmitter;
-import co.cask.tigon.flow.test.FlowManager;
-import co.cask.tigon.flow.test.TestBase;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableMap;
 import org.apache.hadoop.hbase.HBaseTestingUtility;
