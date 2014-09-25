@@ -67,10 +67,10 @@ public class DefaultInputFlowletConfigurer implements InputFlowletConfigurer {
   }
 
   @Override
-  public void addQuery(String outputName, String gsql) {
+  public void addQuery(String outputName, String sql) {
     Preconditions.checkArgument(outputName != null, "Output Name cannot be null.");
     Preconditions.checkState(!sqlMap.containsKey(outputName), "Output Name already exists.");
-    this.sqlMap.put(outputName, gsql);
+    this.sqlMap.put(outputName, sql);
   }
 
   public InputFlowletSpecification createInputFlowletSpec() {

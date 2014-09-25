@@ -14,8 +14,7 @@
  * the License.
  */
 
-
-package co.cask.tigon.sql.sqlflow;
+package co.cask.tigon.test;
 
 import co.cask.http.AbstractHttpHandler;
 import co.cask.http.HttpResponder;
@@ -27,8 +26,6 @@ import co.cask.tigon.api.flow.FlowSpecification;
 import co.cask.tigon.api.flow.flowlet.AbstractFlowlet;
 import co.cask.tigon.api.flow.flowlet.FlowletContext;
 import co.cask.tigon.api.flow.flowlet.OutputEmitter;
-import co.cask.tigon.flow.test.FlowManager;
-import co.cask.tigon.flow.test.TestBase;
 import co.cask.tigon.sql.conf.Constants;
 import co.cask.tigon.sql.flowlet.AbstractInputFlowlet;
 import co.cask.tigon.sql.flowlet.GDATFieldType;
@@ -286,28 +283,27 @@ public class SQLFlowTest extends TestBase {
       responder.sendStatus(HttpResponseStatus.OK);
     }
   }
+
+  private static class DataPacket {
+    //Using the same data type and variable name as specified in the query output
+    long timestamp;
+    int sumValue;
+
+    public String toString() {
+      return "timestamp : " + timestamp + "\tsumValue : " + sumValue;
+    }
+
+    public DataPacket(long timestamp, int sumValue) {
+      this.timestamp = timestamp;
+      this.sumValue = sumValue;
+    }
+
+    public String getTime() {
+      return Long.toString(timestamp);
+    }
+
+    public String getSum() {
+      return Integer.toString(sumValue);
+    }
+  }
 }
-
-class DataPacket {
-  //Using the same data type and variable name as specified in the query output
-  long timestamp;
-  int sumValue;
-
-  public String toString() {
-    return "timestamp : " + timestamp + "\tsumValue : " + sumValue;
-  }
-
-  public DataPacket(long timestamp, int sumValue) {
-    this.timestamp = timestamp;
-    this.sumValue = sumValue;
-  }
-
-  public String getTime() {
-    return Long.toString(timestamp);
-  }
-
-  public String getSum() {
-    return Integer.toString(sumValue);
-  }
-}
-

@@ -14,7 +14,7 @@
  * the License.
  */
 
-package co.cask.tigon.flow.test;
+package co.cask.tigon.test;
 
 import co.cask.tigon.internal.app.runtime.ProgramController;
 import co.cask.tigon.internal.app.runtime.ProgramOptionConstants;

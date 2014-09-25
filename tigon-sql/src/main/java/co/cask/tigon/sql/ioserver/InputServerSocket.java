@@ -94,8 +94,8 @@ public class InputServerSocket extends StreamSocketServer {
     setIngestionPipeline();
     setDataSourcePipeline();
     InetSocketAddress socketAddress = new InetSocketAddress(port);
-    port = socketAddress.getPort();
     Channel ch = ingestionServer.bind(socketAddress);
+    port = ((InetSocketAddress) ch.getLocalAddress()).getPort();
     serverAddressMap.put(Constants.StreamIO.TCP_DATA_INGESTION, (InetSocketAddress) ch.getLocalAddress());
     ch = dataSourceServer.bind(new InetSocketAddress(0));
     serverAddressMap.put(Constants.StreamIO.DATASOURCE, (InetSocketAddress) ch.getLocalAddress());

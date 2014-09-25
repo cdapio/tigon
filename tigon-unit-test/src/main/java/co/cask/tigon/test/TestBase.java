@@ -14,7 +14,7 @@
  * the License.
  */
 
-package co.cask.tigon.flow.test;
+package co.cask.tigon.test;
 
 import co.cask.tephra.TransactionManager;
 import co.cask.tigon.api.flow.Flow;
