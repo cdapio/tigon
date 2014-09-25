@@ -35,7 +35,9 @@ import co.cask.tigon.lang.ClassLoaders;
 import co.cask.tigon.lang.jar.ProgramClassLoader;
 import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Closeables;
@@ -90,6 +92,19 @@ public class DeployClient {
     manifest.getMainAttributes().put(ManifestFields.MANIFEST_VERSION, "1.0");
     manifest.getMainAttributes().put(ManifestFields.MAIN_CLASS, klass.getName());
     return manifest;
+  }
+
+  /**
+   * Converts a POSIX compliant program argument array to a String-to-String Map.
+   * @param args Array of Strings where each element is a POSIX compliant program argument (Ex: "--os=Linux" ).
+   * @return Map of argument Keys and Values (Ex: Key = "os" and Value = "Linux").
+   */
+  public static Map<String, String> fromPosixArray(String[] args) {
+    Map<String, String> kvMap = Maps.newHashMap();
+    for (String arg : args) {
+      kvMap.putAll(Splitter.on("--").omitEmptyStrings().trimResults().withKeyValueSeparator("=").split(arg));
+    }
+    return kvMap;
   }
 
   private static void expandJar(File jarPath, File unpackDir) throws Exception {
