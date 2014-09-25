@@ -59,6 +59,7 @@ public final class Constants {
    */
   public static final String QTREE = "qtree.xml";
   public static final String OUTPUT_SPEC = "output_spec.cfg";
+  public static final String GSQL_FILE = "tigon.gsql";
 
   /**
    * Data Ingestion Ports Map Keys
