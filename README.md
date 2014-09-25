@@ -41,7 +41,7 @@ For more information, see our collection of
 Builds                                                            
 ------------------------------------------------------------------
 [Bamboo Build](https://builds.cask.co/browse/TIGON)                 
-[GitHub Version](https://github.com/caskco/tigon/releases/latest) 
+[GitHub Version](https://github.com/caskdata/tigon/releases/latest) 
 
 
 ## Getting Started
@@ -86,7 +86,7 @@ $ run_distributed.sh <zookeeper-quorum> <hdfs-namespace>
 You can also get started with Tigon by building directly from the latest source code::
 
 ```
-  git clone https://github.com/cask/tigon.git
+  git clone https://github.com/caskdata/tigon.git
   cd tigon
   mvn clean package
 ```
