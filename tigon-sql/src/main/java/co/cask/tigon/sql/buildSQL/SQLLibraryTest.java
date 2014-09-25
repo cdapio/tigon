@@ -34,8 +34,8 @@ public class SQLLibraryTest {
 
   public static void main(String[] args) throws IOException {
     // Skipping all SQL library tests for now
-    if (System.getProperty("maven.test.skip") != null || (System.getProperty("skipTests") != null) ||
-      (System.getProperty("skipSQLLib") != null) || (System.getProperty("skipSQLTests") != null) || true) {
+    if ((System.getProperty("skipTests") != null) || (System.getProperty("maven.test.skip") != null) || true) {
+      LOG.info("Skipping SQL library tests");
       return;
     }
     ProcessBuilder testSQLLibraryBuilder = new ProcessBuilder("perl", "run_test.pl").redirectErrorStream(true);
