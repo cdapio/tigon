@@ -40,7 +40,9 @@ $ ./run_distributed.sh <ZookeeperQuorum> <HDFSNamespace>
 > START /path/to/TwitterAnalytics-0.1.0.jar co.cask.tigon.analytics.TwitterAnalytics [ oauth-properties ]
 ```
 
-The top ten hashtags used in the previous minute get logged to a file.
+The top ten hashtags used in the previous minute get recorded. In the case of standalone instance of Tigon,
+the results will appear immediately in the Tigon command line interface; in the case of distributed instance of Tigon,
+the results will be written to the logs of the YARN container of the Flowlet.
 
 ## License and Trademarks
 
