@@ -27,7 +27,7 @@ public class TwitterAnalytics implements Flow {
   public FlowSpecification configure() {
     return FlowSpecification.Builder.with()
       .setName("TwitterAnalytics")
-      .setDescription("Analysis of tweets to generate top 10 hashtags.")
+      .setDescription("Analysis of tweets to generate top 10 hashtags per minute.")
       .withFlowlets()
       .add("collector", new TweetCollector())
       .add("analyzer", new Analytics())
