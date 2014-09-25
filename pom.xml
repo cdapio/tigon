@@ -24,6 +24,7 @@
   <packaging>pom</packaging>
   <name>Tigon</name>
   <url>https://github.com/caskdata/tigon</url>
+  <description>Real-time Stream processing framework</description>
 
 
   <organization>
@@ -994,6 +995,18 @@
         <artifactId>maven-surefire-report-plugin</artifactId>
         <version>2.14.1</version>
       </plugin>
+      
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.5</version>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.plugins</groupId>
+        <artifactId>nexus-staging-maven-plugin</artifactId>
+        <version>1.6.2</version>
+      </plugin>
+          
     </plugins>
   </reporting>
 
