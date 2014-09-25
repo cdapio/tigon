@@ -48,10 +48,10 @@ public class CountRandom implements Flow {
   /**
    * Random Source Flowlet.
    */
-  public class RandomSource extends AbstractFlowlet {
+  public static class RandomSource extends AbstractFlowlet {
     private OutputEmitter<Integer> randomOutput;
 
-    private final Random random = new Random();
+    private static final Random random = new Random();
 
     @Tick(delay = 1L, unit = TimeUnit.MILLISECONDS)
     public void generate() throws InterruptedException {
