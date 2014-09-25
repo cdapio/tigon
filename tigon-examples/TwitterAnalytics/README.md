@@ -1,27 +1,28 @@
-TwitterAnalytics
-=================
-TwitterAnalytics Application.
+# TwitterAnalytics
 
-Overview
-========
+## Overview
 An application collects Tweets and logs the top 10 hashtags used in the last minute.
 
-Twitter Configuration
-=====================
-In order to utilize the TweetCollector flowlet, which pulls a small sample stream via the Twitter API, the API key and Access token must be configured.
-Follow the steps at the following page to obtain these credentials: [Twitter oauth access tokens](https://dev.twitter.com/oauth/overview/application-owner-access-tokens).
-These configurations must be provided as runtime arguments to the flow prior to starting it, in order to use the TweetCollector flowlet.
+## Twitter Configuration
+In order to utilize the ``TweetCollector`` flowlet, which pulls a small sample stream via the Twitter API, an API key and Access token must be configured.
+Follow the steps at [Twitter oauth access tokens](https://dev.twitter.com/oauth/overview/application-owner-access-tokens) to obtain these credentials.
+These configurations must be provided as runtime arguments to the Flow prior to starting it in order to use the ``TweetCollector`` flowlet.
 
-Flow Runtime Arguments
-======================
-When starting the Application from the command line, runtime arguments can be specified.
+## Flow Runtime Arguments
+When starting the Application from the command line, runtime arguments may need to be specified.
+
+The required Twitter authorization properties ("oauth-properties") include all of these:
+
 "oauth.consumerKey" - See ```Twitter Configuration``` above.
+
 "oauth.consumerSecret" - See ```Twitter Configuration``` above.
+
 "oauth.Token" - See ```Twitter Configuration``` above.
+
 "oauth.TokenSecret" - See ```Twitter Configuration``` above.
 
-Installation
-============
+
+## Installation
 
 Build the Application jar:
 ```
@@ -39,11 +40,11 @@ $ ./run_distributed.sh <ZookeeperQuorum> <HDFSNamespace>
 > START /path/to/TwitterAnalytics-0.1.0.jar co.cask.tigon.analytics.TwitterAnalytics [ oauth-properties ]
 ```
 
-The top 10 hashtags used gets logged to a file.
+The top ten hashtags used in the previous minute get logged to a file.
 
 ## License and Trademarks
 
-Copyright 2014 Cask Data, Inc.
+Copyright © 2014 Cask Data, Inc.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you may not
 use this file except in compliance with the License. You may obtain a copy of

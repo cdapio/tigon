@@ -38,7 +38,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Poll for tweets and batch them to the next flowlet.
+ * Poll for tweets and batch them to the next Flowlet.
  */
 public class TweetCollector extends AbstractFlowlet {
   private static final Logger LOG = LoggerFactory.getLogger(TweetCollector.class);
@@ -113,7 +113,6 @@ public class TweetCollector extends AbstractFlowlet {
         ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(false);
         cb.setAsyncNumThreads(1);
-
 
         Map<String, String> args = getContext().getRuntimeArguments();
         // Override twitter4j.properties file, if provided in runtime args.
