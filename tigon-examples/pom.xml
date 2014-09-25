@@ -49,18 +49,6 @@
       <groupId>com.google.code.gson</groupId>
       <artifactId>gson</artifactId>
     </dependency>
-    <dependency>
-      <groupId>org.twitter4j</groupId>
-      <artifactId>twitter4j-async</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.twitter4j</groupId>
-      <artifactId>twitter4j-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.twitter4j</groupId>
-      <artifactId>twitter4j-stream</artifactId>
-    </dependency>
   </dependencies>
 
   <dependencyManagement>
