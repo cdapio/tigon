@@ -61,9 +61,9 @@ public class CompileStreamBinaries {
     ExternalProgramExecutor makeService = new ExternalProgramExecutor(
       "GENBINS", dir, shell, "-c", "make");
     LOG.info("Starting MAKE : {}", executorService);
-    executorService.startAndWait();
-    Services.getCompletionFuture(executorService).get(20, TimeUnit.SECONDS);
-    if (executorService.getExitCode() != 0) {
+    makeService.startAndWait();
+    Services.getCompletionFuture(makeService).get(20, TimeUnit.SECONDS);
+    if (makeService.getExitCode() != 0) {
       throw new RuntimeException("Stream Engine Binary MAKE Failed");
     }
   }
