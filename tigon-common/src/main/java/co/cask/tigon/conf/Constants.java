@@ -72,8 +72,10 @@ public final class Constants {
   }
 
   public static final String CFG_LOCAL_DATA_DIR = "local.data.dir";
+  public static final String CFG_YARN_USER = "yarn.user";
   public static final String CFG_HDFS_USER = "hdfs.user";
   public static final String CFG_HDFS_NAMESPACE = "hdfs.namespace";
+  public static final String CFG_HDFS_LIB_DIR = "hdfs.lib.dir";
 
   public static final String CFG_TWILL_ZK_NAMESPACE = "twill.zookeeper.namespace";
   public static final String CFG_TWILL_RESERVED_MEMORY_MB = "twill.java.reserved.memory.mb";
@@ -84,6 +86,12 @@ public final class Constants {
    */
   public static final String CFG_LOG_COLLECTION_ROOT = "log.collection.root";
   public static final String DEFAULT_LOG_COLLECTION_ROOT = "data/logs";
+  public static final String CFG_LOG_COLLECTION_PORT = "log.collection.bind.port";
+  public static final int DEFAULT_LOG_COLLECTION_PORT = 12157;
+  public static final String CFG_LOG_COLLECTION_THREADS = "log.collection.threads";
+  public static final int DEFAULT_LOG_COLLECTION_THREADS = 10;
+  public static final String CFG_LOG_COLLECTION_SERVER_ADDRESS = "log.collection.bind.address";
+  public static final String DEFAULT_LOG_COLLECTION_SERVER_ADDRESS = "localhost";
 
 
   public static final String DELTA_WRITE = "d";
