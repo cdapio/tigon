@@ -38,10 +38,10 @@ For more information, see our collection of
 
 ## Is It Building?
 
-Build                                                                     | Status / Version
---------------------------------------------------------------------------|-----------------
-[Travis Continuous Integration Build](https://travis-ci.org/caskco/tigon) | ![travis](https://travis-ci.org/caskco/tigon.svg?branch=develop)
-[GitHub Version](https://github.com/caskco/tigon/releases/latest)         | ![github](http://img.shields.io/github/release/caskco/tigon.svg)
+Builds                                                            | Status
+------------------------------------------------------------------|-----------------
+[Bamboo Build](https://builds.cask.co/browse/TIG)                 | 
+[GitHub Version](https://github.com/caskco/tigon/releases/latest) | ![github](http://img.shields.io/github/release/caskco/tigon.svg)
 
 
 ## Getting Started
