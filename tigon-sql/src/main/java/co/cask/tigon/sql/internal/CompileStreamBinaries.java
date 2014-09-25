@@ -17,6 +17,7 @@
 package co.cask.tigon.sql.internal;
 
 import co.cask.tigon.io.Locations;
+import co.cask.tigon.sql.conf.Constants;
 import co.cask.tigon.sql.manager.ExternalProgramExecutor;
 import org.apache.twill.common.Services;
 import org.apache.twill.filesystem.LocalLocationFactory;
@@ -51,7 +52,8 @@ public class CompileStreamBinaries {
       throw new RuntimeException("Stream Engine Binary Failed - GSEXIT copy failed");
     }
     ExternalProgramExecutor executorService = new ExternalProgramExecutor(
-      "GENBINS", dir, shell, "-c", "../../bin/translate_fta -h localhost -c -S -M -C . packet_schema.txt *.gsql");
+      "GENBINS", dir, shell, "-c",
+      "../../bin/translate_fta -h localhost -c -S -M -C . packet_schema.txt " + Constants.GSQL_FILE);
     LOG.info("Starting GENBINS : {}", executorService);
     executorService.startAndWait();
     Services.getCompletionFuture(executorService).get(20, TimeUnit.SECONDS);

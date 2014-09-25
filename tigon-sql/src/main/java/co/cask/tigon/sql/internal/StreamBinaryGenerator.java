@@ -17,9 +17,11 @@
 package co.cask.tigon.sql.internal;
 
 import co.cask.tigon.io.Locations;
+import co.cask.tigon.sql.conf.Constants;
 import co.cask.tigon.sql.flowlet.InputFlowletSpecification;
 import co.cask.tigon.sql.util.Platform;
 import com.google.common.base.Charsets;
+import com.google.common.base.Joiner;
 import com.google.common.base.Throwables;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.CharStreams;
@@ -36,6 +38,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.Map;
 import java.util.zip.GZIPInputStream;
 
@@ -70,12 +73,10 @@ public class StreamBinaryGenerator {
       writeToLocation(ifresXml, generator.generateIfresXML());
       writeToLocation(hostIfq, generator.generateHostIfq().getValue());
 
-      Map<String, String> sqlFiles = generator.generateQueryFiles();
-      for (Map.Entry<String, String> sqlFile : sqlFiles.entrySet()) {
-        String fileName = String.format("%s.sql", sqlFile.getKey());
-        Location file = createFile(configDir, fileName);
-        writeToLocation(file, sqlFile.getValue());
-      }
+      Map<String, String> gsqlFiles = generator.generateQueryFiles();
+      Collection<String> fileContent = gsqlFiles.values();
+      Location file = createFile(configDir, Constants.GSQL_FILE);
+      writeToLocation(file, Joiner.on(";\n").join(fileContent));
 
       compileBinaries.generateBinaries();
     } catch (Throwable t) {
