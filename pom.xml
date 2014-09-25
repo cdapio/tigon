@@ -761,6 +761,13 @@
   </build>
 
   <profiles>
+
+    <profile>
+      <id>examples</id>
+      <modules>
+        <module>tigon-examples</module>
+      </modules>
+    </profile>
     <!-- Profile for release. Generates extra artifacts -->
     <profile>
       <id>release</id>

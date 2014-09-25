@@ -16,6 +16,7 @@
 
 package co.cask.tigon.api.flow.flowlet;
 
+import co.cask.tephra.TransactionAware;
 import co.cask.tigon.api.RuntimeContext;
 
 /**
@@ -41,4 +42,16 @@ public interface FlowletContext extends RuntimeContext {
    * @return The specification used to configure this {@link Flowlet} instance.
    */
   FlowletSpecification getSpecification();
+
+  /**
+   * Add a {@link TransactionAware} to the context.
+   * @param transactionAware to add to the context.
+   */
+  void addTransactionAware(TransactionAware transactionAware);
+
+  /**
+   * Add a list of {@link TransactionAware}s to the context.
+   * @param transactionAwares to add to the context.
+   */
+  void addTransactionAwares(Iterable<? extends TransactionAware> transactionAwares);
 }

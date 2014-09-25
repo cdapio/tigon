@@ -14,17 +14,23 @@
  * the License.
  */
 
-package co.cask.tigon.internal.app.runtime;
+package co.cask.tigon.analytics;
 
-import co.cask.tephra.TransactionContext;
-import co.cask.tephra.TransactionExecutor;
-import co.cask.tigon.data.queue.QueueClientFactory;
+import java.util.List;
 
 /**
- *
+ * A representation of a tweet and its hashtags.
  */
-public interface DataFabricFacade extends QueueClientFactory {
+public class SimpleTweet {
+  private final String text;
+  private final List<String> hashtags;
 
-  TransactionContext createTransactionManager();
+  public SimpleTweet(String text, List<String> hashtags) {
+    this.hashtags = hashtags;
+    this.text = text;
+  }
 
+  public List<String> getHashtags() {
+    return hashtags;
+  }
 }
