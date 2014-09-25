@@ -78,7 +78,7 @@
             <phase>package</phase>
             <goals><goal>single</goal></goals>
             <configuration>
-              <finalName>test</finalName>
+              <finalName>tigon-developer-release</finalName>
               <formats><format>tar.gz</format></formats>
               <descriptors>
                 <descriptor>src/assembly/tgz.xml</descriptor>
