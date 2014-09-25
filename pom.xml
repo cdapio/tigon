@@ -36,7 +36,6 @@
     <module>tigon-flow</module>
     <module>tigon-unit-test</module>
     <module>tigon-archetypes</module>
-    <module>tigon-examples</module>
     <module>tigon-distribution</module>
   </modules>
 
