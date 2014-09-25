@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-55081520-4']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <title>Getting Started with Tigon &mdash; Tigon 0.1.0 Documentation</title>
+    
+    <link rel="stylesheet" href="_static/tigon.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="Tigon 0.1.0 Documentation" href="index.html" />
+    <link rel="next" title="Tigon Concepts and Architecture" href="architecture.html" />
+    <link rel="prev" title="Tigon Introduction" href="intro.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">Index</a></li>
+        <li class="right" >
+          <a href="architecture.html" title="Tigon Concepts and Architecture"
+             accesskey="N">Next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="Tigon Introduction"
+             accesskey="P">Previous</a> |</li>
+        <li><a href="index.html">Tigon 0.1.0 Documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="getting-started-with-tigon">
+<h1>Getting Started with Tigon<a class="headerlink" href="#getting-started-with-tigon" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<p>Tigon is supported on *NIX systems such as Linux and Macintosh OS X.
+It is not supported on Microsoft Windows.</p>
+<p>To install and use Tigon and its included examples, there are a few prerequisites:</p>
+<ol class="arabic simple">
+<li>JDK 6 or JDK 7 (required to run Tigon; note that $JAVA_HOME should be set)</li>
+<li>GCC</li>
+<li>G++</li>
+<li>libcurl (if it is not already included in your operating system)</li>
+<li>libz</li>
+<li>Apache Maven 3.0+ (required to build the example applications)</li>
+<li>In standalone mode, both Perl 5.x and Python 3.x are required</li>
+</ol>
+</div>
+<div class="section" id="download">
+<h2>Download<a class="headerlink" href="#download" title="Permalink to this headline">¶</a></h2>
+<p>Pre-compiled sources and related files can be downloaded in a zip file:
+<cite>tigon-0.1.0.zip &lt;http://cask.co/downloads/tigon/tigon-0.1.0.zip&gt;</cite>.</p>
+</div>
+<div class="section" id="install">
+<h2>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h2>
+<p>Once the download has completed, unzip the file to a suitable location.</p>
+</div>
+<div class="section" id="building-tigon-from-source">
+<h2>Building Tigon from Source<a class="headerlink" href="#building-tigon-from-source" title="Permalink to this headline">¶</a></h2>
+<p>You can also get started with Tigon by building directly from the latest source code:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="go">git clone https://github.com/cask/tigon.git</span>
+<span class="go">cd tigon</span>
+<span class="go">mvn clean package -P sql-lib</span>
+</pre></div>
+</div>
+<p>After the build completes, you will have a distribution of Tigon under the
+<cite>tigon-distribution/target/</cite> directory.</p>
+<p>Take the <cite>tigon-&lt;version&gt;.tar.gz</cite> file and unzip it into a suitable location.</p>
+<div class="section" id="is-it-building">
+<h3>Is It Building?<a class="headerlink" href="#is-it-building" title="Permalink to this headline">¶</a></h3>
+<ul class="simple">
+<li><a class="reference external" href="https:////builds.cask.co/browse/TIG">Bamboo Build</a></li>
+<li><a class="reference external" href="https://github.com/caskco/tigon/releases/latest">GitHub Version</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="macintosh-os-x">
+<h3>Macintosh OS X<a class="headerlink" href="#macintosh-os-x" title="Permalink to this headline">¶</a></h3>
+<p>Tigon will not run with the default shared memory settings of the Macintosh, as
+OS X does not provide sufficient shared memory regions by default.
+To run Tigon, you&#8217;ll need to revise these settings by executing these commands:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="go">sudo sysctl -w kern.sysv.shmall=102400</span>
+
+<span class="go">sudo sysctl -w kern.sysv.shmseg=100</span>
+
+<span class="go">sudo sysctl -w kern.sysv.shmmax=419430400</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="problems-with-the-downloaded-package">
+<h3>Problems with the Downloaded Package?<a class="headerlink" href="#problems-with-the-downloaded-package" title="Permalink to this headline">¶</a></h3>
+<p>If the downloaded package doesn&#8217;t work, try to build a tarball for your system
+as described above.</p>
+</div>
+</div>
+<div class="section" id="where-to-go-next">
+<h2>Where to Go Next<a class="headerlink" href="#where-to-go-next" title="Permalink to this headline">¶</a></h2>
+<p>Now that you&#8217;ve gotten started with Tigon, take a look at:</p>
+<ul class="simple">
+<li><a class="reference external" href="architecture.html">Concepts and Architecture</a>, which covers the basic design behind Tigon.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><!--
+  Copyright © 2014 Cask Data, Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License"); you may not
+  use this file except in compliance with the License. You may obtain a copy of
+  the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+  License for the specific language governing permissions and limitations under
+  the License.
+-->
+
+<h3><a href="index.html">Table of Contents</a></h3>
+<nav>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="intro.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#download">Download</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install">Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#building-tigon-from-source">Building Tigon from Source</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#where-to-go-next">Where to Go Next</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture.html">Concepts and Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="apis/apis.html">APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="admin.html">Admin</a></li>
+<li class="toctree-l1"><a class="reference internal" href="licenses.html">Licenses and Copyrights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="releasenotes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+</ul>
+
+</nav>
+  <h4>Previous Topic</h4>
+  <p class="topless"><a href="intro.html"
+                        title="Previous Chapter">Tigon Introduction</a></p>
+  <h4>Next Topic</h4>
+  <p class="topless"><a href="architecture.html"
+                        title="Next Chapter">Tigon Concepts and Architecture</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick Search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >Index</a></li>
+        <li class="right" >
+          <a href="architecture.html" title="Tigon Concepts and Architecture"
+             >Next</a> |</li>
+        <li class="right" >
+          <a href="intro.html" title="Tigon Introduction"
+             >Previous</a> |</li>
+        <li><a href="index.html">Tigon 0.1.0 Documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2014 Cask Data, Inc.
+    </div>
+  </body>
+</html>
