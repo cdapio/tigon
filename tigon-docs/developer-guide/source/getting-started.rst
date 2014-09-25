@@ -45,15 +45,13 @@ You can also get started with Tigon by building directly from the latest source 
 
   git clone https://github.com/cask/tigon.git
   cd tigon
-  mvn clean package
+  mvn clean package -P sql-lib
 
 After the build completes, you will have a distribution of Tigon under the
 `tigon-distribution/target/` directory.  
 
 Take the `tigon-<version>.tar.gz` file and unzip it into a suitable location.
 
-For more build options, please refer to the [build instructions](BUILD.md) included in the
-source distribution.
 
 Is It Building?
 ---------------
@@ -90,9 +88,11 @@ To run Tigon, you'll need to revise these settings by executing these commands::
   sudo sysctl -w kern.sysv.shmmax=419430400
 
 
-Setting up Your Development Environment
+Problems with the Downloaded Package?
 ---------------------------------------
 
+If the downloaded package doesn't work, try to build a tarball for your system
+as described above.
 
 
 Where to Go Next

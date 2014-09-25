@@ -12,10 +12,6 @@ Release 0.1.0
 Features
 ------------
 - First public release
-  
-Known Issues
-------------
-
 
 
 Where to Go Next
