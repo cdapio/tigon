@@ -56,15 +56,12 @@ Take the `tigon-<version>.tar.gz` file and unzip it into a suitable location.
 Is It Building?
 ---------------
 
-============================================================================= ==================
- Build                                                                         Status / Version
-============================================================================= ==================
+============================================================================= 
+ Build                                                                       
+============================================================================= 
 `Bamboo Build <https:////builds.cask.co/browse/TIG>`__
-`GitHub Version <https://github.com/caskco/tigon/releases/latest>`__           |github-tigon|
-============================================================================= ==================
-
-.. |github-tigon| image:: http://img.shields.io/github/release/caskco/tigon.svg
-                  :height: 30px
+`GitHub Version <https://github.com/caskco/tigon/releases/latest>`__           
+============================================================================= 
 
 
 Configuration
