@@ -58,6 +58,7 @@ public class DataIngestionRouter extends AbstractIdleService {
   protected void startUp() throws Exception {
     httpService = NettyHttpService.builder()
       .addHttpHandlers(ImmutableList.of(new ForwardingHandler(clientService)))
+      .setHost("0.0.0.0")
       .setPort(httpPort)
       .build();
     httpService.addListener(new ServiceListenerAdapter() {
