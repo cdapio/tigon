@@ -1,5 +1,5 @@
 /*
- * Copyright © 2014 Cask Data, Inc.
+ * Copyright 2014 Cask Data, Inc.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -257,7 +257,7 @@ final class FlowletProcessDriver extends AbstractExecutionThreadService {
     }
 
     // Begin transaction and dequeue
-    TransactionContext txContext = dataFabricFacade.createTransactionManager();
+    final TransactionContext txContext = flowletContext.createTransactionContext();
     try {
       txContext.start();
 
@@ -370,37 +370,43 @@ final class FlowletProcessDriver extends AbstractExecutionThreadService {
   }
 
   private void initFlowlet() throws InterruptedException {
+    final TransactionContext txContext = flowletContext.createTransactionContext();
     try {
-      dataFabricFacade.createTransactionExecutor().execute(new TransactionExecutor.Subroutine() {
-        @Override
-        public void apply() throws Exception {
-          LOG.info("Initializing flowlet: " + flowletContext);
-          flowlet.initialize(flowletContext);
-          LOG.info("Flowlet initialized: " + flowletContext);
-        }
-      });
+      txContext.start();
+      try {
+        LOG.info("Initializing flowlet: " + flowletContext);
+
+        flowlet.initialize(flowletContext);
+
+        LOG.info("Flowlet initialized: " + flowletContext);
+      } catch (Throwable t) {
+        LOG.error("User code exception. Aborting transaction.", t);
+        txContext.abort(new TransactionFailureException("User code exception. Aborting transaction", t));
+        throw Throwables.propagate(t);
+      }
+      txContext.finish();
     } catch (TransactionFailureException e) {
-      Throwable cause = e.getCause() == null ? e : e.getCause();
-      LOG.error("Flowlet throws exception during flowlet initialize: " + flowletContext, cause);
-      throw Throwables.propagate(cause);
+      LOG.error("Flowlet throws exception during flowlet initialize: " + flowletContext, e);
+      throw Throwables.propagate(e);
     }
   }
 
   private void destroyFlowlet() {
+    final TransactionContext txContext = flowletContext.createTransactionContext();
     try {
-      dataFabricFacade.createTransactionExecutor().execute(new TransactionExecutor.Subroutine() {
-        @Override
-        public void apply() throws Exception {
-          LOG.info("Destroying flowlet: " + flowletContext);
-          flowlet.destroy();
-          LOG.info("Flowlet destroyed: " + flowletContext);
-        }
-      });
+      txContext.start();
+      try {
+        LOG.info("Destroying flowlet: " + flowletContext);
+        flowlet.destroy();
+        LOG.info("Flowlet destroyed: " + flowletContext);
+      } catch (Throwable t) {
+        LOG.error("User code exception. Aborting transaction.", t);
+        txContext.abort(new TransactionFailureException("User code exception. Aborting transaction", t));
+        // No need to propagate, as it is shutting down.
+      }
+      txContext.finish();
     } catch (TransactionFailureException e) {
-      Throwable cause = e.getCause() == null ? e : e.getCause();
-      LOG.error("Flowlet throws exception during flowlet destroy: " + flowletContext, cause);
-      // No need to propagate, as it is shutting down.
-    } catch (InterruptedException e) {
+      LOG.error("Flowlet throws exception during flowlet destroy: " + flowletContext, e);
       // No need to propagate, as it is shutting down.
     }
   }
