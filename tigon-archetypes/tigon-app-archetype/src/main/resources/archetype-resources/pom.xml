@@ -52,7 +52,7 @@
       <groupId>co.cask.tigon</groupId>
       <artifactId>tigon-unit-test</artifactId>
       <version>${tigon.version}</version>
-      <scope>provided</scope>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
