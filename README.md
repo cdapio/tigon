@@ -73,6 +73,12 @@ Pre-compiled sources and related files can be downloaded in a zip file:
 Once the download has completed, unzip the file in a suitable location.
 
 
+### Problems with the Downloaded Package?
+
+If the downloaded package doesn't work, try to build a tarball for your system
+as described below.
+
+
 ### Building from Source
 
 You can also get started with Tigon by building directly from the latest source code::
@@ -80,15 +86,13 @@ You can also get started with Tigon by building directly from the latest source 
 ```
   git clone https://github.com/cask/tigon.git
   cd tigon
-  mvn clean package
+  mvn clean package -P sql-lib
 ```
 
 After the build completes, you will have a distribution of Tigon under the
 `tigon-distribution/target/` directory.  
 
 Take the `tigon-<version>.tar.gz` file and unzip it into a suitable location.
-
-For more build options, please refer to the [build instructions](BUILD.md).
 
 ### Skip build and test of SQL libraries (Default is to both build and test the SQL libraries)
     mvn ... -DskipSQLLib
@@ -100,10 +104,10 @@ For more build options, please refer to the [build instructions](BUILD.md).
     mvn ... -DskipSQLTests
 
 
-## Quick Start
+## Getting Started Guide
 
-Visit our web site for a [Quick Start](http://docs.cask.co/docs/tigon/current/quickstart.html)
-that will guide you through installing Tigon, running an example that....  
+Visit our web site for a [Getting Started Guide](http://docs.cask.co/docs/tigon/current/getting-started.html)
+that will guide you through installing Tigon and running an example.  
 
 
 ## Where to Go Next
