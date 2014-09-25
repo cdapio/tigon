@@ -1,6 +1,6 @@
 # Tigon Application Archetype
 
-This directory contains a Tigon Application Archetype for Tigon.
+This directory contains a Maven Application Archetype for Tigon.
 
 # Installing
 
