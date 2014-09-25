@@ -132,7 +132,6 @@ public class TweetCollector extends AbstractFlowlet {
           public void onStatus(Status status) {
             String tweet = status.getText();
             String lang = status.getLang();
-            status.getHashtagEntities();
             if (!lang.equals("en")) {
               return;
             }

@@ -85,6 +85,7 @@
                   <exclude>**/resources/**/*.scss</exclude>
                   <exclude>**/resources/**/*.js</exclude>
                   <exclude>**/resources/**/*.svg</exclude>
+                  <exclude>**/tigon-sql/**</exclude>
                 </excludes>
               </configuration>
             </execution>
