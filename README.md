@@ -40,7 +40,7 @@ For more information, see our collection of
 
 Builds                                                            
 ------------------------------------------------------------------
-[Bamboo Build](https://builds.cask.co/browse/TIG)                 
+[Bamboo Build](https://builds.cask.co/browse/TIGON)                 
 [GitHub Version](https://github.com/caskco/tigon/releases/latest) 
 
 
@@ -65,18 +65,20 @@ To install and use Tigon and its included examples, there are a few prerequisite
 ### Download
 
 Pre-compiled sources and related files can be downloaded in a zip file: 
-[tigon-0.1.0.zip] (http://cask.co/downloads/tigon/tigon-0.1.0.zip).
+[tigon-developer-release-0.1.0.zip] (http://cask.co/downloads/tigon/tigon-0.1.0.zip).
 
 
 ### Install 
 
 Once the download has completed, unzip the file in a suitable location.
 
+### Run Instructions
 
-### Problems with the Downloaded Package?
+To run Tigon in standalone mode:
+$ run_standalone.sh <path-to-flow-jar> <flow-class-name> <run-time-args>
 
-If the downloaded package doesn't work, try to build a tarball for your system
-as described below.
+To run Tigon in distributed mode:
+$ run_distributed.sh <zookeeper-quorum> <hdfs-namespace>
 
 
 ### Building from Source
@@ -86,23 +88,13 @@ You can also get started with Tigon by building directly from the latest source 
 ```
   git clone https://github.com/cask/tigon.git
   cd tigon
-  mvn clean package -P sql-lib
+  mvn clean package
 ```
 
 After the build completes, you will have a distribution of Tigon under the
 `tigon-distribution/target/` directory.  
 
 Take the `tigon-<version>.tar.gz` file and unzip it into a suitable location.
-
-### Skip build and test of SQL libraries (Default is to both build and test the SQL libraries)
-    mvn ... -DskipSQLLib
-    
-### Skip build of SQL libraries
-    mvn ... -DskipSQLBuild
-
-### Skip SQL tests
-    mvn ... -DskipSQLTests
-
 
 ## Getting Started Guide
 
