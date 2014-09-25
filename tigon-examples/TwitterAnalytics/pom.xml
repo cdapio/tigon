@@ -25,10 +25,10 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
-  <artifactId>SentimentAnalysis</artifactId>
+  <artifactId>TwitterAnalytics</artifactId>
 
   <properties>
-    <app.main.class>co.cask.tigon.sentiment.SentimentAnalysis</app.main.class>
+    <app.main.class>co.cask.tigon.analytics.TwitterAnalytics</app.main.class>
   </properties>
 
   <dependencies>
@@ -36,11 +36,6 @@
       <groupId>co.cask.tigon</groupId>
       <artifactId>tigon-api</artifactId>
       <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>com.lingpipe</groupId>
-      <artifactId>lingpipe</artifactId>
-      <version>4.1.0</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>

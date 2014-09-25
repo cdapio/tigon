@@ -14,7 +14,7 @@
  * the License.
  */
 
-package co.cask.tigon.sentiment;
+package co.cask.tigon.analytics;
 
 import co.cask.tigon.api.annotation.Tick;
 import co.cask.tigon.api.flow.flowlet.AbstractFlowlet;
@@ -94,6 +94,7 @@ public class TweetCollector extends AbstractFlowlet {
       // emitting more data to get higher throughput
       for (int k = 0; k < tweetAmplification; k++) {
         output.emit(tweet);
+        output.emit("#GGDONK test value");
       }
     }
   }
@@ -126,6 +127,7 @@ public class TweetCollector extends AbstractFlowlet {
           public void onStatus(Status status) {
             String tweet = status.getText();
             String lang = status.getLang();
+            status.getHashtagEntities();
             if (!lang.equals("en")) {
               return;
             }

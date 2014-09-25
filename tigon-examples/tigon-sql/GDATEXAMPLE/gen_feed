@@ -1,7 +1,0 @@
-#!/usr/bin/perl
-while(1==1) {
-while((-e exampleGdat)) { sleep(1); }
-system("cp example.gdat exampleGdatX ; mv exampleGdatX exampleGdat");
-sleep 1;
-}
-

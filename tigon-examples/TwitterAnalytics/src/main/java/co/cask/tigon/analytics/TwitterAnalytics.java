@@ -13,7 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-package co.cask.tigon.sentiment;
+package co.cask.tigon.analytics;
 
 import co.cask.tigon.api.flow.Flow;
 import co.cask.tigon.api.flow.FlowSpecification;
@@ -21,13 +21,13 @@ import co.cask.tigon.api.flow.FlowSpecification;
 /**
  * A {@link Flow} that collects Tweets and runs a Sentiment analysis algorithm on them.
  */
-public class SentimentAnalysis implements Flow {
+public class TwitterAnalytics implements Flow {
 
   @Override
   public FlowSpecification configure() {
     return FlowSpecification.Builder.with()
-      .setName("SentimentAnalysis")
-      .setDescription("Analysis of tweets to generate sentiments.")
+      .setName("TwitterAnalytics")
+      .setDescription("Analysis of tweets to generate top 10 hashtags.")
       .withFlowlets()
       .add("collector", new TweetCollector())
       .add("analyzer", new Analysis())

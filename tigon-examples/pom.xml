@@ -28,7 +28,7 @@
   <artifactId>tigon-examples</artifactId>
   <packaging>pom</packaging>
   <modules>
-    <module>SentimentAnalysis</module>
+    <module>TwitterAnalytics</module>
   </modules>
 
   <dependencies>
