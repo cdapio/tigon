@@ -36,6 +36,7 @@
     <module>tigon-hbase-compat-0.94</module>
     <module>tigon-hbase-compat-0.96</module>
     <module>tigon-flow</module>
+    <module>tigon-examples</module>
     <module>tigon-distribution</module>
   </modules>
 
