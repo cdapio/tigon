@@ -83,9 +83,9 @@ public class StreamConfigGenerator {
     return "default : Contains[InterfaceType, GDAT]";
   }
 
-  private String createOutputSpec(Map<String, String> gsql) {
+  private String createOutputSpec(Map<String, String> sql) {
     StringBuilder stringBuilder = new StringBuilder();
-    for (String outputStreamName : gsql.keySet()) {
+    for (String outputStreamName : sql.keySet()) {
       stringBuilder.append(outputStreamName).append(OUTPUTSPEC_SUFFIX).append(Constants.NEWLINE);
     }
     return stringBuilder.toString();
@@ -115,21 +115,21 @@ public class StreamConfigGenerator {
     return stringBuilder.toString();
   }
 
-  private String createQueryContent(String name, String gsql) {
+  private String createQueryContent(String name, String sql) {
     StringBuilder stringBuilder = new StringBuilder();
     //TODO: Providing external visibility to all queries for now. Need to set this only for queries whose outputs
     //have corresponding process methods for better performance.
     String header = String.format("DEFINE { query_name '%s'; visibility 'external'; }", name);
     //Use default interface set
-    stringBuilder.append(header).append(Constants.NEWLINE).append(gsql).append(Constants.NEWLINE);
+    stringBuilder.append(header).append(Constants.NEWLINE).append(sql).append(Constants.NEWLINE);
     return stringBuilder.toString();
   }
 
-  private Map<String, String> createQueryFiles(Map<String, String> gsql) {
-    Map<String, String> gsqlQueryMap = Maps.newHashMap();
-    for (Map.Entry<String, String> sqlQuery : gsql.entrySet()) {
-      gsqlQueryMap.put(sqlQuery.getKey(), createQueryContent(sqlQuery.getKey(), sqlQuery.getValue()));
+  private Map<String, String> createQueryFiles(Map<String, String> sql) {
+    Map<String, String> sqlQueryMap = Maps.newHashMap();
+    for (Map.Entry<String, String> sqlQuery : sql.entrySet()) {
+      sqlQueryMap.put(sqlQuery.getKey(), createQueryContent(sqlQuery.getKey(), sqlQuery.getValue()));
     }
-    return gsqlQueryMap;
+    return sqlQueryMap;
   }
 }
