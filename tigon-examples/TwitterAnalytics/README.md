@@ -1,10 +1,10 @@
-SentimentAnalysis
+TwitterAnalytics
 =================
-Sentiment Analysis application.
+TwitterAnalytics Application.
 
 Overview
 ========
-An application that analyzes the sentiments of Twitter Tweets and categorizes them as either positive, negative or neutral.
+An application collects Tweets and logs the top 10 hashtags used in the last minute.
 
 Twitter Configuration
 =====================
@@ -14,7 +14,7 @@ These configurations must be provided as runtime arguments to the flow prior to 
 
 Flow Runtime Arguments
 ======================
-When starting the ```analysis``` flow from the command line, runtime arguments can be specified.
+When starting the Application from the command line, runtime arguments can be specified.
 "oauth.consumerKey" - See ```Twitter Configuration``` above.
 "oauth.consumerSecret" - See ```Twitter Configuration``` above.
 "oauth.Token" - See ```Twitter Configuration``` above.
@@ -25,21 +25,21 @@ Installation
 
 Build the Application jar:
 ```
-mvn clean package
+MAVEN_OPTS="-Xmx512m" mvn package -DskipTests -pl tigon-examples -am -amd -P examples
 ```
 
 To deploy the Application to a standalone instance of Tigon:
 ```
-bin/bash run_standalone.sh SentimentAnalysis-0.1.0.jar co.cask.tigon.sentiment.SentimentAnalysis [ oauth-properties ]
+$ ./run_standalone.sh /path/to/TwitterAnalytics-0.1.0.jar co.cask.tigon.analytics.TwitterAnalytics [ oauth-properties ]
 ```
 
 To deploy the Application to a distributed instance of Tigon:
 ```
-bin/bash run_distributed.sh <ZookeeperQuorum> <HDFSNamespace>
-> START SentimentAnalysis-0.1.0.jar co.cask.tigon.sentiment.SentimentAnalysis [ oauth-properties ]
+$ ./run_distributed.sh <ZookeeperQuorum> <HDFSNamespace>
+> START /path/to/TwitterAnalytics-0.1.0.jar co.cask.tigon.analytics.TwitterAnalytics [ oauth-properties ]
 ```
 
-The sentiment classifications get printed to a log file.
+The top 10 hashtags used gets logged to a file.
 
 ## License and Trademarks
 

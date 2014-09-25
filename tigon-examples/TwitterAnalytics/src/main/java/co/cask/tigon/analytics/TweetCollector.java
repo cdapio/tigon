@@ -20,8 +20,10 @@ import co.cask.tigon.api.annotation.Tick;
 import co.cask.tigon.api.flow.flowlet.AbstractFlowlet;
 import co.cask.tigon.api.flow.flowlet.FlowletContext;
 import co.cask.tigon.api.flow.flowlet.OutputEmitter;
+import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import twitter4j.HashtagEntity;
 import twitter4j.Status;
 import twitter4j.StatusAdapter;
 import twitter4j.StatusListener;
@@ -29,6 +31,7 @@ import twitter4j.TwitterStream;
 import twitter4j.TwitterStreamFactory;
 import twitter4j.conf.ConfigurationBuilder;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -40,10 +43,10 @@ import java.util.concurrent.TimeUnit;
 public class TweetCollector extends AbstractFlowlet {
   private static final Logger LOG = LoggerFactory.getLogger(TweetCollector.class);
 
-  private OutputEmitter<String> output;
+  private OutputEmitter<SimpleTweet> output;
 
   private CollectingThread collector;
-  private BlockingQueue<String> queue;
+  private BlockingQueue<Status> queue;
 
   private int tweetAmplification;
 
@@ -64,7 +67,7 @@ public class TweetCollector extends AbstractFlowlet {
       tweetAmplification = Integer.parseInt(args.get("tweet.amplification"));
       LOG.info("Tweets are being amplified (tweet.amplification={})", tweetAmplification);
     }
-    queue = new LinkedBlockingQueue<String>(10000);
+    queue = new LinkedBlockingQueue<Status>(10000);
     collector = new CollectingThread();
     collector.start();
   }
@@ -86,15 +89,18 @@ public class TweetCollector extends AbstractFlowlet {
     int batchSize = 100;
 
     for (int i = 0; i < batchSize; i++) {
-      String tweet = queue.poll();
+      Status tweet = queue.poll();
       if (tweet == null) {
         break;
       }
 
       // emitting more data to get higher throughput
       for (int k = 0; k < tweetAmplification; k++) {
-        output.emit(tweet);
-        output.emit("#GGDONK test value");
+        List<String> hashtags = Lists.newArrayList();
+        for (HashtagEntity hashtag : tweet.getHashtagEntities()) {
+          hashtags.add(hashtag.getText());
+        }
+        output.emit(new SimpleTweet(tweet.getText(), hashtags));
       }
     }
   }
@@ -132,7 +138,7 @@ public class TweetCollector extends AbstractFlowlet {
               return;
             }
             try {
-              queue.put(tweet);
+              queue.put(status);
             } catch (InterruptedException e) {
               LOG.warn("Interrupted writing to queue", e);
               return;

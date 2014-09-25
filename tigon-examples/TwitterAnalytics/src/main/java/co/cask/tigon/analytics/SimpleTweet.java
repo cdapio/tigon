@@ -13,26 +13,24 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 package co.cask.tigon.analytics;
 
-import co.cask.tigon.api.flow.Flow;
-import co.cask.tigon.api.flow.FlowSpecification;
+import java.util.List;
 
 /**
- * A {@link Flow} that collects Tweets and runs analytics on their hashtags.
+ * A representation of a tweet and its hashtags.
  */
-public class TwitterAnalytics implements Flow {
+public class SimpleTweet {
+  private final String text;
+  private final List<String> hashtags;
 
-  @Override
-  public FlowSpecification configure() {
-    return FlowSpecification.Builder.with()
-      .setName("TwitterAnalytics")
-      .setDescription("Analysis of tweets to generate top 10 hashtags.")
-      .withFlowlets()
-      .add("collector", new TweetCollector())
-      .add("analyzer", new Analytics())
-      .connect()
-      .from("collector").to("analyzer")
-      .build();
+  public SimpleTweet(String text, List<String> hashtags) {
+    this.hashtags = hashtags;
+    this.text = text;
+  }
+
+  public List<String> getHashtags() {
+    return hashtags;
   }
 }

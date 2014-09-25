@@ -32,15 +32,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
- * Sentiment analysis flowlet.
+ * Tweet analytics flowlet.
  */
-public class Analysis extends AbstractFlowlet {
+public class Analytics extends AbstractFlowlet {
 
-  private static final Logger LOG = LoggerFactory.getLogger(Analysis.class);
+  private static final Logger LOG = LoggerFactory.getLogger(Analytics.class);
   private Map<String, Integer> hashtagCounts;
 
   @Override
@@ -52,14 +50,21 @@ public class Analysis extends AbstractFlowlet {
 
   @Batch(100)
   @ProcessInput
-  public void processTweets(Iterator<String> tweets) throws FileNotFoundException {
+  public void processTweets(Iterator<SimpleTweet> tweets) throws FileNotFoundException {
     while (tweets.hasNext()) {
-      parseHashtags(tweets.next());
+      SimpleTweet tweet = tweets.next();
+      for (String hashtag : tweet.getHashtags()) {
+        if (hashtagCounts.containsKey(hashtag)) {
+          hashtagCounts.put(hashtag, hashtagCounts.get(hashtag) + 1);
+        } else {
+          hashtagCounts.put(hashtag, 1);
+        }
+      }
     }
   }
 
   @Tick(unit = TimeUnit.SECONDS, delay = 60)
-  public void logAnalytics() throws InterruptedException {
+  public void logTopTweets() throws InterruptedException {
     if (hashtagCounts.isEmpty()) {
       return;
     }
@@ -72,19 +77,7 @@ public class Analysis extends AbstractFlowlet {
       });
 
     List<Map.Entry<String, Integer>> topHashtags = entryOrdering.greatestOf(hashtagCounts.entrySet(), 10);
-    System.out.println(hashtagCounts);
-    System.out.println(topHashtags);
-  }
-
-  private void parseHashtags(String tweet) {
-    Matcher matcher = Pattern.compile("#\\s*(\\w+)").matcher(tweet);
-    while (matcher.find()) {
-      String hashtag = matcher.group(1);
-      if (hashtagCounts.containsKey(hashtag)) {
-        hashtagCounts.put(hashtag, hashtagCounts.get(hashtag) + 1);
-      } else {
-        hashtagCounts.put(hashtag, 1);
-      }
-    }
+    hashtagCounts.clear();
+    LOG.info("Top hashtags in the last minute : " + topHashtags);
   }
 }
