@@ -24,6 +24,34 @@
   <packaging>pom</packaging>
   <name>Tigon</name>
 
+  <organization>
+    <name>Cask Data, Inc.</name>
+    <url>http://cask.co</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>Cask Data</name>
+      <email>tigon-dev@googlegroups.com</email>
+      <organization>Cask Data, Inc.</organization>
+      <organizationUrl>http://www.tigon.io</organizationUrl>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:https://github.com/caskdata/tigon.git</connection>
+    <developerConnection>scm:git:git@github.com:caskdata/tigon.git</developerConnection>
+    <url>https://github.com/caskdata/tigon.git</url>
+    <tag>HEAD</tag>
+  </scm>
+
   <modules>
     <module>tigon-api</module>
     <module>tigon-queue</module>
