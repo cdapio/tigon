@@ -1,26 +1,15 @@
 # SQLJoinFlow
 
 ## Overview
-An application collects Tweets and logs the top 10 hashtags used in the last minute.
-
-## Twitter Configuration
-In order to utilize the ``TweetCollector`` flowlet, which pulls a small sample stream via the Twitter API, an API key and Access token must be configured.
-Follow the steps at [Twitter oauth access tokens](https://dev.twitter.com/oauth/overview/application-owner-access-tokens) to obtain these credentials.
-These configurations must be provided as runtime arguments to the Flow prior to starting it in order to use the ``TweetCollector`` flowlet.
+An application that demonstrates the capabilities of tigon-sql library.
+It does an inner-join of two data streams and logs the result of the SQL command.
 
 ## Flow Runtime Arguments
-When starting the Application from the command line, runtime arguments may need to be specified.
+When starting the Application from the command line, runtime arguments will need to be specified.
 
-The required Twitter authorization properties ("oauth-properties") include all of these:
+The only required property is:
 
-"oauth.consumerKey" - See ```Twitter Configuration``` above.
-
-"oauth.consumerSecret" - See ```Twitter Configuration``` above.
-
-"oauth.Token" - See ```Twitter Configuration``` above.
-
-"oauth.TokenSecret" - See ```Twitter Configuration``` above.
-
+"httpPort" - The port to run the HTTP ingestion endpoints on.
 
 ## Installation
 
@@ -31,18 +20,27 @@ MAVEN_OPTS="-Xmx512m" mvn package -DskipTests -pl tigon-examples -am -amd -P exa
 
 To deploy the Application to a standalone instance of Tigon:
 ```
-$ ./run_standalone.sh /path/to/TwitterAnalytics-0.1.0.jar co.cask.tigon.analytics.TwitterAnalytics [ oauth-properties ]
+$ ./run_standalone.sh /path/to/SQLJoinFlow-0.1.0.jar cco.cask.tigon.sqljoinflow.SQLJoinFlow [ host-property ]
 ```
 
-To deploy the Application to a distributed instance of Tigon:
+The Flow exposes 2 ingestion endpoints:
 ```
-$ ./run_distributed.sh <ZookeeperQuorum> <HDFSNamespace>
-> START /path/to/TwitterAnalytics-0.1.0.jar co.cask.tigon.analytics.TwitterAnalytics [ oauth-properties ]
+POST /v1/tigon/ageInput -d { "data" : [ <id>, <age> ] }
 ```
 
-The top ten hashtags used in the previous minute get recorded. In the case of standalone instance of Tigon,
-the results will appear immediately in the Tigon command line interface; in the case of distributed instance of Tigon,
-the results will be written to the logs of the YARN container of the Flowlet.
+```
+POST /v1/tigon/nameInput -d { "data" : [ <id>, <name> ] }
+```
+
+The output is the inner-join of these two input streams on their ``id``s. A filter of age greater than 40 is applied
+on the results.
+
+The output will look like:
+
+```
+<id> : <name> : <age>
+```
+
 
 ## License and Trademarks
 
