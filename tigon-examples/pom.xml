@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Copyright © 2014 Cask Data, Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License"); you may not
+  use this file except in compliance with the License. You may obtain a copy of
+  the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+  License for the specific language governing permissions and limitations under
+  the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <parent>
+    <artifactId>tigon</artifactId>
+    <groupId>co.cask.tigon</groupId>
+    <version>0.1.0</version>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+
+  <artifactId>tigon-examples</artifactId>
+  <packaging>pom</packaging>
+  <modules>
+    <module>TwitterAnalytics</module>
+    <module>SQLJoinFlow</module>
+  </modules>
+
+  <dependencies>
+    <dependency>
+      <groupId>co.cask.tigon</groupId>
+      <artifactId>tigon-api</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.guava</groupId>
+      <artifactId>guava</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+    </dependency>
+  </dependencies>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>co.cask.tigon</groupId>
+        <artifactId>tigon-sql</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.twitter4j</groupId>
+        <artifactId>twitter4j-async</artifactId>
+        <version>4.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.twitter4j</groupId>
+        <artifactId>twitter4j-core</artifactId>
+        <version>4.0.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.twitter4j</groupId>
+        <artifactId>twitter4j-stream</artifactId>
+        <version>4.0.0</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>org.apache.rat</groupId>
+          <artifactId>apache-rat-plugin</artifactId>
+          <version>0.10</version>
+          <executions>
+            <execution>
+              <id>rat-check</id>
+              <phase>validate</phase>
+              <goals>
+                <goal>check</goal>
+              </goals>
+              <configuration>
+                <excludes>
+                  <exclude>build-number.txt</exclude>
+                  <exclude>LICENSE*.txt</exclude>
+                  <exclude>README.md</exclude>
+                  <exclude>logs/**</exclude>
+                  <exclude>docs/**</exclude>
+                  <exclude>conf/**</exclude>
+                  <exclude>**/data/**</exclude>
+                  <exclude>**/Apache-LICENSE-2.0</exclude>
+                  <exclude>**/VERSION</exclude>
+                  <exlcude>**/*.patch</exlcude>
+                  <exclude>**/logrotate.d/**</exclude>
+                  <exclude>**/limits.d/**</exclude>
+                  <exclude>**/resources/**/*.txt</exclude>
+                  <exclude>**/resources/**/*.accesslog</exclude>
+                  <exclude>**/resources/**/*.css</exclude>
+                  <exclude>**/resources/**/*.scss</exclude>
+                  <exclude>**/resources/**/*.js</exclude>
+                  <exclude>**/resources/**/*.svg</exclude>
+                  <exclude>**/tigon-sql/**</exclude>
+                  <exclude>**/*.data</exclude>
+                </excludes>
+              </configuration>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.felix</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <version>2.3.7</version>
+          <extensions>true</extensions>
+          <configuration>
+            <archive>
+              <manifest>
+                <mainClass>${app.main.class}</mainClass>
+              </manifest>
+            </archive>
+            <instructions>
+              <Embed-Dependency>*;inline=false;scope=compile</Embed-Dependency>
+              <Embed-Transitive>true</Embed-Transitive>
+              <Embed-Directory>lib</Embed-Directory>
+            </instructions>
+          </configuration>
+          <executions>
+            <execution>
+              <phase>package</phase>
+              <goals>
+                <goal>bundle</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+      </plugins>
+    </pluginManagement>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <version>2.14.1</version>
+        <configuration>
+          <argLine>-Xmx2048m</argLine>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.felix</groupId>
+        <artifactId>maven-bundle-plugin</artifactId>
+        <version>2.3.7</version>
+      </plugin>
+    </plugins>
+  </build>
+</project>
