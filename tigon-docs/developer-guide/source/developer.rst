@@ -26,10 +26,9 @@ assure a unique and core property of the Flow system: it guarantees
 atomic and "exactly-once" processing of each input object by each
 Flowlet in the DAG.
 
-Flows are deployed to the CDAP instance and hosted within containers. Each
-Flowlet instance runs in its own container. Each Flowlet in the DAG can
-have multiple concurrent instances, each consuming a partition of the
-Flowlet’s inputs.
+A Flow runs as a YARN application and each Flowlet instance runs in its own container.
+Each Flowlet in the DAG can have multiple concurrent instances, each consuming a partition
+of the Flowlet’s inputs.
 
 To put data into your Flow, you implement a Flowlet to generate or pull the data
 from an external source.
@@ -47,15 +46,17 @@ returns a ``FlowSpecification`` using ``FlowSpecification.Builder()``::
         .setName("mySampleFlow")
         .setDescription("Flow for showing examples")
         .withFlowlets()
-          .add("flowlet1", new MyExampleFlowlet())
-          .add("flowlet2", new MyExampleFlowlet2())
+          .add("flowlet1", new MyExampleFlowlet(), 1)
+          .add("flowlet2", new MyExampleFlowlet2(), 3)
         .connect()
           .from("flowlet1").to("flowlet2")
         .build();
   }
 
-In this example, the *name*, *description*, *with* (or *without*)
-Flowlets, and *connections* are specified before building the Flow.
+In this example, the *name*, *description*, *with* (or *without*) Flowlets, and
+*connections* are specified before building the Flow. The code above creates a Flow with
+two Flowlets; the first named *flowlet1*, a ``MyExampleFlowlet`` with 1 instance, and the
+second *flowlet2*, a ``MyExampleFlowlet2`` with 3 instances.
 
 .. _flowlets:
 

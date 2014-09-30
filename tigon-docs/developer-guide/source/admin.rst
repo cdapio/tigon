@@ -66,6 +66,6 @@ You can then exit the command-line interface either with ``exit`` or ``Control-C
 Where to Go Next
 ================
 
-Now that you're seen how to run Tigon, take a look at:
+Now that you're familiar with how to run Tigon, take a look at:
 
 - `Licenses and Copyrights <licenses.html>`__, which covers how Tigon has been released.

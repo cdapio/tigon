@@ -30,7 +30,7 @@ Tigon SQL
 Where to Go Next
 ================
 
-Now that you're seen the APIs for Tigon, take a look at:
+Now that you're familiar with the APIs for Tigon, take a look at:
 
 - `Tools <../tools.html>`__, which describes the command-line interface for running a Tigon Application.
 
