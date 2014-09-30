@@ -101,7 +101,7 @@
     <surefire.redirectTestOutputToFile>true</surefire.redirectTestOutputToFile>
 
     <!-- Dependencies versions -->
-    <nettyhttp.version>0.4.0-SNAPSHOT</nettyhttp.version>
+    <nettyhttp.version>0.4.0</nettyhttp.version>
     <fastutil.version>6.5.6</fastutil.version>
     <gson.version>2.2.4</gson.version>
     <guava.version>13.0.1</guava.version>
