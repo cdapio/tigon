@@ -17,9 +17,9 @@ The required Twitter authorization properties ("oauth-properties") include all o
 
 "oauth.consumerSecret" - See ```Twitter Configuration``` above.
 
-"oauth.Token" - See ```Twitter Configuration``` above.
+"oauth.accessToken" - See ```Twitter Configuration``` above.
 
-"oauth.TokenSecret" - See ```Twitter Configuration``` above.
+"oauth.accessTokenSecret" - See ```Twitter Configuration``` above.
 
 
 ## Installation

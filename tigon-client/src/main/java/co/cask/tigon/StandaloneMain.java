@@ -128,7 +128,7 @@ public class StandaloneMain {
     txService.startAndWait();
     metricsCollectionService.startAndWait();
     addShutDownHook();
-    controller = deployClient.startFlow(jarPath, mainClassName, jarUnpackDir, new HashMap<String, String>());
+    controller = deployClient.startFlow(jarPath, mainClassName, jarUnpackDir, runtimeArgs);
     runLatch.await();
   }
 
