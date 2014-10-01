@@ -15,6 +15,6 @@
  */
 
 /**
- *
+ * Guice bindings for Tigon.
  */
 package co.cask.tigon.app.guice;

@@ -15,6 +15,6 @@
  */
 
 /**
- *
+ * TigonSQL Stream Engine Communication Servers.
  */
 package co.cask.tigon.sql.ioserver;

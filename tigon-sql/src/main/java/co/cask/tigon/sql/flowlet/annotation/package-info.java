@@ -15,6 +15,6 @@
  */
 
 /**
- *
+ * Annotations specific to TigonSQL.
  */
 package co.cask.tigon.sql.flowlet.annotation;

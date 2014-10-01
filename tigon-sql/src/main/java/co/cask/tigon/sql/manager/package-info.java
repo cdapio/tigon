@@ -15,6 +15,6 @@
  */
 
 /**
- *
+ * TigonSQL Stream Engine Manager Service.
  */
 package co.cask.tigon.sql.manager;

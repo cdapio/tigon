@@ -15,6 +15,6 @@
  */
 
 /**
- *
+ * TigonSQL Flowlet Configuration.
  */
 package co.cask.tigon.sql.flowlet;

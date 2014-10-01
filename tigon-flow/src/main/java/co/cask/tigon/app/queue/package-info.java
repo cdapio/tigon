@@ -15,6 +15,6 @@
  */
 
 /**
- *
+ * Queue interfaces used in Flows.
  */
 package co.cask.tigon.app.queue;

@@ -15,6 +15,6 @@
  */
 
 /**
- *
+ * Configuration for TigonSQL.
  */
 package co.cask.tigon.sql.conf;

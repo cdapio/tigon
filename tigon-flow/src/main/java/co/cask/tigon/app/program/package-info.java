@@ -15,6 +15,6 @@
  */
 
 /**
- *
+ * Flows are represented as Programs internally.
  */
 package co.cask.tigon.app.program;

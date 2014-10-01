@@ -15,6 +15,6 @@
  */
 
 /**
- *
+ * Utility Classes for TigonSQL.
  */
 package co.cask.tigon.sql.util;

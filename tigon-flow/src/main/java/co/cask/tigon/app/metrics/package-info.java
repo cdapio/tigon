@@ -15,6 +15,6 @@
  */
 
 /**
- *
+ * User Metrics-related classes.
  */
 package co.cask.tigon.app.metrics;
