@@ -14,24 +14,10 @@
  * the License.
  */
 
-package co.cask.tigon.data.dataset;
-
-import javax.annotation.Nullable;
-
 /**
- * Performs namespacing for dataset names.
+ * Commonly used utility functions.
+ * <p>
+ * {@link co.cask.tigon.api.common.Bytes} class handles byte arrays, conversions to/from other types,
+ * comparisons, hash code generation, and manufacturing keys for HashMaps or HashSets.
  */
-public interface DatasetNamespace {
-  /**
-   * @param name name of the dataset
-   * @return namespaced name of the dataset
-   */
-  String namespace(String name);
-
-  /**
-   * @param name namespaced name of the dataset
-   * @return original name of the dataset or null if name is not within this namespace
-   */
-  @Nullable
-  String fromNamespaced(String name);
-}
+package co.cask.tigon.api.common;

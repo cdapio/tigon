@@ -44,10 +44,11 @@ public interface Encoder {
 
   /**
    * Writes out the remaining bytes in {@link java.nio.ByteBuffer}.
-   * The given {@link java.nio.ByteBuffer} is untounch after this method is returned (i.e. same position and limit).
+   * <p>
+   * The given {@link java.nio.ByteBuffer} is untouched after this method returns (i.e. same position and limit).
+   * </p>
    *
    * @param bytes
-   * @return
    * @throws java.io.IOException
    */
   Encoder writeBytes(ByteBuffer bytes) throws IOException;
