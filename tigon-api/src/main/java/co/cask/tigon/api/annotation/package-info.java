@@ -15,6 +15,6 @@
  */
 
 /**
- * Annotations used when creating Applications.
+ * Annotations used when creating Flows.
  */
 package co.cask.tigon.api.annotation;

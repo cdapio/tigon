@@ -21,6 +21,3 @@
  * comparisons, hash code generation, and manufacturing keys for HashMaps or HashSets.
  */
 package co.cask.tigon.api.common;
-
-
-
