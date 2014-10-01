@@ -34,22 +34,25 @@ public final class DefaultFlowletSpecification implements FlowletSpecification {
   private final FailurePolicy failurePolicy;
   private final Map<String, String> properties;
   private final ResourceSpecification resources;
+  private final int maxInstances;
 
   public DefaultFlowletSpecification(String name, String description,
                                      FailurePolicy failurePolicy, Map<String, String> properties,
-                                     ResourceSpecification resources) {
-    this(null, name, description, failurePolicy, properties, resources);
+                                     ResourceSpecification resources, int maxInstances) {
+    this(null, name, description, failurePolicy, properties, resources, maxInstances);
   }
 
   public DefaultFlowletSpecification(String className, String name,
                                      String description, FailurePolicy failurePolicy,
-                                     Map<String, String> properties, ResourceSpecification resources) {
+                                     Map<String, String> properties, ResourceSpecification resources,
+                                     int maxInstances) {
     this.className = className;
     this.name = name;
     this.description = description;
     this.failurePolicy = failurePolicy;
     this.properties = properties == null ? ImmutableMap.<String, String>of() : ImmutableMap.copyOf(properties);
     this.resources = resources;
+    this.maxInstances = maxInstances;
   }
 
   @Override
@@ -85,5 +88,10 @@ public final class DefaultFlowletSpecification implements FlowletSpecification {
   @Override
   public ResourceSpecification getResources() {
     return resources;
+  }
+
+  @Override
+  public int getMaxInstances() {
+    return maxInstances;
   }
 }

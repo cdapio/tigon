@@ -70,7 +70,8 @@ public final class FlowletDefinition {
     this.flowletSpec = new DefaultFlowletSpecification(flowlet.getClass().getName(),
                                                        flowletName == null ? flowletSpec.getName() : flowletName,
                                                        flowletSpec.getDescription(), flowletSpec.getFailurePolicy(),
-                                                       properties, flowletSpec.getResources());
+                                                       properties, flowletSpec.getResources(),
+                                                       flowletSpec.getMaxInstances());
   }
 
   /**

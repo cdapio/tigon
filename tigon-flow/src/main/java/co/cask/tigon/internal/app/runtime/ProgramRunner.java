@@ -26,12 +26,11 @@ public interface ProgramRunner {
 
   /**
    * Runs the {@link Program} with the given {@link ProgramOptions}.
-   * This method must returns immediately and have the {@link ProgramController} returned
-   * state management.
+   * This method must return immediately and return the {@link ProgramController}.
    *
    * @param program
    * @param options
-   * @return
+   * @return the program controller
    */
   ProgramController run(Program program, ProgramOptions options);
 }

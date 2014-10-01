@@ -16,15 +16,11 @@
 
 package co.cask.tigon.sql.io;
 
-import co.cask.tigon.sql.conf.Constants;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import org.apache.http.HttpHost;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.twill.discovery.Discoverable;
-import org.apache.twill.discovery.InMemoryDiscoveryService;
 import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ChannelPipeline;
@@ -42,6 +38,7 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.ServerSocket;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -90,14 +87,18 @@ public class DataRouterTest {
 
   @Test
   public void testDataRouter() throws Exception {
-    InMemoryDiscoveryService discoveryService = new InMemoryDiscoveryService();
-    DataIngestionRouter router = new DataIngestionRouter(discoveryService, serverMap);
+    ServerSocket socket = new ServerSocket(0);
+    int port = -1;
+    try {
+      port = socket.getLocalPort();
+    } finally {
+      socket.close();
+    }
+    DataIngestionRouter router = new DataIngestionRouter(serverMap, port);
     try {
       router.startAndWait();
       TimeUnit.SECONDS.sleep(1);
-      Discoverable discoverable = Iterables.getFirst(discoveryService.discover(Constants.StreamIO.HTTP_DATA_INGESTION),
-                                                     null);
-      InetSocketAddress routerAddress = discoverable.getSocketAddress();
+      InetSocketAddress routerAddress = new InetSocketAddress("127.0.0.1", port);
       HttpHost routerHost = new HttpHost(routerAddress.getHostName(), routerAddress.getPort());
       doPost(routerHost, "stream1");
       doPost(routerHost, "stream2");
@@ -110,6 +111,7 @@ public class DataRouterTest {
       Assert.assertEquals(1, testMap.get("stream3").intValue());
       Assert.assertTrue(!testMap.containsKey("stream4"));
     } finally {
+      socket.close();
       router.stopAndWait();
     }
   }

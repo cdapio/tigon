@@ -30,15 +30,15 @@ public class DefaultInputFlowletSpecification implements InputFlowletSpecificati
   private final String name;
   private final String description;
   private final Map<String, Map.Entry<InputStreamFormat, StreamSchema>> inputSchemas;
-  private final Map<String, String> gsql;
+  private final Map<String, String> sql;
 
   public DefaultInputFlowletSpecification(String name, String description,
                                           Map<String, Map.Entry<InputStreamFormat, StreamSchema>> inputSchemas,
-                                          Map<String, String> gsql) {
+                                          Map<String, String> sql) {
     this.name = name;
     this.description = description;
     this.inputSchemas = ImmutableMap.copyOf(inputSchemas);
-    this.gsql = ImmutableMap.copyOf(gsql);
+    this.sql = ImmutableMap.copyOf(sql);
   }
 
   @Override
@@ -58,6 +58,6 @@ public class DefaultInputFlowletSpecification implements InputFlowletSpecificati
 
   @Override
   public Map<String, String> getQuery() {
-    return gsql;
+    return sql;
   }
 }

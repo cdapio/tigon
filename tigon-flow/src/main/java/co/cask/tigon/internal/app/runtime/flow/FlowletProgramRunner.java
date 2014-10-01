@@ -83,6 +83,7 @@ import com.google.common.util.concurrent.AbstractService;
 import com.google.common.util.concurrent.Service;
 import com.google.inject.Inject;
 import org.apache.twill.api.RunId;
+import org.apache.twill.api.ServiceAnnouncer;
 import org.apache.twill.common.Cancellable;
 import org.apache.twill.common.Threads;
 import org.apache.twill.discovery.DiscoveryServiceClient;
@@ -119,6 +120,7 @@ public final class FlowletProgramRunner implements ProgramRunner {
   private final MetricsCollectionService metricsCollectionService;
   private final DiscoveryServiceClient discoveryServiceClient;
   private final CConfiguration configuration;
+  private final ServiceAnnouncer serviceAnnouncer;
 
   @Inject
   public FlowletProgramRunner(SchemaGenerator schemaGenerator,
@@ -127,7 +129,7 @@ public final class FlowletProgramRunner implements ProgramRunner {
                               QueueReaderFactory queueReaderFactory,
                               MetricsCollectionService metricsCollectionService,
                               DiscoveryServiceClient discoveryServiceClient,
-                              CConfiguration configuration) {
+                              CConfiguration configuration, ServiceAnnouncer serviceAnnouncer) {
     this.schemaGenerator = schemaGenerator;
     this.datumWriterFactory = datumWriterFactory;
     this.dataFabricFacadeFactory = dataFabricFacadeFactory;
@@ -135,6 +137,7 @@ public final class FlowletProgramRunner implements ProgramRunner {
     this.metricsCollectionService = metricsCollectionService;
     this.discoveryServiceClient = discoveryServiceClient;
     this.configuration = configuration;
+    this.serviceAnnouncer = serviceAnnouncer;
   }
 
   @SuppressWarnings("unused")
@@ -178,13 +181,15 @@ public final class FlowletProgramRunner implements ProgramRunner {
 
       Class<? extends Flowlet> flowletClass = (Class<? extends Flowlet>) clz;
 
+      // Creates tx related objects
+      DataFabricFacade dataFabricFacade = dataFabricFacadeFactory.create(program);
+
       // Creates flowlet context
       flowletContext = new BasicFlowletContext(program, flowletName, instanceId, runId, instanceCount,
                                                options.getUserArguments(), flowletDef.getFlowletSpec(),
-                                               metricsCollectionService);
+                                               metricsCollectionService, dataFabricFacade, serviceAnnouncer);
 
-      // Creates tx related objects
-      DataFabricFacade dataFabricFacade = dataFabricFacadeFactory.create(program);
+
 
       // Creates QueueSpecification
       Table<Node, String, Set<QueueSpecification>> queueSpecs = new SimpleQueueSpecificationGenerator().create(
@@ -193,8 +198,8 @@ public final class FlowletProgramRunner implements ProgramRunner {
       Flowlet flowlet = new InstantiatorFactory(false).get(TypeToken.of(flowletClass)).create();
       TypeToken<? extends Flowlet> flowletType = TypeToken.of(flowletClass);
 
-      // Set the context classloader to the reactor classloader. It is needed for the DatumWriterFactory be able
-      // to load reactor classes
+      // Set the context classloader to the Tigon classloader. It is needed for the DatumWriterFactory be able
+      // to load Tigon classes
       Thread.currentThread().setContextClassLoader(FlowletProgramRunner.class.getClassLoader());
 
       // Inject DataSet, OutputEmitter, Metric fields

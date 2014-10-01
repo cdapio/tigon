@@ -1,0 +1,2 @@
+1|ABC|abc|16|abc|DEF|18
+1|ABC|xyz|17|xyz|DEF|15

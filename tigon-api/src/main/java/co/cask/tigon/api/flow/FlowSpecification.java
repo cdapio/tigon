@@ -44,10 +44,9 @@ import java.util.Map;
  *            .setName("PurchaseFlow")
  *            .setDescription("Reads user and purchase information and stores in dataset")
  *            .withFlowlets()
- *              .add("reader", new PurchaseStreamReader())
+ *              .add("reader", new PurchaseReader())
  *              .add("collector", new PurchaseStore())
  *            .connect()
- *              .fromStream("purchaseStream").to("reader")
  *              .from("reader").to("collector")
  *            .build();
  *        }
@@ -249,13 +248,6 @@ public interface FlowSpecification extends ProgramSpecification {
        * @return And instance of {@link ConnectTo} specifying the flowlet it will connect to.
        */
       ConnectTo from(String flowlet);
-
-      /**
-       * Defines the stream that the connection is reading from by the stream name.
-       * @param stream Instance of stream.
-       * @return An instance of {@link ConnectTo} specifying the flowlet it will connect to.
-       */
-      ConnectTo fromStream(String stream);
     }
 
     /**
@@ -294,7 +286,6 @@ public interface FlowSpecification extends ProgramSpecification {
      */
     public final class Connector implements ConnectFrom, ConnectTo, MoreConnect {
 
-      private String fromStream;
       private FlowletDefinition fromFlowlet;
 
       @Override
@@ -308,15 +299,6 @@ public interface FlowSpecification extends ProgramSpecification {
         Preconditions.checkArgument(flowlets.containsKey(flowlet),
                 UserMessages.getMessage(UserErrors.INVALID_FLOWLET_NAME), flowlet);
         fromFlowlet = flowlets.get(flowlet);
-        fromStream = null;
-        return this;
-      }
-
-      @Override
-      public ConnectTo fromStream(String stream) {
-        Preconditions.checkArgument(stream != null, UserMessages.getMessage(UserErrors.INVALID_STREAM_NAME), stream);
-        fromFlowlet = null;
-        fromStream = stream;
         return this;
       }
 
@@ -334,13 +316,8 @@ public interface FlowSpecification extends ProgramSpecification {
 
         FlowletConnection.Type sourceType;
         String sourceName;
-        if (fromStream != null) {
-          sourceType = FlowletConnection.Type.STREAM;
-          sourceName = fromStream;
-        } else {
-          sourceType = FlowletConnection.Type.FLOWLET;
-          sourceName = fromFlowlet.getFlowletSpec().getName();
-        }
+        sourceType = FlowletConnection.Type.FLOWLET;
+        sourceName = fromFlowlet.getFlowletSpec().getName();
         connections.add(new FlowletConnection(sourceType, sourceName, flowlet));
         return this;
 

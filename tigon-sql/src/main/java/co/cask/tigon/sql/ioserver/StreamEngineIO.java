@@ -25,7 +25,6 @@ import co.cask.tigon.sql.io.DataIngestionRouter;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.util.concurrent.AbstractIdleService;
-import org.apache.twill.discovery.InMemoryDiscoveryService;
 import org.jboss.netty.channel.ChannelFactory;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
 
@@ -47,15 +46,16 @@ public class StreamEngineIO extends AbstractIdleService {
   private final Map<String, InetSocketAddress> dataIngressServerMap = Maps.newHashMap();
   private final Map<String, InetSocketAddress> dataEgressServerMap = Maps.newHashMap();
   private final Map<String, InetSocketAddress> dataSourceServerMap = Maps.newHashMap();
-  private final InMemoryDiscoveryService discoveryService;
   private final GDATRecordQueue recordQueue;
   private DataIngestionRouter router;
+  private final Map<String, Integer> portMap;
 
   //TODO Remove GDATRecordQueue parameter from this constructor. Use Guice to inject it directly to OutputServerSocket
-  public StreamEngineIO(InputFlowletSpecification spec, GDATRecordQueue recordQueue) {
+  //TODO Tracked by JIRA TIGON-4
+  public StreamEngineIO(InputFlowletSpecification spec, GDATRecordQueue recordQueue, Map<String, Integer> portMap) {
     this.spec = spec;
-    this.discoveryService = new InMemoryDiscoveryService();
     this.recordQueue = recordQueue;
+    this.portMap = portMap;
   }
 
   @Override
@@ -64,14 +64,16 @@ public class StreamEngineIO extends AbstractIdleService {
       Map.Entry<InputStreamFormat, StreamSchema> streamInfo = spec.getInputSchemas().get(inputName);
       ChannelFactory factory = new NioServerSocketChannelFactory(Executors.newCachedThreadPool(),
                                                                  Executors.newCachedThreadPool());
-      StreamSocketServer service;
+      InputServerSocket service;
       switch(streamInfo.getKey()) {
         case GDAT:
-          service = new InputServerSocket(factory, inputName, streamInfo.getValue());
+          service = new InputServerSocket(factory, inputName, streamInfo.getValue(),
+                                          portMap.get(Constants.TCP_INGESTION_PORT_PREFIX + inputName));
           break;
 
         case JSON:
-          service = new JsonInputServerSocket(factory, inputName, streamInfo.getValue());
+          service = new JsonInputServerSocket(factory, inputName, streamInfo.getValue(),
+                                              portMap.get(Constants.TCP_INGESTION_PORT_PREFIX + inputName));
           break;
 
         default:
@@ -79,6 +81,7 @@ public class StreamEngineIO extends AbstractIdleService {
       }
 
       service.startAndWait();
+      portMap.put(Constants.TCP_INGESTION_PORT_PREFIX + inputName, service.getIngestionPort());
       inputServerMap.put(inputName, service.getSocketAddressMap());
       dataIngressServerMap.put(inputName, service.getSocketAddressMap().get(Constants.StreamIO.TCP_DATA_INGESTION));
       dataSourceServerMap.put(inputName, service.getSocketAddressMap().get(Constants.StreamIO.DATASOURCE));
@@ -95,8 +98,9 @@ public class StreamEngineIO extends AbstractIdleService {
       outputServerSocketServies.add(service);
     }
 
-    router = new DataIngestionRouter(discoveryService, dataIngressServerMap);
+    router = new DataIngestionRouter(dataIngressServerMap, portMap.get(Constants.HTTP_PORT));
     router.startAndWait();
+    portMap.put(Constants.HTTP_PORT, router.getAddress().getPort());
   }
 
   public Map<String, InetSocketAddress> getInputServerMap() {
@@ -125,6 +129,10 @@ public class StreamEngineIO extends AbstractIdleService {
     for (StreamSocketServer service : outputServerSocketServies) {
       service.stopAndWait();
     }
+  }
+
+  public int getDataPort(String key) {
+    return portMap.get(key);
   }
 }
 

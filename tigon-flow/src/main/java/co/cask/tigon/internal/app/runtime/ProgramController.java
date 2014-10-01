@@ -19,6 +19,7 @@ package co.cask.tigon.internal.app.runtime;
 import com.google.common.util.concurrent.ListenableFuture;
 import org.apache.twill.api.RunId;
 import org.apache.twill.common.Cancellable;
+import org.apache.twill.discovery.ServiceDiscovered;
 
 import java.util.concurrent.Executor;
 
@@ -98,8 +99,8 @@ public interface ProgramController {
 
   /**
    * Suspend the running {@link ProgramRunner}.
-   * @return A {@link com.google.common.util.concurrent.ListenableFuture} that will be completed when the program
-   * is actually suspended.
+   * @return the future that will be completed when the program is actually suspended
+   * 
    */
   ListenableFuture<ProgramController> suspend();
 
@@ -117,7 +118,6 @@ public interface ProgramController {
    * and simply will get the same {@link org.apache.twill.common.Cancellable} back.
    * @param listener
    * @param executor
-   * @return
    */
   Cancellable addListener(Listener listener, Executor executor);
 
@@ -125,10 +125,17 @@ public interface ProgramController {
    * Sends a command to the program. It's up to the program on how to handle it.
    * @param name Name of the command.
    * @param value Value of the command.
-   * @return A {@link com.google.common.util.concurrent.ListenableFuture} that would be completed when the command is
-   * handled or ignored.
+   * @return the future that will be completed when the command is handled or ignored
+   * 
    */
   ListenableFuture<ProgramController> command(String name, Object value);
+
+  /**
+   * Discover a service announced by the Program.
+   * @param service Name of the Service.
+   * @return A {@link ServiceDiscovered}
+   */
+  ServiceDiscovered discover(String service);
 
   /**
    * Listener for getting callbacks on state changed on {@link ProgramController}.
@@ -136,7 +143,7 @@ public interface ProgramController {
   interface Listener {
     /**
      * Called when the listener is added. This method will triggered once only.
-     * @param currentState The state of the program by the time when the listener is added.
+     * @param currentState the state of the program by the time when the listener is added
      */
     void init(State currentState);
 

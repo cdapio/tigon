@@ -43,7 +43,10 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.PrintStream;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 /**
@@ -76,9 +79,9 @@ public class StandaloneMain {
 
   private static void usage(boolean error) {
     PrintStream out = (error ? System.err : System.out);
-    out.println("java -cp .:lib/* co.cask.tigon.StandaloneMain <path-to-JAR> <FlowClassName>");
+    out.println("java -cp .:lib/* co.cask.tigon.StandaloneMain <path-to-JAR> <FlowClassName> [arguments]");
     out.println("Example: java -cp .:lib/* co.cask.tigon.StandaloneMain /home/user/tweetFlow-1.0.jar " +
-                  "com.cname.main.TweetFlow");
+                  "com.cname.main.TweetFlow --runtimeKey=value");
     out.println("");
     if (error) {
       throw new IllegalArgumentException();
@@ -89,7 +92,6 @@ public class StandaloneMain {
     return new StandaloneMain();
   }
 
-  //TODO: Add Runtime args, ZooKeeper Ctx String to the list
   public static void main(String[] args) {
     System.out.println("Tigon Standalone Client");
     if (args.length > 0) {
@@ -98,21 +100,36 @@ public class StandaloneMain {
         return;
       }
 
-      if (args.length != 2) {
+      if (args.length < 2) {
         usage(true);
       }
 
       File jarPath = new File(args[0]);
       String mainClassName = args[1];
 
+      Map<String, String> runtimeArgs = null;
+      try {
+         runtimeArgs = DeployClient.fromPosixArray(Arrays.copyOfRange(args, 2, args.length));
+      } catch (IllegalArgumentException e) {
+        usage(true);
+      }
+
       try {
         StandaloneMain main;
         main = createStandaloneMain();
-        main.startUp(jarPath, mainClassName);
+        main.startUp(jarPath, mainClassName, runtimeArgs);
       } catch (Exception e) {
         LOG.error(e.getMessage(), e);
       }
     }
+  }
+
+  public void startUp(File jarPath, String mainClassName, Map<String, String> runtimeArgs) throws Exception {
+    txService.startAndWait();
+    metricsCollectionService.startAndWait();
+    addShutDownHook();
+    controller = deployClient.startFlow(jarPath, mainClassName, jarUnpackDir, runtimeArgs);
+    runLatch.await();
   }
 
   private void addShutDownHook() {
@@ -126,14 +143,6 @@ public class StandaloneMain {
         }
       }
     });
-  }
-
-  public void startUp(File jarPath, String mainClassName) throws Exception {
-    txService.startAndWait();
-    metricsCollectionService.startAndWait();
-    addShutDownHook();
-    controller = deployClient.deployFlow(jarPath, mainClassName, jarUnpackDir);
-    runLatch.await();
   }
 
   public void shutDown() {

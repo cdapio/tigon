@@ -45,7 +45,6 @@ final class DistributedProgramRunnerModule extends AbstractModule {
   @Provides
   private ProgramRunnerFactory provideProgramRunnerFactory(final Map<ProgramRunnerFactory.Type,
                                                                      Provider<ProgramRunner>> providers) {
-
     return new ProgramRunnerFactory() {
       @Override
       public ProgramRunner create(Type programType) {

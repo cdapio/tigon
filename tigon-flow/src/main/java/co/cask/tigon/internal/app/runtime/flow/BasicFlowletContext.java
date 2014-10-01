@@ -16,6 +16,8 @@
 
 package co.cask.tigon.internal.app.runtime.flow;
 
+import co.cask.tephra.TransactionAware;
+import co.cask.tephra.TransactionContext;
 import co.cask.tigon.api.flow.flowlet.FlowletContext;
 import co.cask.tigon.api.flow.flowlet.FlowletSpecification;
 import co.cask.tigon.api.metrics.Metrics;
@@ -23,12 +25,18 @@ import co.cask.tigon.app.metrics.FlowletMetrics;
 import co.cask.tigon.app.program.Program;
 import co.cask.tigon.internal.app.runtime.AbstractContext;
 import co.cask.tigon.internal.app.runtime.Arguments;
+import co.cask.tigon.internal.app.runtime.DataFabricFacade;
 import co.cask.tigon.logging.FlowletLoggingContext;
 import co.cask.tigon.logging.LoggingContext;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import org.apache.twill.api.RunId;
+import org.apache.twill.api.ServiceAnnouncer;
+import org.apache.twill.common.Cancellable;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -45,12 +53,17 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
   private volatile int instanceCount;
   private final FlowletMetrics flowletMetrics;
   private final Arguments runtimeArguments;
+  private final List<TransactionAware> transactionAwares;
+  private final DataFabricFacade dataFabricFacade;
+  private TransactionContext transactionContext;
+  private final ServiceAnnouncer serviceAnnouncer;
 
   BasicFlowletContext(Program program, String flowletId,
                       int instanceId, RunId runId,
                       int instanceCount,
                       Arguments runtimeArguments, FlowletSpecification flowletSpec,
-                      MetricsCollectionService metricsCollectionService) {
+                      MetricsCollectionService metricsCollectionService, DataFabricFacade dataFabricFacade,
+                      ServiceAnnouncer serviceAnnouncer) {
     super(program, runId, getMetricContext(program, flowletId, instanceId), metricsCollectionService);
     this.flowId = program.getName();
     this.flowletId = flowletId;
@@ -60,6 +73,9 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
     this.runtimeArguments = runtimeArguments;
     this.flowletSpec = flowletSpec;
     this.flowletMetrics = new FlowletMetrics(metricsCollectionService, flowId, flowletId);
+    this.transactionAwares = Lists.newArrayList();
+    this.dataFabricFacade = dataFabricFacade;
+    this.serviceAnnouncer = serviceAnnouncer;
   }
 
   @Override
@@ -81,6 +97,24 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
   @Override
   public FlowletSpecification getSpecification() {
     return flowletSpec;
+  }
+
+  @Override
+  public void addTransactionAware(TransactionAware transactionAware) {
+    transactionAwares.add(transactionAware);
+    if (transactionContext != null) {
+      transactionContext.addTransactionAware(transactionAware);
+    }
+  }
+
+  @Override
+  public void addTransactionAwares(Iterable<? extends TransactionAware> transactionAwares) {
+    Iterables.addAll(this.transactionAwares, transactionAwares);
+    if (transactionContext != null) {
+      for (TransactionAware transactionAware : transactionAwares) {
+        transactionContext.addTransactionAware(transactionAware);
+      }
+    }
   }
 
   /**
@@ -107,6 +141,18 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
     return flowletId;
   }
 
+  /**
+   * Create a new {@link TransactionContext} for this flowlet. Add all {@link TransactionAware}s to the context.
+   * @return a new TransactionContext.
+   */
+  public TransactionContext createTransactionContext() {
+    transactionContext = dataFabricFacade.createTransactionManager();
+    for (TransactionAware transactionAware : transactionAwares) {
+      this.transactionContext.addTransactionAware(transactionAware);
+    }
+    return transactionContext;
+  }
+
   @Override
   public int getInstanceId() {
     return instanceId;
@@ -127,5 +173,10 @@ final class BasicFlowletContext extends AbstractContext implements FlowletContex
 
   private static String getMetricContext(Program program, String flowletId, int instanceId) {
     return String.format("%s.%s.%d", program.getName(), flowletId, instanceId);
+  }
+
+  @Override
+  public Cancellable announce(String s, int i) {
+    return serviceAnnouncer.announce(s, i);
   }
 }

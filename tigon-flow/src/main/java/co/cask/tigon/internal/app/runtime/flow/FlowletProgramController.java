@@ -16,6 +16,8 @@
 
 package co.cask.tigon.internal.app.runtime.flow;
 
+import co.cask.tigon.api.flow.flowlet.Flowlet;
+import co.cask.tigon.api.flow.flowlet.FlowletContext;
 import co.cask.tigon.internal.app.runtime.AbstractProgramController;
 import co.cask.tigon.internal.app.runtime.ProgramOptionConstants;
 import com.google.common.base.Preconditions;
@@ -23,6 +25,7 @@ import com.google.common.io.Closeables;
 import com.google.common.util.concurrent.Service;
 import org.apache.twill.common.ServiceListenerAdapter;
 import org.apache.twill.common.Threads;
+import org.apache.twill.discovery.ServiceDiscovered;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -102,6 +105,13 @@ final class FlowletProgramController extends AbstractProgramController {
     LOG.info("Flowlet instance count changed: " + flowletContext + ", new count is " + instances);
   }
 
+  /**
+   * @return a {@link FlowletContext} for the current {@link Flowlet}.
+   */
+  public FlowletContext getFlowletContext() {
+    return flowletContext;
+  }
+
   private void changeInstanceCount(BasicFlowletContext flowletContext, int instanceCount) {
     Preconditions.checkState(getState() == State.SUSPENDED,
                              "Cannot change instance count of a flowlet without suspension.");
@@ -132,5 +142,10 @@ final class FlowletProgramController extends AbstractProgramController {
         }
       }
     }, Threads.SAME_THREAD_EXECUTOR);
+  }
+
+  @Override
+  public ServiceDiscovered discover(String service) {
+    return null;
   }
 }

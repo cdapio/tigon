@@ -24,15 +24,16 @@ import co.cask.tigon.data.Namespace;
 import javax.annotation.Nullable;
 
 /**
- * Default dataset namespace, which namespace by configuration setting {@link Constants.Dataset#TABLE_PREFIX}.
+ * Default dataset namespace; which namespace, determined by the configuration setting 
+ * {@link co.cask.tigon.conf.Constants.Dataset#TABLE_PREFIX}.
  */
 public class DefaultDatasetNamespace implements DatasetNamespace {
   private final String namespacePrefix;
   private final Namespace namespace;
 
   public DefaultDatasetNamespace(CConfiguration conf, Namespace namespace) {
-    String reactorNameSpace = conf.get(Constants.Dataset.TABLE_PREFIX);
-    this.namespacePrefix = reactorNameSpace + ".";
+    String tableNamespace = conf.get(Constants.Dataset.TABLE_PREFIX);
+    this.namespacePrefix = tableNamespace + ".";
     this.namespace = namespace;
   }
 

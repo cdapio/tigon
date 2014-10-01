@@ -63,19 +63,29 @@ public class InputServerSocket extends StreamSocketServer {
   private static final Logger LOG = LoggerFactory.getLogger(InputServerSocket.class);
   private final String streamName;
   private final StreamSchema schema;
+  private int port;
 
   private final ServerBootstrap ingestionServer;
   private final ServerBootstrap dataSourceServer;
 
   private final AtomicReference<Channel> channelAtomicReference;
 
-  public InputServerSocket(ChannelFactory factory, String name, StreamSchema inputSchema) {
+  public InputServerSocket(ChannelFactory factory, String name, StreamSchema inputSchema, int port) {
     this.streamName = name;
     this.schema = inputSchema;
+    this.port = port;
     this.channelAtomicReference = new AtomicReference<Channel>();
     this.channelAtomicReference.set(null);
     ingestionServer = new ServerBootstrap(factory);
     dataSourceServer = new ServerBootstrap(factory);
+  }
+
+  public InputServerSocket(ChannelFactory factory, String name, StreamSchema inputSchema) {
+    this(factory, name, inputSchema, 0);
+  }
+
+  public int getIngestionPort() {
+    return port;
   }
 
   @Override
@@ -83,7 +93,9 @@ public class InputServerSocket extends StreamSocketServer {
     LOG.info("Input Stream {} : Starting Server", streamName);
     setIngestionPipeline();
     setDataSourcePipeline();
-    Channel ch = ingestionServer.bind(new InetSocketAddress(0));
+    InetSocketAddress socketAddress = new InetSocketAddress(port);
+    Channel ch = ingestionServer.bind(socketAddress);
+    port = ((InetSocketAddress) ch.getLocalAddress()).getPort();
     serverAddressMap.put(Constants.StreamIO.TCP_DATA_INGESTION, (InetSocketAddress) ch.getLocalAddress());
     ch = dataSourceServer.bind(new InetSocketAddress(0));
     serverAddressMap.put(Constants.StreamIO.DATASOURCE, (InetSocketAddress) ch.getLocalAddress());
