@@ -284,7 +284,7 @@ simply write::
     .add(new RandomGenerator())
     .add(new RoundingFlowlet())
   .connect()
-    .fromStream("RandomGenerator").to("RoundingFlowlet")
+    .from("RandomGenerator").to("RoundingFlowlet")
 
 If you have multiple Flowlets of the same class, you can give them explicit names::
 
@@ -328,8 +328,8 @@ partition of each input. You can control the number of instances programmaticall
 `REST interfaces <rest.html>`__ or via the CDAP Console. This enables you
 to scale your application to meet capacity at runtime.
 
-In the Local DAP, multiple Flowlet instances are run in threads, so in some cases
-actual performance may not be improved. However, in the Distributed DAP,
+In Tigon Standalone, multiple Flowlet instances are run in threads, so in some cases
+actual performance may not be improved. However, in the Tigon Distributed,
 each Flowlet instance runs in its own Java Virtual Machine (JVM) with independent compute
 resources. Scaling the number of Flowlets can improve performance and have a major impact
 depending on your implementation.
@@ -498,30 +498,6 @@ Here are some rules to follow for Flows, Flowlets and Procedures:
 Keeping these guidelines in mind will help you write more efficient and faster-performing 
 code.
 
-
-The Need for Disabling Transactions
------------------------------------
-Transactions providing ACID (atomicity, consistency, isolation, and durability) guarantees 
-are useful in several applications where data accuracy is critical—examples include billing 
-applications and computing click-through rates.
-
-However, some applications—such as trending—might not need it. Applications that do not 
-strictly require accuracy can trade off accuracy against increased throughput by taking 
-advantage of not having to write/read all the data in a transaction.
-
-Disabling Transactions
-----------------------
-Transaction can be disabled for a Flow by annotating the Flow class with the 
-``@DisableTransaction`` annotation::
-
-  @DisableTransaction
-  class MyExampleFlow implements Flow {
-    ...
-  }
-
-While this may speed up performance, if—for example—a Flowlet fails, the system would not 
-be able to roll back to its previous state. You will need to judge whether the increase in 
-performance offsets the increased risk of inaccurate data.
 
 Best Practices for Developing Applications
 ==========================================

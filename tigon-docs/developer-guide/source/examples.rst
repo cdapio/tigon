@@ -34,8 +34,8 @@ under `Twitter Configuration`_) include all of these:
 
 - ``oauth.consumerKey``
 - ``oauth.consumerSecret``
-- ``oauth.Token``
-- ``oauth.TokenSecret``
+- ``oauth.accessToken``
+- ``oauth.accessTokenSecret``
 
 .. highlight:: console
 

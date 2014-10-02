@@ -10,7 +10,7 @@ Tigon Concepts and Architecture
 Tigon Concepts
 ============================================
 
-Tigon Architecture
+TigonSQL Architecture
 ============================================
 
 Architecture of a High-performance Data Stream Management System
