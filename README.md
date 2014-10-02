@@ -59,13 +59,15 @@ To install and use Tigon and its included examples, there are a few prerequisite
   4. libcurl (if it is not already included in your operating system; see note following)
   5. libz (if it is not already included in your operating system; see note following)
   6. Apache Maven 3.0+ (required to build the example applications)
-  7. In standalone mode, both Perl 5.x and Python 3.x are required to run the TigonSQL Stream Engine
   
-Note: You need the libcurl.so and libz.so at runtime, which are provided by the libcurl and libz packages. 
-At compile time, you need the curl/curl.h and z/z.h headers, provided by 
-libcurl-devel and libz-devel on RHEL systems and provided by libcurl-dev and libz-dev on Debian-based systems. 
-Users who provide curl and libz via compilation (download curl and libz tarballs, ./configure && make && make install) 
-will have the headers provided during the make install.
+Note: You need the libcurl.so and libz.so at runtime, which are provided by the libcurl
+and libz packages. At compile time, you need the curl/curl.h and zlib.h headers, provided
+by libcurl-devel and zlib-devel on RHEL systems and provided by libcurl-dev and libz-dev
+on Debian-based systems. Users who provide curl and libz via compilation (download curl
+and libz tarballs, ./configure && make && make install) will have the headers provided
+during the make install.
+
+Note: To run the TigonSQL Stream Engine outside of Tigon, both Perl 5.x and Python 3.x are required.
 
 ### Download
 
