@@ -14,24 +14,12 @@
  * the License.
  */
 
-package co.cask.tigon.data.dataset;
-
-import javax.annotation.Nullable;
-
 /**
- * Performs namespacing for dataset names.
+ * <p>
+ *   Flow implementations.
+ * </p>
+ * <p>
+ *   Every Flow must implement the {@link co.cask.tigon.api.flow.Flow} interface.
+ * </p>
  */
-public interface DatasetNamespace {
-  /**
-   * @param name name of the dataset
-   * @return namespaced name of the dataset
-   */
-  String namespace(String name);
-
-  /**
-   * @param name namespaced name of the dataset
-   * @return original name of the dataset or null if name is not within this namespace
-   */
-  @Nullable
-  String fromNamespaced(String name);
-}
+package co.cask.tigon.api.flow;

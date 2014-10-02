@@ -14,24 +14,10 @@
  * the License.
  */
 
-package co.cask.tigon.data.dataset;
-
-import javax.annotation.Nullable;
-
 /**
- * Performs namespacing for dataset names.
+ * This package contains internal classes for supporting Tigon.
+ * <p>
+ * These should not be used directly by users of Tigon, as they may change in a later release without warning.
+ * </p>
  */
-public interface DatasetNamespace {
-  /**
-   * @param name name of the dataset
-   * @return namespaced name of the dataset
-   */
-  String namespace(String name);
-
-  /**
-   * @param name namespaced name of the dataset
-   * @return original name of the dataset or null if name is not within this namespace
-   */
-  @Nullable
-  String fromNamespaced(String name);
-}
+package co.cask.tigon.internal.app.runtime;
