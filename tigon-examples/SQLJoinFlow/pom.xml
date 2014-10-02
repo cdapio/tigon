@@ -30,6 +30,10 @@ the License.
   <dependencies>
     <dependency>
       <groupId>co.cask.tigon</groupId>
+      <artifactId>tigon-api</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>co.cask.tigon</groupId>
       <artifactId>tigon-sql</artifactId>
     </dependency>
   </dependencies>

@@ -23,6 +23,14 @@
     <groupId>co.cask.tigon</groupId>
     <version>0.2.0</version>
   </parent>
+  <properties>
+    <slf4j.version>1.7.5</slf4j.version>
+    <logback.version>1.0.9</logback.version>
+    <twitter4j.version>4.0.0</twitter4j.version>
+    <gson.version>2.2.4</gson.version>
+    <guava.version>13.0.1</guava.version>
+  </properties>
+
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>tigon-examples</artifactId>
@@ -32,28 +40,30 @@
     <module>SQLJoinFlow</module>
   </modules>
 
-  <dependencies>
-    <dependency>
-      <groupId>co.cask.tigon</groupId>
-      <artifactId>tigon-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-    </dependency>
-  </dependencies>
-
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>co.cask.tigon</groupId>
+        <artifactId>tigon-api</artifactId>
+        <version>${project.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${guava.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>${gson.version}</version>
+      </dependency>
       <dependency>
         <groupId>co.cask.tigon</groupId>
         <artifactId>tigon-sql</artifactId>
@@ -62,17 +72,17 @@
       <dependency>
         <groupId>org.twitter4j</groupId>
         <artifactId>twitter4j-async</artifactId>
-        <version>4.0.0</version>
+        <version>${twitter4j.version}</version>
       </dependency>
       <dependency>
         <groupId>org.twitter4j</groupId>
         <artifactId>twitter4j-core</artifactId>
-        <version>4.0.0</version>
+        <version>${twitter4j.version}</version>
       </dependency>
       <dependency>
         <groupId>org.twitter4j</groupId>
         <artifactId>twitter4j-stream</artifactId>
-        <version>4.0.0</version>
+        <version>${twitter4j.version}</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

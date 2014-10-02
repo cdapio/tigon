@@ -35,7 +35,6 @@
     <dependency>
       <groupId>co.cask.tigon</groupId>
       <artifactId>tigon-api</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
