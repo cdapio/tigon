@@ -562,15 +562,17 @@ field.
 Field types that are supported using the ``@Property`` annotation are primitives,
 boxed types (e.g. ``Integer``), ``String`` and ``enum``.
 
-Queues
-======
 
-    Check with Nitin
+.. Queues
+.. ======
 
-Operations
-==========
+.. to be completed
 
-    Check with Nitin
+
+.. Operations
+.. ==========
+
+.. to be completed
 
 
 TigonSQL
