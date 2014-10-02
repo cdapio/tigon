@@ -52,7 +52,7 @@ Building Tigon from Source
 
 .. highlight:: console
 
-You can also get started with Tigon by building directly from the latest source code::
+You can also build Tigon directly from the latest source code::
 
   git clone https://github.com/caskdata/tigon.git
   cd tigon
@@ -69,6 +69,7 @@ Is It Building?
 
 - `Bamboo Build <https://builds.cask.co/browse/TIG>`__
 - `GitHub Version <https://github.com/caskdata/tigon/releases/latest>`__           
+
 
 Configuration
 =============
@@ -94,6 +95,16 @@ Problems with the Downloaded Package?
 
 If the downloaded package doesn't work, try to build a tarball for your system
 as described above.
+
+
+Examples
+========
+
+An example of using Tigon with TwitterAnalytics is described in the `Tigon Examples Guide.
+<examples.html>`__
+
+It's an application that collects Tweets and logs the top ten hashtags used in the
+previous minute.
 
 
 Where to Go Next
