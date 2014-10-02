@@ -40,4 +40,3 @@
     <appender-ref ref="Console"/>
   </root>
 </configuration>
-
