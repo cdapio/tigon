@@ -34,7 +34,7 @@ To stop the Flow prior to shutting down distributed mode, use::
 
   tigon > delete <flow-name>
 
-You can then exit the command-line interface either with ``exit`` or ``Control-C``.
+You can then exit the command-line interface either with ``quit`` or ``Control-C``.
 
 Available Commands
 ------------------
@@ -49,7 +49,7 @@ These are the available commands:
    ``help``,Prints this helper text
    ``version``,Prints the version
    ``status``,Prints the current Tigon system status
-   ``exit``,Exits the shell
+   ``quit``,Quits the shell
 
    **Starting Elements**
    ``start <path-to-jar> <flow-classname>``,Starts a Flow

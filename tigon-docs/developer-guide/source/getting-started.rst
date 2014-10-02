@@ -17,17 +17,28 @@ To install and use Tigon and its included examples, there are a few prerequisite
 1. JDK 6 or JDK 7 (required to run Tigon; note that $JAVA_HOME should be set)
 #. GCC
 #. G++
-#. libcurl (if it is not already included in your operating system)
-#. libz
+#. libcurl (if it is not already included in your operating system; see note following)
+#. libz (if it is not already included in your operating system; see note following)
 #. Apache Maven 3.0+ (required to build the example applications)
 #. In standalone mode, both Perl 5.x and Python 3.x are required
+
+**Note:** You need the ``libcurl.so`` and ``libz.so`` at runtime, which are provided by
+the ``libcurl`` and ``libz`` packages. At compile time, you need the ``curl/curl.h`` and
+``zlib.h`` headers, provided by ``libcurl-devel`` and ``zlib-devel`` on RHEL systems and
+provided by ``libcurl-dev`` and ``libz-dev`` on Debian-based systems. Users who provide
+curl and libz via compilation (download ``curl`` and ``libz`` tarballs, ``./configure &&
+make && make install``) will have the headers provided during the make install.
+
+**Note:** To run the TigonSQL Stream Engine outside of Tigon, both Perl 5.x and Python 3.x
+are required.
 
 
 Download
 ========
 
 Pre-compiled sources and related files can be downloaded in a zip file: 
-`tigon-0.1.0.zip <http://cask.co/downloads/tigon/tigon-0.1.0.zip>`.
+`tigon-0.1.0.zip. 
+<http://repository.cask.co/downloads/co/cask/tigon/tigon-developer-release/0.1.0/tigon-developer-release-0.1.0.tgz>`__
 
 
 Install 
@@ -43,7 +54,7 @@ Building Tigon from Source
 
 You can also get started with Tigon by building directly from the latest source code::
 
-  git clone https://github.com/cask/tigon.git
+  git clone https://github.com/caskdata/tigon.git
   cd tigon
   mvn clean package -P sql-lib
 
@@ -56,8 +67,8 @@ Take the `tigon-<version>.tar.gz` file and unzip it into a suitable location.
 Is It Building?
 ---------------
 
-- `Bamboo Build <https:////builds.cask.co/browse/TIG>`__
-- `GitHub Version <https://github.com/caskco/tigon/releases/latest>`__           
+- `Bamboo Build <https://builds.cask.co/browse/TIG>`__
+- `GitHub Version <https://github.com/caskdata/tigon/releases/latest>`__           
 
 Configuration
 =============
