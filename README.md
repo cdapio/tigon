@@ -1,6 +1,6 @@
 # Tigon
 
-![Tigon Logo](/docs/guides/source/_images/tigon.png)
+![Tigon Logo](/tigon-docs/developer-guide/source/_images/tigon.png)
 
 **Introduction**
 
@@ -56,16 +56,22 @@ To install and use Tigon and its included examples, there are a few prerequisite
   1. JDK 6 or JDK 7 (required to run Tigon; note that $JAVA_HOME should be set)
   2. GCC
   3. G++
-  4. libcurl (if it is not already included in your operating system)
-  5. libz
+  4. libcurl (if it is not already included in your operating system; see note following)
+  5. libz (if it is not already included in your operating system; see note following)
   6. Apache Maven 3.0+ (required to build the example applications)
-  7. In standalone mode, both Perl 5.x and Python 3.x are required
-
+  7. In standalone mode, both Perl 5.x and Python 3.x are required to run the TigonSQL Stream Engine
+  
+Note: You need the libcurl.so and libz.so at runtime, which are provided by the libcurl and libz packages. 
+At compile time, you need the curl/curl.h and z/z.h headers, provided by 
+libcurl-devel and libz-devel on RHEL systems and provided by libcurl-dev and libz-dev on Debian-based systems. 
+Users who provide curl and libz via compilation (download curl and libz tarballs, ./configure && make && make install) 
+will have the headers provided during the make install.
 
 ### Download
 
 Pre-compiled sources and related files can be downloaded in a zip file: 
-[tigon-developer-release-0.1.0.zip] (http://cask.co/downloads/tigon/tigon-0.1.0.zip).
+[tigon-developer-release-0.1.0.zip.]
+(http://repository.cask.co/downloads/co/cask/tigon/tigon-developer-release/0.1.0/tigon-developer-release-0.1.0.tgz)
 
 
 ### Install 
