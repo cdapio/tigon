@@ -30,6 +30,7 @@ SOURCE="source"
 BUILD="build"
 BUILD_PDF="build-pdf"
 HTML="html"
+INCLUDES="_includes"
 
 API="tigon-api"
 APIS="apis"
@@ -39,6 +40,7 @@ LICENSES="licenses"
 LICENSES_PDF="licenses-pdf"
 PROJECT="tigon"
 PROJECT_CAPS="Tigon"
+EXAMPLES="tigon-examples"
 
 SCRIPT_PATH=`pwd`
 
@@ -77,20 +79,21 @@ function usage() {
   echo "Usage: $SCRIPT < option > [source]"
   echo ""
   echo "  Options (select one)"
-  echo "    build         Clean build of javadocs and HTML docs, copy javadocs into place, zip results"
-  echo "    build-quick   Clean build of HTML docs, copy existing javadocs into place"
-  echo "    build-github  Clean build and zip for placing on GitHub"
-  echo "    build-web     Clean build and zip for placing on docs.cask.co webserver"
+  echo "    build          Clean build of javadocs and HTML docs, copy javadocs into place, zip results"
+  echo "    build-includes Clean conversion of example/README.md to _includes directory reST files"
+  echo "    build-quick    Clean build of HTML docs, copy existing javadocs into place"
+  echo "    build-github   Clean build and zip for placing on GitHub"
+  echo "    build-web      Clean build and zip for placing on docs.cask.co webserver"
   echo ""
-  echo "    docs          Clean build of docs"
-  echo "    javadocs      Clean build of javadocs (selected modules only) for SDK and website"
-  echo "    javadocs-full Clean build of javadocs for all modules"
-  echo "    zip           Zips docs into an archive"
+  echo "    docs           Clean build of docs"
+  echo "    javadocs       Clean build of javadocs (selected modules only) for SDK and website"
+  echo "    javadocs-full  Clean build of javadocs for all modules"
+  echo "    zip            Zips docs into an archive"
   echo ""
-  echo "    depends       Build Site listing dependencies"
-  echo "    sdk           Build SDK"
+  echo "    depends        Build Site listing dependencies"
+  echo "    sdk            Build SDK"
   echo "  with"
-  echo "    source        Path to $PROJECT source for javadocs, if not $PROJECT_PATH"
+  echo "    source         Path to $PROJECT source for javadocs, if not $PROJECT_PATH"
   echo " "
   exit 1
 }
@@ -98,17 +101,20 @@ function usage() {
 function clean() {
   cd $SCRIPT_PATH
   rm -rf $SCRIPT_PATH/$BUILD
+  mkdir $SCRIPT_PATH/$BUILD
 }
 
 function build_docs() {
   clean
   cd $SCRIPT_PATH
+  add_includes
   sphinx-build -b html -d build/doctrees source build/html
 }
 
 function build_docs_google() {
   clean
   cd $SCRIPT_PATH
+  add_includes
   sphinx-build -D googleanalytics_id=$1 -D googleanalytics_enabled=1 -b html -d build/doctrees source build/html
 }
 
@@ -166,6 +172,40 @@ function build() {
   build_javadocs
   copy_javadocs
   make_zip
+}
+
+function add_includes() {
+  SOURCE_INCLUDES_DIR=$SCRIPT_PATH/$SOURCE/$INCLUDES
+  BUILD_INCLUDES_DIR=$SCRIPT_PATH/$BUILD/$INCLUDES
+  rm -rf $BUILD_INCLUDES_DIR
+  mkdir $BUILD_INCLUDES_DIR
+  if hash pandoc 2>/dev/null; then
+    echo "pandoc is installed; rebuilding the example README includes."
+    pandoc_includes $BUILD_INCLUDES_DIR
+  else
+    echo "WARNING: pandoc not installed; checked-in README includes will be copied instead."
+    cp -R $SOURCE_INCLUDES_DIR/ $BUILD_INCLUDES_DIR
+  fi
+}
+
+function build_includes() {
+  if hash pandoc 2>/dev/null; then
+    echo "pandoc is installed; rebuilding the example README includes."
+    SOURCE_INCLUDES_DIR=$SCRIPT_PATH/$SOURCE/$INCLUDES
+    rm -rf $SOURCE_INCLUDES_DIR
+    mkdir $SOURCE_INCLUDES_DIR
+    pandoc_includes $SOURCE_INCLUDES_DIR
+  else
+    echo "WARNING: pandoc not installed; checked-in README includes will be copied instead."
+  fi
+}
+
+function pandoc_includes() {
+  # Uses pandoc to translate the README markdown files to rst in the target directory
+  INCLUDES_DIR=$1
+#   pandoc -t rst $PROJECT_PATH/$EXAMPLES/helloWorld/README.md -o $INCLUDES_DIR/hello-world.rst
+  pandoc -t rst $PROJECT_PATH/$EXAMPLES/SQLJoinFlow/README.md -o $INCLUDES_DIR/sql-join-flow.rst
+  pandoc -t rst $PROJECT_PATH/$EXAMPLES/TwitterAnalytics/README.md -o $INCLUDES_DIR/twitter-analytics.rst
 }
 
 function build_quick() {
@@ -243,6 +283,7 @@ fi
 
 case "$1" in
   build )              build; exit 1;;
+  build-includes )     build_includes; exit 1;;
   build-quick )        build_quick; exit 1;;
   build-github )       build_github; exit 1;;
   build-web )          build_web; exit 1;;

@@ -1,25 +1,29 @@
 # TwitterAnalytics
 
+
 ## Overview
 An application collects Tweets and logs the top 10 hashtags used in the last minute.
 
+
 ## Twitter Configuration
-In order to utilize the ``TweetCollector`` flowlet, which pulls a small sample stream via the Twitter API, an API key and Access token must be configured.
-Follow the steps at [Twitter oauth access tokens](https://dev.twitter.com/oauth/overview/application-owner-access-tokens) to obtain these credentials.
-These configurations must be provided as runtime arguments to the Flow prior to starting it in order to use the ``TweetCollector`` flowlet.
+In order to utilize the ``TweetCollector`` flowlet, which pulls a small sample stream via
+the Twitter API, an API key and Access token must be configured. Follow the steps at
+[Twitter oauth access tokens]
+(https://dev.twitter.com/oauth/overview/application-owner-access-tokens) to obtain
+these credentials. These configurations must be provided as runtime arguments to the Flow
+prior to starting it in order to use the ``TweetCollector`` flowlet.
+
 
 ## Flow Runtime Arguments
 When starting the Application from the command line, runtime arguments may need to be specified.
 
-The required Twitter authorization properties ("oauth-properties") include all of these:
+The required Twitter authorization properties (*oauth-properties*), as described in 
+**Twitter Configuration** above, include all of these:
 
-"oauth.consumerKey" - See ```Twitter Configuration``` above.
-
-"oauth.consumerSecret" - See ```Twitter Configuration``` above.
-
-"oauth.accessToken" - See ```Twitter Configuration``` above.
-
-"oauth.accessTokenSecret" - See ```Twitter Configuration``` above.
+- ```oauth.consumerKey```
+- ```oauth.consumerSecret```
+- ```oauth.accessToken```
+- ```oauth.accessTokenSecret```
 
 
 ## Installation
@@ -29,20 +33,21 @@ Build the Application jar:
 MAVEN_OPTS="-Xmx512m" mvn package -DskipTests -pl tigon-examples -am -amd -P examples
 ```
 
-To deploy the Application to a standalone instance of Tigon:
+To deploy the Application to a standalone instance of Tigon (substituting for *version* and *oauth-properties*):
 ```
-$ ./run_standalone.sh /path/to/TwitterAnalytics-0.1.0.jar co.cask.tigon.analytics.TwitterAnalytics [ oauth-properties ]
+$ ./run_standalone.sh /path/to/TwitterAnalytics-<version>.jar co.cask.tigon.analytics.TwitterAnalytics [ oauth-properties ]
 ```
 
-To deploy the Application to a distributed instance of Tigon:
+To deploy the Application to a distributed instance of Tigon (substituting for *version* and *oauth-properties*):
 ```
 $ ./run_distributed.sh <ZookeeperQuorum> <HDFSNamespace>
-> START /path/to/TwitterAnalytics-0.1.0.jar co.cask.tigon.analytics.TwitterAnalytics [ oauth-properties ]
+> START /path/to/TwitterAnalytics-<version>.jar co.cask.tigon.analytics.TwitterAnalytics [ oauth-properties ]
 ```
 
 The top ten hashtags used in the previous minute get recorded. In the case of standalone instance of Tigon,
 the results will appear immediately in the Tigon command line interface; in the case of distributed instance of Tigon,
 the results will be written to the logs of the YARN container of the Flowlet.
+
 
 ## License and Trademarks
 

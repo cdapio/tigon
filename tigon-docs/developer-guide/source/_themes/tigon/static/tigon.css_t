@@ -255,12 +255,12 @@ em {
 }
 
 pre {
-    padding: 10px;
+    padding: 10px 10px 16px 10px;
     background-color: White;
     background-color: #ecf0f3;
     background-color: #F9FAFB;
     color: #222;
-    line-height: 1.2em;
+    line-height: 1.4em;
     border: 1px solid #C6C9CB;
     font-size: 1.1em;
     margin: 1.5em 0 1.5em 0;

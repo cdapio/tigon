@@ -56,7 +56,7 @@ You can also build Tigon directly from the latest source code::
 
   git clone https://github.com/caskdata/tigon.git
   cd tigon
-  mvn clean package -P sql-lib
+  mvn clean package -P sql-lib -DskipTests
 
 After the build completes, you will have a distribution of Tigon under the
 `tigon-distribution/target/` directory.  
