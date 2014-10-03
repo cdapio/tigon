@@ -9,10 +9,10 @@ Tigon Examples
 
 .. highlight:: console
 
-.. include:: ../build/_includes/sql-join-flow.rst
+.. include:: _includes/sql-join-flow.rst
    :end-before: License and Trademarks
    
-.. include:: ../build/_includes/twitter-analytics.rst
+.. include:: _includes/twitter-analytics.rst
    :end-before: License and Trademarks
 
 

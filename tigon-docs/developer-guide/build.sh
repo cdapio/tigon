@@ -90,6 +90,7 @@ function usage() {
   echo "    javadocs-full  Clean build of javadocs for all modules"
   echo "    zip            Zips docs into an archive"
   echo ""
+  echo "    check-includes Check if included files have changed from source"
   echo "    depends        Build Site listing dependencies"
   echo "    sdk            Build SDK"
   echo "  with"
@@ -107,21 +108,21 @@ function clean() {
 function build_docs() {
   clean
   cd $SCRIPT_PATH
-  add_includes
+  check_includes
   sphinx-build -b html -d build/doctrees source build/html
 }
 
 function build_docs_google() {
   clean
   cd $SCRIPT_PATH
-  add_includes
+  check_includes
   sphinx-build -D googleanalytics_id=$1 -D googleanalytics_enabled=1 -b html -d build/doctrees source build/html
 }
 
 function build_javadocs() {
   cd $PROJECT_PATH
-  mvn clean install -DskipTests
-  mvn site -DskipTests
+  mvn clean install -DskipTests -Dgpg.skip=true
+  mvn site -DskipTests -Dgpg.skip=true
 }
 
 function copy_javadocs() {
@@ -146,7 +147,12 @@ function make_zip_html() {
 function make_zip() {
 # This creates a zip that unpacks to the same name
   version
-  ZIP_DIR_NAME="$PROJECT-docs-$PROJECT_VERSION-$1"
+#   ZIP_DIR_NAME="$PROJECT-docs-$PROJECT_VERSION-$1"
+  if [ "x$1" == "x" ]; then
+    ZIP_DIR_NAME="$PROJECT-docs-$PROJECT_VERSION"
+  else
+    ZIP_DIR_NAME="$PROJECT-docs-$PROJECT_VERSION-$1"
+  fi  
   cd $SCRIPT_PATH/$BUILD
   mv $HTML $ZIP_DIR_NAME
   zip -r $ZIP_DIR_NAME.zip $ZIP_DIR_NAME/*
@@ -174,17 +180,31 @@ function build() {
   make_zip
 }
 
-function add_includes() {
-  SOURCE_INCLUDES_DIR=$SCRIPT_PATH/$SOURCE/$INCLUDES
-  BUILD_INCLUDES_DIR=$SCRIPT_PATH/$BUILD/$INCLUDES
-  rm -rf $BUILD_INCLUDES_DIR
-  mkdir $BUILD_INCLUDES_DIR
+function check_includes() {
   if hash pandoc 2>/dev/null; then
-    echo "pandoc is installed; rebuilding the example README includes."
+    echo "pandoc is installed; checking the example README includes."
+    # Build includes
+    BUILD_INCLUDES_DIR=$SCRIPT_PATH/$BUILD/$INCLUDES
+    rm -rf $BUILD_INCLUDES_DIR
+    mkdir $BUILD_INCLUDES_DIR
     pandoc_includes $BUILD_INCLUDES_DIR
+    # Test included files
+    test_include sql-join-flow.rst
+    test_include twitter-analytics.rst
   else
-    echo "WARNING: pandoc not installed; checked-in README includes will be copied instead."
-    cp -R $SOURCE_INCLUDES_DIR/ $BUILD_INCLUDES_DIR
+    echo "WARNING: pandoc not installed; checked-in README includes will be used instead."
+  fi
+}
+
+function test_include() {
+  BUILD_INCLUDES_DIR=$SCRIPT_PATH/$BUILD/$INCLUDES
+  SOURCE_INCLUDES_DIR=$SCRIPT_PATH/$SOURCE/$INCLUDES
+  EXAMPLE=$1
+  if diff -q $BUILD_INCLUDES_DIR/$1 $SOURCE_INCLUDES_DIR/$1 2>/dev/null; then
+    echo "Tested $1; matches checked-in include file."
+  else
+    echo "WARNING: Tested $1; does not match checked-in include file. Copying to source directory."
+    cp -f $BUILD_INCLUDES_DIR/$1 $SOURCE_INCLUDES_DIR/$1
   fi
 }
 
@@ -196,7 +216,7 @@ function build_includes() {
     mkdir $SOURCE_INCLUDES_DIR
     pandoc_includes $SOURCE_INCLUDES_DIR
   else
-    echo "WARNING: pandoc not installed; checked-in README includes will be copied instead."
+    echo "WARNING: pandoc not installed; checked-in README includes will be used instead."
   fi
 }
 
@@ -223,15 +243,10 @@ function build_web() {
 }
 
 function build_github() {
-  # GitHub requires a .nojekyll file at the root to allow for Sphinx's directories beginning with underscores
   build_docs_google $GOOGLE_ANALYTICS_GITHUB
   build_javadocs
   copy_javadocs
   make_zip $GITHUB
-  ZIP_DIR_NAME="$PROJECT-docs-$PROJECT_VERSION-$GITHUB"
-  cd $SCRIPT_PATH/$BUILD
-  touch $ZIP_DIR_NAME/.nojekyll
-  zip $ZIP_DIR_NAME.zip $ZIP_DIR_NAME/.nojekyll
 }
 
 function build_standalone() {
@@ -287,6 +302,7 @@ case "$1" in
   build-quick )        build_quick; exit 1;;
   build-github )       build_github; exit 1;;
   build-web )          build_web; exit 1;;
+  check-includes )     check_includes; exit 1;;
   clean )              clean; exit 1;;
   docs )               build_docs; exit 1;;
   build-standalone )   build_standalone; exit 1;;
