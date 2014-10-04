@@ -724,6 +724,7 @@
                 <excludes>
                   <exclude>build-number.txt</exclude>
                   <exclude>**/README.md</exclude>
+                  <exclude>**/BUILD.md</exclude>
                   <exclude>**/pom.xml</exclude>
                   <exclude>**/tigon-docs/**</exclude>
                   <exclude>**/tigon-examples/**</exclude>
