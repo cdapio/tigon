@@ -61,11 +61,6 @@
     </dependency>
     <dependency>
       <groupId>co.cask.tigon</groupId>
-      <artifactId>tigon-sql</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>co.cask.tigon</groupId>
       <artifactId>tigon-client</artifactId>
       <version>${project.version}</version>
     </dependency>
@@ -74,11 +69,6 @@
   <profiles>
     <profile>
       <id>dist</id>
-      <properties>
-        <sdk.dir>${project.build.directory}/sdk</sdk.dir>
-        <stage.opt.dir>${sdk.dir}/tigon-sdk-${project.version}</stage.opt.dir>
-        <stage.lib.dir>${stage.opt.dir}/lib</stage.lib.dir>
-      </properties>
       <build>
         <plugins>
           <plugin>
