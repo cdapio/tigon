@@ -24,7 +24,7 @@ See [Surefire doc](http://maven.apache.org/surefire/maven-surefire-plugin/exampl
 ### Build all examples
     mvn package -DskipTests -pl tigon-examples -am -amd -P examples
 
-### Build Tigon Distribution ZIP
+### Build Tigon Distribution
     mvn package -DskipTests -pl tigon-examples -am -amd -P examples && mvn clean package -DskipTests -Pdist
 
 ### Build the complete set of Javadocs, for all modules
