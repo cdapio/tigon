@@ -24,7 +24,7 @@
   <packaging>pom</packaging>
   <name>Tigon</name>
   <url>https://github.com/caskdata/tigon</url>
-  <description>Real-time Stream processing framework</description>
+  <description>Real-time Stream Processing Framework</description>
 
 
   <organization>
@@ -55,25 +55,14 @@
     <tag>HEAD</tag>
   </scm>
 
-  <modules>
-    <module>tigon-api</module>
-    <module>tigon-queue</module>
-    <module>tigon-common</module>
-    <module>tigon-yarn</module>
-    <module>tigon-client</module>
-    <module>tigon-sql</module>
-    <module>tigon-hbase-compat-0.94</module>
-    <module>tigon-hbase-compat-0.96</module>
-    <module>tigon-flow</module>
-    <module>tigon-unit-test</module>
-    <module>tigon-archetypes</module>
-    <module>tigon-distribution</module>
-  </modules>
-
   <repositories>
     <repository>
       <id>apache.snapshots</id>
       <url>https://repository.apache.org/content/repositories/snapshots</url>
+    </repository>
+    <repository>
+      <id>sonatype</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
     </repository>
     <repository>
       <id>continuuity-public</id>
@@ -120,6 +109,21 @@
     <iocommons.version>2.1</iocommons.version>
     <twill.version>0.4.0-incubating-SNAPSHOT</twill.version>
   </properties>
+
+  <modules>
+    <module>tigon-api</module>
+    <module>tigon-queue</module>
+    <module>tigon-common</module>
+    <module>tigon-yarn</module>
+    <module>tigon-client</module>
+    <module>tigon-sql</module>
+    <module>tigon-hbase-compat-0.94</module>
+    <module>tigon-hbase-compat-0.96</module>
+    <module>tigon-flow</module>
+    <module>tigon-unit-test</module>
+    <module>tigon-archetypes</module>
+    <module>tigon-distribution</module>
+  </modules>
 
   <dependencyManagement>
     <dependencies>
@@ -753,16 +757,6 @@
           </executions>
         </plugin>
 
-        <!-- Deploy plugin -->
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-deploy-plugin</artifactId>
-          <version>2.8</version>
-          <configuration>
-            <deployAtEnd>true</deployAtEnd>
-          </configuration>
-        </plugin>
-
         <!-- GPG signature -->
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
@@ -834,13 +828,14 @@
   </build>
 
   <profiles>
-
+    <!-- Profile to turn on inclusion of all examples -->
     <profile>
       <id>examples</id>
       <modules>
         <module>tigon-examples</module>
       </modules>
     </profile>
+
     <!-- Profile for release. Generates extra artifacts -->
     <profile>
       <id>release</id>
@@ -899,6 +894,23 @@
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-javadoc-plugin</artifactId>
             <version>2.9</version>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+
+    <profile>
+      <id>dist</id>
+      <build>
+        <plugins>
+          <!-- Deploy plugin -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-deploy-plugin</artifactId>
+            <version>2.8</version>
+            <configuration>
+              <deployAtEnd>true</deployAtEnd>
+            </configuration>
           </plugin>
         </plugins>
       </build>

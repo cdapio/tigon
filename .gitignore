@@ -24,7 +24,7 @@ build/
 hs_err_pid*
 
 # Maven build directory
-target
+target/
 
 # Generated binaries
 tigon-sql/bin

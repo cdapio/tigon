@@ -28,9 +28,8 @@
   <properties>
     <app.main.class>${package}.CountRandom</app.main.class>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <tigon.version>0.1.0</tigon.version>
+    <tigon.version>0.2.0</tigon.version>
     <slf4j.version>1.7.5</slf4j.version>
-    <guava.version>13.0.1</guava.version>
     <junit.version>4.11</junit.version>
   </properties>
 

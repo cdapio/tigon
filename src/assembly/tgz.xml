@@ -17,7 +17,7 @@
 <assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
           xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
-  <id>bin</id>
+  <id>sdk</id>
   <formats>
     <format>tar.gz</format>
   </formats>
@@ -37,4 +37,46 @@
       </binaries>
     </moduleSet>
   </moduleSets>
+  <fileSets>
+    <!-- Include top level bin directory -->
+    <fileSet>
+      <directory>${project.basedir}/../bin</directory>
+      <outputDirectory>bin</outputDirectory>
+      <fileMode>0755</fileMode>
+      <directoryMode>0755</directoryMode>
+    </fileSet>
+    <!-- Include top level text files -->
+    <fileSet>
+      <directory>${project.basedir}/..</directory>
+      <outputDirectory>.</outputDirectory>
+      <includes>
+        <include>README.md</include>
+        <include>LICENSE</include>
+      </includes>
+      <fileMode>0644</fileMode>
+    </fileSet>
+    <!-- Include examples -->
+    <fileSet>
+      <directory>${project.basedir}/../tigon-examples</directory>
+      <outputDirectory>examples</outputDirectory>
+      <includes>
+        <include>README*</include>
+        <include>**/src/**</include>
+        <include>**/bin/**</include>
+        <include>**/resources/**</include>
+        <include>**/pom.xml</include>
+        <include>**/target/*.jar</include>
+      </includes>
+      <excludes>
+        <exclude>pom.xml</exclude>
+      </excludes>
+    </fileSet>
+  </fileSets>
+  <files>
+    <file>
+      <source>${project.basedir}/../tigon-examples/deploy_pom.xml</source>
+      <outputDirectory>examples</outputDirectory>
+      <destName>pom.xml</destName>
+    </file>
+  </files>
 </assembly>

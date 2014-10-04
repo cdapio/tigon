@@ -1,4 +1,11 @@
-Contains sample applications for Tigon
+Contains sample flows for Tigon
+
+In order to build the sample flows, invoke the following Maven command.
+
+mvn clean package
+
+Once the Maven build is complete, you should be able to find the example JARs under the target directory of each
+example.
 
 ## License and Trademarks
 

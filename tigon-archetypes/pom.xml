@@ -29,8 +29,9 @@
   <artifactId>tigon-archetypes</artifactId>
   <packaging>pom</packaging>
   <name>Tigon Application Archetypes</name>
+
   <modules>
-  <module>tigon-app-archetype</module>
+    <module>tigon-app-archetype</module>
   </modules>
 
 </project>

@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
 Copyright © 2014 Cask Data, Inc.
 
@@ -20,18 +19,18 @@ the License.
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <parent>
-    <artifactId>tigon-examples</artifactId>
     <groupId>co.cask.tigon</groupId>
+    <artifactId>tigon-examples</artifactId>
     <version>0.2.0</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
+  <properties>
+    <app.main.class>co.cask.tigon.sqljoinflow.SQLJoinFlow</app.main.class>
+  </properties>
+
   <artifactId>SQLJoinFlow</artifactId>
   <dependencies>
-    <dependency>
-      <groupId>co.cask.tigon</groupId>
-      <artifactId>tigon-api</artifactId>
-    </dependency>
     <dependency>
       <groupId>co.cask.tigon</groupId>
       <artifactId>tigon-sql</artifactId>

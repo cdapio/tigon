@@ -11,13 +11,6 @@ The only required property is:
 
 "httpPort" - The port to run the HTTP ingestion endpoints on.
 
-## Installation
-
-Build the Application jar:
-```
-MAVEN_OPTS="-Xmx512m" mvn package -DskipTests -pl tigon-examples -am -amd -P examples
-```
-
 To deploy the Application to a standalone instance of Tigon:
 ```
 $ ./run_standalone.sh /path/to/SQLJoinFlow-0.1.0.jar cco.cask.tigon.sqljoinflow.SQLJoinFlow [ host-property ]
@@ -40,7 +33,6 @@ The output will look like:
 ```
 <id> : <name> : <age>
 ```
-
 
 ## License and Trademarks
 
