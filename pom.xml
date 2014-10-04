@@ -68,6 +68,7 @@
     <module>tigon-unit-test</module>
     <module>tigon-archetypes</module>
     <module>tigon-distribution</module>
+    <module>tigon-use-cases</module>
   </modules>
 
   <repositories>

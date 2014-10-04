@@ -14,36 +14,37 @@
  * the License.
  */
 
-package co.cask.tigon.internal;
-
-import java.util.ResourceBundle;
+package co.cask.tigon.usecases.adbids;
 
 /**
- * User Messages helper class.
+ * A Bid made by an advertiser for a user-id.
  */
-public final class UserMessages {
-
-  private static final String BUNDLE_NAME = "UserMessages";
-
-  public static String getMessage(final String key) {
-
-    try {
-      return getBundle().getString(key);
-
-    } catch (Exception e) {
-      return "Unknown Error. Please check the Tigon Instance log.";
-    }
-
-  }
+public final class Bid {
+  private final String id;
+  private final String item;
+  private final double amount;
 
   /**
-   *
-   * @return Resource bundle.
+   * Create a new Bid for a user.
+   * @param id id of the user.
+   * @param item type of the advertisement.
+   * @param amount bid amount for the advertisement.
    */
-  public static ResourceBundle getBundle() {
-
-    return ResourceBundle.getBundle(BUNDLE_NAME);
-
+  public Bid(String id, String item, double amount) {
+    this.id = id;
+    this.item = item;
+    this.amount = amount;
   }
 
+  public String getId() {
+    return id;
+  }
+
+  public String getItem() {
+    return item;
+  }
+
+  public double getAmount() {
+    return amount;
+  }
 }

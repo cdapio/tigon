@@ -32,6 +32,7 @@ import co.cask.tigon.metrics.MetricsCollectionService;
 import co.cask.tigon.metrics.NoOpMetricsCollectionService;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableList;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
@@ -60,9 +61,14 @@ public class TestBase {
 
   protected static FlowManager deployFlow(Class<? extends Flow> flowClz, Map<String, String> runtimeArgs,
                                    File...bundleEmbeddedJars) {
+    return deployFlow(flowClz, ImmutableList.<Class<?>>of(), runtimeArgs, bundleEmbeddedJars);
+  }
+
+  protected static FlowManager deployFlow(Class<? extends Flow> flowClz, Iterable<Class<?>> classes,
+                                          Map<String, String> runtimeArgs, File...bundleEmbeddedJars) {
     Preconditions.checkNotNull(flowClz, "Flow class cannot be null");
     try {
-      Location deployJar = deployClient.jarForTestBase(flowClz, bundleEmbeddedJars);
+      Location deployJar = deployClient.jarForTestBase(flowClz, classes, bundleEmbeddedJars);
       ProgramController controller = deployClient.startFlow(new File(deployJar.toURI()), flowClz.getName(),
                                                             tmpFolder.newFolder(), runtimeArgs);
       return new DefaultFlowManager(controller);

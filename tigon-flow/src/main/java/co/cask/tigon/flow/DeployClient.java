@@ -37,6 +37,7 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.io.ByteStreams;
@@ -161,9 +162,14 @@ public class DeployClient {
 
   public Location jarForTestBase(Class<?> flowClz, File... bundleEmbeddedJars)
     throws Exception {
+    return jarForTestBase(flowClz, ImmutableList.<Class<?>>of(), bundleEmbeddedJars);
+  }
+
+  public Location jarForTestBase(Class<?> flowClz, Iterable<Class<?>> classes, File... bundleEmbeddedJars)
+    throws Exception {
     Preconditions.checkNotNull(flowClz, "Flow cannot be null.");
     Location deployedJar = locationFactory.create(createDeploymentJar(
-      locationFactory, flowClz, bundleEmbeddedJars).toURI());
+      locationFactory, flowClz, classes, bundleEmbeddedJars).toURI());
     LOG.info("Created deployedJar at {}", deployedJar.toURI().toASCIIString());
     return deployedJar;
   }
@@ -178,14 +184,15 @@ public class DeployClient {
     };
   }
 
-  private static File createDeploymentJar(LocationFactory locationFactory, Class<?> clz, File...bundleEmbeddedJars)
+  private static File createDeploymentJar(LocationFactory locationFactory, Class<?> clz, Iterable<Class<?>> classes,
+                                          File...bundleEmbeddedJars)
     throws IOException, InstantiationException, IllegalAccessException {
 
     ApplicationBundler bundler = new ApplicationBundler(ImmutableList.of("co.cask.tigon.api",
                                                                          "org.apache.hadoop",
                                                                          "org.apache.hbase"));
     Location jarLocation = locationFactory.create(clz.getName()).getTempFile(".jar");
-    bundler.createBundle(jarLocation, clz);
+    bundler.createBundle(jarLocation, ImmutableSet.<Class<?>>builder().add(clz).addAll(classes).build());
 
     Location deployJar = locationFactory.create(clz.getName()).getTempFile(".jar");
 
@@ -244,6 +251,11 @@ public class DeployClient {
     }
 
     return new File(deployJar.toURI());
+  }
+
+  private static File createDeploymentJar(LocationFactory locationFactory, Class<?> clz, File...bundleEmbeddedJars)
+    throws IOException, InstantiationException, IllegalAccessException {
+    return createDeploymentJar(locationFactory, clz, ImmutableList.<Class<?>>of(), bundleEmbeddedJars);
   }
 
 }

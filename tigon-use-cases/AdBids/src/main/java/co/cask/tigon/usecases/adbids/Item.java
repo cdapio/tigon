@@ -14,36 +14,15 @@
  * the License.
  */
 
-package co.cask.tigon.internal;
-
-import java.util.ResourceBundle;
+package co.cask.tigon.usecases.adbids;
 
 /**
- * User Messages helper class.
+ * Items that advertisers bid on for a user.
  */
-public final class UserMessages {
+public final class Item {
 
-  private static final String BUNDLE_NAME = "UserMessages";
+  public static final String SPORTS = "SPORTS";
 
-  public static String getMessage(final String key) {
-
-    try {
-      return getBundle().getString(key);
-
-    } catch (Exception e) {
-      return "Unknown Error. Please check the Tigon Instance log.";
-    }
-
-  }
-
-  /**
-   *
-   * @return Resource bundle.
-   */
-  public static ResourceBundle getBundle() {
-
-    return ResourceBundle.getBundle(BUNDLE_NAME);
-
-  }
+  public static final String TRAVEL = "TRAVEL";
 
 }
