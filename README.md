@@ -18,7 +18,7 @@ low-latency stream processing with a SQL-like query Language.
 
 Together, they have combined to create **Tigon**.
 
-There are many applications that can take advantage of these features:
+There are many applications that can take advantage of its features:
 
 - Ability to handle extremely large data flows;
 - Exactly-once event processing using an app-level Java API with consistency, reliability, and persistence;
@@ -72,9 +72,8 @@ Note: To run the TigonSQL Stream Engine outside of Tigon, both Perl 5.x and Pyth
 ### Download
 
 Pre-compiled sources and related files can be downloaded in a zip file: 
-[tigon-developer-release-0.1.0.zip.]
-(http://repository.cask.co/downloads/co/cask/tigon/tigon-developer-release/0.1.0/tigon-developer-release-0.1.0.tgz)
-
+[tigon-developer-release-0.2.0.zip.]
+(http://repository.cask.co/downloads/co/cask/tigon/tigon-developer-release/0.2.0/tigon-developer-release-0.2.0.tgz)
 
 ### Install 
 
@@ -88,21 +87,21 @@ $ run_standalone.sh <path-to-flow-jar> <flow-class-name> <run-time-args>
 To run Tigon in distributed mode:
 $ run_distributed.sh <zookeeper-quorum> <hdfs-namespace>
 
-
 ### Building from Source
 
-You can also get started with Tigon by building directly from the latest source code::
+You can also build Tigon directly from the latest source code:
 
 ```
   git clone https://github.com/caskdata/tigon.git
   cd tigon
-  mvn clean package
+  mvn clean package -P sql-lib -DskipTests
 ```
 
 After the build completes, you will have a distribution of Tigon under the
 `tigon-distribution/target/` directory.  
 
 Take the `tigon-<version>.tar.gz` file and unzip it into a suitable location.
+
 
 ## Getting Started Guide
 
