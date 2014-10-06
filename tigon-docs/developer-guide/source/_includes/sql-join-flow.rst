@@ -16,7 +16,8 @@ will need to be specified.
 
 The only required property is:
 
-``http-port`` - The port to run the HTTP ingestion endpoints on
+``http-port`` - The port to run the HTTP ingestion endpoints on;
+example: ``--httpPort=1433``
 
 Installation
 ------------
