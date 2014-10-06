@@ -563,11 +563,14 @@ Field types that are supported using the ``@Property`` annotation are primitives
 boxed types (e.g. ``Integer``), ``String`` and ``enum``.
 
 
-.. Queues
-.. ======
+Queues
+======
 
-.. to be completed
-
+The data flows between Flowlets are implemented through Queues. In the standalone mode, this
+is implemented through in-memory data structures. In distributed mode, it is
+implemented using HBase Tables. This provides reliability and fault-tolerance to the Flow
+system such that when a Flowlet instances dies, it is respawned and it starts reading
+events from the queues from the next event in the queue. 
 
 .. Operations
 .. ==========
@@ -577,6 +580,10 @@ boxed types (e.g. ``Integer``), ``String`` and ``enum``.
 
 TigonSQL
 =========
+
+TigonSQL refers both to a library (the In-memory Stream Processing engine
+that can perform filtering, aggregation, and joins of data streams) and the language used
+by that library.
 
 The Tigon query language, *TigonSQL*, is a pure stream query language with a SQL-like
 syntax (being mostly a restriction of SQL).

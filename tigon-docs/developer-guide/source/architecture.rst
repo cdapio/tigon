@@ -10,6 +10,45 @@ Tigon Concepts and Architecture
 Tigon Concepts
 ============================================
 
+Tigon is a real-time stream processing framework built on top of Apache Hadoop, YARN and HBase.
+
+Applications built using the Tigon platform are referred to as Flows. Each Flow contains one or
+more Flowlets which can be connected together and be visualized as a Directed Acyclic
+Graph. 
+
+The data flow between Flowlets is implemented through Queues. These flows can be run in
+either in Standalone Mode (for example, on a laptop) or in a Distributed Mode (in a Hadoop
+cluster). In Standalone, the Flowlets are implemented using threads, and Queues are
+implemented using in-memory data structures. 
+
+In Distributed Mode, each Flowlet is a YARN container, and Queues are implemented using
+HBase Tables. In Distributed Mode an applications can, if required, persist data to HBase.
+Since multiple Flowlets can potentially be accessing the same Tables, it's advised that an
+application use Cask Tephra to write to the HBase Tables transactionally. (Details of this
+are covered in our `Developer Guide. <developer.html>`__)
+
+.. image:: _images/tigon-stack.png
+   :width: 600px
+
+.. image:: _images/tigon-architecture-01.png
+   :width: 600px
+
+
+TigonSQL is a library built for Tigon. It contains a In-memory Stream Processing engine
+that can perform filtering, aggregation, and joins of data streams. It is built to be a
+special flowlet (``AbstractInputFlowlet``) which can be used as a part of your Flow. 
+
+Ideally, TigonSQL’s ``AbstractInputFlowlet`` should be the first flowlet in your Flow to
+use it in your application. This way it is used to ingest high-throughputs of multiple
+data streams and process them in-memory, and the outputs are then persisted in Queues
+(HBase Tables, in Distributed Mode) for subsequent flowlets to process. 
+
+Currently the number of instances of an ``AbstractInputFlowlet`` is limited to one. Other
+flowlets don’t have this constraint. ``AbstractInputFlowlet`` exposes HTTP and TCP
+endpoints for the user to ingest data. Details on how to use these endpoints is covered in
+our `Developer Guide. <developer.html>`__
+
+
 TigonSQL Architecture
 ============================================
 

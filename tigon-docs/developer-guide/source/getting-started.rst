@@ -56,7 +56,7 @@ You can also build Tigon directly from the latest source code::
 
   git clone https://github.com/caskdata/tigon.git
   cd tigon
-  mvn clean package -P sql-lib -DskipTests
+  mvn clean package -P sql-lib -DskipTests 
 
 After the build completes, you will have a distribution of Tigon under the
 `tigon-distribution/target/` directory.  
@@ -79,9 +79,9 @@ Macintosh OS X
 
 .. highlight:: console
 
-Tigon will not run with the default shared memory settings of the Macintosh, as 
+TigonSQL will not run with the default shared memory settings of the Macintosh, as 
 OS X does not provide sufficient shared memory regions by default. 
-To run Tigon, you'll need to revise these settings by executing these commands::
+To run TigonSQL, you'll need to revise these settings by executing these commands::
 
   sudo sysctl -w kern.sysv.shmall=102400
 
