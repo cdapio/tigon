@@ -11,7 +11,7 @@ When starting the Application from the command line, runtime arguments will need
 
 The only required property is:
 
-```http-port``` - The port to run the HTTP ingestion endpoints on
+```http-port``` - The port to run the HTTP ingestion endpoints on; example: ```--httpPort=1433```
 
 
 ## Installation

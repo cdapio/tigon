@@ -353,18 +353,19 @@ Flowlet can specify one of these three partitioning strategies:
 
 - **Hash-based:** If the emitting Flowlet annotates each data object with a hash key, this
   partitioning ensures that all objects of a given key are received by the same consumer
-  instance. This can be useful for aggregating by key, and can help reduce write conflicts.
+  instance. This can be useful for aggregating by key, and can help reduce write conflicts
+  when writing to HBase in distributed mode.
 
-Suppose we have a Flowlet that counts words::
+Let's look at a case where a Hash Partition is required. Suppose we have a Flowlet that counts words::
 
   public class Counter extends AbstractFlowlet {
 
-    @UseDataSet("wordCounts")
-    private KeyValueTable wordCountsTable;
+    private Map<String, Integer> wordCount = Maps.newHashMap();
 
     @ProcessInput("wordOut")
     public void process(String word) {
-      this.wordCountsTable.increment(Bytes.toBytes(word), 1L);
+      int count = wordCount.containsKey(word) ? (wordCount.get(word) + 1) : 1;
+      wordCount.put(word, count); 
     }
   }
 
@@ -374,7 +375,8 @@ Flowlet has many instances, we can specify round-robin partitioning::
   @RoundRobin
   @ProcessInput("wordOut")
   public void process(String word) {
-    this.wordCountsTable.increment(Bytes.toBytes(word), 1L);
+    int count = wordCount.containsKey(word) ? (wordCount.get(word) + 1) : 1;
+    wordCount.put(word, count);
   }
 
 Now, if we have three instances of this Flowlet, every instance will receive every third
@@ -392,7 +394,8 @@ leading to a write conflict. To avoid conflicts, we can use hash-based partition
   @HashPartition("wordHash")
   @ProcessInput("wordOut")
   public void process(String word) {
-    this.wordCountsTable.increment(Bytes.toBytes(word), 1L);
+    int count = wordCount.containsKey(word) ? (wordCount.get(word) + 1) : 1;
+    wordCount.put(word, count);
   }
 
 Now only one of the Flowlet instances will receive the word *scream*, and there can be no
@@ -421,6 +424,16 @@ Partitioning can be combined with batch execution::
   @ProcessInput("wordOut")
   public void process(Iterator<String> words) {
      ...
+
+Queues
+======
+
+The data flows between Flowlets are implemented through Queues. In the Standalone Mode,
+this is implemented through in-memory data structures. In Distributed Mode, it is
+implemented using HBase Tables. This provides reliability and fault-tolerance to the Flow
+system such that when a Flowlet instances dies, it is respawned and it starts reading
+events from the queues from the next event in the queue.
+
 
 Flow Transaction System
 =======================
@@ -498,6 +511,174 @@ Here are some rules to follow for Flows, Flowlets and Procedures:
 Keeping these guidelines in mind will help you write more efficient and faster-performing 
 code.
 
+Writing to HBase Transactionally From a Flowlet
+-----------------------------------------------
+
+Tigon internally uses Tephra extensively to complete transactional operations.
+Tephra can also be leveraged by developers to write to HBase transactionally. To do this, wrap
+an *HTable* instance with Tephra’s ``TransactionAwareHTable`` and add it to the Flowlet’s
+context.
+
+Here's an example::
+
+  public static final class TransactionalFlowlet extends AbstractFlowlet {
+
+    private OutputEmitter<Integer> intEmitter;
+    private int i = 0;
+
+    @Override
+    public void initialize(FlowletContext context) throws Exception {
+      // Acquire HTable instance
+      TransactionAwareHTable txAwareHTable = new TransactionAwareHTable(htable);
+      context.addTransactionAware(txAwareHTable);
+    }
+
+    @Tick(delay = 1L, unit = TimeUnit.SECONDS)
+    public void process() throws Exception {
+      Put put = new Put(Bytes.toBytes(“testRow”));
+      put.add(Bytes.toBytes(“testFamily”), Bytes.toBytes(“testQualifier”), Bytes.toBytes(i));
+      transactionAwareHTable.put(put);
+
+      Integer value = ++i;
+      intEmitter.emit(value, "integer", value.hashCode());
+    }
+  }
+
+Operations performed on the ``TransactionAwareHTable`` instance inside  the ``initialize``, ``destroy``,
+and each of the ``process`` methods are committed as a single transaction. Exceptions thrown in any
+of these methods will result in a rollback of the entire transaction.
+
+Using TigonSQL
+==============
+
+TigonSQL provides an in-memory SQL streaming engine and can perform filtering,
+aggregation, and joins of Streams. This can be highly useful for use cases where a large
+ingestion rate is required. 
+
+However, it must be noted that as the data in TigonSQL is held in-memory, there is a
+possibility of data loss if the Flowlet container or the Stream Engine fails. The
+transaction guarantees and the persistence of data comes into play only after the results
+of the ``AbstractInputFlowlet`` is emitted and is persisted in HBase Tables through
+Queues. A further consideration is that in the current implementation, the instance count
+of ``AbstractInputFlowlet`` is limited to a single instance.  
+
+In order to use the TigonSQL library in your flow, you need a Flowlet that extends
+``AbstractInputFlowlet``. To use the StreamEngine, implement the ``create method``. The
+building blocks of the StreamEngine are the ``StreamSchema``, ``addJSONInput``, and
+``addQuery`` methods. 
+
+``StreamSchema`` objects are constructed using the ``StreamSchema`` Builder. These objects
+represent the input schema of a Stream, with these fields allowed to be part of the input
+schema:
+
+- BOOL
+- INT
+- LONG
+- DOUBLE
+- STRING
+
+The Builder’s ``addField`` method takes the name of the field, the field type and the
+``SlidingWindowAttribute``. The sliding window attribute is used to annotate that a field is
+monotonically increasing or decreasing. A field with this attribute set to
+increasing or decreasing might be required for certain SQL queries; for example, "GROUP BY
+*increasingField*".
+
+Once one or more ``StreamSchemas`` are created, they are added as an input using the
+``addJSONInput`` method. This method takes the name of the input stream and the schema of
+the stream. Once the inputs streams have been added, one or more SQL queries can be
+defined using an ``addQuery`` method. The ``addQuery`` method takes the name of the query
+and the SQL statement.
+
+The output of the SQL queries will be POJOs, whose output class you can define.
+The names of the members of the output class should match the names used in the SQL query
+statement. In the example given below, ``DataPacket`` is one such POJO class.
+
+In order to process the output of SQL queries, you'll need to annotate the methods
+with ``@QueryOutput(<QueryName>)``. You can then choose to process the objects in
+that method or emit the object to a subsequent Flowlet. In the example given below,
+``emitData`` is a method which is annotated with ``QueryOutput`` and it emits the
+``DataPacket`` object to the next Flowlet::
+
+  public class SQLFlowlet extends AbstractInputFlowlet {
+      private OutputEmitter<DataPacket> dataEmitter;
+      private final Logger LOG = LoggerFactory.getLogger(SQLFlowlet.class);
+
+      @Override
+      public void create() {
+        setName("Summation");
+        setDescription("Sums up the input value over a timewindow");
+        StreamSchema schema = new StreamSchema.Builder()
+          .addField("timestamp", GDATFieldType.LONG, GDATSlidingWindowAttribute.INCREASING)
+          .addField("intStream", GDATFieldType.INT)
+          .build();
+        addJSONInput("intInput", schema);
+        addQuery("sumOut", "SELECT timestamp, SUM(intStream) AS sumValue FROM intInput GROUP BY timestamp");
+      }
+
+      @QueryOutput("sumOut")
+      public void emitData(DataPacket dataPacket) {
+        LOG.info("Emitting data to next flowlet");
+        // Each data packet is forwarded to the next flowlet
+        dataEmitter.emit(dataPacket);
+      }
+    }
+
+  class DataPacket {
+      // Using the same data type and variable name as specified in the query output
+      long timestamp;
+      int sumValue;
+  }
+
+Ingesting Data into an AbstractInputFlowlet
+-------------------------------------------
+In order to ingest data into the flowlet, the AbstractInputFlowlet gives couple of
+options. One is a HTTP ingestion endpoint; the other is a TCP endpoint. If you run
+the Flow in Standalone Mode, the ingestion endpoints are printed out in the log messages
+on the console (wrapped for formatting)::
+
+  2014-10-02 16:54:40,401 - INFO  [executor-13:c.c.t.s.f.AbstractInputFlowlet@322] 
+    - Announced Data Port tcpPort_intInput - 63537
+  2014-10-02 16:54:40,402 - INFO  [executor-13:c.c.t.s.f.AbstractInputFlowlet@322] 
+    - Announced Data Port httpPort - 63541
+
+You can ingest data through the HTTP Port using a curl command such as::
+
+  curl -v -X POST http://localhost:63541/v1/tigon/<InputName> -d '{ "data" : [ “12495”, “233“ ] }’
+
+For the example given above, it would then be:: 
+
+  curl -v -X POST http://localhost:63541/v1/tigon/intInput -d '{ "data" : [ “12495”, “233“ ] }’
+
+You can choose to ingest data through either HTTP or TCP endpoints; in the case above, the TCP server is
+running on 63537. There is one TCP endpoint for each input stream.
+
+If the Flow is running in Distributed Mode on a cluster, you can use discover using
+serviceinfo commands the endpoints.
+
+Optionally, you can provide a runtime arg when you start (``--httpPort=1433``) to give a
+port number for the HTTP service. The ``AbstractInputFlowlet`` will attempt to start the
+HTTP server on that port; it will fail if it can’t bind to that port. This option may be
+useful only in Standalone Mode; in Distributed Mode, you might also need to know the
+hostname where the service is running.
+
+TigonSQL, The Query Language
+----------------------------
+TigonSQL refers both to a library (the In-memory Stream Processing engine
+that can perform filtering, aggregation, and joins of data streams) and the language used
+by that library.
+
+The Tigon query language, *TigonSQL*, is a pure stream query language with a SQL-like
+syntax (being mostly a restriction of SQL).
+
+*TigonSQL* is presented in the `Tigon Architecture Guide 
+<architecture#stream-query-language>`__, including the basic concepts with examples.
+
+Details of the language, its theory of operation, quick start guide and complete 
+reference can be found in the `Tigon SQL User Manual <_downloads/User_Manual_2014_rev1.html>`__.
+
+For developers who are writing extensions to Tigon SQL, please refer to the
+`Tigon SQL Contributor Manual <_downloads/Contributor_Manual_2014_rev1.html>`__.
+
 
 Best Practices for Developing Applications
 ==========================================
@@ -561,41 +742,6 @@ field.
 
 Field types that are supported using the ``@Property`` annotation are primitives,
 boxed types (e.g. ``Integer``), ``String`` and ``enum``.
-
-
-Queues
-======
-
-The data flows between Flowlets are implemented through Queues. In the standalone mode, this
-is implemented through in-memory data structures. In distributed mode, it is
-implemented using HBase Tables. This provides reliability and fault-tolerance to the Flow
-system such that when a Flowlet instances dies, it is respawned and it starts reading
-events from the queues from the next event in the queue. 
-
-.. Operations
-.. ==========
-
-.. to be completed
-
-
-TigonSQL
-=========
-
-TigonSQL refers both to a library (the In-memory Stream Processing engine
-that can perform filtering, aggregation, and joins of data streams) and the language used
-by that library.
-
-The Tigon query language, *TigonSQL*, is a pure stream query language with a SQL-like
-syntax (being mostly a restriction of SQL).
-
-*TigonSQL* is presented in the `Tigon Architecture Guide 
-<architecture#stream-query-language>`__, including the basic concepts with examples.
-
-Details of the language, its theory of operation, quick start guide and complete 
-reference can be found in the `Tigon SQL User Manual <_downloads/User_Manual_2014_rev1.html>`__.
-
-For developers who are writing extensions to Tigon SQL, please refer to the
-`Tigon SQL Contributor Manual <_downloads/Contributor_Manual_2014_rev1.html>`__.
 
 
 Where to Go Next
