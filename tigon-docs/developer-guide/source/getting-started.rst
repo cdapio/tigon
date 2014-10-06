@@ -20,7 +20,6 @@ To install and use Tigon and its included examples, there are a few prerequisite
 #. libcurl (if it is not already included in your operating system; see note following)
 #. libz (if it is not already included in your operating system; see note following)
 #. Apache Maven 3.0+ (required to build the example applications)
-#. In standalone mode, both Perl 5.x and Python 3.x are required
 
 **Note:** You need the ``libcurl.so`` and ``libz.so`` at runtime, which are provided by
 the ``libcurl`` and ``libz`` packages. At compile time, you need the ``curl/curl.h`` and
@@ -38,7 +37,7 @@ Download
 
 Pre-compiled sources and related files can be downloaded in a zip file: 
 `tigon-0.1.0.zip. 
-<http://repository.cask.co/downloads/co/cask/tigon/tigon-developer-release/0.1.0/tigon-developer-release-0.1.0.tgz>`__
+<http://repository.cask.co/downloads/co/cask/tigon/tigon-developer-release/0.2.0/tigon-developer-release-0.2.0.tgz>`__
 
 
 Install 
@@ -100,9 +99,15 @@ as described above.
 Examples
 ========
 
-An example of using Tigon with TwitterAnalytics is described in the `Tigon Examples Guide.
-<examples.html>`__
+Examples of using Tigon are described in the `Tigon Examples Guide. <examples.html>`__
 
+SQLJoinFlow
+-----------
+An application that demonstrates the capabilities of the Tigon-SQL library.
+It performs an inner-join of two data streams and logs the result of the SQL command.
+
+TwitterAnalytics
+----------------
 It's an application that collects Tweets and logs the top ten hashtags used in the
 previous minute.
 

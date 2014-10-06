@@ -4,8 +4,8 @@ TwitterAnalytics
 Overview
 --------
 
-An application collects Tweets and logs the top 10 hashtags used in the
-last minute.
+An application that collects Tweets and logs the top 10 hashtags used in
+the last minute.
 
 Twitter Configuration
 ---------------------

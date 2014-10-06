@@ -16,8 +16,8 @@ will need to be specified.
 
 The only required property is:
 
-``http-port`` - The port to run the HTTP ingestion endpoints on;
-example: ``--httpPort=1433``
+``httpPort`` - The port to run the HTTP ingestion endpoints on; example:
+``--httpPort=1433``
 
 Installation
 ------------
@@ -29,11 +29,11 @@ Build the Application jar:
     MAVEN_OPTS="-Xmx512m" mvn package -DskipTests -pl tigon-examples -am -amd -P examples
 
 To deploy the Application to a standalone instance of Tigon
-(substituting for *version* and *http-port*):
+(substituting for *version* and *httpPort*):
 
 ::
 
-    $ ./run_standalone.sh /path/to/SQLJoinFlow-<version>.jar co.cask.tigon.sqljoinflow.SQLJoinFlow <http-port>
+    $ ./run_standalone.sh /path/to/SQLJoinFlow-<version>.jar co.cask.tigon.sqljoinflow.SQLJoinFlow --httpPort=<httpPort>
 
 The Flow exposes 2 ingestion endpoints:
 
