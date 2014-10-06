@@ -22,7 +22,6 @@ Known Issues
   as described in the `Getting Started with Tigon guide. <getting-started.html#macintosh-os-x>`__
 - The maximum number of ``AbstractInputFlowlet`` instances is limited to one.
 - Metrics are currently not supported.
-- A Flow needs to have at least two Flowlets.
 
 
 Where to Go Next

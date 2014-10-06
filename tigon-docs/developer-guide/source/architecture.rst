@@ -18,14 +18,17 @@ Graph.
 
 The data flow between Flowlets is implemented through Queues. These flows can be run in
 either in Standalone Mode (for example, on a laptop) or in a Distributed Mode (in a Hadoop
-cluster). In Standalone, the Flowlets are implemented using threads, and Queues are
-implemented using in-memory data structures. 
+cluster). 
+
+In Standalone Mode, the Flowlets are implemented using threads, and Queues are implemented
+using in-memory data structures. 
 
 In Distributed Mode, each Flowlet is a YARN container, and Queues are implemented using
-HBase Tables. In Distributed Mode an applications can, if required, persist data to HBase.
+HBase Tables. An application can, if required, persist data to HBase.
 Since multiple Flowlets can potentially be accessing the same Tables, it's advised that an
 application use Cask Tephra to write to the HBase Tables transactionally. (Details of this
-are covered in our `Developer Guide. <developer.html>`__)
+are covered in our Developer Guide section on the `"Flow Transaction System". 
+<developer.html#flow-transaction-system>`__)
 
 .. image:: _images/tigon-stack.png
    :width: 600px
@@ -38,15 +41,15 @@ TigonSQL is a library built for Tigon. It contains a In-memory Stream Processing
 that can perform filtering, aggregation, and joins of data streams. It is built to be a
 special flowlet (``AbstractInputFlowlet``) which can be used as a part of your Flow. 
 
-Ideally, TigonSQL’s ``AbstractInputFlowlet`` should be the first flowlet in your Flow to
-use it in your application. This way it is used to ingest high-throughputs of multiple
-data streams and process them in-memory, and the outputs are then persisted in Queues
+Ideally, to use TigonSQL’s ``AbstractInputFlowlet`` in your application, it should be the
+first flowlet in your Flow. It will be used to ingest high-throughputs of multiple data
+streams and process them in-memory, and the outputs will then be persisted in Queues
 (HBase Tables, in Distributed Mode) for subsequent flowlets to process. 
 
 Currently the number of instances of an ``AbstractInputFlowlet`` is limited to one. Other
 flowlets don’t have this constraint. ``AbstractInputFlowlet`` exposes HTTP and TCP
 endpoints for the user to ingest data. Details on how to use these endpoints is covered in
-our `Developer Guide. <developer.html>`__
+our `Developer Guide. <developer.html#ingesting>`__
 
 
 TigonSQL Architecture
@@ -57,31 +60,30 @@ Architecture of a High-performance Data Stream Management System
 
 Designing a high-performance Data Stream Management System (DSMS) requires solving a large
 number of unique technical challenges stemming from extreme data rates and real-time
-processing requirements. In this document, we present the architecture of the Tigon stream
-database specifically designed to address these challenges. Tigon was developed by AT&T
-Labs-Research and Cask Data, Inc. for monitoring high-rate network data streams and is
-currently used as a vehicle for networking and streaming research by AT&T.
+processing requirements. In this document, we present the architecture of the TigonSQL
+stream database specifically designed to address these challenges. TigonSQL Stream
+Database was developed by AT&T Labs-Research for monitoring high-rate network data streams
+and is currently used as a vehicle for networking and streaming research by AT&T.
 
 Even though the system is specialized for network monitoring applications, most of the
-Tigon design principles apply to any streaming application required to process high-rate
-data streams in real-time. This document focuses on these more general aspects of the
-system.
+design principles apply to any streaming application required to process high-rate data
+streams in real-time. This document focuses on these more general aspects of the system.
 
 The document is organized as:
 
-- An overview of the `stream query language`_ used by Tigon and a description of the main types 
+- An overview of the `stream query language`_ used by TigonSQL and a description of the main types 
   of streaming queries;
 - An overview of the `two-level (low- and high-) architecture <#two-level-query-architecture>`_ 
-  that Tigon uses for early data reduction;
+  that TigonSQL uses for early data reduction;
 - The `main software components <#system-architecture>`_ of the system;
-- `Query optimizations <#query-optimization>`_ performed by Tigon to handle the demands of
+- `Query optimizations <#query-optimization>`_ performed by TigonSQL to handle the demands of
   real-time stream processing; and a
 - `Summary <#doc-summary>`_ of concepts.
 
 Stream Query Language 
 ---------------------
 
-The Tigon query language, *TigonSQL*, is a pure stream query language with a SQL-like
+The TigonSQL query language, *TigonSQL*, is a pure stream query language with a SQL-like
 syntax (being mostly a restriction of SQL). That is, all inputs to a TigonSQL are streams, and
 the output is a data stream. This restriction enables easy query composition and greatly
 simplifies and streamlines the implementation of efficient streaming operators. The query
@@ -122,13 +124,13 @@ appears to be simple, an examination of the evaluation details shows that the se
 are complex.
 
 A primary requirement of a DSMS is to provide a way to unblock otherwise blocking
-operators such as aggregation and join. In Tigon, unblocking is generally accomplished by
+operators such as aggregation and join. In TigonSQL, unblocking is generally accomplished by
 defining a window on the data stream on which the query evaluation will occur at any
-moment in time. Tigon uses tumbling windows, which are more suitable for network analysis
+moment in time. TigonSQL uses tumbling windows, which are more suitable for network analysis
 applications.
 
 Unblocking is accomplished by limiting the scope of output tuples that an input tuple can
-affect using a timestamp mechanism. To implement this mechanism, Tigon requires that some
+affect using a timestamp mechanism. To implement this mechanism, TigonSQL requires that some
 fields of the input data streams be identified as behaving like timestamps. The locality
 of input tuples is determined by analyzing how the query references the timestamp fields.
 In the following sections we describe all the basic types of streaming queries in
@@ -157,15 +159,15 @@ increasing also. This query counts the packets between each source and destinati
 address during 60 second epochs. 
 
 In addition to supporting all standard SQL aggregate functions such as SUM, COUNT, MIN,
-etc, Tigon supports User Defined Aggregate Functions (UDAFs). In order to incorporate a
-new UDAF into Tigon, the user needs to provide the following four functions: 
+etc, TigonSQL supports User Defined Aggregate Functions (UDAFs). In order to incorporate a
+new UDAF into TigonSQL, the user needs to provide the following four functions: 
 
 - an INITIALIZE function, which initializes the state of a scratchpad space;
 - an ITERATE function, which adds a value to the state of the UDAF; 
 - an OUTPUT function, which returns the value of the aggregate; and 
 - a DESTROY function, which releases UDAF resources. 
 
-Tigon handles all the details of managing the scratchpad space for maintaining the state
+TigonSQL handles all the details of managing the scratchpad space for maintaining the state
 of aggregates and automatically inserts the calls to corresponding functions.
 
 
@@ -182,7 +184,7 @@ number of duplicate sequence numbers. A TigonSQL statement for the query is::
  GROUP BY time/60 as tb, srcIP, dstIP 
   
 Since some of the TCP connection spans multiple one minute epochs, the query undercounts
-all such connections. Tigon solves this problem by introducing a special type of
+all such connections. TigonSQL solves this problem by introducing a special type of
 aggregation query—running aggregation—which allows a running aggregate to retain its state
 between the epochs. This is accomplished by introducing a new TigonSQL keyword –
 *Closing_When*. 
@@ -232,7 +234,7 @@ that combines the length of packets with matching IP addresses is::
   WHERE PKT1.time = PKT2.time and PKT1.srcIP = PKT2.srcIP 
     and PKT1.destIP = PKT2.destIP 
     
-Even though Tigon currently does not support sliding windows joins, it is fairly
+Even though TigonSQL currently does not support sliding windows joins, it is fairly
 straigtforward to extend TigonSQL and the query translator to support this type of
 streaming queries.
 
@@ -240,7 +242,7 @@ streaming queries.
 Two-Level Query Architecture
 ----------------------------
 
-Tigon has a *two-level query architecture*, where the *low* level is used for data
+TigonSQL has a *two-level query architecture*, where the *low* level is used for data
 reduction and the *high* level performs more complex processing. This approach is employed
 to keep up with high streaming rates in a controlled way. 
 
@@ -248,7 +250,7 @@ High-speed data streams are called source streams to distinguish them from data 
 created by queries. The data volumes of these source streams are far too large to provide
 a copy to each query on the stream. Instead, the queries are shipped to the streams. 
 
-If a query Q is to be executed over source stream S, then Tigon creates a subquery q which
+If a query Q is to be executed over source stream S, then TigonSQL creates a subquery q which
 directly accesses S, and transforms Q into  Q\ :sub:`0` which is executed over the output
 from q. In general, one subquery is created for every table variable which aliases a
 source stream for every query in the current query set. The subqueries read directly from
@@ -258,7 +260,7 @@ Since their output streams are much smaller than the source stream, the two-leve
 architecture greatly reduces the amount of copying: simple queries can be evaluated
 directly on a source stream.
 
-The subqueries (which are called *LFTAs*, or low-level queries, in Tigon)
+The subqueries (which are called *LFTAs*, or low-level queries, in TigonSQL)
 are intended to be fast, lightweight data reduction queries. By deferring expensive
 processing (expensive functions and predicates, joins, large scale aggregation), the high
 volume source stream is quickly processed, minimizing buffer requirements. The expensive
@@ -272,9 +274,9 @@ low-level processor and thus causing packet drops. We will give a more detailed
 description of the query splitting optimizations `below
 <#splitting-selection-and-aggregation-queries>`__. 
 
-The Tigon DSMS has many aspects of a real-time system: for example, if the system cannot
+The TigonSQL DSMS has many aspects of a real-time system: for example, if the system cannot
 keep up with the offered load, it will drop tuples. To spread out the processing load over
-time and thus improve schedulability, Tigon implements traffic shaping policies in some of
+time and thus improve schedulability, TigonSQL implements traffic shaping policies in some of
 its operators. In particular, the aggregation operator uses a slow flush to emit tuples
 when the aggregation epoch changes. One output tuple is emitted for every input tuple
 which arrives, until all finished groups have been output (or the epoch changes again, in
@@ -283,7 +285,7 @@ which case all old groups are flushed immediately).
 System Architecture
 -----------------------
 
-The Tigon system consists of a four main software components: query translator,
+The TigonSQL system consists of a four main software components: query translator,
 runtime system, cluster manager, and applications:
 
 - **Query translator** translates TigonSQL queries submitted to the system into multiple
@@ -299,7 +301,7 @@ runtime system, cluster manager, and applications:
   All the HFTAs run as separate processes using a standard stream library to communicate
   with other FTAs and applications. All the LFTA modules are linked directly into the
   runtime system for efficient access to the source streams. A query translator is capable
-  of generating both centralized and distributed query plans depending on particular Tigon
+  of generating both centralized and distributed query plans depending on particular TigonSQL
   configuration. If a streaming query spans multiple network interfaces or several
   distributed data streams, the generated code is automatically parallelized to use the
   available resources.
@@ -309,10 +311,10 @@ runtime system, cluster manager, and applications:
   as management and tracking of the data sources, maintaining the registry of all active
   FTAs, and handling Inter-Process Communications (IPC). Additionally, the runtime system
   is responsible for the scheduling and execution of all the low-level queries linked
-  directly into it. Each Tigon node in distributed configurations runs its own runtime
+  directly into it. Each TigonSQL node in distributed configurations runs its own runtime
   system responsible for the local FTAs.
 
-- **Cluster manager** component is responsible for managing a network of cooperating Tigon
+- **Cluster manager** component is responsible for managing a network of cooperating TigonSQL
   nodes. This component is responsible for all aspects of distributed stream processing:
   placement of the FTAs on participating hosts, failure detection for applications and
   streaming queries, restart-based recovery, load shedding during overload conditions, and
@@ -324,10 +326,10 @@ runtime system, cluster manager, and applications:
   HFTA modules. Both run as separate processes and can subscribe to and consume the output
   streams produced by other FTAs using a standard stream library. The only difference lies
   in that an application does not produce an output stream of its own and essentially acts
-  as a data sink. Many Tigon applications dump the processed streaming data into a data
+  as a data sink. Many TigonSQL applications dump the processed streaming data into a data
   warehouse for further offline analysis.
   
-Here is a simplified architecture of a single-node Tigon system:
+Here is a simplified architecture of a single-node TigonSQL system:
 
 .. image:: _images/architecture.png
    :width: 6in
@@ -336,12 +338,12 @@ Here is a simplified architecture of a single-node Tigon system:
 Query Optimization
 ------------------
 Effective query optimization mechanism is critical for a Data Stream Management System
-that needs to perform sophisticated query processing at line speeds. Tigon uses a large
+that needs to perform sophisticated query processing at line speeds. TigonSQL uses a large
 number of optimizations to lower the processing cost for both HFTA and LFTA queries. The
 range of techniques employed includes conventional optimizations based on relational
 algebra (pushing selection and projection as low as possible, join reordering) and a
 number of unique streaming query optimizations. In the following subsections we give an
-overview of streaming-specific Tigon.
+overview of streaming-specific TigonSQL.
 
 Splitting Selection and Aggregation Queries
 ...........................................
@@ -351,14 +353,14 @@ would like to maximize the amount of data reduction performed by low-level queri
 pushing more processing to LFTAs), while keeping per-tuple processing costs very low to
 avoid overburdening the runtime systems and causing an uncontrollable packet drop. 
 
-The solution used in Tigon relies on a simple cost model to compare the respective costs
+The solution used in TigonSQL relies on a simple cost model to compare the respective costs
 of different selection predicates and scalar expressions involving the attributes of the
 data stream. Only the predicates and functions deemed inexpensive enough to run on
 low-level (called LFTA-safe predicates and functions) are pushed down for execution in an
 LFTA.
 
 LFTA-safeness largely depends on the restrictions or additional capabilities of the
-runtime system used in particular Tigon configuration.
+runtime system used in particular TigonSQL configuration.
 
 We will illustrate how query splitting works using a network monitoring query that
 extracts the names of the hosts from HTTP requests. The TigonSQL statement for this
@@ -396,7 +398,7 @@ considerations related to the way that aggregation is implemented at LFTA level.
 ensure that aggregation is fast, the low-level aggregation operator uses a fixed-size
 hash table for maintaining the different groups of a GROUP BY. If a hash table collision
 occurs, the existing group and its aggregate are ejected (as a tuple), and the new group
-uses the old group's slot. That is, Tigon computes a partial aggregate at the low level
+uses the old group's slot. That is, TigonSQL computes a partial aggregate at the low level
 which is completed at a higher level. The query decomposition of an aggregate query Q is
 similar to that of sub-aggregates and super-aggregates in data cube computations. If the
 definition of one or more grouping variables uses an LFTA-unsafe function, it is not
@@ -426,12 +428,12 @@ Prefilters
 A Data Stream Management System is expected to handle a very large number of queries
 running on the same sets of input streams, which greatly increases the likelihood of
 significant overlap between the computations performed by different queries. In order to
-avoid performing redundant computations, Tigon utilizes a prefilter mechanism which
+avoid performing redundant computations, TigonSQL utilizes a prefilter mechanism which
 extracts the shared predicates out of streaming queries and executes them only once per
 input tuple. In order to keep the prefilter very lightweight and to avoid pushing
 expensive predicates that may not be invoked by LFTAs, only cheap predicates are selected
 for the inclusion in the prefilter. Non-shared predicates are also considered since
-pushing them into prefilter allows the Tigon to avoid relatively expensive LFTA
+pushing them into prefilter allows the TigonSQL to avoid relatively expensive LFTA
 invocations. 
 
 The query translator selects the candidate predicates based on the query analysis and
@@ -447,7 +449,7 @@ passed for further processing by that LFTA.
 Machine Code Generation
 .......................
 Interpreting a streaming query at runtime incurs a significant CPU overhead that should be
-avoided if real-time tuples processing is required. To avoid this overhead, Tigon instead
+avoided if real-time tuples processing is required. To avoid this overhead, TigonSQL instead
 uses a generated code system. All the input queries are translated into C (for LFTAs) and
 C++ (for HFTAs) code which is then translated into native machine code. The object modules
 corresponding to the low-level queries are linked directly into the runtime system.
@@ -468,7 +470,7 @@ functionality required by this type of query: maintaining a group table, updatin
 values of the aggregates, flushing the aggregate values of the epoch change, etc. The
 generated aggregate functor only needs to implement query-specific functionality such as
 extracting all referenced tuple attributes and generating output tuples based on grouping
-variables and computed aggregates. The Tigon approach to template-based code generation
+variables and computed aggregates. The TigonSQL approach to template-based code generation
 combines the performance of generated query system with the ease of extensibility and
 modification to existing operators.
 
@@ -476,11 +478,11 @@ modification to existing operators.
 
 Summary
 -------
-In this document, we presented the design of Tigon—a high-performance database for
-network applications. We presented an overview the stream query language
-used by Tigon and described the semantics of the basic types of streaming queries. We also
+In this document, we presented the design of TigonSQL—a high-performance streaming
+database for network applications. We presented an overview the stream query language used
+by TigonSQL and described the semantics of the basic types of streaming queries. We also
 surveyed the two-level architecture for early data reduction and describe several of the
-streaming query optimizations that Tigon uses for efficient processing of high-rate
+streaming query optimizations that TigonSQL uses for efficient processing of high-rate
 streams.
 
 Where to Go Next

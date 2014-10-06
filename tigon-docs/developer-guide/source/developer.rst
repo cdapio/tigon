@@ -387,9 +387,10 @@ all scream for ice cream”:
 - The second instance receives the words: *scream we for*
 - The third instance receives the words: *you all ice*
 
-The potential problem with this is that the first two instances might
-both attempt to increment the counter for the word *scream* at the same time,
-leading to a write conflict. To avoid conflicts, we can use hash-based partitioning::
+The potential problem with this is that the first two instances might both attempt to
+increment the counter for the word *scream* and thus lead to an incorrect count (since the
+count is stored in-memory in different flowlets). To avoid conflicts, we can use
+hash-based partitioning::
 
   @HashPartition("wordHash")
   @ProcessInput("wordOut")
@@ -399,7 +400,7 @@ leading to a write conflict. To avoid conflicts, we can use hash-based partition
   }
 
 Now only one of the Flowlet instances will receive the word *scream*, and there can be no
-more write conflicts. Note that in order to use hash-based partitioning, the emitting
+more incorrect counts. Note that in order to use hash-based partitioning, the emitting
 Flowlet must annotate each data object with the partitioning key::
 
   @Output("wordOut")
@@ -432,7 +433,7 @@ The data flows between Flowlets are implemented through Queues. In the Standalon
 this is implemented through in-memory data structures. In Distributed Mode, it is
 implemented using HBase Tables. This provides reliability and fault-tolerance to the Flow
 system such that when a Flowlet instances dies, it is respawned and it starts reading
-events from the queues from the next event in the queue.
+from the next event in the queue.
 
 
 Flow Transaction System
@@ -515,7 +516,8 @@ Writing to HBase Transactionally From a Flowlet
 -----------------------------------------------
 
 Tigon internally uses Tephra extensively to complete transactional operations. Tephra can
-also be leveraged by developers to write to HBase transactionally. To do this, wrap an
+also be leveraged by developers to write to HBase transactionally, and in so doing obtain 
+Tephra's ACID properties of transactions. To do this, wrap an
 *HTable* instance (the variable ``htable`` in the example below) with Tephra’s
 ``TransactionAwareHTable`` and add it to the Flowlet’s context::
 
@@ -553,7 +555,7 @@ TigonSQL provides an in-memory SQL streaming engine and can perform filtering,
 aggregation, and joins of Streams. This can be highly useful for use cases where a large
 ingestion rate is required. 
 
-However, it must be noted that as the data in TigonSQL is held in-memory, there is a
+However, it must be noted that the data in TigonSQL is held in-memory and thus there is a
 possibility of data loss if the Flowlet container or the Stream Engine fails. The
 transaction guarantees and the persistence of data comes into play only after the results
 of the ``AbstractInputFlowlet`` is emitted and is persisted in HBase Tables through
@@ -562,8 +564,8 @@ of ``AbstractInputFlowlet`` is limited to a single instance.
 
 In order to use the TigonSQL library in your flow, you need a Flowlet that extends
 ``AbstractInputFlowlet``. To use the StreamEngine, implement the ``create method``. The
-building blocks of the StreamEngine are the ``StreamSchema``, ``addJSONInput``, and
-``addQuery`` methods. 
+building blocks of the StreamEngine are the ``StreamSchema`` objects, and the
+``addJSONInput`` and ``addQuery`` methods. 
 
 ``StreamSchema`` objects are constructed using the ``StreamSchema`` Builder. These objects
 represent the input schema of a Stream, with these fields allowed to be part of the input
@@ -627,9 +629,11 @@ that method or emit the object to a subsequent Flowlet. In the example given bel
       int sumValue;
   }
 
+.. _ingesting:
+
 Ingesting Data into an AbstractInputFlowlet
 -------------------------------------------
-In order to ingest data into the flowlet, the AbstractInputFlowlet gives couple of
+In order to ingest data into the flowlet, the AbstractInputFlowlet gives two
 options. One is a HTTP ingestion endpoint; the other is a TCP endpoint. If you run
 the Flow in Standalone Mode, the ingestion endpoints are printed out in the log messages
 on the console (wrapped for formatting)::
@@ -641,7 +645,7 @@ on the console (wrapped for formatting)::
 
 You can ingest data through the HTTP Port using a curl command such as::
 
-  curl -v -X POST http://localhost:63541/v1/tigon/<InputName> -d '{ "data" : [ “12495”, “233“ ] }’
+  curl -v -X POST http://localhost:<port>/v1/tigon/<InputName> -d '{ "data" : [ “12495”, “233“ ] }’
 
 For the example given above, it would then be:: 
 
@@ -650,8 +654,8 @@ For the example given above, it would then be::
 You can choose to ingest data through either HTTP or TCP endpoints; in the case above, the TCP server is
 running on 63537. There is one TCP endpoint for each input stream.
 
-If the Flow is running in Distributed Mode on a cluster, you can use discover using
-serviceinfo commands the endpoints.
+If the Flow is running in Distributed Mode on a cluster, you can use the ``discover`` and
+``service`` info commands to find out the endpoints.
 
 Optionally, you can provide a runtime arg when you start (``--httpPort=1433``) to give a
 port number for the HTTP service. The ``AbstractInputFlowlet`` will attempt to start the
@@ -727,8 +731,7 @@ The Flowlet constructor is called with the parameter when the Flow is configured
         .withFlowlets().add(new Tokenizer())
                        .add(new WordsFilter("the"))
                        .add(new WordsCounter())
-        .connect().fromStream("text").to("Tokenizer")
-                  .from("Tokenizer").to("WordsFilter")
+        .connect().from("Tokenizer").to("WordsFilter")
                   .from("WordsFilter").to("WordsCounter")
         .build();
     }
