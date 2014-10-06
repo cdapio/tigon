@@ -34,7 +34,7 @@ There are many applications that can take advantage of its features:
 - Open-source software and development process.
 
 For more information, see our collection of 
-[Guides and other documentation](http://docs.cask.co/tigon/current/index.html).
+[Guides and other documentation](http://docs.cask.co/tigon/current/en/index.html).
 
 ## Is It Building?
 
@@ -105,7 +105,7 @@ Take the `tigon-<version>.tar.gz` file and unzip it into a suitable location.
 
 ## Getting Started Guide
 
-Visit our web site for a [Getting Started Guide](http://docs.cask.co/docs/tigon/current/getting-started.html)
+Visit our web site for a [Getting Started Guide](http://docs.cask.co/docs/tigon/current/en/getting-started.html)
 that will guide you through installing Tigon and running an example.  
 
 
@@ -114,10 +114,10 @@ that will guide you through installing Tigon and running an example.
 Now that you've had a look at Tigon SDK, take a look at:
 
 - Examples, located in the `/tigon-examples` directory of Tigon;
-- [Selected Examples](http://docs.cask.co/tigon/current/examples.html) 
+- [Selected Examples](http://docs.cask.co/tigon/current/en/examples.html) 
   (demonstrating basic features of Tigon) are located on-line; and
 - Developer Guides, located in the source distribution in `/docs/developer-guide/source`
-  or [online](http://docs.cask.co/tigon/current/index.html).
+  or [online](http://docs.cask.co/tigon/current/en/index.html).
 
 
 ## How to Contribute
