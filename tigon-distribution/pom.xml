@@ -84,7 +84,7 @@
                   <finalName>tigon-${project.version}</finalName>
                   <formats><format>tar.gz</format></formats>
                   <descriptors>
-                    <descriptor>src/assembly/tgz.xml</descriptor>
+                    <descriptor>src/assembly/assembly.xml</descriptor>
                   </descriptors>
                 </configuration>
               </execution>

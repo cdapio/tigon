@@ -33,10 +33,6 @@
 
   <repositories>
     <repository>
-      <id>continuuity-public</id>
-      <url>https://repository.continuuity.com/content/groups/public</url>
-    </repository>
-    <repository>
       <id>apache.snapshots</id>
       <url>https://repository.apache.org/content/repositories/snapshots</url>
     </repository>
@@ -72,10 +68,12 @@
     <dependency>
       <groupId>co.cask.tigon</groupId>
       <artifactId>tigon-unit-test</artifactId>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
