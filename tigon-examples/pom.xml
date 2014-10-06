@@ -45,6 +45,18 @@
     <dependencies>
       <dependency>
         <groupId>co.cask.tigon</groupId>
+        <artifactId>tigon-api</artifactId>
+        <version>${project.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>co.cask.tigon</groupId>
         <artifactId>tigon-sql</artifactId>
         <version>${project.version}</version>
       </dependency>
@@ -63,6 +75,12 @@
         <artifactId>twitter4j-stream</artifactId>
         <version>${twitter4j.version}</version>
       </dependency>
+      <dependency>
+        <groupId>co.cask.tigon</groupId>
+        <artifactId>tigon-unit-test</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
@@ -70,13 +88,10 @@
     <dependency>
       <groupId>co.cask.tigon</groupId>
       <artifactId>tigon-api</artifactId>
-      <version>${project.version}</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
@@ -89,13 +104,10 @@
     <dependency>
       <groupId>co.cask.tigon</groupId>
       <artifactId>tigon-unit-test</artifactId>
-      <version>${project.version}</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 

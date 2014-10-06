@@ -40,30 +40,58 @@
     </repository>
   </repositories>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>co.cask.tigon</groupId>
+        <artifactId>tigon-api</artifactId>
+        <version>${tigon.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>co.cask.tigon</groupId>
+        <artifactId>tigon-sql</artifactId>
+        <version>${tigon.version}</version>
+      </dependency>
+
+      <!-- Unit-tests dependencies -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>co.cask.tigon</groupId>
+        <artifactId>tigon-unit-test</artifactId>
+        <version>${tigon.version}</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>co.cask.tigon</groupId>
       <artifactId>tigon-api</artifactId>
-      <version>${tigon.version}</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>co.cask.tigon</groupId>
       <artifactId>tigon-unit-test</artifactId>
-      <version>${tigon.version}</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>${slf4j.version}</version>
-      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>${junit.version}</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
 
