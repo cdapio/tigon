@@ -514,12 +514,10 @@ code.
 Writing to HBase Transactionally From a Flowlet
 -----------------------------------------------
 
-Tigon internally uses Tephra extensively to complete transactional operations.
-Tephra can also be leveraged by developers to write to HBase transactionally. To do this, wrap
-an *HTable* instance with Tephra’s ``TransactionAwareHTable`` and add it to the Flowlet’s
-context.
-
-Here's an example::
+Tigon internally uses Tephra extensively to complete transactional operations. Tephra can
+also be leveraged by developers to write to HBase transactionally. To do this, wrap an
+*HTable* instance (the variable ``htable`` in the example below) with Tephra’s
+``TransactionAwareHTable`` and add it to the Flowlet’s context::
 
   public static final class TransactionalFlowlet extends AbstractFlowlet {
 
