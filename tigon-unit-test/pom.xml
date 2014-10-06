@@ -38,6 +38,7 @@
       <groupId>co.cask.tigon</groupId>
       <artifactId>tigon-sql</artifactId>
       <version>${project.version}</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

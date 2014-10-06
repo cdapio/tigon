@@ -72,6 +72,7 @@ import javax.ws.rs.Path;
  * SQLFlowTest
  */
 public class SQLFlowTest extends TestBase {
+  private static final Gson GSON = new Gson();
   private static FlowManager flowManager;
   private static Thread ingestData;
   static final int MAX_TIMESTAMP = 10;
@@ -135,8 +136,8 @@ public class SQLFlowTest extends TestBase {
     if (response.getStatusLine().getStatusCode() != 200) {
       return null;
     }
-    String[] requestData = EntityUtils.toString(response.getEntity(), Charsets.UTF_8).replace("\"", "").split(":");
-    return new DataPacket(Long.parseLong(requestData[0]), Integer.parseInt(requestData[1]));
+    String serializedDataPacket = EntityUtils.toString(response.getEntity(), Charsets.UTF_8);
+    return GSON.fromJson(serializedDataPacket, DataPacket.class);
   }
 
   @Test
@@ -253,7 +254,6 @@ public class SQLFlowTest extends TestBase {
 
   public static final class TestHandler extends AbstractHttpHandler {
     private static final Logger LOG = LoggerFactory.getLogger(TestHandler.class);
-    private static Gson gsonObject = new Gson();
     private static JsonObject requestData;
     private static Queue<DataPacket> queue = Queues.newConcurrentLinkedQueue();
 
@@ -264,7 +264,7 @@ public class SQLFlowTest extends TestBase {
         responder.sendStatus(HttpResponseStatus.NO_CONTENT);
       }
       DataPacket dataPacket = queue.poll();
-      responder.sendJson(HttpResponseStatus.OK, dataPacket.timestamp + ":" + dataPacket.sumValue);
+      responder.sendJson(HttpResponseStatus.OK, dataPacket);
     }
 
 
@@ -272,7 +272,7 @@ public class SQLFlowTest extends TestBase {
     @POST
     public void getPing(HttpRequest request, HttpResponder responder) {
       try {
-        requestData = gsonObject.fromJson(request.getContent().toString(Charsets.UTF_8), JsonObject.class);
+        requestData = GSON.fromJson(request.getContent().toString(Charsets.UTF_8), JsonObject.class);
       } catch (Exception e) {
         throw new RuntimeException("Cannot parse JSON data from the HTTP response");
       }

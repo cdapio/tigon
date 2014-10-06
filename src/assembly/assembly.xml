@@ -24,15 +24,17 @@
   <includeBaseDirectory>true</includeBaseDirectory>
   <moduleSets>
     <moduleSet>
-
       <!-- Enable access to all projects in the current multimodule build! -->
       <useAllReactorProjects>true</useAllReactorProjects>
-
       <binaries>
         <outputDirectory>lib</outputDirectory>
         <unpack>false</unpack>
         <dependencySets>
-          <dependencySet/>
+          <dependencySet>
+            <excludes>
+              <exclude>co.cask.tigon:tigon-sql</exclude>
+            </excludes>
+          </dependencySet>
         </dependencySets>
       </binaries>
     </moduleSet>

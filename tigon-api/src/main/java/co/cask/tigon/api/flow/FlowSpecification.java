@@ -222,6 +222,14 @@ public interface FlowSpecification extends ProgramSpecification {
       }
 
       /**
+       * Constructs a {@link FlowSpecification}.
+       * @return An instance of {@link FlowSpecification}
+       */
+      public FlowSpecification build() {
+        return new DefaultFlowSpecification(name, description, flowlets, connections);
+      }
+
+      /**
        * Defines a connection between two flowlets.
        * @return An instance of {@link ConnectFrom}
        */
