@@ -77,6 +77,7 @@
       <source>${project.basedir}/../tigon-examples/deploy_pom.xml</source>
       <outputDirectory>examples</outputDirectory>
       <destName>pom.xml</destName>
+      <filtered>true</filtered>
     </file>
   </files>
 </assembly>
