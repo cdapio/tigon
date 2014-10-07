@@ -596,15 +596,18 @@ temporal_type data_type::compute_temporal_type(temporal_type l_tempo, temporal_t
   }
 
 //		If the value might be negative, can't deduce anything
+//                      However Java doesn't have unsigned types so the logic which forbids int has to be removed.
   if(op == "*"){
-  	if((l_type!=int_t && l_type!=floating_t && l_type!=llong_t) && (r_type!=int_t && r_type!=floating_t && r_type!=llong_t)){
+//  	if((l_type!=int_t && l_type!=floating_t && l_type!=llong_t) && (r_type!=int_t && r_type!=floating_t && r_type!=llong_t)){
+        if(!((l_type==int_t || l_type==floating_t || l_type==llong_t) && (r_type==int_t || r_type==floating_t || r_type==llong_t))){
 		if(l_tempo == constant_t) ret = r_tempo;
 		if(r_tempo == constant_t) ret = l_tempo;
 		if(l_tempo == r_tempo) ret = r_tempo;
 	 }
   }
   if(op == "/"){
-  	if((l_type!=int_t && l_type!=floating_t && l_type!=llong_t) && (r_type!=int_t && r_type!=floating_t && r_type!=llong_t)){
+//  	if((l_type!=int_t && l_type!=floating_t && l_type!=llong_t) && (r_type!=int_t && r_type!=floating_t && r_type!=llong_t)){
+        if(!((l_type==int_t || l_type==floating_t || l_type==llong_t) && (r_type==int_t || r_type==floating_t || r_type==llong_t))){
 		if((l_tempo == constant_t || l_tempo ==decreasing_t) &&
 				 (r_tempo == increasing_t)) ret = decreasing_t;
 		if((l_tempo == constant_t || l_tempo ==increasing_t) &&
