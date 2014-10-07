@@ -21,6 +21,7 @@ import co.cask.http.HttpResponder;
 import co.cask.http.NettyHttpService;
 import co.cask.tigon.api.annotation.HashPartition;
 import co.cask.tigon.api.annotation.ProcessInput;
+import co.cask.tigon.api.annotation.Property;
 import co.cask.tigon.api.annotation.Tick;
 import co.cask.tigon.api.flow.Flow;
 import co.cask.tigon.api.flow.FlowSpecification;
@@ -66,12 +67,12 @@ import javax.ws.rs.PathParam;
  */
 public class BasicFlowTest extends TestBase {
 
+  private static final String INSTANCE_UPDATER_FLOWLET_ID = "instance-updater";
   private static final String GENERATOR_FLOWLET_ID = "generator";
   private static final String SINK_FLOWLET_ID = "sink";
 
   private static NettyHttpService service;
   private static String baseURL;
-  private static FlowManager flowManager;
   private static HttpClient httpClient;
 
   // Endpoints exposed by the Netty service.
@@ -92,32 +93,33 @@ public class BasicFlowTest extends TestBase {
     InetSocketAddress address = service.getBindAddress();
     baseURL = "http://" + address.getHostName() + ":" + address.getPort();
 
-    Map<String, String> runtimeArgs = Maps.newHashMap();
-    runtimeArgs.put("baseURL", baseURL);
-
     httpClient = new HttpClient();
-    // Start the flow and let it run for 15 seconds.
-    flowManager = deployFlow(TestFlow.class, runtimeArgs);
-    TimeUnit.SECONDS.sleep(15);
   }
 
   @AfterClass
   public static void afterClass() {
-    flowManager.stop();
     service.stopAndWait();
   }
 
   @Test
   public void testFlow() throws Exception {
+    FlowManager flowManager = deployFlow(TestFlow.class, getRuntimeArguments());
+    TimeUnit.SECONDS.sleep(15);
+
     // Exactly 10 events should have been emitted from the generator to the sink.
     GetMethod method = new GetMethod(baseURL + EndPoints.PING);
     httpClient.executeMethod(method);
     int pingCount = Integer.valueOf(method.getResponseBodyAsString());
     Assert.assertEquals(10, pingCount);
+
+    flowManager.stop();
   }
 
   @Test
   public void testInstanceChange() throws Exception {
+    FlowManager flowManager = deployFlow(TestFlow.class, getRuntimeArguments());
+    TimeUnit.SECONDS.sleep(15);
+
     flowManager.setFlowletInstances(GENERATOR_FLOWLET_ID, 5);
     TimeUnit.SECONDS.sleep(5);
 
@@ -149,13 +151,35 @@ public class BasicFlowTest extends TestBase {
     httpClient.executeMethod(sinkInstancesMethod);
     sinkInstances = Integer.valueOf(sinkInstancesMethod.getResponseBodyAsString());
     Assert.assertEquals(3, sinkInstances);
+
+    flowManager.stop();
   }
 
   @Test(expected = IllegalArgumentException.class)
   public void testInvalidConfigurationFlow() {
     // The Flow is configured to have 5 instances of the Sink flowlet, which allows a maximum of 3 instances.
     // It should fail at deploy.
-    deployFlow(InvalidConfigurationFlow.class, Maps.<String, String>newHashMap());
+    deployFlow(InvalidConfigurationFlow.class, getRuntimeArguments());
+  }
+
+  @Test
+  public void testSingleFlowletFlow() throws Exception {
+    FlowManager flowManager = deployFlow(SingleFlowletFlow.class, getRuntimeArguments());
+    TimeUnit.SECONDS.sleep(15);
+
+    flowManager.setFlowletInstances(INSTANCE_UPDATER_FLOWLET_ID, 5);
+    TimeUnit.SECONDS.sleep(5);
+
+    GetMethod instancesMethod = new GetMethod(baseURL + getFlowletInstancesEndpoint(INSTANCE_UPDATER_FLOWLET_ID));
+    httpClient.executeMethod(instancesMethod);
+    int flowletInstances = Integer.valueOf(instancesMethod.getResponseBodyAsString());
+    Assert.assertEquals(5, flowletInstances);
+
+    flowManager.stop();
+
+    httpClient.executeMethod(instancesMethod);
+    flowletInstances = Integer.valueOf(instancesMethod.getResponseBodyAsString());
+    Assert.assertEquals(0, flowletInstances);
   }
 
   public static final class TestFlow implements Flow {
@@ -163,10 +187,10 @@ public class BasicFlowTest extends TestBase {
     @Override
     public FlowSpecification configure() {
       return FlowSpecification.Builder.with()
-        .setName("testFlow")
+        .setName("TestFlow")
         .setDescription("")
         .withFlowlets()
-        .add(GENERATOR_FLOWLET_ID, new GeneratorFlowlet(), 1)
+        .add(GENERATOR_FLOWLET_ID, new GeneratorFlowlet(GENERATOR_FLOWLET_ID), 1)
         .add(SINK_FLOWLET_ID, new SinkFlowlet(), 1)
         .connect()
         .from(GENERATOR_FLOWLET_ID).to(SINK_FLOWLET_ID)
@@ -179,10 +203,10 @@ public class BasicFlowTest extends TestBase {
     @Override
     public FlowSpecification configure() {
       return FlowSpecification.Builder.with()
-        .setName("invalidTestFlow")
+        .setName("InvalidConfigurationFlow")
         .setDescription("")
         .withFlowlets()
-        .add(GENERATOR_FLOWLET_ID, new GeneratorFlowlet(), 1)
+        .add(GENERATOR_FLOWLET_ID, new GeneratorFlowlet(GENERATOR_FLOWLET_ID), 1)
         .add(SINK_FLOWLET_ID, new SinkFlowlet(), 5)
         .connect()
         .from(GENERATOR_FLOWLET_ID).to(SINK_FLOWLET_ID)
@@ -190,14 +214,34 @@ public class BasicFlowTest extends TestBase {
     }
   }
 
-  private static final class GeneratorFlowlet extends AbstractFlowlet {
+  public static final class SingleFlowletFlow implements Flow {
 
-    private static final Logger LOG = LoggerFactory.getLogger(GeneratorFlowlet.class);
-    private OutputEmitter<Integer> intEmitter;
-    private int i = 0;
-    private HttpClient client;
-    private HttpMethod countdownMethod;
-    private HttpMethod decreaseInstanceMethod;
+    @Override
+    public FlowSpecification configure() {
+      return FlowSpecification.Builder.with()
+        .setName("SingleFlowletFlow")
+        .setDescription("")
+        .withFlowlets()
+        .add(INSTANCE_UPDATER_FLOWLET_ID, new InstanceUpdaterFlowlet(INSTANCE_UPDATER_FLOWLET_ID), 1)
+        .build();
+    }
+  }
+
+  /**
+   * No-op flowlet that notifies the Netty service upon instantiation and destruction.
+   */
+  private static class InstanceUpdaterFlowlet extends AbstractFlowlet {
+    protected static final Logger LOG = LoggerFactory.getLogger(InstanceUpdaterFlowlet.class);
+    protected HttpClient client;
+    protected HttpMethod countdownMethod;
+    protected HttpMethod decreaseInstanceMethod;
+
+    @Property
+    private final String flowletId;
+
+    public InstanceUpdaterFlowlet(String flowletId) {
+      this.flowletId = flowletId;
+    }
 
     @Override
     public void initialize(FlowletContext context) throws Exception {
@@ -205,26 +249,21 @@ public class BasicFlowTest extends TestBase {
       String baseURL = context.getRuntimeArguments().get("baseURL");
       client = new HttpClient();
 
-      LOG.info("Starting GeneratorFlowlet.");
+      LOG.info("Starting InstanceUpdaterFlowlet.");
 
-      String generatorInstancesEndpoint = baseURL + getFlowletInstancesEndpoint(GENERATOR_FLOWLET_ID);
+      String instancesEndpoint = baseURL + getFlowletInstancesEndpoint(flowletId);
       // Notify the NettyServer that a new Generator flowlet is initialized.
-      HttpMethod increaseInstanceMethod = new PostMethod(generatorInstancesEndpoint);
+      HttpMethod increaseInstanceMethod = new PostMethod(instancesEndpoint);
       client.executeMethod(increaseInstanceMethod);
 
       countdownMethod = new GetMethod(baseURL + EndPoints.COUNTDOWN);
-      decreaseInstanceMethod = new DeleteMethod(generatorInstancesEndpoint);
+      decreaseInstanceMethod = new DeleteMethod(instancesEndpoint);
     }
 
     @Tick(delay = 1L, unit = TimeUnit.SECONDS)
     @SuppressWarnings("UnusedDeclaration")
     public void process() throws Exception {
-      // Emit an event only if 10 events haven't been emitted yet.
-      if (client.executeMethod(countdownMethod) == 200) {
-        Integer value = ++i;
-        intEmitter.emit(value, "integer", value.hashCode());
-        LOG.info("Sending data {} to sink.", value);
-      }
+      // no-op
     }
 
     @Override
@@ -233,6 +272,28 @@ public class BasicFlowTest extends TestBase {
         client.executeMethod(decreaseInstanceMethod);
       } catch (IOException e) {
         throw Throwables.propagate(e);
+      }
+    }
+  }
+
+  private static final class GeneratorFlowlet extends InstanceUpdaterFlowlet {
+    @SuppressWarnings("UnusedDeclaration")
+    private OutputEmitter<Integer> intEmitter;
+    private int i = 0;
+
+    public GeneratorFlowlet(String flowletId) {
+      super(flowletId);
+    }
+
+    @Tick(delay = 1L, unit = TimeUnit.SECONDS)
+    @SuppressWarnings("UnusedDeclaration")
+    @Override
+    public void process() throws Exception {
+      // Emit an event only if 10 events haven't been emitted yet.
+      if (client.executeMethod(countdownMethod) == 200) {
+        Integer value = ++i;
+        intEmitter.emit(value, "integer", value.hashCode());
+        LOG.info("Sending data {} to sink.", value);
       }
     }
   }
@@ -327,5 +388,11 @@ public class BasicFlowTest extends TestBase {
 
   protected static String getFlowletInstancesEndpoint(String flowletId) {
     return EndPoints.INSTANCES.replace("{key}", flowletId);
+  }
+
+  private Map<String, String> getRuntimeArguments() {
+    Map<String, String> runtimeArgs = Maps.newHashMap();
+    runtimeArgs.put("baseURL", baseURL);
+    return runtimeArgs;
   }
 }
