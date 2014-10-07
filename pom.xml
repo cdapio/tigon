@@ -1006,10 +1006,10 @@
                   <source>
                     if (project.version.endsWith("-SNAPSHOT")){
                     project.properties['deploy.url'] = project.properties['cask.packages.snapshot.repo'];
-                    project.properties['dist.deploy.groupId'] = "co.cask.cdap.distributions.snapshots";
+                    project.properties['dist.deploy.groupId'] = "co.cask.tigon.distributions.snapshots";
                     } else {
                     project.properties['deploy.url'] = project.properties['cask.packages.release.repo'];
-                    project.properties['dist.deploy.groupId'] = "co.cask.cdap.distributions.release";
+                    project.properties['dist.deploy.groupId'] = "co.cask.tigon.distributions.release";
                     }
                   </source>
                 </configuration>
