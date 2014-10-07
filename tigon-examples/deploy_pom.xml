@@ -22,7 +22,7 @@
 
   <groupId>co.cask.tigon</groupId>
   <artifactId>tigon-examples</artifactId>
-  <version>${project.version}</version>
+  <version>@project.version@</version>
   <packaging>pom</packaging>
   <name>Tigon Examples</name>
 
@@ -39,7 +39,7 @@
   </repositories>
 
   <properties>
-    <tigon.version>${project.version}</tigon.version>
+    <tigon.version>@project.version@</tigon.version>
     <slf4j.version>1.7.5</slf4j.version>
     <logback.version>1.0.9</logback.version>
     <twitter4j.version>4.0.0</twitter4j.version>

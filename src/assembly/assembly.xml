@@ -21,65 +21,11 @@
   <formats>
     <format>tar.gz</format>
   </formats>
-  <includeBaseDirectory>true</includeBaseDirectory>
-  <moduleSets>
-    <moduleSet>
-      <!-- Enable access to all projects in the current multimodule build! -->
-      <useAllReactorProjects>true</useAllReactorProjects>
-      <binaries>
-        <outputDirectory>lib</outputDirectory>
-        <unpack>false</unpack>
-        <dependencySets>
-          <dependencySet>
-            <excludes>
-              <exclude>co.cask.tigon:tigon-sql</exclude>
-            </excludes>
-          </dependencySet>
-        </dependencySets>
-      </binaries>
-    </moduleSet>
-  </moduleSets>
+  <includeBaseDirectory>false</includeBaseDirectory>
   <fileSets>
-    <!-- Include top level bin directory -->
     <fileSet>
-      <directory>${project.basedir}/../bin</directory>
-      <outputDirectory>bin</outputDirectory>
-      <fileMode>0755</fileMode>
-      <directoryMode>0755</directoryMode>
-    </fileSet>
-    <!-- Include top level text files -->
-    <fileSet>
-      <directory>${project.basedir}/..</directory>
-      <outputDirectory>.</outputDirectory>
-      <includes>
-        <include>README.md</include>
-        <include>LICENSE</include>
-      </includes>
-      <fileMode>0644</fileMode>
-    </fileSet>
-    <!-- Include examples -->
-    <fileSet>
-      <directory>${project.basedir}/../tigon-examples</directory>
-      <outputDirectory>examples</outputDirectory>
-      <includes>
-        <include>README*</include>
-        <include>**/src/**</include>
-        <include>**/bin/**</include>
-        <include>**/resources/**</include>
-        <include>**/pom.xml</include>
-        <include>**/target/*.jar</include>
-      </includes>
-      <excludes>
-        <exclude>pom.xml</exclude>
-      </excludes>
+      <directory>${sdk.dir}</directory>
+      <outputDirectory>/</outputDirectory>
     </fileSet>
   </fileSets>
-  <files>
-    <file>
-      <source>${project.basedir}/../tigon-examples/deploy_pom.xml</source>
-      <outputDirectory>examples</outputDirectory>
-      <destName>pom.xml</destName>
-      <filtered>true</filtered>
-    </file>
-  </files>
 </assembly>
