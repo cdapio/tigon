@@ -676,10 +676,10 @@ syntax (being mostly a restriction of SQL).
 <architecture#stream-query-language>`__, including the basic concepts with examples.
 
 Details of the language, its theory of operation, quick start guide and complete 
-reference can be found in the `Tigon SQL User Manual <_downloads/User_Manual_2014_rev1.html>`__.
+reference can be found in the `Tigon SQL User Manual <_downloads/Tigon_SQL_User_Manual_2014_v4.pdf>`__.
 
 For developers who are writing extensions to Tigon SQL, please refer to the
-`Tigon SQL Contributor Manual <_downloads/Contributor_Manual_2014_rev1.html>`__.
+`Tigon SQL Contributor Manual <_downloads/Tigon_SQL_Contributor_Manual_2014_v2.pdf>`__.
 
 
 Best Practices for Developing Applications
