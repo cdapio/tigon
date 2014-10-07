@@ -71,7 +71,7 @@
       <id>dist</id>
       <properties>
         <sdk.dir>${project.build.directory}/sdk</sdk.dir>
-        <stage.opt.dir>${sdk.dir}/tigon-${project.version}-sdk</stage.opt.dir>
+        <stage.opt.dir>${sdk.dir}/tigon-sdk-${project.version}</stage.opt.dir>
         <stage.lib.dir>${stage.opt.dir}/lib</stage.lib.dir>
       </properties>
       <build>
@@ -215,7 +215,7 @@
                 <phase>package</phase>
                 <goals><goal>single</goal></goals>
                 <configuration>
-                  <finalName>tigon-${project.version}</finalName>
+                  <finalName>tigon-sdk</finalName>
                   <formats><format>tar.gz</format></formats>
                   <descriptors>
                     <descriptor>${project.basedir}/src/main/assembly/assembly.xml</descriptor>
@@ -238,9 +238,9 @@
                   <version>${project.version}</version>
                   <groupId>${project.groupId}</groupId>
                   <artifactId>tigon-sdk</artifactId>
-                  <packaging>tgz</packaging>
+                  <packaging>tar.gz</packaging>
                   <generatePom>false</generatePom>
-                  <file>${project.build.directory}/tigon-${project.version}-sdk.tar.gz</file>
+                  <file>${project.build.directory}/tigon-sdk-${project.version}.tar.gz</file>
                   <repositoryId>continuuity</repositoryId>
                   <url>${deploy.url}</url>
                 </configuration>
