@@ -1,26 +1,25 @@
 # HelloWorld
 
 ## Overview
-An application that emits "Hello World" messages.
+
+An application that emits and counts "Hello World" messages.
 
 ## Building the JAR
-```
-mvn clean package
-```
+
+    mvn clean package
 
 To start the Flow in the Standalone Runtime of Tigon (substituting for *version*):
-```
-$ ./run_standalone.sh /path/to/HellWorld-<version>.jar co.cask.tigon.helloworld.HelloWorldFlow 
-```
 
-To start the Flow in the Distributed Runtime of Tigon:
-```
-$ ./run_distributed.sh <ZookeeperQuorum> <HDFSNamespace>
-> START /path/to/HellWorld-<version>.jar co.cask.tigon.helloworld.HelloWorldFlow
-```
+    $ ./run_standalone.sh /path/to/HellWorld-<version>.jar co.cask.tigon.helloworld.HelloWorldFlow 
 
-The HelloWorld Flow logs a "Hello World" message every second. If run in the standalone runtime, the logs appear on the
-console. In the distributed runtime, showlogs CLI command can be used to view these logs.
+To start the Flow in the Distributed Runtime of Tigon (substituting for *version*):
+
+    $ ./run_distributed.sh <ZookeeperQuorum> <HDFSNamespace>
+    > START /path/to/HellWorld-<version>.jar co.cask.tigon.helloworld.HelloWorldFlow
+
+The HelloWorld Flow logs a "Hello World" message and a total count every second. If run in
+the standalone runtime, the logs appear on the console. In the distributed runtime,
+showlogs CLI command can be used to view these logs.
 
 ## License and Trademarks
 
