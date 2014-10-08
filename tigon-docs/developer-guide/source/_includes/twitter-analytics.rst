@@ -12,8 +12,8 @@ Twitter Configuration
 
 In order to utilize the ``TweetCollector`` flowlet, which pulls a small
 sample stream via the Twitter API, an API key and Access token must be
-configured. Follow the steps at [Twitter oauth access tokens]
-(https://dev.twitter.com/oauth/overview/application-owner-access-tokens)
+configured. Follow the steps at `Twitter oauth access
+tokens <https://dev.twitter.com/oauth/overview/application-owner-access-tokens>`__
 to obtain these credentials. These configurations must be provided as
 runtime arguments to the Flow prior to starting it in order to use the
 ``TweetCollector`` flowlet.
@@ -39,17 +39,17 @@ Build the Application jar:
 
 ::
 
-    MAVEN_OPTS="-Xmx512m" mvn package -DskipTests -pl tigon-examples -am -amd -P examples
+    mvn clean package
 
-To deploy the Application to a standalone instance of Tigon
-(substituting for *version* and *oauth-properties*):
+To start the Flow in the Standalone Runtime of Tigon (substituting for
+*version* and *oauth-properties*):
 
 ::
 
     $ ./run_standalone.sh /path/to/TwitterAnalytics-<version>.jar co.cask.tigon.analytics.TwitterAnalytics [ oauth-properties ]
 
-To deploy the Application to a distributed instance of Tigon
-(substituting for *version* and *oauth-properties*):
+To start the Flow in the Distributed Runtime of Tigon (substituting for
+*version* and *oauth-properties*):
 
 ::
 

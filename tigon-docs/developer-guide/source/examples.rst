@@ -21,5 +21,5 @@ Where to Go Next
 
 Now that you're seen an example demonstrating Tigon, take a look at:
 
-- `APIs <apis/apis.html>`__, which includes the Java and Tigon-SQL APIs of Tigon.
+- `APIs <apis/apis.html>`__, which includes the Java and TigonSQL APIs of Tigon.
 

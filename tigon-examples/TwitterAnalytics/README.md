@@ -1,20 +1,19 @@
 # TwitterAnalytics
 
-
 ## Overview
+
 An application that collects Tweets and logs the top 10 hashtags used in the last minute.
 
-
 ## Twitter Configuration
+
 In order to utilize the ``TweetCollector`` flowlet, which pulls a small sample stream via
 the Twitter API, an API key and Access token must be configured. Follow the steps at
-[Twitter oauth access tokens]
-(https://dev.twitter.com/oauth/overview/application-owner-access-tokens) to obtain
-these credentials. These configurations must be provided as runtime arguments to the Flow
-prior to starting it in order to use the ``TweetCollector`` flowlet.
-
+[Twitter oauth access tokens](https://dev.twitter.com/oauth/overview/application-owner-access-tokens)
+to obtain these credentials. These configurations must be provided as runtime arguments to
+the Flow prior to starting it in order to use the ``TweetCollector`` flowlet.
 
 ## Flow Runtime Arguments
+
 When starting the Application from the command line, runtime arguments may need to be specified.
 
 The required Twitter authorization properties (*oauth-properties*), as described in 
@@ -25,24 +24,20 @@ The required Twitter authorization properties (*oauth-properties*), as described
 - ```oauth.accessToken```
 - ```oauth.accessTokenSecret```
 
-
 ## Installation
 
 Build the Application jar:
-```
-mvn clean package
-```
 
-To deploy the Application to a standalone instance of Tigon (substituting for *version* and *oauth-properties*):
-```
-$ ./run_standalone.sh /path/to/TwitterAnalytics-<version>.jar co.cask.tigon.analytics.TwitterAnalytics [ oauth-properties ]
-```
+    mvn clean package
 
-To deploy the Application to a distributed instance of Tigon (substituting for *version* and *oauth-properties*):
-```
-$ ./run_distributed.sh <ZookeeperQuorum> <HDFSNamespace>
-> START /path/to/TwitterAnalytics-<version>.jar co.cask.tigon.analytics.TwitterAnalytics [ oauth-properties ]
-```
+To start the Flow in the Standalone Runtime of Tigon (substituting for *version* and *oauth-properties*):
+
+    $ ./run_standalone.sh /path/to/TwitterAnalytics-<version>.jar co.cask.tigon.analytics.TwitterAnalytics [ oauth-properties ]
+
+To start the Flow in the Distributed Runtime of Tigon (substituting for *version* and *oauth-properties*):
+
+    $ ./run_distributed.sh <ZookeeperQuorum> <HDFSNamespace>
+    > START /path/to/TwitterAnalytics-<version>.jar co.cask.tigon.analytics.TwitterAnalytics [ oauth-properties ]
 
 The top ten hashtags used in the previous minute get recorded. In the case of standalone instance of Tigon,
 the results will appear immediately in the Tigon command line interface; in the case of distributed instance of Tigon,

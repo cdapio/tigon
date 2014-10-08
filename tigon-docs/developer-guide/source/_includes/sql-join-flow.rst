@@ -28,8 +28,8 @@ Build the Application jar:
 
     MAVEN_OPTS="-Xmx512m" mvn package -DskipTests -pl tigon-examples -am -amd -P examples
 
-To deploy the Application to a standalone instance of Tigon
-(substituting for *version* and *httpPort*):
+To start the Flow in the Standalone Runtime of Tigon (substituting for
+*version* and *httpPort*):
 
 ::
 
@@ -40,8 +40,6 @@ The Flow exposes 2 ingestion endpoints:
 ::
 
     POST /v1/tigon/ageInput -d { "data" : [ <id>, <age> ] }
-
-::
 
     POST /v1/tigon/nameInput -d { "data" : [ <id>, <name> ] }
 
