@@ -61,20 +61,6 @@
       <artifactId>junit</artifactId>
       <scope>compile</scope>
     </dependency>
-    <dependency>
-      <groupId>co.cask.tephra</groupId>
-      <artifactId>tephra-hbase-compat-0.96</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-minicluster</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>co.cask.http</groupId>
-      <artifactId>netty-http</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
 
 </project>
