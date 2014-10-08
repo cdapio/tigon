@@ -70,7 +70,7 @@ import java.lang.annotation.Target;
  * </p>
  * 
  * <p>
- * See the <i><a href="http://cask.co/docs/cdap/current/en/">Cask DAP Developer Guides</a></i>
+ * See the <i><a href="http://docs.tigon.io/tigon/current/en/developer.html">Tigon Developer Guides</a></i>
  * for more information.
  * </p>
  *

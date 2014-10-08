@@ -2668,7 +2668,7 @@ void generate_makefile(vector<string> &input_file_names, int nfiles,
 		fprintf(outfl,"-last ");
 	if(use_pads)
 		fprintf(outfl, "-ldll -ldl ");
-	fprintf(outfl," -lgscpaux -lcurl");
+	fprintf(outfl," -lgscpaux");
 #ifdef GCOV
 	fprintf(outfl," -fprofile-arcs");
 #endif
@@ -2693,7 +2693,7 @@ void generate_makefile(vector<string> &input_file_names, int nfiles,
 	for(i=0;i<hfta_names.size();++i)
 		fprintf(outfl,
 ("%s: %s.o\n"
-"\t$(CPP) -o %s %s.o -L"+root_path+"/lib -lgscpapp -lgscphostaux -lgscphost -lgscpinterface -lgscphftaaux -lgscphostaux -lm -lgscpaux -lclearinghouse -lresolv -lpthread -lgscpaux -lcurl -lgscphftaaux -lgscpaux %s\n"
+"\t$(CPP) -o %s %s.o -L"+root_path+"/lib -lgscpapp -lgscphostaux -lgscphost -lgscpinterface -lgscphftaaux -lgscphostaux -lm -lgscpaux -lclearinghouse -lresolv -lpthread -lgscpaux -lgscphftaaux -lgscpaux %s\n"
 "\n"
 "%s.o: %s.cc\n"
 "\t$(CPP) -o %s.o -c %s.cc\n"

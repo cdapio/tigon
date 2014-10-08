@@ -32,12 +32,12 @@ install: all
 	cp gsprintconsole  gsgdatprint  gdat2ascii  process_logs gsexit ../../../../bin/ 
 
 gsgdatprint: gsgdatprint.o ../../../../lib/libgscphostaux.a ../../../../lib/libgscphost.a ../../../../lib/libgscpinterface.a ../../../../lib/libgscpapp.a
-	g++ -g -o gsgdatprint gsgdatprint.o -L../../../../lib  -lgscpapp  -lgscphostaux -lgscphost -lgscpinterface -lgscplftaaux -lclearinghouse -lgscpaux  -lcurl
+	g++ -g -o gsgdatprint gsgdatprint.o -L../../../../lib  -lgscpapp  -lgscphostaux -lgscphost -lgscpinterface -lgscplftaaux -lclearinghouse -lgscpaux 
 
 gsgdatprint.o: gsgdatprint.c
 
 gsexit: gsexit.o ../../../../lib/libgscphostaux.a ../../../../lib/libgscphost.a ../../../../lib/libgscpinterface.a ../../../../lib/libgscpapp.a
-	g++ -g -o gsexit gsexit.o -L../../../../lib  -lgscpapp  -lgscphostaux -lgscphost -lgscpinterface -lgscplftaaux -lclearinghouse -lgscpaux  -lcurl
+	g++ -g -o gsexit gsexit.o -L../../../../lib  -lgscpapp  -lgscphostaux -lgscphost -lgscpinterface -lgscplftaaux -lclearinghouse -lgscpaux 
 
 gsexit.o: gsexit.c
 
@@ -45,26 +45,26 @@ gsexit.o: gsexit.c
 gsgdatprint.c: $(INCDIR/gsconfig.h) $(INCDIR/gstypes.h)
 
 gdat2ascii: gdat2ascii.o ../../../../lib/libgscphostaux.a  ../../../../lib/libgscpinterface.a 
-	g++ -g -o gdat2ascii gdat2ascii.o -L../../../../lib   -lgscphostaux  -lgscpinterface -lgscpaux  -lcurl
+	g++ -g -o gdat2ascii gdat2ascii.o -L../../../../lib   -lgscphostaux  -lgscpinterface -lgscpaux 
 
 gdat2ascii.o: gdat2ascii.c
 
 gdat2ascii.c : $(INCDIR/gsconfig.h) $(INCDIR/gstypes.h)
 
 gsprintconsole: gsprintconsole.o ../../../../lib/libgscphostaux.a ../../../../lib/libgscphost.a ../../../../lib/libgscpinterface.a ../../../../lib/libgscpapp.a
-	g++ -g -o gsprintconsole gsprintconsole.o -L../../../../lib -lgscpapp  -lgscphostaux -lgscphost -lgscpinterface -lgscplftaaux -lclearinghouse -lgscpaux  -lcurl 
+	g++ -g -o gsprintconsole gsprintconsole.o -L../../../../lib -lgscpapp  -lgscphostaux -lgscphost -lgscpinterface -lgscplftaaux -lclearinghouse -lgscpaux  
 
 gsprintconsole.o: gsprintconsole.c
 
 gsprintconsole.c : $(INCDIR/gsconfig.h) $(INCDIR/gstypes.h)
 
 gssinksim: gssinksim.o ../../../../lib/libgscphostaux.a ../../../../lib/libgscphost.a ../../../../lib/libgscpinterface.a ../../../../lib/libgscpapp.a
-	g++ -g -o gssinksim gssinksim.o -L../../../../lib -lgscpapp  -lgscphostaux -lgscphost -lgscpinterface -lgscplftaaux -lclearinghouse -lgscpaux  -lcurl
+	g++ -g -o gssinksim gssinksim.o -L../../../../lib -lgscpapp  -lgscphostaux -lgscphost -lgscpinterface -lgscplftaaux -lclearinghouse -lgscpaux 
 
 gssinksim.o: gssinksim.c
 
 gssource: gssource.o
-	g++ -g -o gssource gssource.o -L../../../../lib   -lgscpaux  -lcurl
+	g++ -g -o gssource gssource.o -L../../../../lib   -lgscpaux 
 
 gssource.o: gssource.c
 

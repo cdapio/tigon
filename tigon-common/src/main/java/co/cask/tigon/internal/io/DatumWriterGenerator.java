@@ -169,7 +169,7 @@ final class DatumWriterGenerator {
 
     ClassDefinition classDefinition = new ClassDefinition(classWriter.toByteArray(), className);
     // DEBUG block. Uncomment for debug
-//    co.cask.cdap.internal.asm.Debugs.debugByteCode(classDefinition, new java.io.PrintWriter(System.out));
+//    co.cask.tigon.internal.asm.Debugs.debugByteCode(classDefinition, new java.io.PrintWriter(System.out));
     // End DEBUG block
     return classDefinition;
   }

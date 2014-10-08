@@ -15,9 +15,10 @@
  */
 
 /**
- * This package contains internal classes for supporting the CDAP API.
+ * This package contains internal classes for supporting the Tigon Flow API.
  * <p>
- * These should not be used directly by users of the CDAP API, as they may change in a later release without warning.
+ * These should not be used directly by users of the Tigon Flow API, as they may change in a later release without
+ * warning.
  * </p>
  */
 package co.cask.tigon.internal.flow;

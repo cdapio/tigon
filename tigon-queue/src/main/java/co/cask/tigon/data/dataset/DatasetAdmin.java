@@ -14,7 +14,7 @@
  * the License.
  */
 
-package co.cask.tigon.dataset;
+package co.cask.tigon.data.dataset;
 
 import java.io.Closeable;
 import java.io.IOException;
