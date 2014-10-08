@@ -21,20 +21,17 @@ The required Twitter authorization properties ("oauth-properties") include all o
 
 "oauth.accessTokenSecret" - See ```Twitter Configuration``` above.
 
-
-## Installation
-
-Build the Application jar:
+## Building the JAR
 ```
-MAVEN_OPTS="-Xmx512m" mvn package -DskipTests -pl tigon-examples -am -amd -P examples
+mvn clean package
 ```
 
-To deploy the Application to a standalone instance of Tigon:
+To start the Flow in the Standalone Runtime of Tigon:
 ```
 $ ./run_standalone.sh /path/to/TwitterAnalytics-0.1.0.jar co.cask.tigon.analytics.TwitterAnalytics [ oauth-properties ]
 ```
 
-To deploy the Application to a distributed instance of Tigon:
+To start the Flow in the Distributed Runtime of Tigon:
 ```
 $ ./run_distributed.sh <ZookeeperQuorum> <HDFSNamespace>
 > START /path/to/TwitterAnalytics-0.1.0.jar co.cask.tigon.analytics.TwitterAnalytics [ oauth-properties ]
