@@ -37,8 +37,8 @@ public class HelloWorldFlow implements Flow {
       .setName("HelloWorld")
       .setDescription("HelloWorld Flow")
       .withFlowlets()
-      .add("generator", new HelloWorldFlowlet())
-      .add("logger", new LoggerFlowlet())
+      .add("generator", new HelloWorldFlowlet(), 1)
+      .add("logger", new LoggerFlowlet(), 1)
       .connect()
       .from("generator").to("logger")
       .build();
@@ -61,10 +61,11 @@ public class HelloWorldFlow implements Flow {
    */
   private static final class LoggerFlowlet extends AbstractFlowlet {
     private static final Logger LOG = LoggerFactory.getLogger(LoggerFlowlet.class);
+    private int count = 0;
 
     @ProcessInput
     public void process(String input) {
-      LOG.info("Received: {}", input);
+      LOG.info("Received: {} - {} time(s)", input, ++count);
     }
   }
 
