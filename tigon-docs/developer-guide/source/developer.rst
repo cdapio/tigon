@@ -324,8 +324,8 @@ will contain up to 100 data objects read from the input.
 Flowlets and Instances
 ----------------------
 You can have one or more instances of any given Flowlet, each consuming a disjoint
-partition of each input. You can control the number of instances programmatically via the
-`REST interfaces <rest.html>`__ or via the CDAP Console. This enables you
+partition of each input. You can control the number of instances through the 
+command-line interface (CLI) in Distributed Mode.. This enables you
 to scale your application to meet capacity at runtime.
 
 In Tigon Standalone, multiple Flowlet instances are run in threads, so in some cases

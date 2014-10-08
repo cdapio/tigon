@@ -37,7 +37,7 @@ are covered in our Developer Guide section on the `"Flow Transaction System".
    :width: 600px
 
 
-TigonSQL is a library built for Tigon. It contains a In-memory Stream Processing engine
+TigonSQL is a library built for Tigon. It contains a in-memory Stream processing engine
 that can perform filtering, aggregation, and joins of data streams. It is built to be a
 special flowlet (``AbstractInputFlowlet``) which can be used as a part of your Flow. 
 

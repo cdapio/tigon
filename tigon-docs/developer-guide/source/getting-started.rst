@@ -73,7 +73,7 @@ You can also build Tigon directly from the latest source code::
 
   git clone https://github.com/caskdata/tigon.git
   cd tigon
-  mvn clean package -P sql-lib -DskipTests 
+  mvn clean package -DskipTests -Pdist
 
 After the build completes, you will have a distribution of Tigon under the
 `tigon-distribution/target/` directory.  
@@ -113,6 +113,12 @@ Problems with the Downloaded Package?
 If the downloaded package doesn't work, try to build a tarball for your system
 as described above.
 
+If you face problems using TigonSQL, you can build the TigonSQL Streaming library from the GitHub repo source::
+
+  mvn clean install -DskipTests -P sql-lib,dist
+
+The TigonSQL jar will be installed locally and will be used by maven to create Tigon
+applications when they are created on the same machine.
 
 Examples
 ========
