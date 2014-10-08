@@ -90,6 +90,8 @@
                   <overWriteReleases>false</overWriteReleases>
                   <overWriteSnapshots>false</overWriteSnapshots>
                   <overWriteIfNewer>true</overWriteIfNewer>
+                  <excludeGroupIds>org.apache.hbase</excludeGroupIds>
+                  <excludeArtifactIds>hadoop-hdfs</excludeArtifactIds>
                   <prependGroupId>true</prependGroupId>
                   <silent>true</silent>
                   <includeScope>compile</includeScope>
