@@ -28,7 +28,7 @@ import co.cask.tigon.api.Processor;
  *   configure the flow.
  * </p>
  *
- * See the <i>Cask DAP Developer Guide</i> and the CDAP instance example applications.
+ * See the <i>Tigon Developer Guide</i> and Tigon example applications.
  * @see FlowSpecification
  * @see co.cask.tigon.api.flow.flowlet.Flowlet Flowlet
  */

@@ -27,7 +27,7 @@ CXX=g++
 #SMANDIR = /home/strategy/projects/emf_dev/dist_db/SocketMan-1.3
 INCLUDES = -I../../include -I../../include/hfta  -I../ftacmp
 # LDLIBS = -lc -lnsl -lsocket -lm
-LDLIBS = -L../../lib -lm -lgscphostaux -lgscpapp -lgscphost -lgscpinterface -lgscprts -lgscplftaaux -lgscpaux -lcurl
+LDLIBS = -L../../lib -lm -lgscphostaux -lgscpapp -lgscphost -lgscpinterface -lgscprts -lgscplftaaux -lgscpaux
 # C++OPTS = -g -n -D_BSD_SIGNALS -DYYDEBUG=1 $(INCLUDES) 
 C++OPTS = -g  -D_BSD_SIGNALS $(INCLUDES) 
 C++LDOPTS = -g 

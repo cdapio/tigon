@@ -30,7 +30,7 @@ The required Twitter authorization properties (*oauth-properties*), as described
 
 Build the Application jar:
 ```
-MAVEN_OPTS="-Xmx512m" mvn package -DskipTests -pl tigon-examples -am -amd -P examples
+mvn clean package
 ```
 
 To deploy the Application to a standalone instance of Tigon (substituting for *version* and *oauth-properties*):

@@ -22,7 +22,7 @@ all: libgscpaux.a
 install : all
 	cp libgscpaux.a ../../../../../lib/
 
-libgscpaux.a :  gshub.o json.o block_allocator.o
+libgscpaux.a :  gshub.o simple_http.o json.o block_allocator.o
 		ar cr $@ $?
 		( ranlib $@ ) 2>/dev/null || true
 	cp libgscpaux.a ../../../../../lib/

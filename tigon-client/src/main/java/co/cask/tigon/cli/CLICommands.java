@@ -31,6 +31,7 @@ public enum CLICommands {
   FLOWLETINFO (1, "Prints the Flowlet Names and the corresponding Instance Count", "<flowname>"),
   STATUS (1, "Shows the Status of the Flow", "<flowname>"),
   VERSION (0, "Shows the Version of Tigon", ""),
+  SHOWLOGS (1, "Shows the live logs of the Flow", "<flowname>"),
   HELP (1, "Shows the usage for that given command", "<command>"),
   QUIT(0, "Quit the Tigon Client", "");
 

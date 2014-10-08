@@ -15,6 +15,6 @@
  */
 
 /**
- * Package for CDAP Application.
+ * Package for Tigon Application.
  */
 package $package;
