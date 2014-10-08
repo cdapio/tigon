@@ -45,7 +45,25 @@ Install
 
 Once the download has completed, unzip the file to a suitable location.
 
-  
+
+Creating an Application
+=======================
+
+.. highlight:: console
+
+The best way to start developing a Tigon application is by using the Maven archetype::
+
+  $ mvn archetype:generate \
+    -DarchetypeGroupId=co.cask.tigon  \
+    -DarchetypeArtifactId=tigon-app-archetype  
+    -DarchetypeVersion=0.2.0
+
+This creates a Maven project with all required dependencies, Maven plugins, and a simple
+application template for the development of your application. You can import this Maven
+project into your preferred IDE—such as Eclipse or IntelliJ—and start developing your
+first Tigon application.
+
+
 Building Tigon from Source
 ==========================
 
