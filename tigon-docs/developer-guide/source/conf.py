@@ -31,16 +31,16 @@ import os
 import subprocess
 
 def get_sdk_version():
-    # Sets the Build Version via maven
-    mvn_version_cmd = "mvn help:evaluate -o -Dexpression=project.version -f ../../../pom.xml | grep -v '^\['"
+    # Sets the Build Version
+    grep_version_cmd = "grep '<version>' ../../../pom.xml | awk 'NR==1;START{print $1}'"
     version = None
     try:
-        version = subprocess.check_output(mvn_version_cmd, shell=True).strip().replace("-SNAPSHOT", "")
+        version = subprocess.check_output(grep_version_cmd, shell=True).strip().replace("-SNAPSHOT", "").replace("<version>", "").replace("</version>", "")
+        print "SDK Version: %s" % version
     except:
-        print "Could not get version from maven"
+        print "Could not get version from grep"
         sys.exit(1)
     return version
-
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
