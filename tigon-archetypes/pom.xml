@@ -21,7 +21,7 @@
   <parent>
     <artifactId>tigon</artifactId>
     <groupId>co.cask.tigon</groupId>
-    <version>0.2.0</version>
+    <version>0.2.0-SNAPSHOT</version>
   </parent>
 
   <modelVersion>4.0.0</modelVersion>
@@ -29,8 +29,9 @@
   <artifactId>tigon-archetypes</artifactId>
   <packaging>pom</packaging>
   <name>Tigon Application Archetypes</name>
+
   <modules>
-  <module>tigon-app-archetype</module>
+    <module>tigon-app-archetype</module>
   </modules>
 
 </project>

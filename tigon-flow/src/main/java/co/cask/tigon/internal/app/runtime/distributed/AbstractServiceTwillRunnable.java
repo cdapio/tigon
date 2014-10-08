@@ -157,6 +157,7 @@ public abstract class AbstractServiceTwillRunnable extends AbstractTwillRunnable
 
   @Override
   public void stop() {
+    LOG.info("Stopping Service Twill Runnable : {}", name);
     if (runThread != null) {
       runThread.interrupt();
     }

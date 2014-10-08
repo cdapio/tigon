@@ -18,7 +18,7 @@ package co.cask.tigon.api.metrics;
 
 /**
  * Defines a way to collect user-defined metrics.
- * To use it, just add a Metrics field in a CDAP application element, for example a Flowlet, and start using it.
+ * To use it, just add a Metrics field in a Tigon Flowlet, and start using it.
  */
 public interface Metrics {
   /**
