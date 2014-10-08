@@ -243,40 +243,42 @@ $(document).ready(function() {
  * Modification by Cask to scroll to anchors correctly.
  # Takes into account height of header bar and space between header bar and first heading.
  */
-
-function anchor_alert(msg){
-	alert('anchor_alert\n'+msg);
-}
-
-function anchor_scroll(hash){
-// 	anchor_alert('hash:'+hash);
-	var fromTop = 32 + 20 - 2; // Top bar height + space - overlap
-	var $toElement = jQuery("[id="+hash+"]");
-	var toPosition = $toElement.position().top - fromTop;
-	// Scroll to element
-	$('html, body').animate({ scrollTop: toPosition });
-	// Update URL in browser
-	if(history && "pushState" in history) {
-		history.pushState({}, document.title, window.location.pathname + "#" + hash);
-	}
-}
-
 jQuery(function() {
+
+  function anchor_scroll(hash){
+    var fromTop = 32 + 20 - 2; // Top bar height + space - overlap
+    // Scroll to element
+    $('html, body').animate({ scrollTop: jQuery(hash).position().top - fromTop });
+    // Update URL in browser
+    window.location.hash = hash.substr(1);
+  }
+
 	// Catch all clicks on a tags
-	jQuery("a").click(function(){
-		// Check if it has a hash (i.e. if it's an anchor link)
-		if(this.hash){
-			var hash = this.hash.substr(1);
-			anchor_scroll(hash);
-			return false;
-		}
+	jQuery("body").on('click', 'a[href^="#"]', function(e){
+    e.preventDefault();
+		anchor_scroll(e.currentTarget.getAttribute('href'));
 	});
+
 	// Do the same with urls with hash (so on page load it will slide nicely)
 	if(location.hash){
-  		window.scroll(0,0);
- 		var hash = location.hash.substr(1);
-		anchor_scroll(hash);
-		return false;
+  	window.scrollTo(0, 0);
+		anchor_scroll(location.hash);
 	}
-	return true;
+
+
+
+
+
+
+  // scroll highlight
+	jQuery(document).scroll(function(e){
+    console.log(e, $u);
+	});
+
+
+
+
+
+
+
 });
