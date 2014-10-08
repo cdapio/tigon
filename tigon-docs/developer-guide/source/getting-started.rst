@@ -35,8 +35,8 @@ are required.
 Download
 ========
 
-Pre-compiled sources and related files can be downloaded in a zip file: 
-`tigon-developer-release-0.2.0.zip. 
+Pre-compiled sources and related files can be downloaded in a tgz file: 
+`tigon-developer-release-0.2.0.tgz. 
 <http://repository.cask.co/downloads/co/cask/tigon/tigon-developer-release/0.2.0/tigon-developer-release-0.2.0.tgz>`__
 
 

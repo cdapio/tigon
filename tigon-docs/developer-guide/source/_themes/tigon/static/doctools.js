@@ -265,9 +265,32 @@ jQuery(function() {
 		anchor_scroll(location.hash);
 	}
 
-  // scroll highlight
-	jQuery(document).scroll(function(e){
-    console.log(e, $u);
-	});
+// scroll highlight
+  var sections = [],
+      sidebarLinks = $('.sphinxsidebar a[href^="#"]');
 
+  sidebarLinks.each(function() {
+    var link = $(this);
+    sections.push({
+      top: $(link.attr('href')).offset().top - 10,
+      link: link
+    });
+  });
+
+  function setScrollActive() {
+    var $win = $(window), 
+        top = $win.scrollTop(),
+        bottom = top + $win.height();
+
+    sidebarLinks.removeClass('scroll-active');
+
+    for (var i = 0, m = sections.length; i < m; i++) {
+      if(sections[i].top >= top) {
+        sections[i].link.addClass('scroll-active');
+        break;
+      }
+    };
+  }
+  jQuery(document).scroll($u.debounce(setScrollActive, 100));
+  setScrollActive();
 });

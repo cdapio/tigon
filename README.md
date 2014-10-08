@@ -71,7 +71,8 @@ Note: To run the TigonSQL Stream Engine outside of Tigon, both Perl 5.x and Pyth
 
 ### Download
 
-Pre-compiled sources and related files can be downloaded in a zip file from [tigon-io.](http://tigon.io)
+Pre-compiled sources and related files can be downloaded in a tgz file: 
+[tigon-developer-release-0.2.0.tgz.](http://repository.cask.co/downloads/co/cask/tigon/tigon-developer-release/0.2.0/tigon-developer-release-0.2.0.tgz)
 
 ### Install 
 
