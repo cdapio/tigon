@@ -1,52 +1,42 @@
 # SQLJoinFlow
 
 ## Overview
-An application that demonstrates the capabilities of tigon-sql library.
-It does an inner-join of two data streams and logs the result of the SQL command.
+
+An application that demonstrates the capabilities of the Tigon-SQL library.
+It performs an inner-join of two data streams and logs the result of the SQL command.
 
 ## Flow Runtime Arguments
+
 When starting the Application from the command line, runtime arguments will need to be specified.
 
 The only required property is:
 
-"httpPort" - The port to run the HTTP ingestion endpoints on.
+```httpPort``` - The port to run the HTTP ingestion endpoints on; example: ```--httpPort=1433```
 
-## Building the JAR
-```
-mvn clean package
-```
 
-To start the Flow in the Standalone Runtime of Tigon:
-```
-$ ./run_standalone.sh /path/to/SQLJoinFlow-0.1.0.jar cco.cask.tigon.sqljoinflow.SQLJoinFlow [ host-property ]
-```
+## Installation
 
-To start the Flow in the Distributed Runtime of Tigon:
-```
-$ ./run_distributed.sh <ZookeeperQuorum> <HDFSNamespace>
-> START /path/to/SQLJoinFlow-0.1.0.jar cco.cask.tigon.sqljoinflow.SQLJoinFlow
-> STATUS SQLFlow
-RUNNING
-> DISCOVER SQLFlow httpPort
-```
+Build the Application jar:
+
+    MAVEN_OPTS="-Xmx512m" mvn package -DskipTests -pl tigon-examples -am -amd -P examples
+
+To start the Flow in the Standalone Runtime of Tigon (substituting for *version* and *httpPort*):
+
+    $ ./run_standalone.sh /path/to/SQLJoinFlow-<version>.jar co.cask.tigon.sqljoinflow.SQLJoinFlow --httpPort=<httpPort>
 
 The Flow exposes 2 ingestion endpoints:
-```
-POST /v1/tigon/ageInput -d { "data" : [ <id>, <age> ] }
-```
 
-```
-POST /v1/tigon/nameInput -d { "data" : [ <id>, <name> ] }
-```
+    POST /v1/tigon/ageInput -d { "data" : [ <id>, <age> ] }
 
-The output is the inner-join of these two input streams on their ``id``s. A filter of age greater than 40 is applied
+    POST /v1/tigon/nameInput -d { "data" : [ <id>, <name> ] }
+
+The output is the inner-join of these two input streams on their ```id```s. A filter of age greater than 40 is applied
 on the results.
 
-The output will look like:
+The output will appear as:
 
-```
-<id> : <name> : <age>
-```
+    <id> : <name> : <age>
+
 
 ## License and Trademarks
 
