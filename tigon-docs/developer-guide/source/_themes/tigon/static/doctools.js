@@ -265,20 +265,9 @@ jQuery(function() {
 		anchor_scroll(location.hash);
 	}
 
-
-
-
-
-
   // scroll highlight
 	jQuery(document).scroll(function(e){
     console.log(e, $u);
 	});
-
-
-
-
-
-
 
 });
