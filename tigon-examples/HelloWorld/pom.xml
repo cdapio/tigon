@@ -26,7 +26,7 @@ the License.
   <modelVersion>4.0.0</modelVersion>
 
   <properties>
-    <app.main.class>co.cask.tigon.simpleflow.HelloWorldFlow</app.main.class>
+    <app.main.class>co.cask.tigon.helloworld.HelloWorldFlow</app.main.class>
   </properties>
 
   <artifactId>HelloWorld</artifactId>
