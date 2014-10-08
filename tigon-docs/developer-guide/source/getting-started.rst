@@ -78,7 +78,7 @@ You can also build Tigon directly from the latest source code::
 After the build completes, you will have a distribution of Tigon under the
 `tigon-distribution/target/` directory.  
 
-Take the `tigon-<version>.tar.gz` file and unzip it into a suitable location.
+Take the `tigon-sdk-<version>.tar.gz` file and unzip it into a suitable location.
 
 
 Is It Building?
