@@ -30,8 +30,8 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * A HelloWorld {@link Flow}.
- * HelloWorldFlow contains one flowlet that emits 'Hello World' and another flowlet that counts the number of times
- * it received 'HelloWorld' and logs it.
+ * <p>HelloWorldFlow contains one flowlet that emits 'Hello World' and another flowlet that counts the number of times
+ * it received 'HelloWorld' and logs it.</p>
  */
 public class HelloWorldFlow implements Flow {
 
