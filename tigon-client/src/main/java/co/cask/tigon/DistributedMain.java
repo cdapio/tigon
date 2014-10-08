@@ -209,6 +209,8 @@ public class DistributedMain {
           for (InetSocketAddress socketAddress : flowOperations.discover(args[1], args[2])) {
             out.println(String.format("%s:%s", socketAddress.getHostName(), socketAddress.getPort()));
           }
+        } else if (cmd.equals(CLICommands.SHOWLOGS)) {
+          flowOperations.addLogHandler(args[1], System.out);
         } else if (cmd.equals(CLICommands.SERVICEINFO)) {
           out.println(StringUtils.join(flowOperations.getServices(args[1]), "\n"));
         } else if (cmd.equals(CLICommands.VERSION)) {

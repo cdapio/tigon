@@ -18,8 +18,8 @@ package co.cask.tigon.data.lib.hbase;
 
 
 import co.cask.tigon.api.common.Bytes;
+import co.cask.tigon.data.dataset.DatasetAdmin;
 import co.cask.tigon.data.util.hbase.HBaseTableUtil;
-import co.cask.tigon.dataset.DatasetAdmin;
 import co.cask.tigon.utils.ProjectInfo;
 import com.google.common.base.Function;
 import com.google.common.collect.ImmutableList;

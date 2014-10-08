@@ -11,16 +11,23 @@ The only required property is:
 
 "httpPort" - The port to run the HTTP ingestion endpoints on.
 
-## Installation
-
-Build the Application jar:
+## Building the JAR
 ```
-MAVEN_OPTS="-Xmx512m" mvn package -DskipTests -pl tigon-examples -am -amd -P examples
+mvn clean package
 ```
 
-To deploy the Application to a standalone instance of Tigon:
+To start the Flow in the Standalone Runtime of Tigon:
 ```
 $ ./run_standalone.sh /path/to/SQLJoinFlow-0.1.0.jar cco.cask.tigon.sqljoinflow.SQLJoinFlow [ host-property ]
+```
+
+To start the Flow in the Distributed Runtime of Tigon:
+```
+$ ./run_distributed.sh <ZookeeperQuorum> <HDFSNamespace>
+> START /path/to/SQLJoinFlow-0.1.0.jar cco.cask.tigon.sqljoinflow.SQLJoinFlow
+> STATUS SQLFlow
+RUNNING
+> DISCOVER SQLFlow httpPort
 ```
 
 The Flow exposes 2 ingestion endpoints:
@@ -40,7 +47,6 @@ The output will look like:
 ```
 <id> : <name> : <age>
 ```
-
 
 ## License and Trademarks
 

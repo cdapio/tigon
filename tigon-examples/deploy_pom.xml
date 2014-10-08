@@ -18,71 +18,35 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <parent>
-    <groupId>co.cask.tigon</groupId>
-    <artifactId>tigon</artifactId>
-    <version>0.2.0-SNAPSHOT</version>
-  </parent>
-
-  <properties>
-    <slf4j.version>1.7.5</slf4j.version>
-    <logback.version>1.0.9</logback.version>
-    <twitter4j.version>4.0.0</twitter4j.version>
-    <gson.version>2.2.4</gson.version>
-    <guava.version>13.0.1</guava.version>
-  </properties>
-
   <modelVersion>4.0.0</modelVersion>
 
+  <groupId>co.cask.tigon</groupId>
   <artifactId>tigon-examples</artifactId>
+  <version>@project.version@</version>
   <packaging>pom</packaging>
+  <name>Tigon Examples</name>
+
   <modules>
     <module>TwitterAnalytics</module>
     <module>SQLJoinFlow</module>
   </modules>
 
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>co.cask.tigon</groupId>
-        <artifactId>tigon-api</artifactId>
-        <version>${project.version}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.slf4j</groupId>
-        <artifactId>slf4j-api</artifactId>
-        <version>${slf4j.version}</version>
-        <scope>provided</scope>
-      </dependency>
-      <dependency>
-        <groupId>co.cask.tigon</groupId>
-        <artifactId>tigon-sql</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.twitter4j</groupId>
-        <artifactId>twitter4j-core</artifactId>
-        <version>${twitter4j.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.twitter4j</groupId>
-        <artifactId>twitter4j-async</artifactId>
-        <version>${twitter4j.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.twitter4j</groupId>
-        <artifactId>twitter4j-stream</artifactId>
-        <version>${twitter4j.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>co.cask.tigon</groupId>
-        <artifactId>tigon-unit-test</artifactId>
-        <version>${project.version}</version>
-        <scope>test</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
+  <repositories>
+    <repository>
+      <id>apache.snapshots</id>
+      <url>https://repository.apache.org/content/repositories/snapshots</url>
+    </repository>
+  </repositories>
+
+  <properties>
+    <tigon.version>@project.version@</tigon.version>
+    <slf4j.version>1.7.5</slf4j.version>
+    <logback.version>1.0.9</logback.version>
+    <twitter4j.version>4.0.0</twitter4j.version>
+    <gson.version>2.2.4</gson.version>
+    <guava.version>13.0.1</guava.version>
+    <junit.version>4.11</junit.version>
+  </properties>
 
   <dependencies>
     <dependency>
@@ -107,47 +71,70 @@
     </dependency>
   </dependencies>
 
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>co.cask.tigon</groupId>
+        <artifactId>tigon-api</artifactId>
+        <version>${tigon.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>${slf4j.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${guava.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.google.code.gson</groupId>
+        <artifactId>gson</artifactId>
+        <version>${gson.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>co.cask.tigon</groupId>
+        <artifactId>tigon-sql</artifactId>
+        <version>${tigon.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.twitter4j</groupId>
+        <artifactId>twitter4j-async</artifactId>
+        <version>${twitter4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.twitter4j</groupId>
+        <artifactId>twitter4j-core</artifactId>
+        <version>${twitter4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.twitter4j</groupId>
+        <artifactId>twitter4j-stream</artifactId>
+        <version>${twitter4j.version}</version>
+      </dependency>
+
+      <!-- Unit-tests dependencies -->
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>co.cask.tigon</groupId>
+        <artifactId>tigon-unit-test</artifactId>
+        <version>${tigon.version}</version>
+        <scope>test</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
   <build>
     <pluginManagement>
       <plugins>
-        <plugin>
-          <groupId>org.apache.rat</groupId>
-          <artifactId>apache-rat-plugin</artifactId>
-          <version>0.10</version>
-          <executions>
-            <execution>
-              <id>rat-check</id>
-              <phase>validate</phase>
-              <goals>
-                <goal>check</goal>
-              </goals>
-              <configuration>
-                <excludes>
-                  <exclude>build-number.txt</exclude>
-                  <exclude>LICENSE*.txt</exclude>
-                  <exclude>README.md</exclude>
-                  <exclude>logs/**</exclude>
-                  <exclude>docs/**</exclude>
-                  <exclude>conf/**</exclude>
-                  <exclude>**/data/**</exclude>
-                  <exclude>**/Apache-LICENSE-2.0</exclude>
-                  <exclude>**/VERSION</exclude>
-                  <exlcude>**/*.patch</exlcude>
-                  <exclude>**/logrotate.d/**</exclude>
-                  <exclude>**/limits.d/**</exclude>
-                  <exclude>**/resources/**/*.txt</exclude>
-                  <exclude>**/resources/**/*.accesslog</exclude>
-                  <exclude>**/resources/**/*.css</exclude>
-                  <exclude>**/resources/**/*.scss</exclude>
-                  <exclude>**/resources/**/*.js</exclude>
-                  <exclude>**/resources/**/*.svg</exclude>
-                  <exclude>**/tigon-sql/**</exclude>
-                  <exclude>**/*.data</exclude>
-                </excludes>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
         <plugin>
           <groupId>org.apache.felix</groupId>
           <artifactId>maven-bundle-plugin</artifactId>
@@ -176,6 +163,7 @@
         </plugin>
       </plugins>
     </pluginManagement>
+
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
