@@ -102,10 +102,6 @@
       <artifactId>gson</artifactId>
     </dependency>
     <dependency>
-      <groupId>co.cask.tigon</groupId>
-      <artifactId>tigon-unit-test</artifactId>
-    </dependency>
-    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
     </dependency>
