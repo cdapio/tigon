@@ -328,6 +328,8 @@ get_tuple_again:
     res=gscp_get_buffer(ftaid,(gs_int32_t *)size,tbuffer,tbuf_size,timeout);
     
     if ((res==0) && (ftaschema_is_temporal_tuple(get_fta(*ftaid)->schema, tbuffer))) {
+        FTAID myftaid;
+        myftaid=gscpipc_getftaid();
         /* extract trace */
         if (ftaschema_get_trace(get_fta(*ftaid)->schema,
                                 tbuffer, *size, &trace_id, &sz, &trace))
@@ -346,7 +348,9 @@ get_tuple_again:
         /* append producers fta_stat to the trace */
         /* for now we will just fill the FTAID part with 0 of fta_stat, the rest will be cleared */
         memset(trace_buffer + (sz * sizeof(fta_stat)), 0, sizeof(fta_stat));
-        
+
+        memcpy(trace_buffer + (sz * sizeof(fta_stat)), &myftaid, sizeof(FTAID));
+
         fta_heartbeat(gscpipc_getftaid(), trace_id, sz+1, (fta_stat *)trace_buffer);
 		free(trace_buffer);
         res=2; //indicate that it is a temporal tuple
