@@ -192,6 +192,7 @@ function check_includes() {
     # Test included files
     test_include hello-world.rst
     test_include sql-join-flow.rst
+    test_include tigon-sql.rst
     test_include twitter-analytics.rst
   else
     echo "WARNING: pandoc not installed; checked-in README includes will be used instead."
@@ -227,6 +228,7 @@ function pandoc_includes() {
   INCLUDES_DIR=$1
   pandoc -t rst $PROJECT_PATH/$TIGON_EXAMPLES/HelloWorld/README.md -o $INCLUDES_DIR/hello-world.rst
   pandoc -t rst $PROJECT_PATH/$TIGON_EXAMPLES/SQLJoinFlow/README.md -o $INCLUDES_DIR/sql-join-flow.rst
+  pandoc -t rst $PROJECT_PATH/$TIGON_EXAMPLES/tigon-sql/README.md -o $INCLUDES_DIR/tigon-sql.rst
   pandoc -t rst $PROJECT_PATH/$TIGON_EXAMPLES/TwitterAnalytics/README.md -o $INCLUDES_DIR/twitter-analytics.rst
 }
 
