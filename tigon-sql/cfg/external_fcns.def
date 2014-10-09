@@ -1,7 +1,7 @@
  ///////////////////////////////////////////////////////////
 //          Matching predicates
 ///////////////////////////////////////////////////////////
-	PRED [LFTA_LEGAL, COST HIGH]str_exists_substr[string, string];
+        PRED [LFTA_LEGAL, COST HIGH]str_exists_substr[string, string];
         PRED [LFTA_LEGAL, COST HIGH]str_compare[string,string];
         PRED [LFTA_LEGAL, COST LOW] str_match_offset [uint,string,string];
         PRED [LFTA_LEGAL, COST LOW] byte_match_offset [uint,uint,string];
@@ -10,11 +10,15 @@
 //          MIN/MAX functions
 ///////////////////////////////////////////////////////////
 
- 
+
+// REMARK: UNSIGNED FUNCTIONS RETAINED FOR GSQL STAND
+// ALONE USE CURRENTLY NOT SUPPORTED BY TIGON STREAMS
+
         ullong FUN [LFTA_LEGAL, COST FREE] LLMIN (ullong,ullong);
         ullong FUN [LFTA_LEGAL, COST FREE] LLMAX (ullong,ullong); 
         uint FUN [LFTA_LEGAL, COST FREE] UMIN (uint,uint);
         uint FUN [LFTA_LEGAL, COST FREE] UMAX (uint,uint); 
+
         IP FUN [LFTA_LEGAL, COST FREE] UMIN (IP,IP);
         IP FUN [LFTA_LEGAL, COST FREE] UMAX (IP,IP);
    
@@ -22,7 +26,10 @@
 //          Function for regex matching
 ///////////////////////////////////////////////////////////
 
-	uint FUN [LFTA_LEGAL, COST EXPENSIVE] 
+// REMARK: UNSIGNED FUNCTIONS RETAINED FOR GSQL STAND
+// ALONE USE CURRENTLY NOT SUPPORTED BY TIGON STREAMS
+
+uint FUN [LFTA_LEGAL, COST EXPENSIVE]
 		str_regex_match( string, string HANDLE);
 	uint FUN [LFTA_LEGAL, COST EXPENSIVE] 
 		str_partial_regex_match( string, string HANDLE, uint);
@@ -38,7 +45,11 @@
 //          Function for casting
 ///////////////////////////////////////////////////////////
 
- 	int FUN [LFTA_LEGAL,COST FREE] non_temporal(int);
+
+// REMARK: UNSIGNED FUNCTIONS RETAINED FOR GSQL STAND
+// ALONE USE CURRENTLY NOT SUPPORTED BY TIGON STREAMS
+
+    int FUN [LFTA_LEGAL,COST FREE] non_temporal(int);
 	uint FUN [LFTA_LEGAL,COST FREE] non_temporal(uint);
 	llong FUN [LFTA_LEGAL,COST FREE] non_temporal(llong);
 	ullong FUN [LFTA_LEGAL,COST FREE] non_temporal(ullong);
@@ -64,7 +75,12 @@
 ///////////////////////////////////////////////////////////
 //          Convert an IPv4 address 
 ///////////////////////////////////////////////////////////
-	uint FUN [PARTIAL,COST HIGH] strtoi(string);
+
+
+// REMARK: UNSIGNED FUNCTIONS RETAINED FOR GSQL STAND
+// ALONE USE CURRENTLY NOT SUPPORTED BY TIGON STREAMS
+
+    uint FUN [PARTIAL,COST HIGH] strtoi(string);
 	IP FUN [PARTIAL,COST HIGH] strtoip(string); 
 
 //	for constant strings - faster at runtime
@@ -76,7 +92,12 @@
 //          Compute running sum
 ///////////////////////////////////////////////////////////
 
-	ullong UDAF [RUNNING, SUBAGGR moving_sum_lfta, SUPERAGGR super_moving_sum_udaf ] moving_sum_udaf fstring12 (uint, uint);
+
+// REMARK: UNSIGNED FUNCTIONS RETAINED FOR GSQL STAND
+// ALONE USE CURRENTLY NOT SUPPORTED BY TIGON STREAMS
+
+
+    ullong UDAF [RUNNING, SUBAGGR moving_sum_lfta, SUPERAGGR super_moving_sum_udaf ] moving_sum_udaf fstring12 (uint, uint);
 
 	uint EXTR moving_sum moving_sum_udaf moving_sum_extract (uint,uint);
 	uint FUN  [COST LOW] moving_sum_extract(ullong);
