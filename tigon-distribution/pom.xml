@@ -218,7 +218,7 @@
                 <goals><goal>single</goal></goals>
                 <configuration>
                   <finalName>tigon-sdk</finalName>
-                  <formats><format>tar.gz</format></formats>
+                  <formats><format>zip</format></formats>
                   <descriptors>
                     <descriptor>${project.basedir}/src/main/assembly/assembly.xml</descriptor>
                   </descriptors>
@@ -240,9 +240,9 @@
                   <version>${project.version}</version>
                   <groupId>${project.groupId}</groupId>
                   <artifactId>tigon-sdk</artifactId>
-                  <packaging>tar.gz</packaging>
+                  <packaging>zip</packaging>
                   <generatePom>false</generatePom>
-                  <file>${project.build.directory}/tigon-sdk-${project.version}.tar.gz</file>
+                  <file>${project.build.directory}/tigon-sdk-${project.version}.zip</file>
                   <repositoryId>continuuity</repositoryId>
                   <url>${deploy.url}</url>
                 </configuration>
