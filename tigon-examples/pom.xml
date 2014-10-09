@@ -37,6 +37,7 @@
   <artifactId>tigon-examples</artifactId>
   <packaging>pom</packaging>
   <modules>
+    <module>HelloWorld</module>
     <module>TwitterAnalytics</module>
     <module>SQLJoinFlow</module>
   </modules>
