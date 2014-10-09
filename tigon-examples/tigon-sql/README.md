@@ -1,10 +1,10 @@
-# Tigon-SQL Examples
+# TigonSQL Examples
 
 ## Overview
 
 These examples are used in sections 3 and 4 of the TigonSQL Users Manual, available at
 
-    http://docs.tigon.io/tigon/current/en/_downloads/Tigon_SQL_User_Manual_2014_v4.pdf
+http://docs.tigon.io/tigon/current/en/_downloads/Tigon_SQL_User_Manual_2014_v4.pdf
 
 Please refer to these instructions to use these examples.
 
