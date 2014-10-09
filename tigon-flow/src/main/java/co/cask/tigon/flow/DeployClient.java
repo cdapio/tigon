@@ -140,7 +140,7 @@ public class DeployClient {
     ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
     Thread.currentThread().setContextClassLoader(classLoader);
     Location deployJar = jarForTestBase(clz);
-    LOG.info("Deloy Jar location : {}", deployJar.toURI());
+    LOG.info("Deploy Jar location : {}", deployJar.toURI());
     try {
       return Programs.create(deployJar, classLoader);
     } finally {
