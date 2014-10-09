@@ -344,10 +344,8 @@ get_tuple_again:
         /* generate a heartbeat */
         memcpy(trace_buffer, trace, sz * sizeof(fta_stat));
         /* append producers fta_stat to the trace */
-        /* for now we will just fill the FTAID part of fta_stat, the rest will be cleared */
+        /* for now we will just fill the FTAID part with 0 of fta_stat, the rest will be cleared */
         memset(trace_buffer + (sz * sizeof(fta_stat)), 0, sizeof(fta_stat));
-        /* copy ftaid */
-        memcpy(trace_buffer + (sz * sizeof(fta_stat)), ftaid, sizeof(FTAID));
         
         fta_heartbeat(gscpipc_getftaid(), trace_id, sz+1, (fta_stat *)trace_buffer);
 		free(trace_buffer);
