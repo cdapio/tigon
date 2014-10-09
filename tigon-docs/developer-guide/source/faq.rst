@@ -42,17 +42,13 @@ integration, and security.
 
 Enable every Java developer to create powerful, real-time stream processing applications.
 
-.. **How fast will Tigon import data?**
-
-.. **How big a cluster has Tigon been run on?**
-
 
 Running Tigon
 =============
 
 **How do I get started with Tigon?**
 
-Download the tar.gz, untar it and checkout the examples! 
+Download the zip, unzip it and checkout the examples! 
 
 See our `Getting Started With Tigon <getting-started.html>`__ guide.
 
