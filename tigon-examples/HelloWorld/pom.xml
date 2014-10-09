@@ -26,15 +26,9 @@
   <modelVersion>4.0.0</modelVersion>
 
   <properties>
-    <app.main.class>co.cask.tigon.sqljoinflow.SQLJoinFlow</app.main.class>
+    <app.main.class>co.cask.tigon.helloworld.HelloWorldFlow</app.main.class>
   </properties>
 
-  <artifactId>SQLJoinFlow</artifactId>
-  <dependencies>
-    <dependency>
-      <groupId>co.cask.tigon</groupId>
-      <artifactId>tigon-sql</artifactId>
-    </dependency>
-  </dependencies>
+  <artifactId>HelloWorld</artifactId>
 
 </project>

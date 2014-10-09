@@ -27,6 +27,7 @@
   <name>Tigon Examples</name>
 
   <modules>
+    <module>HelloWorld</module>
     <module>TwitterAnalytics</module>
     <module>SQLJoinFlow</module>
   </modules>
