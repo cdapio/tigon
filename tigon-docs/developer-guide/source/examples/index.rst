@@ -8,16 +8,14 @@ Tigon Examples
 
 .. toctree::
    :maxdepth: 1
-   
+   :titlesonly:
+
    Hello World <hello-world>
    SQL Join Flow <sql-join-flow>
    Twitter Analytics <twitter-analytics>
 
 
-Example Descriptions
-====================
-
-- `Hello World Example <hello-world>`__
+- `Hello World Example <hello-world.html>`__
 
   .. include:: hello-world.rst
      :start-line: 5
@@ -40,5 +38,5 @@ Where to Go Next
 
 Now that you're seen an example demonstrating Tigon, take a look at:
 
-- `APIs <apis/apis.html>`__, which includes the Java and TigonSQL APIs of Tigon.
+- `APIs <../apis/index.html>`__, which includes the Java and TigonSQL APIs of Tigon.
 
