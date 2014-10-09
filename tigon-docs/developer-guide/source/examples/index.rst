@@ -14,6 +14,8 @@ Tigon Examples
    SQL Join Flow <sql-join-flow>
    Twitter Analytics <twitter-analytics>
 
+These examples are included in the `source download <getting-started.html#download>`__ 
+in the ``tigon-examples`` directory.
 
 - `Hello World Example <hello-world.html>`__
 
