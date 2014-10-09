@@ -13,8 +13,8 @@ Tigon Documentation
    Getting Started </getting-started>
    Concepts and Architecture </architecture>
    Developer Guide </developer>
-   Examples </examples>
-   APIs </apis/apis>
+   Examples </examples/index>
+   APIs </apis/index>
    Tools <tools>
    Admin </admin>
    Licenses and Copyrights </licenses>

@@ -140,10 +140,6 @@ div.sphinxsidebar a {
 }
 
 div.sphinxsidebar a.scroll-active {
-  color: black;
-/*  color: #ff9900;
-  font-style: italic; */
-  font-weight: bold;
 }
 
 div.sphinxsidebar input {

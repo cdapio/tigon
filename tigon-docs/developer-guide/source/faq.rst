@@ -26,7 +26,7 @@ applications that can handle large volumes of data.
 **How does Tigon work?**
 
 Tigon is built on top of Hadoop/HBase. It uses the 
-`Tephra Transaction Engine <https://github.com/caskco/tephra>`__ and Twill
+`Tephra Transaction Engine <https://github.com/caskdata/tephra>`__ and Twill
 for spinning up YARN applications. For in-memory stream processing, it uses the TigonSQL
 in-memory stream processing engine developed by AT&T.
 
@@ -34,7 +34,7 @@ in-memory stream processing engine developed by AT&T.
 
 Tigon is focused on solving the issues faced in real-time stream processing. 
 
-The `Cask Data Application Platform (CDAP) <http:cask.co/cdap>`__ is a generalized 'Big
+The `Cask Data Application Platform (CDAP) <http://cdap.io>`__ is a generalized 'Big
 Data' application platform with additional features such as dataset abstractions, batch job
 integration, and security.
 
@@ -54,11 +54,11 @@ Running Tigon
 
 Download the tar.gz, untar it and checkout the examples! 
 
-See our `Getting Started With Tigon <getting-started>`__ guide.
+See our `Getting Started With Tigon <getting-started.html>`__ guide.
 
 **What are the prerequisites for running Tigon?**
 
-See our `Getting Started With Tigon <getting-started#prerequisites>`__ guide
+See our `Getting Started With Tigon <getting-started.html#prerequisites>`__ guide
 for a list of prerequisites.
 
 **What platforms and Java version does Tigon run on?**
@@ -95,7 +95,9 @@ a mailing list, an IRC channel and a `GitHub repository. <https://github.com/cas
 **What mailing lists are available for additional help?**
 
 Tigon User Group and Development Discussions: 
-`tigon-dev@googlegroups.com <https://groups.google.com/d/forum/tigon-dev>`__
+
+- `tigon-dev@googlegroups.com <https://groups.google.com/d/forum/tigon-dev>`__
+- `tigon-user@googlegroups.com <https://groups.google.com/d/forum/tigon-user>`__
 
 **Is there an IRC Channel?**
 

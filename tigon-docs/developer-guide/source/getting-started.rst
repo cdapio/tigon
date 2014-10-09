@@ -123,7 +123,7 @@ applications when they are created on the same machine.
 Examples
 ========
 
-Examples of using Tigon are described in the `Tigon Examples Guide. <examples.html>`__
+Examples of using Tigon are described in the `Tigon Examples Guide. <examples/index.html>`__
 
 SQLJoinFlow
 -----------
