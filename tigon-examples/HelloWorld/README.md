@@ -18,8 +18,8 @@ To start the Flow in the Distributed Runtime of Tigon (substituting for *version
     > START /path/to/HellWorld-<version>.jar co.cask.tigon.helloworld.HelloWorldFlow
 
 The HelloWorld Flow logs a "Hello World" message and a total count every second. If run in
-the standalone runtime, the logs appear on the console. In the distributed runtime,
-showlogs CLI command can be used to view these logs.
+the Standalone Runtime, the logs appear on the console. In the Distributed Runtime, the
+```showlogs``` CLI command can be used to view these logs.
 
 ## License and Trademarks
 
