@@ -93,7 +93,7 @@ int http_get_request(endpoint addr, gs_csp_t url, gs_uint32_t* http_code, gs_sp_
 		if (!strncmp(header_line, "Content-Type: ", strlen("Content-Type: "))) {
 			strcpy(content_type, header_line + strlen("Content-Type: "));
 			if (strcmp(content_type, "application/json")) {
-				printf("Invalid Content-Type %s, application/json expected\n", content_type);
+				fprintf(stderr, "Invalid Content-Type %s, application/json expected\n", content_type);
 				return -1;
 			}
 			break;		// we only care about Content-Type headers
@@ -101,7 +101,7 @@ int http_get_request(endpoint addr, gs_csp_t url, gs_uint32_t* http_code, gs_sp_
 	}
 
 	if ((*http_code == 200) && (*content_type == 0)) {
-		printf("Missing Content-Type in server response, application/json expected\n");
+		fprintf(stderr, "Missing Content-Type in server response, application/json expected\n");
 		return -1;
 	}
 
