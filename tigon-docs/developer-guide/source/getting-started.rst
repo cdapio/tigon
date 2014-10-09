@@ -35,9 +35,9 @@ are required.
 Download
 ========
 
-Pre-compiled sources and related files can be downloaded in a tgz file: 
-`tigon-developer-release-0.2.0.tgz. 
-<http://repository.cask.co/downloads/co/cask/tigon/tigon-developer-release/0.2.0/tigon-developer-release-0.2.0.tgz>`__
+Pre-compiled sources and related files can be downloaded in a zip file: 
+`tigon-developer-release-0.2.0.zip. 
+<http://repository.cask.co/downloads/co/cask/tigon/tigon-developer-release/0.2.0/tigon-developer-release-0.2.0.zip>`__
 
 
 Install 
@@ -78,7 +78,7 @@ You can also build Tigon directly from the latest source code::
 After the build completes, you will have a distribution of Tigon under the
 `tigon-distribution/target/` directory.  
 
-Take the `tigon-sdk-<version>.tar.gz` file and unzip it into a suitable location.
+Take the `tigon-sdk-<version>.zip` file and unzip it into a suitable location.
 
 
 Is It Building?

@@ -71,8 +71,8 @@ Note: To run the TigonSQL Stream Engine outside of Tigon, both Perl 5.x and Pyth
 
 ### Download
 
-Pre-compiled sources and related files can be downloaded in a tgz file: 
-[tigon-developer-release-0.2.0.tgz.](http://repository.cask.co/downloads/co/cask/tigon/tigon-developer-release/0.2.0/tigon-developer-release-0.2.0.tgz)
+Pre-compiled sources and related files can be downloaded in a zip file: 
+[tigon-developer-release-0.2.0.zip.](http://repository.cask.co/downloads/co/cask/tigon/tigon-developer-release/0.2.0/tigon-developer-release-0.2.0.zip)
 
 ### Install 
 
@@ -81,25 +81,25 @@ Once the download has completed, unzip the file in a suitable location.
 ### Run Instructions
 
 To run Tigon in standalone mode:
-$ run_standalone.sh <path-to-flow-jar> <flow-class-name> <run-time-args>
+
+    $ run_standalone.sh <path-to-flow-jar> <flow-class-name> <run-time-args>
 
 To run Tigon in distributed mode:
-$ run_distributed.sh <zookeeper-quorum> <hdfs-namespace>
+
+    $ run_distributed.sh <zookeeper-quorum> <hdfs-namespace>
 
 ### Building from Source
 
 You can also build Tigon directly from the latest source code:
 
-```
-  git clone https://github.com/caskdata/tigon.git
-  cd tigon
-  mvn clean package -P sql-lib -DskipTests
-```
+    git clone https://github.com/caskdata/tigon.git
+    cd tigon
+    mvn clean package -DskipTests -Pdist
 
 After the build completes, you will have a distribution of Tigon under the
 `tigon-distribution/target/` directory.  
 
-Take the `tigon-<version>.tar.gz` file and unzip it into a suitable location.
+Take the `tigon-sdk-<version>.zip` file and unzip it into a suitable location.
 
 
 ## Getting Started Guide
@@ -113,10 +113,10 @@ that will guide you through installing Tigon and running an example.
 Now that you've had a look at Tigon SDK, take a look at:
 
 - Examples, located in the `/tigon-examples` directory of Tigon;
-- [Selected Examples](http://docs.cask.co/tigon/current/en/examples.html) 
+- [Online Examples](http://docs.cask.co/tigon/current/en/examples/index.html) 
   (demonstrating basic features of Tigon) are located on-line; and
-- Developer Guides, located in the source distribution in `/docs/developer-guide/source`
-  or [online](http://docs.cask.co/tigon/current/en/index.html).
+- Developer Guides, located in the source distribution in `/tigon-docs/developer-guide/source`
+  or [online](http://docs.cask.co/tigon/current/en/developer.html).
 
 
 ## How to Contribute

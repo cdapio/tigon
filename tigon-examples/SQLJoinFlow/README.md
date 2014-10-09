@@ -1,4 +1,4 @@
-# SQLJoinFlow
+# SQL Join Flow Example
 
 ## Overview
 

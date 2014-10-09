@@ -190,7 +190,7 @@ function check_includes() {
     mkdir $BUILD_INCLUDES_DIR
     pandoc_includes $BUILD_INCLUDES_DIR
     # Test included files
-#     test_include hellow-world.rst
+    test_include hello-world.rst
     test_include sql-join-flow.rst
     test_include twitter-analytics.rst
   else
@@ -225,7 +225,7 @@ function build_includes() {
 function pandoc_includes() {
   # Uses pandoc to translate the README markdown files to rst in the target directory
   INCLUDES_DIR=$1
-#   pandoc -t rst $PROJECT_PATH/$TIGON_EXAMPLES/HelloWorld/README.md -o $INCLUDES_DIR/hello-world.rst
+  pandoc -t rst $PROJECT_PATH/$TIGON_EXAMPLES/HelloWorld/README.md -o $INCLUDES_DIR/hello-world.rst
   pandoc -t rst $PROJECT_PATH/$TIGON_EXAMPLES/SQLJoinFlow/README.md -o $INCLUDES_DIR/sql-join-flow.rst
   pandoc -t rst $PROJECT_PATH/$TIGON_EXAMPLES/TwitterAnalytics/README.md -o $INCLUDES_DIR/twitter-analytics.rst
 }
