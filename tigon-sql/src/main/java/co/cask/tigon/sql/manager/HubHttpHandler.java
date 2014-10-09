@@ -229,12 +229,12 @@ public class HubHttpHandler extends AbstractHttpHandler {
   public void discoverInstance(HttpRequest request, HttpResponder responder,
                                @PathParam("instance") String instance) {
     if (!instance.equals(hubDataStoreReference.get().getInstanceName())) {
-      responder.sendStatus(HttpResponseStatus.BAD_REQUEST);
+      responder.sendJson(HttpResponseStatus.BAD_REQUEST, new JsonObject());
       return;
     }
     InetSocketAddress address = hubDataStoreReference.get().getClearingHouseAddress();
     if (address == null) {
-      responder.sendStatus(HttpResponseStatus.BAD_REQUEST);
+      responder.sendJson(HttpResponseStatus.BAD_REQUEST, new JsonObject());
       return;
     }
     responder.sendJson(HttpResponseStatus.OK, createResponse(address.getAddress().getHostAddress(), address.getPort()));
@@ -248,14 +248,14 @@ public class HubHttpHandler extends AbstractHttpHandler {
       || (!instance.equals(hubDataStoreReference.get().getInstanceName()))) {
       //TODO: Make sure Stream Engine accepts error Strings and then we can sendError instead of sendStatus
       //Instance name does not match or Service not initialized
-      responder.sendStatus(HttpResponseStatus.BAD_REQUEST);
+      responder.sendJson(HttpResponseStatus.BAD_REQUEST, new JsonObject());
       return;
     }
     InetSocketAddress address = this.hubDataStoreReference.get().getClearingHouseAddress();
     if (address == null) {
       //TODO: Make sure Stream Engine accepts error Strings and then we can sendError instead of sendStatus
       //Clearing house address not defined
-      responder.sendStatus(HttpResponseStatus.BAD_REQUEST);
+      responder.sendJson(HttpResponseStatus.BAD_REQUEST, new JsonObject());
       return;
     }
     responder.sendJson(HttpResponseStatus.OK, createResponse(address.getAddress().getHostAddress(), address.getPort()));
@@ -274,7 +274,8 @@ public class HubHttpHandler extends AbstractHttpHandler {
       }
     }
     if (ds == null) {
-      responder.sendError(HttpResponseStatus.BAD_REQUEST, "Data source : '" + dataSourceName + "' not found");
+      //Data source not found
+      responder.sendJson(HttpResponseStatus.BAD_REQUEST, new JsonObject());
       return;
     }
     responder.sendJson(HttpResponseStatus.OK, createResponse(ds.getAddress().getAddress().getHostAddress(),
@@ -294,7 +295,8 @@ public class HubHttpHandler extends AbstractHttpHandler {
       }
     }
     if (ds == null) {
-      responder.sendError(HttpResponseStatus.BAD_REQUEST, "Data sink : '" + dataSinkName + "' not found");
+      //Data sink not found
+      responder.sendJson(HttpResponseStatus.BAD_REQUEST, new JsonObject());
       return;
     }
     responder.sendJson(HttpResponseStatus.OK, createResponse(ds.getAddress().getAddress().getHostAddress(),
@@ -310,6 +312,7 @@ public class HubHttpHandler extends AbstractHttpHandler {
       responder.sendJson(HttpResponseStatus.OK, new JsonObject());
       return;
     }
-    responder.sendError(HttpResponseStatus.BAD_REQUEST, "Instance name does not match");
+    //Instance name does not match
+    responder.sendJson(HttpResponseStatus.BAD_REQUEST, new JsonObject());
   }
 }
