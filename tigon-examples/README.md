@@ -1,6 +1,6 @@
 Contains sample applications for Tigon
 
-In order to build the examples, invoke the following Maven command.
+In order to build the examples, invoke the Maven command:
 
     mvn clean package
 
