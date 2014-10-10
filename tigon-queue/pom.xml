@@ -31,7 +31,7 @@
   <dependencies>
     <dependency>
       <groupId>co.cask.tigon</groupId>
-      <artifactId>tigon-core</artifactId>
+      <artifactId>tigon-yarn</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
