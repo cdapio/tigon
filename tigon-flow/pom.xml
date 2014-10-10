@@ -25,6 +25,8 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>tigon-flow</artifactId>
+  <name>Tigon Flow</name>
+  <packaging>jar</packaging>
 
   <dependencies>
     <dependency>

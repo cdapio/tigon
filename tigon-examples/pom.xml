@@ -18,6 +18,8 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>co.cask.tigon</groupId>
     <artifactId>tigon</artifactId>
@@ -32,10 +34,10 @@
     <guava.version>13.0.1</guava.version>
   </properties>
 
-  <modelVersion>4.0.0</modelVersion>
-
   <artifactId>tigon-examples</artifactId>
   <packaging>pom</packaging>
+  <name>Tigon Examples</name>
+
   <modules>
     <module>HelloWorld</module>
     <module>TwitterAnalytics</module>
