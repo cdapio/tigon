@@ -27,7 +27,7 @@
 
   <artifactId>tigon-distribution</artifactId>
   <name>Tigon Distribution</name>
-  <packaging>jar</packaging>
+  <packaging>pom</packaging>
 
   <dependencies>
     <dependency>
