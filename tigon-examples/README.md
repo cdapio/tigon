@@ -2,7 +2,7 @@ Contains sample applications for Tigon
 
 In order to build the examples, invoke the following Maven command.
 
-mvn clean package
+    mvn clean package
 
 Once the Maven build is complete, you should be able to find the example JARs under the target directory of each
 example.
