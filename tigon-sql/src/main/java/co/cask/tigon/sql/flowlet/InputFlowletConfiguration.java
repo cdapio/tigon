@@ -16,7 +16,7 @@
 
 package co.cask.tigon.sql.flowlet;
 
-import org.apache.twill.filesystem.Location;
+import java.io.File;
 
 /**
  * Configures the InputFlowet Setup.
@@ -26,5 +26,5 @@ public interface InputFlowletConfiguration {
   /**
    * Creates the required configuration files and the library files.
    */
-  Location createStreamEngineProcesses();
+  File createStreamEngineProcesses();
 }

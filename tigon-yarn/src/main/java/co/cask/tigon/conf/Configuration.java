@@ -1959,5 +1959,5 @@ public class Configuration implements Iterable<Map.Entry<String, String>> {
       // prevent duplicate calls
       currentName = null;
     }
-  };
+  }
 }

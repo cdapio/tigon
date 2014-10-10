@@ -16,7 +16,6 @@
 
 package co.cask.tigon.sql.internal;
 
-import co.cask.tigon.io.Locations;
 import co.cask.tigon.sql.conf.Constants;
 import co.cask.tigon.sql.flowlet.InputFlowletSpecification;
 import co.cask.tigon.sql.util.Platform;
@@ -30,7 +29,6 @@ import org.apache.commons.compress.archivers.ArchiveException;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.io.FileUtils;
-import org.apache.twill.filesystem.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,26 +45,26 @@ import java.util.zip.GZIPInputStream;
  */
 public class StreamBinaryGenerator {
   private static final Logger LOG = LoggerFactory.getLogger(StreamBinaryGenerator.class);
-  private final Location dir;
+  private final File dir;
   private final InputFlowletSpecification spec;
 
-  public StreamBinaryGenerator(Location dir, InputFlowletSpecification spec) {
+  public StreamBinaryGenerator(File dir, InputFlowletSpecification spec) {
     this.dir = dir;
     this.spec = spec;
   }
 
-  public Location createStreamProcesses() {
-    Location configDir = null;
+  public File createStreamProcesses() {
+    File configDir = null;
     try {
       configDir = createStreamLibrary(dir);
       CompileStreamBinaries compileBinaries = new CompileStreamBinaries(configDir);
       StreamConfigGenerator generator = new StreamConfigGenerator(spec);
-      Location outputSpec = createFile(configDir, "output_spec.cfg");
-      Location packetSchema = createFile(configDir, "packet_schema.txt");
-      Location ifresXml = createFile(configDir, "ifres.xml");
+      File outputSpec = createFile(configDir, "output_spec.cfg");
+      File packetSchema = createFile(configDir, "packet_schema.txt");
+      File ifresXml = createFile(configDir, "ifres.xml");
       Map.Entry<String, String> ifqContent = generator.generateHostIfq();
       String ifqFile = String.format("%s.ifq", ifqContent.getKey());
-      Location hostIfq = createFile(configDir, ifqFile);
+      File hostIfq = createFile(configDir, ifqFile);
 
       writeToLocation(outputSpec, generator.generateOutputSpec());
       writeToLocation(packetSchema, generator.generatePacketSchema());
@@ -75,7 +73,7 @@ public class StreamBinaryGenerator {
 
       Map<String, String> gsqlFiles = generator.generateQueryFiles();
       Collection<String> fileContent = gsqlFiles.values();
-      Location file = createFile(configDir, Constants.GSQL_FILE);
+      File file = createFile(configDir, Constants.GSQL_FILE);
       writeToLocation(file, Joiner.on(";\n").join(fileContent));
 
       compileBinaries.generateBinaries();
@@ -86,48 +84,47 @@ public class StreamBinaryGenerator {
     return configDir;
   }
 
-  private Location createStreamLibrary(Location dir) throws IOException, ArchiveException {
+  private File createStreamLibrary(File dir) throws IOException, ArchiveException {
     if (!dir.exists()) {
       dir.mkdirs();
     }
 
     //Get the library zip, copy it to temp dir, unzip it
     String libFile = Platform.libraryResource();
-    Location libZip = dir.append(libFile);
-    libZip.createNew();
+    File libZip = new File(dir, libFile);
+    libZip.createNewFile();
     copyResourceFileToDir(libFile, libZip);
     unzipFile(libZip);
 
     //Create directory structure to place the Stream Engine Config Files
-    Location workDir = dir.append("work");
+    File workDir = new File(dir, "work");
     workDir.mkdirs();
-    Location queryDir = workDir.append("query");
+    File queryDir = new File(workDir, "query");
     queryDir.mkdirs();
-    File qDir = new File(queryDir.toURI().getPath());
-    FileUtils.copyFileToDirectory(new File(dir.append("cfg").append("external_fcns.def").toURI().getPath()), qDir);
-    FileUtils.copyFileToDirectory(new File(dir.append("cfg").append("internal_fcn.def").toURI().getPath()), qDir);
+    FileUtils.copyFileToDirectory(new File(dir, "cfg/external_fcns.def"), queryDir);
+    FileUtils.copyFileToDirectory(new File(dir, "cfg/internal_fcn.def"), queryDir);
     return queryDir;
   }
 
-  private Location createFile(Location dir, String name) throws IOException {
-    Location file = dir.append(name);
-    file.createNew();
+  private File createFile(File dir, String name) throws IOException {
+    File file = new File(dir, name);
+    file.createNewFile();
     return file;
   }
 
-  private void writeToLocation(Location loc, String content) throws IOException {
-    CharStreams.write(content, CharStreams.newWriterSupplier(Locations.newOutputSupplier(loc), Charsets.UTF_8));
+  private void writeToLocation(File loc, String content) throws IOException {
+    CharStreams.write(content, CharStreams.newWriterSupplier(Files.newOutputStreamSupplier(loc), Charsets.UTF_8));
   }
 
-  private void copyResourceFileToDir(String fileName, Location libZip) throws IOException {
+  private void copyResourceFileToDir(String fileName, File libZip) throws IOException {
     InputStream ifres = getClass().getResourceAsStream("/" + fileName);
-    ByteStreams.copy(ifres, Locations.newOutputSupplier(libZip));
+    ByteStreams.copy(ifres, Files.newOutputStreamSupplier(libZip));
     ifres.close();
   }
 
-  private void unzipFile(Location libZip) throws IOException, ArchiveException {
+  private void unzipFile(File libZip) throws IOException, ArchiveException {
     String path = libZip.toURI().getPath();
-    String outDir = Locations.getParent(libZip).toURI().getPath();
+    String outDir = libZip.getParentFile().getPath();
     TarArchiveInputStream archiveInputStream = new TarArchiveInputStream(
       new GZIPInputStream(new FileInputStream(path)));
     try {

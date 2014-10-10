@@ -31,28 +31,6 @@
       <groupId>co.cask.tigon</groupId>
       <artifactId>tigon-common</artifactId>
       <version>${project.version}</version>
-      <exclusions>
-        <exclusion>
-          <groupId>org.apache.hadoop</groupId>
-          <artifactId>hadoop-common</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.hbase</groupId>
-          <artifactId>hbase</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.hadoop</groupId>
-          <artifactId>hadoop-mapreduce-client-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.twill</groupId>
-          <artifactId>twill-core</artifactId>
-        </exclusion>
-        <exclusion>
-          <groupId>org.apache.twill</groupId>
-          <artifactId>twill-yarn</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>co.cask.http</groupId>

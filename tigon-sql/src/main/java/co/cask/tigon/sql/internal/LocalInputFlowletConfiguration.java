@@ -18,23 +18,24 @@ package co.cask.tigon.sql.internal;
 
 import co.cask.tigon.sql.flowlet.InputFlowletConfiguration;
 import co.cask.tigon.sql.flowlet.InputFlowletSpecification;
-import org.apache.twill.filesystem.Location;
+
+import java.io.File;
 
 /**
  * Sets up LocalInputFlowlet {@link co.cask.tigon.sql.flowlet.InputFlowletSpecification}
  * in a given Directory location.
  */
 public class LocalInputFlowletConfiguration implements InputFlowletConfiguration {
-  private Location dir;
+  private File dir;
   private InputFlowletSpecification spec;
 
-  public LocalInputFlowletConfiguration(Location dir, InputFlowletSpecification spec) {
+  public LocalInputFlowletConfiguration(File dir, InputFlowletSpecification spec) {
     this.dir = dir;
     this.spec = spec;
   }
 
   @Override
-  public Location createStreamEngineProcesses() {
+  public File createStreamEngineProcesses() {
     StreamBinaryGenerator binaryGenerator = new StreamBinaryGenerator(dir, spec);
     return binaryGenerator.createStreamProcesses();
   }

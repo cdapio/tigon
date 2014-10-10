@@ -42,9 +42,6 @@ import com.google.common.io.Files;
 import org.apache.commons.io.FileUtils;
 import org.apache.twill.common.Cancellable;
 import org.apache.twill.common.Services;
-import org.apache.twill.filesystem.LocalLocationFactory;
-import org.apache.twill.filesystem.Location;
-import org.apache.twill.filesystem.LocationFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -208,13 +205,11 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
 
     // Setup temporary directory structure
     tmpFolder = Files.createTempDir();
-    LocationFactory locationFactory = new LocalLocationFactory(tmpFolder);
-
-    Location baseDir = locationFactory.create("baseDir");
+    File baseDir = new File(tmpFolder, "baseDir");
     baseDir.mkdirs();
 
     InputFlowletConfiguration inputFlowletConfiguration = new LocalInputFlowletConfiguration(baseDir, spec);
-    Location binDir = inputFlowletConfiguration.createStreamEngineProcesses();
+    File binDir = inputFlowletConfiguration.createStreamEngineProcesses();
 
     healthInspector = new HealthInspector(this);
     metricsRecorder = new MetricsRecorder(metrics);
