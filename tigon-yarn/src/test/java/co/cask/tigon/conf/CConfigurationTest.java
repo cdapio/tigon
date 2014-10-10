@@ -20,6 +20,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * Testing CConfiguration.
@@ -40,16 +41,16 @@ public class CConfigurationTest {
     b = conf.get("conf.test.B");
     Assert.assertNotNull(a);
     Assert.assertNotNull(b);
-    Assert.assertEquals("A", a);
-    Assert.assertEquals("B", b);
+    assertEquals("A", a);
+    assertEquals("B", b);
     // override one of the defaults and verify
     conf.addResource("test-override.xml");
     a = conf.get("conf.test.A");
     b = conf.get("conf.test.B");
     Assert.assertNotNull(a);
     Assert.assertNotNull(b);
-    Assert.assertEquals("A", a);
-    Assert.assertEquals("B+", b);
+    assertEquals("A", a);
+    assertEquals("B+", b);
   }
 
   @Test
@@ -83,7 +84,7 @@ public class CConfigurationTest {
 
     try {
       conf.getInt("missing.property");
-      Assert.fail("Expected getInt() to throw NullPointerException");
+      fail("Expected getInt() to throw NullPointerException");
     } catch (NullPointerException e) {
       // expected
     }
@@ -91,7 +92,7 @@ public class CConfigurationTest {
 
     try {
       conf.getLong("missing.property");
-      Assert.fail("Expected getLong() to throw NullPointerException");
+      fail("Expected getLong() to throw NullPointerException");
     } catch (NullPointerException e) {
       // expected
     }
@@ -99,7 +100,7 @@ public class CConfigurationTest {
 
     try {
       conf.getLongBytes("missing.property");
-      Assert.fail("Expected getLongBytes() to throw NullPointerException");
+      fail("Expected getLongBytes() to throw NullPointerException");
     } catch (NullPointerException e) {
       // expected
     }
@@ -107,7 +108,7 @@ public class CConfigurationTest {
 
     try {
       conf.getFloat("missing.property");
-      Assert.fail("Expected getFloat() to throw NullPointerException");
+      fail("Expected getFloat() to throw NullPointerException");
     } catch (NullPointerException e) {
       // expected
     }
@@ -115,7 +116,7 @@ public class CConfigurationTest {
 
     try {
       conf.getBoolean("missing.property");
-      Assert.fail("Expected getBoolean() to throw NullPointerException");
+      fail("Expected getBoolean() to throw NullPointerException");
     } catch (NullPointerException e) {
       // expected
     }
@@ -123,7 +124,7 @@ public class CConfigurationTest {
 
     try {
       conf.getEnum("missing.property", TestEnum.class);
-      Assert.fail("Expected getEnum() to throw NullPointerException");
+      fail("Expected getEnum() to throw NullPointerException");
     } catch (NullPointerException e) {
       // expected
     }
@@ -131,7 +132,7 @@ public class CConfigurationTest {
 
     try {
       conf.getPattern("missing.property");
-      Assert.fail("Expected getPattern() to throw NullPointerException");
+      fail("Expected getPattern() to throw NullPointerException");
     } catch (NullPointerException e) {
       // expected
     }
@@ -139,11 +140,11 @@ public class CConfigurationTest {
 
     try {
       conf.getRange("missing.property");
-      Assert.fail("Expected getRange() to throw NullPointerException");
+      fail("Expected getRange() to throw NullPointerException");
     } catch (NullPointerException e) {
       // expected
     }
   }
 
-  private enum TestEnum { FIRST };
+  private enum TestEnum { FIRST }
 }
