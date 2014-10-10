@@ -137,6 +137,7 @@
                         <include>**/bin/**</include>
                         <include>**/resources/**</include>
                         <include>**/pom.xml</include>
+                        <include>**/README*</include>
                         <include>**/target/*.jar</include>
                       </includes>
                       <excludes>
