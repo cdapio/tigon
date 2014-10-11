@@ -21,6 +21,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include "schemaparser.h"
+#include "gshub.h"
 
 
 // Defined here to avoid link errors as this array is auto generated for the lfta and referenced in the clearinghouse library which gets linked against the hfta
@@ -113,8 +114,20 @@ gs_retval_t
 ftaapp_init(gs_uint32_t bufsz)
 {
     
+    endpoint gshub;
+    FTAID myftaid;
+    gs_sp_t name = "app\0";
     if (hostlib_init(APP,bufsz,DEFAULTDEV,0,0)!=0) {
         gslog(LOG_EMERG,"ftaap_init::error:could not initialize hostlib\n");
+        return -1;
+    }
+    if (get_hub(&gshub)!=0) {
+         gslog(LOG_EMERG,"ERROR:could not find gshub in appinterface init");
+         return -1;
+    }
+    myftaid=gscpipc_getftaid();
+    if (set_ftainstance(gshub,get_instance_name(),(gs_sp_t)name,&myftaid)!=0) {
+        gslog(LOG_EMERG,"ERROR:could not set_ftainstance");
         return -1;
     }
     return 0;
