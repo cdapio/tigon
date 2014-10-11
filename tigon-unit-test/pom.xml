@@ -15,10 +15,6 @@
 
   <dependencies>
     <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-    </dependency>
-    <dependency>
       <groupId>co.cask.tigon</groupId>
       <artifactId>tigon-flow</artifactId>
       <version>${project.version}</version>
@@ -40,15 +36,6 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>co.cask.tephra</groupId>
-      <artifactId>tephra-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.twill</groupId>
-      <artifactId>twill-api</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>co.cask.http</groupId>
       <artifactId>netty-http</artifactId>
       <scope>test</scope>
@@ -56,6 +43,17 @@
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-minicluster</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hbase</groupId>
+      <artifactId>hbase</artifactId>
+      <classifier>tests</classifier>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hbase</groupId>
+      <artifactId>hbase-client</artifactId>
       <scope>test</scope>
     </dependency>
   </dependencies>

@@ -117,9 +117,9 @@
     <module>tigon-common</module>
     <module>tigon-sql</module>
     <module>tigon-yarn</module>
+    <module>tigon-queue</module>
     <module>tigon-hbase-compat-0.94</module>
     <module>tigon-hbase-compat-0.96</module>
-    <module>tigon-queue</module>
     <module>tigon-flow</module>
     <module>tigon-client</module>
     <module>tigon-unit-test</module>
