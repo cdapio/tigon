@@ -348,7 +348,6 @@
         <version>${twill.version}</version>
       </dependency>
 
-
       <!-- Hadoop dependencies -->
       <dependency>
         <groupId>org.apache.hadoop</groupId>
@@ -654,8 +653,6 @@
           </exclusion>
         </exclusions>
       </dependency>
-
-
 
       <!-- Tests dependencies -->
       <dependency>
