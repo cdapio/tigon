@@ -262,6 +262,7 @@ public class SQLFlowTest extends TestBase {
     public void getDataPacket(HttpRequest request, HttpResponder responder) {
       if (queue.size() == 0) {
         responder.sendStatus(HttpResponseStatus.NO_CONTENT);
+        return;
       }
       DataPacket dataPacket = queue.poll();
       responder.sendJson(HttpResponseStatus.OK, dataPacket);

@@ -202,7 +202,6 @@ public class InputServerSocket extends StreamSocketServer {
     public void channelDisconnected(ChannelHandlerContext ctx, ChannelStateEvent e) {
       //Stream Engine RTS process Disconnected!
       log.error("Input Stream {} : Channel Disconnected - Stream Engine RTS process!", name);
-      channelAtomicReference.set(null);
     }
 
     @Override
@@ -211,7 +210,6 @@ public class InputServerSocket extends StreamSocketServer {
       log.error("Input Stream {} : {}", name, e.getCause());
       Channel ch = e.getChannel();
       ch.close();
-      channelAtomicReference.set(null);
     }
   }
 

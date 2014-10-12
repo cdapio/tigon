@@ -21,6 +21,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 #include "schemaparser.h"
+#include "gshub.h"
 
 
 // Defined here to avoid link errors as this array is auto generated for the lfta and referenced in the clearinghouse library which gets linked against the hfta
@@ -113,8 +114,20 @@ gs_retval_t
 ftaapp_init(gs_uint32_t bufsz)
 {
     
+    endpoint gshub;
+    FTAID myftaid;
+    gs_sp_t name = "app\0";
     if (hostlib_init(APP,bufsz,DEFAULTDEV,0,0)!=0) {
         gslog(LOG_EMERG,"ftaap_init::error:could not initialize hostlib\n");
+        return -1;
+    }
+    if (get_hub(&gshub)!=0) {
+         gslog(LOG_EMERG,"ERROR:could not find gshub in appinterface init");
+         return -1;
+    }
+    myftaid=gscpipc_getftaid();
+    if (set_ftainstance(gshub,get_instance_name(),(gs_sp_t)name,&myftaid)!=0) {
+        gslog(LOG_EMERG,"ERROR:could not set_ftainstance");
         return -1;
     }
     return 0;
@@ -328,6 +341,8 @@ get_tuple_again:
     res=gscp_get_buffer(ftaid,(gs_int32_t *)size,tbuffer,tbuf_size,timeout);
     
     if ((res==0) && (ftaschema_is_temporal_tuple(get_fta(*ftaid)->schema, tbuffer))) {
+        FTAID myftaid;
+        myftaid=gscpipc_getftaid();
         /* extract trace */
         if (ftaschema_get_trace(get_fta(*ftaid)->schema,
                                 tbuffer, *size, &trace_id, &sz, &trace))
@@ -344,11 +359,11 @@ get_tuple_again:
         /* generate a heartbeat */
         memcpy(trace_buffer, trace, sz * sizeof(fta_stat));
         /* append producers fta_stat to the trace */
-        /* for now we will just fill the FTAID part of fta_stat, the rest will be cleared */
+        /* for now we will just fill the FTAID part with 0 of fta_stat, the rest will be cleared */
         memset(trace_buffer + (sz * sizeof(fta_stat)), 0, sizeof(fta_stat));
-        /* copy ftaid */
-        memcpy(trace_buffer + (sz * sizeof(fta_stat)), ftaid, sizeof(FTAID));
-        
+
+        memcpy(trace_buffer + (sz * sizeof(fta_stat)), &myftaid, sizeof(FTAID));
+
         fta_heartbeat(gscpipc_getftaid(), trace_id, sz+1, (fta_stat *)trace_buffer);
 		free(trace_buffer);
         res=2; //indicate that it is a temporal tuple
