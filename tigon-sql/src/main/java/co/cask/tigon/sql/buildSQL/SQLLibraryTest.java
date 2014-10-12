@@ -14,7 +14,7 @@
  * the License.
  */
 
-package co.cask.tigon.sql.buildSQL;
+package co.cask.tigon.sql.buildsql;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

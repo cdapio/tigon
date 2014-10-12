@@ -14,7 +14,7 @@
  * the License.
  */
 
-package co.cask.tigon.sql.buildSQL;
+package co.cask.tigon.sql.buildsql;
 
 import co.cask.tigon.sql.util.Platform;
 import org.apache.twill.filesystem.LocalLocationFactory;
