@@ -149,6 +149,7 @@
                       <excludes>
                         <exclude>pom.xml</exclude>
                         <exclude>**/target/original*.jar</exclude>
+                        <exclude>tigon-sql/*</exclude>
                       </excludes>
                     </resource>
                   </resources>
