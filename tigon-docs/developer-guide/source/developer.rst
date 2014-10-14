@@ -114,7 +114,7 @@ Note that the Flowlet declares the output emitter but does not
 initialize it. The Flow system initializes and injects its
 implementation at runtime.
 
-The method is annotated with @``ProcessInput``—this tells the Flow
+The method is annotated with ``@ProcessInput``—this tells the Flow
 system that this method can process input data.
 
 You can overload the process method of a Flowlet by adding multiple
@@ -654,8 +654,24 @@ For the example given above, it would then be::
 You can choose to ingest data through either HTTP or TCP endpoints; in the case above, the TCP server is
 running on 63537. There is one TCP endpoint for each input stream.
 
-If the Flow is running in Distributed Mode on a cluster, you can use the ``discover`` and
-``service`` info commands to find out the endpoints.
+If the Flow is running in Distributed Mode on a cluster, you can use the ``serviceinfo``
+and ``discover`` commands to find out the endpoints.
+
+In the above example, if we execute ``serviceinfo <flow-name>`` as described in the 
+:doc:`Distributed Command-Line Intreface, <tools>` we should see a list of available services::
+
+  httpPort
+  tcpPort_intInput
+  
+Now we can discover a specific service’s endpoint (either HTTP or TCP) by executing::
+
+  discover <flow-name> httpPort
+  
+or::
+
+  discover <flow-name> tcpPort_intInput
+
+This is will display the hostname and port on which those services are running.
 
 Optionally, you can provide a runtime arg when you start (``--httpPort=1433``) to give a
 port number for the HTTP service. The ``AbstractInputFlowlet`` will attempt to start the
@@ -750,6 +766,6 @@ Where to Go Next
 
 Now that you're familiar with the components and concepts of Tigon, take a look at:
 
-- `Examples <examples.html>`__, with a complete example demonstrating Tigon.
+- `Examples <examples/index.html>`__, with a series of examples demonstrating Tigon.
 
 

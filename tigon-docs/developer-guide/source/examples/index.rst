@@ -12,8 +12,8 @@ Tigon Examples
 
    Hello World <hello-world>
    SQL Join Flow <sql-join-flow>
-   TigonSQL <tigon-sql>
    Twitter Analytics <twitter-analytics>
+   TigonSQL <tigon-sql>
 
 These examples are included in the `source download <getting-started.html#download>`__ 
 in the ``tigon-examples`` directory.
@@ -30,17 +30,17 @@ in the ``tigon-examples`` directory.
      :start-line: 5
      :end-before: Flow Runtime Arguments
 
-- `TigonSQL Examples <tigon-sql.html>`__
-
-  .. include:: tigon-sql.rst
-     :start-line: 5
-     :end-before: License and Trademarks
-
 - `Twitter Analytics Example <twitter-analytics.html>`__
 
   .. include:: twitter-analytics.rst
      :start-line: 5
      :end-before: Twitter Configuration
+
+- `TigonSQL Examples <tigon-sql.html>`__ *(Advanced)*
+
+  .. include:: tigon-sql.rst
+     :start-line: 5
+     :end-before: License and Trademarks
 
 Where to Go Next
 ================
@@ -48,4 +48,3 @@ Where to Go Next
 Now that you're seen an example demonstrating Tigon, take a look at:
 
 - `APIs <../apis/index.html>`__, which includes the Java and TigonSQL APIs of Tigon.
-

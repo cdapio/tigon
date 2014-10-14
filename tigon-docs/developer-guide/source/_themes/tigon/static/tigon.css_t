@@ -47,6 +47,7 @@ div.body {
     color: #3E4349;
     padding: 0 30px 30px 30px;
     font-size: 0.9em;
+    min-height: 1200px;
 }
 
 div.footer {
@@ -191,11 +192,12 @@ div.body h6 { font-size: 100%; background-color: #F2F2F2; }
 
 div.body h1 { background-color: #E0E0E0; }
 div.body h2 { background-color: #E0E0E0; }
-div.body h3 { background-color: #E0E0E0; }
-div.body h4 { 
-    background-color: #F2F2F2;
-    margin: 30px 0px 10px 0px;
-}
+div.body h3 { background-color: #F2F2F2; }
+div.body h4 { background-color: #FAFAFA; margin: 30px 0px 10px 0px; }
+
+div.body h3 { border-bottom: 2px solid #808080; }
+
+div.body h4 { border-bottom: 1px solid #808080; }
 
 a.headerlink {
     color: #c60f0f;

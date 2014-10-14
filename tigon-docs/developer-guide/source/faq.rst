@@ -11,7 +11,7 @@ General
 
 **What is Tigon?**
 
-**Tigon** is an open-source, real-time stream processing framework built on top of Hadoop |(TM)| and HBase.
+**Tigon** is an open-source, real-time stream processing framework built on top of Apache |(TM)| Hadoop |(R)| and HBase.
 
 **Who is Tigon intended for?**
 
@@ -26,8 +26,8 @@ applications that can handle large volumes of data.
 **How does Tigon work?**
 
 Tigon is built on top of Hadoop/HBase. It uses the 
-`Tephra Transaction Engine <https://github.com/caskdata/tephra>`__ and Twill
-for spinning up YARN applications. For in-memory stream processing, it uses the TigonSQL
+`Tephra Transaction Engine <https://github.com/caskdata/tephra>`__ and `Twill <http://twill.incubator.apache.org>`__
+for spinning up YARN applications. For in-memory stream processing, it uses the `TigonSQL <advanced.html>`__
 in-memory stream processing engine developed by AT&T.
 
 **What is the difference between Tigon and Cask's other projects, such as CDAP?**
@@ -137,4 +137,7 @@ here's how to do it:
    `caskdata/tigon <https://github.com/caskdata/tigon>`__ repository.
    
 .. |(TM)| unicode:: U+2122 .. trademark sign
+   :ltrim:
+
+.. |(R)| unicode:: U+00AE .. registered trademark sign
    :ltrim:

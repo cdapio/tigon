@@ -11,8 +11,9 @@ Licensing and Open Source
 ============================
 
 What type of license is Tigon open sourced under?
--------------------------------------------------------------
+-------------------------------------------------
 Tigon is licensed under an `Apache 2.0 license <http://www.apache.org/licenses/LICENSE-2.0.html>`_.
+
 
 Copyrights
 ==========
@@ -30,10 +31,3 @@ either express or implied. See the License for the specific language governing p
 and limitations under the License.
 
 Tigon is a trademark of Cask Data, Inc. All rights reserved.
-
-Where to Go Next
-================
-
-Now that you're seen the Tigon license, take a look at:
-
-- `Release Notes <releasenotes.html>`__, with a summary for this version.
