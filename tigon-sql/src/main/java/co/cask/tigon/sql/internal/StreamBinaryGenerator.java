@@ -54,9 +54,8 @@ public class StreamBinaryGenerator {
   }
 
   public File createStreamProcesses() {
-    File configDir = null;
     try {
-      configDir = createStreamLibrary(dir);
+      File configDir = createStreamLibrary(dir);
       CompileStreamBinaries compileBinaries = new CompileStreamBinaries(configDir);
       StreamConfigGenerator generator = new StreamConfigGenerator(spec);
       File outputSpec = createFile(configDir, "output_spec.cfg");
@@ -81,7 +80,7 @@ public class StreamBinaryGenerator {
       LOG.error(t.getMessage(), t);
       Throwables.propagate(t);
     }
-    return configDir;
+    return null;
   }
 
   private File createStreamLibrary(File dir) throws IOException, ArchiveException {
