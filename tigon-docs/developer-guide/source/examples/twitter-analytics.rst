@@ -1,5 +1,5 @@
-TwitterAnalytics
-================
+Twitter Analytics Example
+=========================
 
 Overview
 --------

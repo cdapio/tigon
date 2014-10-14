@@ -40,7 +40,8 @@ LICENSES="licenses"
 LICENSES_PDF="licenses-pdf"
 PROJECT="tigon"
 PROJECT_CAPS="Tigon"
-EXAMPLES="tigon-examples"
+EXAMPLES="examples"
+TIGON_EXAMPLES="tigon-examples"
 
 SCRIPT_PATH=`pwd`
 
@@ -189,7 +190,9 @@ function check_includes() {
     mkdir $BUILD_INCLUDES_DIR
     pandoc_includes $BUILD_INCLUDES_DIR
     # Test included files
+    test_include hello-world.rst
     test_include sql-join-flow.rst
+    test_include tigon-sql.rst
     test_include twitter-analytics.rst
   else
     echo "WARNING: pandoc not installed; checked-in README includes will be used instead."
@@ -198,7 +201,7 @@ function check_includes() {
 
 function test_include() {
   BUILD_INCLUDES_DIR=$SCRIPT_PATH/$BUILD/$INCLUDES
-  SOURCE_INCLUDES_DIR=$SCRIPT_PATH/$SOURCE/$INCLUDES
+  SOURCE_INCLUDES_DIR=$SCRIPT_PATH/$SOURCE/$EXAMPLES
   EXAMPLE=$1
   if diff -q $BUILD_INCLUDES_DIR/$1 $SOURCE_INCLUDES_DIR/$1 2>/dev/null; then
     echo "Tested $1; matches checked-in include file."
@@ -211,7 +214,7 @@ function test_include() {
 function build_includes() {
   if hash pandoc 2>/dev/null; then
     echo "pandoc is installed; rebuilding the example README includes."
-    SOURCE_INCLUDES_DIR=$SCRIPT_PATH/$SOURCE/$INCLUDES
+    SOURCE_INCLUDES_DIR=$SCRIPT_PATH/$SOURCE/$EXAMPLES
     rm -rf $SOURCE_INCLUDES_DIR
     mkdir $SOURCE_INCLUDES_DIR
     pandoc_includes $SOURCE_INCLUDES_DIR
@@ -223,9 +226,10 @@ function build_includes() {
 function pandoc_includes() {
   # Uses pandoc to translate the README markdown files to rst in the target directory
   INCLUDES_DIR=$1
-#   pandoc -t rst $PROJECT_PATH/$EXAMPLES/helloWorld/README.md -o $INCLUDES_DIR/hello-world.rst
-  pandoc -t rst $PROJECT_PATH/$EXAMPLES/SQLJoinFlow/README.md -o $INCLUDES_DIR/sql-join-flow.rst
-  pandoc -t rst $PROJECT_PATH/$EXAMPLES/TwitterAnalytics/README.md -o $INCLUDES_DIR/twitter-analytics.rst
+  pandoc -t rst $PROJECT_PATH/$TIGON_EXAMPLES/HelloWorld/README.md -o $INCLUDES_DIR/hello-world.rst
+  pandoc -t rst $PROJECT_PATH/$TIGON_EXAMPLES/SQLJoinFlow/README.md -o $INCLUDES_DIR/sql-join-flow.rst
+  pandoc -t rst $PROJECT_PATH/$TIGON_EXAMPLES/tigon-sql/README.md -o $INCLUDES_DIR/tigon-sql.rst
+  pandoc -t rst $PROJECT_PATH/$TIGON_EXAMPLES/TwitterAnalytics/README.md -o $INCLUDES_DIR/twitter-analytics.rst
 }
 
 function build_quick() {

@@ -6,6 +6,14 @@
 Getting Started with Tigon
 ============================================
 
+We recommend you follow these steps to get started with Tigon:
+
+1. Check that you have the `prerequisites`_ and install if necessary.
+#. `Download`_ the pre-compiled sources and related files.
+#. `Configure`_ your system, if necessary.
+#. Run the `examples`_ to test your installation and learn about Tigon.
+
+
 Prerequisites
 =============
 
@@ -17,27 +25,18 @@ To install and use Tigon and its included examples, there are a few prerequisite
 1. JDK 6 or JDK 7 (required to run Tigon; note that $JAVA_HOME should be set)
 #. GCC
 #. G++
-#. libcurl (if it is not already included in your operating system; see note following)
-#. libz (if it is not already included in your operating system; see note following)
 #. Apache Maven 3.0+ (required to build the example applications)
 
-**Note:** You need the ``libcurl.so`` and ``libz.so`` at runtime, which are provided by
-the ``libcurl`` and ``libz`` packages. At compile time, you need the ``curl/curl.h`` and
-``zlib.h`` headers, provided by ``libcurl-devel`` and ``zlib-devel`` on RHEL systems and
-provided by ``libcurl-dev`` and ``libz-dev`` on Debian-based systems. Users who provide
-curl and libz via compilation (download ``curl`` and ``libz`` tarballs, ``./configure &&
-make && make install``) will have the headers provided during the make install.
-
-**Note:** To run the TigonSQL Stream Engine outside of Tigon, both Perl 5.x and Python 3.x
+**Note:** To run the TigonSQL Stream Engine outside of Tigon, ``libz``, ``Perl 5.x``, and ``Python 3.x``
 are required.
 
 
 Download
 ========
 
-Pre-compiled sources and related files can be downloaded in a tgz file: 
-`tigon-developer-release-0.2.0.tgz. 
-<http://repository.cask.co/downloads/co/cask/tigon/tigon-developer-release/0.2.0/tigon-developer-release-0.2.0.tgz>`__
+Pre-compiled sources and related files can be downloaded in a zip file: 
+`tigon-developer-release-0.2.0.zip. 
+<http://repository.cask.co/downloads/co/cask/tigon/tigon-developer-release/0.2.0/tigon-developer-release-0.2.0.zip>`__
 
 
 Install 
@@ -78,15 +77,17 @@ You can also build Tigon directly from the latest source code::
 After the build completes, you will have a distribution of Tigon under the
 `tigon-distribution/target/` directory.  
 
-Take the `tigon-sdk-<version>.tar.gz` file and unzip it into a suitable location.
+Take the `tigon-sdk-<version>.zip` file and unzip it into a suitable location.
 
 
 Is It Building?
 ---------------
+These links allow you to check the status of the automated builds of the source code:
 
 - `Bamboo Build <https://builds.cask.co/browse/TIG>`__
 - `GitHub Version <https://github.com/caskdata/tigon/releases/latest>`__           
 
+.. _configure:
 
 Configuration
 =============
@@ -123,17 +124,25 @@ applications when they are created on the same machine.
 Examples
 ========
 
-Examples of using Tigon are described in the `Tigon Examples Guide. <examples.html>`__
+Examples of using Tigon are described in the `Tigon Examples Guide: <examples/index.html>`__
 
-SQLJoinFlow
------------
-An application that demonstrates the capabilities of the Tigon-SQL library.
-It performs an inner-join of two data streams and logs the result of the SQL command.
+- `Hello World Example <examples/hello-world.html>`__
 
-TwitterAnalytics
-----------------
-It's an application that collects Tweets and logs the top ten hashtags used in the
-previous minute.
+  .. include:: examples/hello-world.rst
+     :start-line: 5
+     :end-before: Building the JAR
+
+- `Twitter Analytics Example <examples/twitter-analytics.html>`__
+
+  .. include:: examples/twitter-analytics.rst
+     :start-line: 5
+     :end-before: Twitter Configuration
+
+- `SQL Join Flow Example <examples/sql-join-flow.html>`__
+
+  .. include:: examples/sql-join-flow.rst
+     :start-line: 5
+     :end-before: Flow Runtime Arguments
 
 
 Where to Go Next

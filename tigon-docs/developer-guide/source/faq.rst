@@ -11,7 +11,7 @@ General
 
 **What is Tigon?**
 
-**Tigon** is an open-source, real-time stream processing framework built on top of Hadoop |(TM)| and HBase.
+**Tigon** is an open-source, real-time stream processing framework built on top of Apache |(TM)| Hadoop |(R)| and HBase.
 
 **Who is Tigon intended for?**
 
@@ -26,15 +26,15 @@ applications that can handle large volumes of data.
 **How does Tigon work?**
 
 Tigon is built on top of Hadoop/HBase. It uses the 
-`Tephra Transaction Engine <https://github.com/caskco/tephra>`__ and Twill
-for spinning up YARN applications. For in-memory stream processing, it uses the TigonSQL
+`Tephra Transaction Engine <https://github.com/caskdata/tephra>`__ and `Twill <http://twill.incubator.apache.org>`__
+for spinning up YARN applications. For in-memory stream processing, it uses the `TigonSQL <advanced.html>`__
 in-memory stream processing engine developed by AT&T.
 
 **What is the difference between Tigon and Cask's other projects, such as CDAP?**
 
 Tigon is focused on solving the issues faced in real-time stream processing. 
 
-The `Cask Data Application Platform (CDAP) <http:cask.co/cdap>`__ is a generalized 'Big
+The `Cask Data Application Platform (CDAP) <http://cdap.io>`__ is a generalized 'Big
 Data' application platform with additional features such as dataset abstractions, batch job
 integration, and security.
 
@@ -42,23 +42,19 @@ integration, and security.
 
 Enable every Java developer to create powerful, real-time stream processing applications.
 
-.. **How fast will Tigon import data?**
-
-.. **How big a cluster has Tigon been run on?**
-
 
 Running Tigon
 =============
 
 **How do I get started with Tigon?**
 
-Download the tar.gz, untar it and checkout the examples! 
+Download the zip, unzip it and checkout the examples! 
 
-See our `Getting Started With Tigon <getting-started>`__ guide.
+See our `Getting Started With Tigon <getting-started.html>`__ guide.
 
 **What are the prerequisites for running Tigon?**
 
-See our `Getting Started With Tigon <getting-started#prerequisites>`__ guide
+See our `Getting Started With Tigon <getting-started.html#prerequisites>`__ guide
 for a list of prerequisites.
 
 **What platforms and Java version does Tigon run on?**
@@ -90,12 +86,14 @@ Tigon Support
 **Where can I find more information about Tigon?**
 
 Our resources include this website, our parent website (`cask.co <http://cask.co>`__),
-a mailing list, an IRC channel and a `GitHub repository. <https://github.com/caskdata/tigon>`__
+two mailing lists, an IRC channel and a `GitHub repository. <https://github.com/caskdata/tigon>`__
 
 **What mailing lists are available for additional help?**
 
 Tigon User Group and Development Discussions: 
-`tigon-dev@googlegroups.com <https://groups.google.com/d/forum/tigon-dev>`__
+
+- Focused on Tigon usage questions, discussions, and solutions: `tigon-user@googlegroups.com <https://groups.google.com/d/forum/tigon-user>`__
+- For developers modifying Tigon itself: `tigon-dev@googlegroups.com <https://groups.google.com/d/forum/tigon-dev>`__
 
 **Is there an IRC Channel?**
 
@@ -107,7 +105,7 @@ Bugs and tasks are tracked in a public JIRA issue tracker. Details on access wil
 
 **Is commercial support available for Tigon?**
 
-Contact Cask Data for information on `commercial Tigon support. <http:cask.co/support>`__
+Contact Cask Data for information on `commercial Tigon support. <http://cask.co/company/#company-contact>`__
 
 
 Contributing to Tigon
@@ -139,4 +137,7 @@ here's how to do it:
    `caskdata/tigon <https://github.com/caskdata/tigon>`__ repository.
    
 .. |(TM)| unicode:: U+2122 .. trademark sign
+   :ltrim:
+
+.. |(R)| unicode:: U+00AE .. registered trademark sign
    :ltrim:
