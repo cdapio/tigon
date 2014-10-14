@@ -61,7 +61,7 @@ Where to Go Next
 .. |examples| replace:: **Examples:**
 .. _examples: examples/index.html
 
-- |examples|_ **four Tigon examples** are included in the source distribution.
+- |examples|_ **Tigon examples** are included in the source distribution in the ``tigon-examples`` directory.
 
 
 .. |apis| replace:: **APIs:**

@@ -24,10 +24,8 @@ Bug Fixes
 
 Known Issues
 ------------
-- In order to use TigonSQL on Mac OS X, shared memory settings need to be modified
-  as described in the `Getting Started with Tigon guide. <getting-started.html#macintosh-os-x>`__
-- The maximum number of ``AbstractInputFlowlet`` instances is limited to one.
-- Metrics are currently not supported.
+- The ``libz`` dependency of TigonSQL is only required if running the TigonSQL Stream Engine outside of Tigon.
+- See *Known Issues* of `the previous version. <#known-issues-010>`_
 
 
 Release 0.1.0
@@ -38,6 +36,8 @@ Features
 - Ability to launch Flows in either Standalone or Distributed Mode. 
 - Command Line Interface for Distributed Mode to manage Flows.
 - TigonSQL provides integration of In-Memory Streaming Engine through the ``AbstractInputFlowlet``.
+
+.. _known-issues-010:
 
 Known Issues
 ------------

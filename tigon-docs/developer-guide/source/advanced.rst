@@ -439,3 +439,14 @@ surveyed the two-level architecture for early data reduction and describe severa
 streaming query optimizations that TigonSQL uses for efficient processing of high-rate
 streams.
 
+Where to Go Next
+================
+An example of using TigonSQL directly is included in the `source repo at GitHub. <https://github.com/caskdata/tigon>`__
+
+- `TigonSQL Examples <examples/tigon-sql.html>`__ *(Advanced)*
+
+  .. include:: examples/tigon-sql.rst
+     :start-line: 5
+     :end-before: License and Trademarks
+
+

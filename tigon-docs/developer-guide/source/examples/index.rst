@@ -36,11 +36,6 @@ in the ``tigon-examples`` directory.
      :start-line: 5
      :end-before: Flow Runtime Arguments
 
-- `TigonSQL Examples <tigon-sql.html>`__ *(Advanced)*
-
-  .. include:: tigon-sql.rst
-     :start-line: 5
-     :end-before: License and Trademarks
 
 Where to Go Next
 ================

@@ -56,15 +56,9 @@ To install and use Tigon and its included examples, there are a few prerequisite
   1. JDK 6 or JDK 7 (required to run Tigon; note that $JAVA_HOME should be set)
   2. GCC
   3. G++
-  4. libz (if it is not already included in your operating system; see note following)
-  5. Apache Maven 3.0+ (required to build the example applications)
+  4. Apache Maven 3.0+ (required to build the example applications)
   
-Note: You need the libz.so at runtime, which is provided by the libz package. At compile
-time, you need the zlib.h header, provided by zlib-devel on RHEL systems and by libz-dev
-on Debian-based systems. Users who provide libz via compilation (download a libz tarball,
-./configure && make && make install) will have the header provided during the make install.
-
-Note: To run the TigonSQL Stream Engine outside of Tigon, both Perl 5.x and Python 3.x are required.
+Note: To run the TigonSQL Stream Engine outside of Tigon, libz, Perl 5.x, and Python 3.x are required.
 
 ### Download
 
@@ -147,8 +141,12 @@ Thanks for helping to improve Tigon!
 
 ### Mailing List
 
-Tigon User Group and Development Discussions: 
+Tigon User Group: 
+[tigon-user@googlegroups.com](https://groups.google.com/d/forum/tigon-user)
+
+Tigon Development Discussion: 
 [tigon-dev@googlegroups.com](https://groups.google.com/d/forum/tigon-dev)
+
 
 ### IRC Channel
 
