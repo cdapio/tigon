@@ -25,7 +25,10 @@ See [Surefire doc](http://maven.apache.org/surefire/maven-surefire-plugin/exampl
     mvn package -DskipTests -pl tigon-examples -am -amd -P examples
 
 ### Build Tigon Distribution
-    mvn package -DskipTests -pl tigon-examples -am -amd -P examples && mvn clean package -DskipTests -Pdist
+    mvn clean package -DskipTests -P examples -pl tigon-examples -am -amd && mvn package -DskipTests -Pdist
+
+### Rebuild TigonSQL Library
+    mvn clean package install -DskipTests -Psql-lib
 
 ### Build the complete set of Javadocs, for all modules
     mvn clean site -DskipTests

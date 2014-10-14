@@ -25,6 +25,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>tigon-hbase-compat-0.96</artifactId>
+  <name>Tigon HBase 0.96 Compatibility</name>
   <packaging>jar</packaging>
 
   <dependencies>

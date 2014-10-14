@@ -26,6 +26,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>tigon-distribution</artifactId>
+  <name>Tigon Distribution</name>
   <packaging>pom</packaging>
 
   <dependencies>
@@ -37,6 +38,11 @@
     <dependency>
       <groupId>co.cask.tigon</groupId>
       <artifactId>tigon-common</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>co.cask.tigon</groupId>
+      <artifactId>tigon-yarn</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
@@ -137,11 +143,13 @@
                         <include>**/bin/**</include>
                         <include>**/resources/**</include>
                         <include>**/pom.xml</include>
+                        <include>**/README*</include>
                         <include>**/target/*.jar</include>
                       </includes>
                       <excludes>
                         <exclude>pom.xml</exclude>
                         <exclude>**/target/original*.jar</exclude>
+                        <exclude>tigon-sql/*</exclude>
                       </excludes>
                     </resource>
                   </resources>

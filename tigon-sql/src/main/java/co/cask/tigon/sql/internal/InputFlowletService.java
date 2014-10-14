@@ -28,10 +28,10 @@ import co.cask.tigon.sql.manager.ProcessInitiator;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.AbstractIdleService;
 import org.apache.twill.common.Services;
-import org.apache.twill.filesystem.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +42,7 @@ import java.util.Map;
  */
 public final class InputFlowletService extends AbstractIdleService {
   private static final Logger LOG = LoggerFactory.getLogger(InputFlowletService.class);
-  private final Location dir;
+  private final File dir;
   private final StreamEngineIO ioService;
   private HubDataStore hubDataStore;
   private DiscoveryServer discoveryServer;
@@ -53,7 +53,7 @@ public final class InputFlowletService extends AbstractIdleService {
   private final ProcessMonitor processMonitor;
 
   //TODO Remove GDATRecordQueue parameter from this constructor. Use Guice to inject it directly to OutputServerSocket
-  public InputFlowletService(Location dir, InputFlowletSpecification spec, HealthInspector healthInspector,
+  public InputFlowletService(File dir, InputFlowletSpecification spec, HealthInspector healthInspector,
                              MetricsRecorder metricsRecorder, GDATRecordQueue recordQueue,
                              Map<String, Integer> portMap, ProcessMonitor processMonitor) {
     this.dir = dir;

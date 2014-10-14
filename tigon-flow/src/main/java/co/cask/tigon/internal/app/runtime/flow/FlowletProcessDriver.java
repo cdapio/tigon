@@ -17,7 +17,6 @@
 package co.cask.tigon.internal.app.runtime.flow;
 
 import co.cask.tephra.TransactionContext;
-import co.cask.tephra.TransactionExecutor;
 import co.cask.tephra.TransactionFailureException;
 import co.cask.tigon.api.flow.flowlet.Callback;
 import co.cask.tigon.api.flow.flowlet.FailurePolicy;

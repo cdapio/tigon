@@ -16,12 +16,9 @@
 
 package co.cask.tigon.sql.internal;
 
-import co.cask.tigon.io.Locations;
 import co.cask.tigon.sql.conf.Constants;
 import co.cask.tigon.sql.manager.ExternalProgramExecutor;
 import org.apache.twill.common.Services;
-import org.apache.twill.filesystem.LocalLocationFactory;
-import org.apache.twill.filesystem.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,16 +30,15 @@ import java.util.concurrent.TimeUnit;
  */
 public class CompileStreamBinaries {
   private static final Logger LOG = LoggerFactory.getLogger(CompileStreamBinaries.class);
-  private final Location dir;
+  private final File dir;
 
-  public CompileStreamBinaries(Location dir) {
+  public CompileStreamBinaries(File dir) {
     this.dir = dir;
   }
 
   public void generateBinaries() throws Exception {
-    Location rootTmpDir = Locations.getParent(Locations.getParent(dir));
-    Location shell = new LocalLocationFactory(new File("/")).create("/").append("bin").append("sh");
-
+    File rootTmpDir = dir.getParentFile().getParentFile();
+    File shell = new File("/bin/sh");
     ExternalProgramExecutor copyGSEXIT = new ExternalProgramExecutor("Copy GSEXIT", dir, shell, "-c",
                                                                      "cp ../../bin/gsexit ./GSEXIT");
     copyGSEXIT.startAndWait();

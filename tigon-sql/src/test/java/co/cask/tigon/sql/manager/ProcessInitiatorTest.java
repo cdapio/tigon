@@ -18,7 +18,6 @@ package co.cask.tigon.sql.manager;
 
 import co.cask.tigon.sql.util.MetaInformationParser;
 import com.google.common.collect.Lists;
-import org.apache.twill.filesystem.LocalLocationFactory;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.ClassRule;
@@ -60,14 +59,14 @@ public class ProcessInitiatorTest {
       .setHFTACount(5)
       .setHubAddress(new InetSocketAddress("127.0.0.1", 2222))
       .setClearingHouseAddress(new InetSocketAddress("127.0.0.1", 1111))
-      .setBinaryLocation(new LocalLocationFactory(tmp.newFolder()).create(tmp.newFolder().toURI()))
+      .setBinaryLocation(tmp.newFolder())
       .build();
     processInitiator = new ProcessInitiator(hubDataStore);
   }
 
   @Test
   public void testRTSExecution() throws IOException {
-    File file = new File(hubDataStore.getBinaryLocation().append("rts").toURI().getPath());
+    File file = new File(hubDataStore.getBinaryLocation(), "rts");
     Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "utf-8"));
     writer.write("echo $1 & $2");
     file.setExecutable(true, false);
@@ -78,7 +77,7 @@ public class ProcessInitiatorTest {
   @Test
   public void testHFTAExecution() throws IOException {
     Writer writer = new BufferedWriter(new OutputStreamWriter(
-      new FileOutputStream(hubDataStore.getBinaryLocation().append("qtree.xml").toURI().getPath()), "utf-8"));
+      new FileOutputStream(new File(hubDataStore.getBinaryLocation(), "qtree.xml")), "utf-8"));
     //Creating sample qtree.xml
     writer.write("<?xml version='1.0' encoding='ISO-8859-1'?>\n" +
                    "<?xml-stylesheet type='text/xsl' href='qtree.xsl'?>\n" +
@@ -122,7 +121,7 @@ public class ProcessInitiatorTest {
     }
     Assert.assertEquals(1, count);
 
-    File file = new File(hubDataStore.getBinaryLocation().append("hfta_0").toURI().getPath());
+    File file = new File(hubDataStore.getBinaryLocation(), "hfta_0");
     writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "utf-8"));
     writer.write("echo $1 & $2");
     file.setExecutable(true, false);
@@ -132,7 +131,7 @@ public class ProcessInitiatorTest {
 
   @Test
   public void testGSEXITExecution() throws IOException {
-    File file = new File(hubDataStore.getBinaryLocation().append("GSEXIT").toURI().getPath());
+    File file = new File(hubDataStore.getBinaryLocation(), "GSEXIT");
     Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "utf-8"));
     writer.write("echo $1 & $2");
     file.setExecutable(true, false);
