@@ -139,17 +139,17 @@ Examples of using Tigon are described in the `Tigon Examples Guide: <examples/in
      :start-line: 5
      :end-before: Building the JAR
 
-- `SQL Join Flow Example <examples/sql-join-flow.html>`__
-
-  .. include:: examples/sql-join-flow.rst
-     :start-line: 5
-     :end-before: Flow Runtime Arguments
-
 - `Twitter Analytics Example <examples/twitter-analytics.html>`__
 
   .. include:: examples/twitter-analytics.rst
      :start-line: 5
      :end-before: Twitter Configuration
+
+- `SQL Join Flow Example <examples/sql-join-flow.html>`__
+
+  .. include:: examples/sql-join-flow.rst
+     :start-line: 5
+     :end-before: Flow Runtime Arguments
 
 
 Where to Go Next

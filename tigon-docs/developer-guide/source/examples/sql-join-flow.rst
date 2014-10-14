@@ -4,7 +4,7 @@ SQL Join Flow Example
 Overview
 --------
 
-An application that demonstrates the capabilities of the Tigon-SQL
+An application that demonstrates the capabilities of the TigonSQL
 library. It performs an inner-join of two data streams and logs the
 result of the SQL command.
 
