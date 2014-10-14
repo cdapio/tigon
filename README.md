@@ -101,13 +101,16 @@ that will guide you through installing Tigon and running an example.
 
 ## Where to Go Next
 
-Now that you've had a look at Tigon SDK, take a look at:
+Now that you've had a look at the Tigon SDK, take a look at:
 
-- Examples, located in the `/tigon-examples` directory of Tigon;
+- Examples, located in the `/tigon-examples` directory of Tigon
 - [Online Examples](http://docs.cask.co/tigon/current/en/examples/index.html) 
-  (demonstrating basic features of Tigon) are located on-line; and
+  (demonstrating basic features of Tigon) are located on-line
+- [Example Tigon Applications:](https://github.com/caskdata/tigon-apps)
+  - [AdNetworkFlow:](https://github.com/caskdata/tigon-apps/tree/develop/AdNetworkFlow)
+    Demonstrates using Tigon to write a realtime bidding (RTB) advertisement framework
 - Developer Guides, located in the source distribution in `/tigon-docs/developer-guide/source`
-  or [online](http://docs.cask.co/tigon/current/en/developer.html).
+  or [online](http://docs.cask.co/tigon/current/en/developer.html)
 
 
 ## How to Contribute

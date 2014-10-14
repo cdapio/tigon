@@ -3,7 +3,7 @@
    :copyright: Copyright © 2014 Cask Data, Inc.
 
 ============================================
-Tigon Examples
+Tigon Examples and Applications
 ============================================
 
 .. toctree::
@@ -14,6 +14,9 @@ Tigon Examples
    Twitter Analytics <twitter-analytics>
    SQL Join Flow <sql-join-flow>
    TigonSQL <tigon-sql>
+
+Examples
+========
 
 These examples are included in the `source download <getting-started.html#download>`__ 
 in the ``tigon-examples`` directory.
@@ -35,6 +38,16 @@ in the ``tigon-examples`` directory.
   .. include:: sql-join-flow.rst
      :start-line: 5
      :end-before: Flow Runtime Arguments
+
+Applications
+============
+
+Applications built with Tigon are included in the 
+`tigon-apps repository <https://github.com/caskdata/tigon-apps>`__ at 
+`GitHub: <https://github.com/caskdata>`__
+
+- `AdNetworkFlow: <https://github.com/caskdata/tigon-apps/tree/develop/AdNetworkFlow>`__
+  Demonstrates using Tigon to write a realtime bidding (RTB) advertisement framework.
 
 
 Where to Go Next

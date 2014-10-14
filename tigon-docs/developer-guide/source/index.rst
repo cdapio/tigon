@@ -58,10 +58,11 @@ Where to Go Next
   suggested **best practices for application development.**
 
 
-.. |examples| replace:: **Examples:**
+.. |examples| replace:: **Examples and Applications:**
 .. _examples: examples/index.html
 
-- |examples|_ **Tigon examples** are included in the source distribution in the ``tigon-examples`` directory.
+- |examples|_ **Tigon examples** are included in the source distribution in the ``tigon-examples`` directory;
+  **example applications** are online in the `tigon-apps repository <https://github.com/caskdata/tigon-apps>`__.
 
 
 .. |apis| replace:: **APIs:**
