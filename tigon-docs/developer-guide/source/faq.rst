@@ -105,7 +105,7 @@ Bugs and tasks are tracked in a public JIRA issue tracker. Details on access wil
 
 **Is commercial support available for Tigon?**
 
-Contact Cask Data for information on `commercial Tigon support. <http://cask.co/support>`__
+Contact Cask Data for information on `commercial Tigon support. <http://cask.co/company/#company-contact>`__
 
 
 Contributing to Tigon
