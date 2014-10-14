@@ -86,14 +86,14 @@ Tigon Support
 **Where can I find more information about Tigon?**
 
 Our resources include this website, our parent website (`cask.co <http://cask.co>`__),
-a mailing list, an IRC channel and a `GitHub repository. <https://github.com/caskdata/tigon>`__
+two mailing lists, an IRC channel and a `GitHub repository. <https://github.com/caskdata/tigon>`__
 
 **What mailing lists are available for additional help?**
 
 Tigon User Group and Development Discussions: 
 
-- `tigon-dev@googlegroups.com <https://groups.google.com/d/forum/tigon-dev>`__
-- `tigon-user@googlegroups.com <https://groups.google.com/d/forum/tigon-user>`__
+- Focused on Tigon usage questions, discussions, and solutions: `tigon-user@googlegroups.com <https://groups.google.com/d/forum/tigon-user>`__
+- For developers modifying Tigon itself: `tigon-dev@googlegroups.com <https://groups.google.com/d/forum/tigon-dev>`__
 
 **Is there an IRC Channel?**
 
@@ -105,7 +105,7 @@ Bugs and tasks are tracked in a public JIRA issue tracker. Details on access wil
 
 **Is commercial support available for Tigon?**
 
-Contact Cask Data for information on `commercial Tigon support. <http:cask.co/support>`__
+Contact Cask Data for information on `commercial Tigon support. <http://cask.co/support>`__
 
 
 Contributing to Tigon
