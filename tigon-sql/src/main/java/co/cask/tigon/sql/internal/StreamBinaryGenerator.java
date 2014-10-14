@@ -76,11 +76,12 @@ public class StreamBinaryGenerator {
       writeToLocation(file, Joiner.on(";\n").join(fileContent));
 
       compileBinaries.generateBinaries();
+      return configDir;
     } catch (Throwable t) {
       LOG.error(t.getMessage(), t);
       Throwables.propagate(t);
+      return null;
     }
-    return null;
   }
 
   private File createStreamLibrary(File dir) throws IOException, ArchiveException {
