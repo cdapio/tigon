@@ -20,7 +20,7 @@
 
   <groupId>co.cask.tigon</groupId>
   <artifactId>tigon</artifactId>
-  <version>0.2.0-SNAPSHOT</version>
+  <version>0.3.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <name>Tigon</name>
   <url>https://github.com/caskdata/tigon</url>
