@@ -51,14 +51,17 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sun.security.util.Resources_es;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.InetSocketAddress;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * Tigon Distributed Main.
@@ -105,6 +108,8 @@ public class DistributedMain {
 
   public static void main(String[] args) {
     System.out.println("Tigon Distributed Client");
+
+
     if (args.length > 0) {
       if ("--help".equals(args[0]) || "-h".equals(args[0])) {
         usage(false);
@@ -152,6 +157,15 @@ public class DistributedMain {
 
   public void startUp(PrintStream out) throws Exception {
     registerShutDownHook();
+    Properties properties = new Properties();
+    try {
+      InputStream in = getClass().getResourceAsStream("/build.properties");
+      properties.load();
+      in.close();
+    } catch (IOException ex) {
+      LOG.error("Failed to Properties", ex);
+    }
+
     flowOperations.startAndWait();
     List<String> commandList = Lists.newArrayList();
     for (CLICommands cliCommand : CLICommands.values()) {
@@ -214,7 +228,7 @@ public class DistributedMain {
         } else if (cmd.equals(CLICommands.SERVICEINFO)) {
           out.println(StringUtils.join(flowOperations.getServices(args[1]), "\n"));
         } else if (cmd.equals(CLICommands.VERSION)) {
-          out.println(Constants.VERSION);
+          out.println(properties.getProperty("project.info.version"));
         } else if (cmd.equals(CLICommands.HELP)) {
           try {
             out.println(CLICommands.valueOf(args[1].toUpperCase()).printHelp());
