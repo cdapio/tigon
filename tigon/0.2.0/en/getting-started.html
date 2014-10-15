@@ -1,0 +1,267 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-55081520-4']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <title>Getting Started with Tigon &mdash; Tigon 0.2.0 Documentation</title>
+    
+    <link rel="stylesheet" href="_static/tigon.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="Tigon 0.2.0 Documentation" href="index.html" />
+    <link rel="next" title="Tigon Concepts and Architecture" href="concepts.html" />
+    <link rel="prev" title="Introduction to Tigon" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">Index</a></li>
+        <li class="right" >
+          <a href="concepts.html" title="Tigon Concepts and Architecture"
+             accesskey="N">Next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Introduction to Tigon"
+             accesskey="P">Previous</a> |</li>
+        <li><a href="table-of-contents.html">Tigon 0.2.0 Documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="getting-started-with-tigon">
+<h1>Getting Started with Tigon<a class="headerlink" href="#getting-started-with-tigon" title="Permalink to this headline">¶</a></h1>
+<p>We recommend you follow these steps to get started with Tigon:</p>
+<ol class="arabic simple">
+<li>Check that you have the <a class="reference internal" href="#prerequisites">prerequisites</a> and install if necessary.</li>
+<li><a class="reference internal" href="#download">Download</a> the pre-compiled sources and related files.</li>
+<li><a class="reference internal" href="#configure">Configure</a> your system, if necessary.</li>
+<li>Run the <a class="reference internal" href="#examples">examples</a> to test your installation and learn about Tigon.</li>
+</ol>
+<div class="section" id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Permalink to this headline">¶</a></h2>
+<p>Tigon is supported on *NIX systems such as Linux and Macintosh OS X.
+It is not supported on Microsoft Windows.</p>
+<p>To install and use Tigon and its included examples, there are a few prerequisites:</p>
+<ol class="arabic simple">
+<li>JDK 6 or JDK 7 (required to run Tigon; note that $JAVA_HOME should be set)</li>
+<li>GCC</li>
+<li>G++</li>
+<li>Apache Maven 3.0+ (required to build the example applications)</li>
+</ol>
+<p><strong>Note:</strong> To run the TigonSQL Stream Engine outside of Tigon, <tt class="docutils literal"><span class="pre">libz</span></tt>, <tt class="docutils literal"><span class="pre">Perl</span> <span class="pre">5.x</span></tt>, and <tt class="docutils literal"><span class="pre">Python</span> <span class="pre">3.x</span></tt>
+are required.</p>
+</div>
+<div class="section" id="download">
+<h2>Download<a class="headerlink" href="#download" title="Permalink to this headline">¶</a></h2>
+<p>Pre-compiled sources and related files can be downloaded in a zip file:
+<a class="reference external" href="http://repository.cask.co/downloads/co/cask/tigon/tigon-developer-release/0.2.0/tigon-developer-release-0.2.0.zip">tigon-developer-release-0.2.0.zip.</a></p>
+</div>
+<div class="section" id="install">
+<h2>Install<a class="headerlink" href="#install" title="Permalink to this headline">¶</a></h2>
+<p>Once the download has completed, unzip the file to a suitable location.</p>
+</div>
+<div class="section" id="creating-an-application">
+<h2>Creating an Application<a class="headerlink" href="#creating-an-application" title="Permalink to this headline">¶</a></h2>
+<p>The best way to start developing a Tigon application is by using the Maven archetype:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="gp">$</span> mvn archetype:generate <span class="se">\</span>
+<span class="go">  -DarchetypeGroupId=co.cask.tigon  \</span>
+<span class="go">  -DarchetypeArtifactId=tigon-app-archetype</span>
+<span class="go">  -DarchetypeVersion=0.2.0</span>
+</pre></div>
+</div>
+<p>This creates a Maven project with all required dependencies, Maven plugins, and a simple
+application template for the development of your application. You can import this Maven
+project into your preferred IDE—such as Eclipse or IntelliJ—and start developing your
+first Tigon application.</p>
+</div>
+<div class="section" id="building-tigon-from-source">
+<h2>Building Tigon from Source<a class="headerlink" href="#building-tigon-from-source" title="Permalink to this headline">¶</a></h2>
+<p>You can also build Tigon directly from the latest source code:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="go">git clone https://github.com/caskdata/tigon.git</span>
+<span class="go">cd tigon</span>
+<span class="go">mvn clean package -DskipTests -Pdist</span>
+</pre></div>
+</div>
+<p>After the build completes, you will have a distribution of Tigon under the
+<cite>tigon-distribution/target/</cite> directory.</p>
+<p>Take the <cite>tigon-sdk-&lt;version&gt;.zip</cite> file and unzip it into a suitable location.</p>
+<div class="section" id="is-it-building">
+<h3>Is It Building?<a class="headerlink" href="#is-it-building" title="Permalink to this headline">¶</a></h3>
+<p>These links allow you to check the status of the automated builds of the source code:</p>
+<ul class="simple">
+<li><a class="reference external" href="https://builds.cask.co/browse/TIG">Bamboo Build</a></li>
+<li><a class="reference external" href="https://github.com/caskdata/tigon/releases/latest">GitHub Version</a></li>
+</ul>
+</div>
+</div>
+<div class="section" id="configuration">
+<span id="configure"></span><h2>Configuration<a class="headerlink" href="#configuration" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="macintosh-os-x">
+<h3>Macintosh OS X<a class="headerlink" href="#macintosh-os-x" title="Permalink to this headline">¶</a></h3>
+<p>TigonSQL will not run with the default shared memory settings of the Macintosh, as
+OS X does not provide sufficient shared memory regions by default.
+To run TigonSQL, you&#8217;ll need to revise these settings by executing these commands:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="go">sudo sysctl -w kern.sysv.shmall=102400</span>
+
+<span class="go">sudo sysctl -w kern.sysv.shmseg=100</span>
+
+<span class="go">sudo sysctl -w kern.sysv.shmmax=419430400</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="problems-with-the-downloaded-package">
+<h3>Problems with the Downloaded Package?<a class="headerlink" href="#problems-with-the-downloaded-package" title="Permalink to this headline">¶</a></h3>
+<p>If the downloaded package doesn&#8217;t work, try to build a tarball for your system
+as described above.</p>
+<p>If you face problems using TigonSQL, you can build the TigonSQL Streaming library from the GitHub repo source:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="go">mvn clean install -DskipTests -P sql-lib,dist</span>
+</pre></div>
+</div>
+<p>The TigonSQL jar will be installed locally and will be used by maven to create Tigon
+applications when they are created on the same machine.</p>
+</div>
+</div>
+<div class="section" id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Permalink to this headline">¶</a></h2>
+<p>Examples of using Tigon are described in the <a class="reference external" href="examples/index.html">Tigon Examples Guide:</a></p>
+<ul>
+<li><p class="first"><a class="reference external" href="examples/hello-world.html">Hello World Example</a></p>
+<p>An application that emits and counts &#8220;Hello World&#8221; messages.</p>
+</li>
+<li><p class="first"><a class="reference external" href="examples/twitter-analytics.html">Twitter Analytics Example</a></p>
+<p>An application that collects Tweets and logs the top 10 hashtags used in
+the last minute.</p>
+</li>
+<li><p class="first"><a class="reference external" href="examples/sql-join-flow.html">SQL Join Flow Example</a></p>
+<p>An application that demonstrates the capabilities of the TigonSQL
+library. It performs an inner-join of two data streams and logs the
+result of the SQL command.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="where-to-go-next">
+<h2>Where to Go Next<a class="headerlink" href="#where-to-go-next" title="Permalink to this headline">¶</a></h2>
+<p>Now that you&#8217;ve gotten started with Tigon, take a look at:</p>
+<ul class="simple">
+<li><a class="reference external" href="concepts.html">Concepts and Architecture</a>, which covers the basic design behind Tigon.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><!--
+  Copyright © 2014 Cask Data, Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License"); you may not
+  use this file except in compliance with the License. You may obtain a copy of
+  the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+  License for the specific language governing permissions and limitations under
+  the License.
+-->
+
+<h3><a href="table-of-contents.html">Table of Contents</a></h3>
+<nav>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#download">Download</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#install">Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#creating-an-application">Creating an Application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#building-tigon-from-source">Building Tigon from Source</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#is-it-building">Is It Building?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#macintosh-os-x">Macintosh OS X</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#problems-with-the-downloaded-package">Problems with the Downloaded Package?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#where-to-go-next">Where to Go Next</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">Concepts and Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples and Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="apis/index.html">APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="admin.html">Administration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="licenses.html">Licenses and Copyrights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+</ul>
+
+</nav>
+  <h4>Previous Topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="Previous Chapter">Introduction to Tigon</a></p>
+  <h4>Next Topic</h4>
+  <p class="topless"><a href="concepts.html"
+                        title="Next Chapter">Tigon Concepts and Architecture</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick Search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2014 Cask Data, Inc.
+    </div>
+  </body>
+</html>
