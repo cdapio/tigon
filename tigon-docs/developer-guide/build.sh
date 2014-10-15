@@ -73,6 +73,22 @@ WEB="web"
 GOOGLE_ANALYTICS_GITHUB="UA-55081520-4"
 GITHUB="github"
 
+REDIRECT_EN_HTML=`cat <<EOF
+<!DOCTYPE HTML>
+<html lang="en-US">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="refresh" content="0;url=en/index.html">
+        <script type="text/javascript">
+            window.location.href = "en/index.html"
+        </script>
+        <title></title>
+    </head>
+    <body>
+    </body>
+</html>
+EOF`
+
 function usage() {
   cd $PROJECT_PATH
   PROJECT_PATH=`pwd`
@@ -148,7 +164,6 @@ function make_zip_html() {
 function make_zip() {
 # This creates a zip that unpacks to the same name
   version
-#   ZIP_DIR_NAME="$PROJECT-docs-$PROJECT_VERSION-$1"
   if [ "x$1" == "x" ]; then
     ZIP_DIR_NAME="$PROJECT-docs-$PROJECT_VERSION"
   else
@@ -166,13 +181,10 @@ function make_zip_localized() {
   cd $SCRIPT_PATH/$BUILD
   mkdir $PROJECT_VERSION
   mv $HTML $PROJECT_VERSION/en
+  # Add a redirect index.html file
+  echo "$REDIRECT_EN_HTML" > $PROJECT_VERSION/index.html
   zip -r $ZIP_DIR_NAME.zip $PROJECT_VERSION/*
 }
-
-function make_zip_web() {
-  make_zip_localized $WEB
-}
-
 
 function build() {
   build_docs
@@ -183,7 +195,7 @@ function build() {
 
 function check_includes() {
   if hash pandoc 2>/dev/null; then
-    echo "pandoc is installed; checking the example README includes."
+    echo "Confirmed that pandoc is installed; checking the example README includes."
     # Build includes
     BUILD_INCLUDES_DIR=$SCRIPT_PATH/$BUILD/$INCLUDES
     rm -rf $BUILD_INCLUDES_DIR
@@ -213,7 +225,7 @@ function test_include() {
 
 function build_includes() {
   if hash pandoc 2>/dev/null; then
-    echo "pandoc is installed; rebuilding the example README includes."
+    echo "Confirmed that pandoc is installed; rebuilding the example README includes."
     SOURCE_INCLUDES_DIR=$SCRIPT_PATH/$SOURCE/$EXAMPLES
     rm -rf $SOURCE_INCLUDES_DIR
     mkdir $SOURCE_INCLUDES_DIR
@@ -238,8 +250,6 @@ function build_quick() {
 }
 
 function build_web() {
-# This is used to stage files
-# desired path is 2.5.0-SNAPSHOT/en/*
   build_docs_google $GOOGLE_ANALYTICS_WEB
   build_javadocs
   copy_javadocs
@@ -250,7 +260,7 @@ function build_github() {
   build_docs_google $GOOGLE_ANALYTICS_GITHUB
   build_javadocs
   copy_javadocs
-  make_zip $GITHUB
+  make_zip_localized $GITHUB
 }
 
 function build_standalone() {
@@ -317,6 +327,5 @@ case "$1" in
   version )            print_version; exit 1;;
   test )               test; exit 1;;
   zip )                make_zip; exit 1;;
-  zip-web )            make_zip_web; exit 1;;
   * )                  usage; exit 1;;
 esac
