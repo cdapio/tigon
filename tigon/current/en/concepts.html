@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-55081520-4']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <title>Tigon Concepts and Architecture &mdash; Tigon 0.2.0 Documentation</title>
+    
+    <link rel="stylesheet" href="_static/tigon.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="Tigon 0.2.0 Documentation" href="index.html" />
+    <link rel="next" title="Tigon Developer Guide" href="developer.html" />
+    <link rel="prev" title="Getting Started with Tigon" href="getting-started.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">Index</a></li>
+        <li class="right" >
+          <a href="developer.html" title="Tigon Developer Guide"
+             accesskey="N">Next</a> |</li>
+        <li class="right" >
+          <a href="getting-started.html" title="Getting Started with Tigon"
+             accesskey="P">Previous</a> |</li>
+        <li><a href="table-of-contents.html">Tigon 0.2.0 Documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tigon-concepts-and-architecture">
+<h1>Tigon Concepts and Architecture<a class="headerlink" href="#tigon-concepts-and-architecture" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="tigon-architecture">
+<h2>Tigon Architecture<a class="headerlink" href="#tigon-architecture" title="Permalink to this headline">¶</a></h2>
+<p>Tigon is a real-time, low-latency, high-throughput stream processing framework built on
+top of Apache Hadoop, YARN and HBase.</p>
+<p>Applications built using the Tigon platform are referred to as Flows. Each Flow contains one or
+more Flowlets which can be connected together and be visualized as a Directed Acyclic
+Graph:</p>
+<a class="reference internal image-reference" href="_images/tigon-architecture-01.png"><img alt="_images/tigon-architecture-01.png" src="_images/tigon-architecture-01.png" style="width: 600px;" /></a>
+<p>The data flow between Flowlets is implemented through Queues. These flows can be run in
+either in Standalone Mode (for example, on a laptop) or in a Distributed Mode (in a Hadoop
+cluster).</p>
+<p>In Standalone Mode, the Flowlets are implemented using threads, and Queues are implemented
+using in-memory data structures.</p>
+<p>In Distributed Mode, each Flowlet is a YARN container, and Queues are implemented using
+HBase Tables. An application can, if required, persist data to HBase.
+Since multiple Flowlets can potentially be accessing the same Tables, it&#8217;s advised that an
+application use Cask Tephra to write to the HBase Tables transactionally. (Details of this
+are covered in our Developer Guide section on the <a class="reference external" href="developer.html#flow-transaction-system">&#8220;Flow Transaction System&#8221;.</a>)</p>
+</div>
+<div class="section" id="tigon-stack">
+<h2>Tigon Stack<a class="headerlink" href="#tigon-stack" title="Permalink to this headline">¶</a></h2>
+<a class="reference internal image-reference" href="_images/tigon-stack.png"><img alt="_images/tigon-stack.png" src="_images/tigon-stack.png" style="width: 300px;" /></a>
+<p>TigonSQL is a library built for Tigon. It contains a in-memory Stream processing engine
+that can perform filtering, aggregation, and joins of data streams. It is built to be a
+special flowlet (<tt class="docutils literal"><span class="pre">AbstractInputFlowlet</span></tt>) which can be used as a part of your Flow.</p>
+<p>Ideally, to use TigonSQL’s <tt class="docutils literal"><span class="pre">AbstractInputFlowlet</span></tt> in your application, it should be the
+first flowlet in your Flow. It will be used to ingest high-throughputs of multiple data
+streams and process them in-memory, and the outputs will then be persisted in Queues
+(HBase Tables, in Distributed Mode) for subsequent flowlets to process.</p>
+<p>Currently the number of instances of an <tt class="docutils literal"><span class="pre">AbstractInputFlowlet</span></tt> is limited to one. Other
+flowlets don’t have this constraint. <tt class="docutils literal"><span class="pre">AbstractInputFlowlet</span></tt> exposes HTTP and TCP
+endpoints for the user to ingest data. Details on how to use these endpoints is covered in
+our <a class="reference external" href="developer.html#ingesting">Developer Guide.</a></p>
+</div>
+<div class="section" id="where-to-go-next">
+<h2>Where to Go Next<a class="headerlink" href="#where-to-go-next" title="Permalink to this headline">¶</a></h2>
+<p>Now that you&#8217;re familiar with the basic concept and architecture of Tigon, take a look at:</p>
+<ul class="simple">
+<li><a class="reference external" href="developer.html">Developer</a>, which covers writing applications using Tigon.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><!--
+  Copyright © 2014 Cask Data, Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License"); you may not
+  use this file except in compliance with the License. You may obtain a copy of
+  the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+  License for the specific language governing permissions and limitations under
+  the License.
+-->
+
+<h3><a href="table-of-contents.html">Table of Contents</a></h3>
+<nav>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Concepts and Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#tigon-architecture">Tigon Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#tigon-stack">Tigon Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#where-to-go-next">Where to Go Next</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developer.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples and Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="apis/index.html">APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="admin.html">Administration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="licenses.html">Licenses and Copyrights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+</ul>
+
+</nav>
+  <h4>Previous Topic</h4>
+  <p class="topless"><a href="getting-started.html"
+                        title="Previous Chapter">Getting Started with Tigon</a></p>
+  <h4>Next Topic</h4>
+  <p class="topless"><a href="developer.html"
+                        title="Next Chapter">Tigon Developer Guide</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick Search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2014 Cask Data, Inc.
+    </div>
+  </body>
+</html>

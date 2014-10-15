@@ -1,0 +1,287 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-55081520-4']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <title>Tigon Documentation &mdash; Tigon 0.2.0 Documentation</title>
+    
+    <link rel="stylesheet" href="_static/tigon.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="Tigon 0.2.0 Documentation" href="index.html" />
+    <link rel="next" title="Introduction to Tigon" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">Index</a></li>
+        <li class="right" >
+          <a href="index.html" title="Introduction to Tigon"
+             accesskey="N">Next</a> |</li>
+        <li><a href="#">Tigon 0.2.0 Documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tigon-documentation">
+<h1>Tigon Documentation<a class="headerlink" href="#tigon-documentation" title="Permalink to this headline">¶</a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="index.html#where-to-go-next">Where to Go Next</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#download">Download</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#install">Install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#creating-an-application">Creating an Application</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#building-tigon-from-source">Building Tigon from Source</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#is-it-building">Is It Building?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#configuration">Configuration</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#macintosh-os-x">Macintosh OS X</a></li>
+<li class="toctree-l3"><a class="reference internal" href="getting-started.html#problems-with-the-downloaded-package">Problems with the Downloaded Package?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started.html#where-to-go-next">Where to Go Next</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">Concepts and Architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#tigon-architecture">Tigon Architecture</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#tigon-stack">Tigon Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="concepts.html#where-to-go-next">Where to Go Next</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="developer.html">Developer Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="developer.html#tigon-flows">Tigon Flows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developer.html#tigon-flowlets">Tigon Flowlets</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="developer.html#input-context">Input Context</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer.html#type-projection">Type Projection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer.html#flowlet-method-and-tick-annotation">Flowlet Method and &#64;Tick Annotation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer.html#connection">Connection</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer.html#batch-execution">Batch Execution</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer.html#flowlets-and-instances">Flowlets and Instances</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer.html#partitioning-strategies">Partitioning Strategies</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="developer.html#queues">Queues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="developer.html#flow-transaction-system">Flow Transaction System</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="developer.html#the-need-for-transactions">The Need for Transactions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer.html#occ-optimistic-concurrency-control">OCC: Optimistic Concurrency Control</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer.html#writing-to-hbase-transactionally-from-a-flowlet">Writing to HBase Transactionally From a Flowlet</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="developer.html#using-tigonsql">Using TigonSQL</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="developer.html#ingesting-data-into-an-abstractinputflowlet">Ingesting Data into an AbstractInputFlowlet</a></li>
+<li class="toctree-l3"><a class="reference internal" href="developer.html#tigonsql-the-query-language">TigonSQL, The Query Language</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="developer.html#best-practices-for-developing-applications">Best Practices for Developing Applications</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="developer.html#initializing-instance-fields">Initializing Instance Fields</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="developer.html#where-to-go-next">Where to Go Next</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples and Applications</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/hello-world.html">Hello World</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/hello-world.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/hello-world.html#building-the-jar">Building the JAR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/hello-world.html#license-and-trademarks">License and Trademarks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/twitter-analytics.html">Twitter Analytics</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/twitter-analytics.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/twitter-analytics.html#twitter-configuration">Twitter Configuration</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/twitter-analytics.html#flow-runtime-arguments">Flow Runtime Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/twitter-analytics.html#installation">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/twitter-analytics.html#license-and-trademarks">License and Trademarks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/sql-join-flow.html">SQL Join Flow</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/sql-join-flow.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/sql-join-flow.html#flow-runtime-arguments">Flow Runtime Arguments</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/sql-join-flow.html#installation">Installation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/sql-join-flow.html#license-and-trademarks">License and Trademarks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/tigon-sql.html">TigonSQL</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="examples/tigon-sql.html#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="examples/tigon-sql.html#license-and-trademarks">License and Trademarks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="examples/index.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/index.html#reference-applications">Reference Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/index.html#where-to-go-next">Where to Go Next</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="apis/index.html">APIs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="apis/index.html#tigon-java-api">Tigon Java API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="apis/index.html#tigon-sql-advanced">Tigon SQL <em>(Advanced)</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="apis/index.html#where-to-go-next">Where to Go Next</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Tools</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#tigon-command-line-interface">Tigon Command-Line Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="tools.html#introduction">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tools.html#available-commands">Available Commands</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="tools.html#where-to-go-next">Where to Go Next</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="admin.html">Administration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="admin.html#standalone-mode">Standalone Mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="admin.html#distributed-mode">Distributed Mode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="admin.html#where-to-go-next">Where to Go Next</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced Features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="advanced.html#tigonsql-architecture">TigonSQL Architecture</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#architecture-of-a-high-performance-data-stream-management-system">Architecture of a High-performance Data Stream Management System</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#stream-query-language">Stream Query Language</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#two-level-query-architecture">Two-Level Query Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#system-architecture">System Architecture</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#query-optimization">Query Optimization</a></li>
+<li class="toctree-l3"><a class="reference internal" href="advanced.html#doc-summary">Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="advanced.html#where-to-go-next">Where to Go Next</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="licenses.html">Licenses and Copyrights</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="licenses.html#licensing-and-open-source">Licensing and Open Source</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="licenses.html#what-type-of-license-is-tigon-open-sourced-under">What type of license is Tigon open sourced under?</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="licenses.html#copyrights">Copyrights</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="release-notes.html">Release Notes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="release-notes.html#release-0-2-0">Release 0.2.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="release-notes.html#features">Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="release-notes.html#bug-fixes">Bug Fixes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="release-notes.html#known-issues">Known Issues</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="release-notes.html#release-0-1-0">Release 0.1.0</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="release-notes.html#id1">Features</a></li>
+<li class="toctree-l3"><a class="reference internal" href="release-notes.html#known-issues-010">Known Issues</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#general">General</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#running-tigon">Running Tigon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#tigon-support">Tigon Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="faq.html#contributing-to-tigon">Contributing to Tigon</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><!--
+  Copyright © 2014 Cask Data, Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License"); you may not
+  use this file except in compliance with the License. You may obtain a copy of
+  the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+  License for the specific language governing permissions and limitations under
+  the License.
+-->
+
+<h3><a href="#">Table of Contents</a></h3>
+<nav>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">Concepts and Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples and Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="apis/index.html">APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="admin.html">Administration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="licenses.html">Licenses and Copyrights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+</ul>
+
+</nav>
+  <h4>Next Topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="Next Chapter">Introduction to Tigon</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick Search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2014 Cask Data, Inc.
+    </div>
+  </body>
+</html>

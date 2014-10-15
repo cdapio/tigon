@@ -1,0 +1,196 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-55081520-4']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <title>Introduction to Tigon &mdash; Tigon 0.2.0 Documentation</title>
+    
+    <link rel="stylesheet" href="_static/tigon.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="Tigon 0.2.0 Documentation" href="#" />
+    <link rel="next" title="Getting Started with Tigon" href="getting-started.html" />
+    <link rel="prev" title="Tigon Documentation" href="table-of-contents.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">Index</a></li>
+        <li class="right" >
+          <a href="getting-started.html" title="Getting Started with Tigon"
+             accesskey="N">Next</a> |</li>
+        <li class="right" >
+          <a href="table-of-contents.html" title="Tigon Documentation"
+             accesskey="P">Previous</a> |</li>
+        <li><a href="table-of-contents.html">Tigon 0.2.0 Documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="introduction-to-tigon">
+<h1>Introduction to Tigon<a class="headerlink" href="#introduction-to-tigon" title="Permalink to this headline">¶</a></h1>
+<p><strong>Tigon</strong> is an open-source, real-time, low-latency, high-throughput stream processing framework.</p>
+<p>Tigon is a collaborative effort between Cask Data, Inc. and AT&amp;T that combines
+technologies from these companies to create a disruptive new framework to handle a diverse
+set of real-time streaming requirements.</p>
+<p>Cask Data has built technology that provides scalable, reliable, and persistent high-throughput
+event processing with high-level Java APIs using Apache™ Hadoop® and HBase.</p>
+<p>AT&amp;T has built a streaming engine that provides massively scalable, flexible, and in-memory
+low-latency stream processing with a SQL-like query language.</p>
+<p>Together, they have combined to create <strong>Tigon</strong>.</p>
+<p>There are many applications that can take advantage of its features:</p>
+<ul class="simple">
+<li>Ability to handle <strong>extremely large data flows</strong>;</li>
+<li><strong>Exactly-once event processing</strong> using an app-level Java API with consistency, reliability, and persistence;</li>
+<li><strong>Streaming database using a SQL-like language</strong> to filter, group and join data streams in-memory;</li>
+<li>Runs collections of queries using <strong>pipelined query plans</strong>;</li>
+<li>Able to transparently handle <strong>complex record routing</strong> in large parallelized implementations;</li>
+<li><strong>Runs and scales</strong> as a native Apache Hadoop YARN Application;</li>
+<li>Reads, writes, and <strong>tightly integrates with HDFS and HBase</strong>;</li>
+<li>Supports a significant amount of <strong>parallelization</strong>;</li>
+<li><strong>Fault-tolerance and horizontal scalability</strong> without burdening the developer;</li>
+<li><strong>Enterprise features</strong> with logging, and monitoring tools;</li>
+<li><strong>Simpler programming model</strong>, tools and UI; and</li>
+<li><strong>Open-source software</strong> and development process.</li>
+</ul>
+<div class="section" id="where-to-go-next">
+<h2>Where to Go Next<a class="headerlink" href="#where-to-go-next" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="getting-started.html"><strong>Getting Started with Tigon:</strong></a> covers <strong>prerequisites, download instructions, installation, building and configuration.</strong></li>
+</ul>
+<ul class="simple">
+<li><a class="reference external" href="concepts.html"><strong>Concepts and Architecture:</strong></a> explains the <strong>overall architecture and technology stack</strong> behind Tigon.</li>
+</ul>
+<ul class="simple">
+<li><a class="reference external" href="developer.html"><strong>Developer Guide:</strong></a> the components of Tigon: <strong>Flows; Flowlets; Queues;</strong> and the <strong>Flow Transaction System</strong> along with
+suggested <strong>best practices for application development.</strong></li>
+</ul>
+<ul class="simple">
+<li><a class="reference external" href="examples/index.html"><strong>Examples and Applications:</strong></a> <strong>Tigon examples</strong> are included in the source distribution in the <tt class="docutils literal"><span class="pre">tigon-examples</span></tt> directory;
+<strong>reference applications</strong> are online in the <a class="reference external" href="https://github.com/caskdata/tigon-apps">tigon-apps repository</a>.</li>
+</ul>
+<ul class="simple">
+<li><a class="reference external" href="apis/index.html"><strong>APIs:</strong></a>  includes the <strong>Java</strong> and <strong>TigonSQL APIs</strong> of Tigon, including documentation
+for developers writing extensions to TigonSQL.</li>
+</ul>
+<ul class="simple">
+<li><a class="reference external" href="tools.html"><strong>Tools:</strong></a> describes the <strong>Tigon Command-Line Interface,</strong> which provides methods to interact with a running
+Tigon instance from within a shell, similar to an HBase shell or bash.</li>
+</ul>
+<ul class="simple">
+<li><a class="reference external" href="admin.html"><strong>Administration:</strong></a> explains the commands for <strong>starting and stopping Tigon,</strong> in both Standalone and Distributed modes.</li>
+</ul>
+<ul class="simple">
+<li><a class="reference external" href="advanced.html"><strong>Advanced Features:</strong></a> covers <strong>TigonSQL,</strong> the high-performance data stream management system inside Tigon. You can
+use Tigon and develop applications without reference to this section.</li>
+</ul>
+<ul class="simple">
+<li><strong>Remaining Sections:</strong> the final documentation sections cover the <a class="reference internal" href="licenses.html"><em>Licenses and Copyrights,</em></a> <a class="reference internal" href="release-notes.html"><em>Releases Notes,</em></a> and a <a class="reference internal" href="faq.html"><em>FAQ.</em></a></li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><!--
+  Copyright © 2014 Cask Data, Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License"); you may not
+  use this file except in compliance with the License. You may obtain a copy of
+  the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+  License for the specific language governing permissions and limitations under
+  the License.
+-->
+
+<h3><a href="table-of-contents.html">Table of Contents</a></h3>
+<nav>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="">Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#where-to-go-next">Where to Go Next</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">Concepts and Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples and Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="apis/index.html">APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="admin.html">Administration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="licenses.html">Licenses and Copyrights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+</ul>
+
+</nav>
+  <h4>Previous Topic</h4>
+  <p class="topless"><a href="table-of-contents.html"
+                        title="Previous Chapter">Tigon Documentation</a></p>
+  <h4>Next Topic</h4>
+  <p class="topless"><a href="getting-started.html"
+                        title="Next Chapter">Getting Started with Tigon</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick Search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2014 Cask Data, Inc.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-55081520-4']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <title>Hello World Example &mdash; Tigon 0.2.0 Documentation</title>
+    
+    <link rel="stylesheet" href="../_static/tigon.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="top" title="Tigon 0.2.0 Documentation" href="../index.html" />
+    <link rel="up" title="Tigon Examples and Reference Applications" href="index.html" />
+    <link rel="next" title="Twitter Analytics Example" href="twitter-analytics.html" />
+    <link rel="prev" title="Tigon Examples and Reference Applications" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../genindex.html" title="General Index"
+             accesskey="I">Index</a></li>
+        <li class="right" >
+          <a href="twitter-analytics.html" title="Twitter Analytics Example"
+             accesskey="N">Next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Tigon Examples and Reference Applications"
+             accesskey="P">Previous</a> |</li>
+        <li><a href="../table-of-contents.html">Tigon 0.2.0 Documentation</a> &raquo;</li>
+          <li><a href="index.html" accesskey="U">Tigon Examples and Reference Applications</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="hello-world-example">
+<h1>Hello World Example<a class="headerlink" href="#hello-world-example" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="overview">
+<h2>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<p>An application that emits and counts &#8220;Hello World&#8221; messages.</p>
+</div>
+<div class="section" id="building-the-jar">
+<h2>Building the JAR<a class="headerlink" href="#building-the-jar" title="Permalink to this headline">¶</a></h2>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">mvn</span> <span class="n">clean</span> <span class="kn">package</span>
+</pre></div>
+</div>
+<p>To start the Flow in the Standalone Runtime of Tigon (substituting for
+<em>version</em>):</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">$</span> <span class="o">./</span><span class="n">run_standalone</span><span class="o">.</span><span class="na">sh</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">HellWorld</span><span class="o">-&lt;</span><span class="n">version</span><span class="o">&gt;.</span><span class="na">jar</span> <span class="n">co</span><span class="o">.</span><span class="na">cask</span><span class="o">.</span><span class="na">tigon</span><span class="o">.</span><span class="na">helloworld</span><span class="o">.</span><span class="na">HelloWorldFlow</span>
+</pre></div>
+</div>
+<p>To start the Flow in the Distributed Runtime of Tigon (substituting for
+<em>version</em>):</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">$</span> <span class="o">./</span><span class="n">run_distributed</span><span class="o">.</span><span class="na">sh</span> <span class="o">&lt;</span><span class="n">ZookeeperQuorum</span><span class="o">&gt;</span> <span class="o">&lt;</span><span class="n">HDFSNamespace</span><span class="o">&gt;</span>
+<span class="o">&gt;</span> <span class="n">START</span> <span class="o">/</span><span class="n">path</span><span class="o">/</span><span class="n">to</span><span class="o">/</span><span class="n">HellWorld</span><span class="o">-&lt;</span><span class="n">version</span><span class="o">&gt;.</span><span class="na">jar</span> <span class="n">co</span><span class="o">.</span><span class="na">cask</span><span class="o">.</span><span class="na">tigon</span><span class="o">.</span><span class="na">helloworld</span><span class="o">.</span><span class="na">HelloWorldFlow</span>
+</pre></div>
+</div>
+<p>The HelloWorld Flow logs a &#8220;Hello World&#8221; message and a total count every
+second. If run in the Standalone Runtime, the logs appear on the
+console. In the Distributed Runtime, the <tt class="docutils literal"><span class="pre">showlogs</span></tt> CLI command can be
+used to view these logs.</p>
+</div>
+<div class="section" id="license-and-trademarks">
+<h2>License and Trademarks<a class="headerlink" href="#license-and-trademarks" title="Permalink to this headline">¶</a></h2>
+<p>Copyright © 2014 Cask Data, Inc.</p>
+<p>Licensed under the Apache License, Version 2.0 (the &#8220;License&#8221;); you may
+not use this file except in compliance with the License. You may obtain
+a copy of the License at</p>
+<p><a class="reference external" href="http://www.apache.org/licenses/LICENSE-2.0">http://www.apache.org/licenses/LICENSE-2.0</a></p>
+<p>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an &#8220;AS IS&#8221; BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><!--
+  Copyright © 2014 Cask Data, Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License"); you may not
+  use this file except in compliance with the License. You may obtain a copy of
+  the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+  License for the specific language governing permissions and limitations under
+  the License.
+-->
+
+<h3><a href="../table-of-contents.html">Table of Contents</a></h3>
+<nav>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../concepts.html">Concepts and Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../developer.html">Developer Guide</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">Examples and Applications</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="">Hello World</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">Overview</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#building-the-jar">Building the JAR</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#license-and-trademarks">License and Trademarks</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="twitter-analytics.html">Twitter Analytics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sql-join-flow.html">SQL Join Flow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tigon-sql.html">TigonSQL</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#reference-applications">Reference Applications</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#where-to-go-next">Where to Go Next</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../apis/index.html">APIs</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../tools.html">Tools</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../admin.html">Administration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../advanced.html">Advanced Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../licenses.html">Licenses and Copyrights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../faq.html">FAQ</a></li>
+</ul>
+
+</nav>
+  <h4>Previous Topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="Previous Chapter">Tigon Examples and Reference Applications</a></p>
+  <h4>Next Topic</h4>
+  <p class="topless"><a href="twitter-analytics.html"
+                        title="Next Chapter">Twitter Analytics Example</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick Search</h3>
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2014 Cask Data, Inc.
+    </div>
+  </body>
+</html>

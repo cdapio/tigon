@@ -1,0 +1,246 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-55081520-4']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+        var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+        ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+        var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+    </script>
+    <title>Tigon Tools &mdash; Tigon 0.2.0 Documentation</title>
+    
+    <link rel="stylesheet" href="_static/tigon.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.2.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  false
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
+    <link rel="top" title="Tigon 0.2.0 Documentation" href="index.html" />
+    <link rel="next" title="Tigon Administration" href="admin.html" />
+    <link rel="prev" title="Tigon APIs" href="apis/index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">Index</a></li>
+        <li class="right" >
+          <a href="admin.html" title="Tigon Administration"
+             accesskey="N">Next</a> |</li>
+        <li class="right" >
+          <a href="apis/index.html" title="Tigon APIs"
+             accesskey="P">Previous</a> |</li>
+        <li><a href="table-of-contents.html">Tigon 0.2.0 Documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="tigon-tools">
+<h1>Tigon Tools<a class="headerlink" href="#tigon-tools" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="tigon-command-line-interface">
+<h2>Tigon Command-Line Interface<a class="headerlink" href="#tigon-command-line-interface" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="introduction">
+<h3>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h3>
+<p>The Command-Line Interface (CLI) provides methods to interact with a running Tigon
+instance from within a shell, similar to HBase shell or <tt class="docutils literal"><span class="pre">bash</span></tt>. It is automatically
+started once you start Tigon in <a class="reference external" href="/admin#distributed-mode">Distributed Mode</a>.</p>
+<p>The executable should bring you into a shell, with this prompt:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="go">tigon &gt;</span>
+</pre></div>
+</div>
+<p>To list all of the available commands, enter <tt class="docutils literal"><span class="pre">help</span></tt>:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="go">tigon &gt; help</span>
+</pre></div>
+</div>
+<p>To list all Flows currently running in Tigon, use:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="go">tigon &gt; list</span>
+</pre></div>
+</div>
+<p>To stop the Flow prior to shutting down distributed mode, use:</p>
+<div class="highlight-console"><div class="highlight"><pre><span class="go">tigon &gt; delete &lt;flow-name&gt;</span>
+</pre></div>
+</div>
+<p>You can then exit the command-line interface either with <tt class="docutils literal"><span class="pre">quit</span></tt> or <tt class="docutils literal"><span class="pre">Control-C</span></tt>.</p>
+</div>
+<div class="section" id="available-commands">
+<h3>Available Commands<a class="headerlink" href="#available-commands" title="Permalink to this headline">¶</a></h3>
+<p>These are the available commands:</p>
+<table border="1" class="docutils">
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead valign="bottom">
+<tr class="row-odd"><th class="head">Command</th>
+<th class="head">Description</th>
+</tr>
+</thead>
+<tbody valign="top">
+<tr class="row-even"><td><strong>General</strong></td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">help</span> <span class="pre">&lt;command&gt;</span></tt></td>
+<td>Shows the usage for a given <em>command</em></td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">version</span></tt></td>
+<td>Prints the version of Tigon</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">status</span> <span class="pre">&lt;flow-name&gt;</span></tt></td>
+<td>Prints the status of the Flow <em>flow-name</em></td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">quit</span></tt></td>
+<td>Quits the shell</td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td><strong>Starting Elements</strong></td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">start</span> <span class="pre">&lt;path-to-jar&gt;</span> <span class="pre">&lt;flow-classname&gt;</span> <span class="pre">[</span> <span class="pre">--key1=v1</span> <span class="pre">--key2=v2</span> <span class="pre">]</span></tt></td>
+<td>Starts a Flow with Runtime Arguments</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">stop</span> <span class="pre">&lt;flow-name&gt;</span></tt></td>
+<td>Stops the Flow <em>flow-name</em></td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">delete</span> <span class="pre">&lt;flow-name&gt;</span></tt></td>
+<td>Stops and Deletes the Queues for the Flow <em>flow-name</em></td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">set</span> <span class="pre">&lt;flow-name&gt;</span> <span class="pre">&lt;flowlet-name&gt;</span> <span class="pre">&lt;instances&gt;</span></tt></td>
+<td>Set the number of instance of a Flowlet <em>flowlet-name</em> for the Flow <em>flow-name</em></td>
+</tr>
+<tr class="row-odd"><td>&nbsp;</td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-even"><td><strong>Listing Elements</strong></td>
+<td>&nbsp;</td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">list</span></tt></td>
+<td>Lists all Flows which are currently running</td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">serviceinfo</span> <span class="pre">&lt;flow-name&gt;</span></tt></td>
+<td>Prints all Services announced in the Flow <em>flow-name</em></td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">discover</span> <span class="pre">&lt;flow-name&gt;</span> <span class="pre">&lt;service-name&gt;</span></tt></td>
+<td>Discovers a service endpoint of a Service <em>service-name</em> for the Flow <em>flow-name</em></td>
+</tr>
+<tr class="row-even"><td><tt class="docutils literal"><span class="pre">flowletinfo</span> <span class="pre">&lt;flow-name&gt;</span></tt></td>
+<td>Prints Flowlet Names and corresponding Instances for the Flow <em>flow-name</em></td>
+</tr>
+<tr class="row-odd"><td><tt class="docutils literal"><span class="pre">showlogs</span> <span class="pre">&lt;flow-name&gt;</span></tt></td>
+<td>Shows live logs of the Flow <em>flow-name</em></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" id="where-to-go-next">
+<h2>Where to Go Next<a class="headerlink" href="#where-to-go-next" title="Permalink to this headline">¶</a></h2>
+<p>Now that you&#8217;re seen the command line tool for Tigon, take a look at:</p>
+<ul class="simple">
+<li><a class="reference external" href="admin.html">Admin</a>, which describes administrating a Tigon application.</li>
+</ul>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><!--
+  Copyright © 2014 Cask Data, Inc.
+
+  Licensed under the Apache License, Version 2.0 (the "License"); you may not
+  use this file except in compliance with the License. You may obtain a copy of
+  the License at
+
+  http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+  License for the specific language governing permissions and limitations under
+  the License.
+-->
+
+<h3><a href="table-of-contents.html">Table of Contents</a></h3>
+<nav>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="index.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started</a></li>
+<li class="toctree-l1"><a class="reference internal" href="concepts.html">Concepts and Architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="developer.html">Developer Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/index.html">Examples and Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="apis/index.html">APIs</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="">Tools</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#tigon-command-line-interface">Tigon Command-Line Interface</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introduction">Introduction</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#available-commands">Available Commands</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#where-to-go-next">Where to Go Next</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="admin.html">Administration</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced Features</a></li>
+<li class="toctree-l1"><a class="reference internal" href="licenses.html">Licenses and Copyrights</a></li>
+<li class="toctree-l1"><a class="reference internal" href="release-notes.html">Release Notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="faq.html">FAQ</a></li>
+</ul>
+
+</nav>
+  <h4>Previous Topic</h4>
+  <p class="topless"><a href="apis/index.html"
+                        title="Previous Chapter">Tigon APIs</a></p>
+  <h4>Next Topic</h4>
+  <p class="topless"><a href="admin.html"
+                        title="Next Chapter">Tigon Administration</a></p>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick Search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2014 Cask Data, Inc.
+    </div>
+  </body>
+</html>
