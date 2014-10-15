@@ -51,7 +51,6 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sun.security.util.Resources_es;
 
 import java.io.File;
 import java.io.IOException;
@@ -108,8 +107,6 @@ public class DistributedMain {
 
   public static void main(String[] args) {
     System.out.println("Tigon Distributed Client");
-
-
     if (args.length > 0) {
       if ("--help".equals(args[0]) || "-h".equals(args[0])) {
         usage(false);
@@ -160,7 +157,7 @@ public class DistributedMain {
     Properties properties = new Properties();
     try {
       InputStream in = getClass().getResourceAsStream("/build.properties");
-      properties.load();
+      properties.load(in);
       in.close();
     } catch (IOException ex) {
       LOG.error("Failed to Properties", ex);
