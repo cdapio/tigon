@@ -62,7 +62,7 @@ Where to Go Next
 .. _examples: examples/index.html
 
 - |examples|_ **Tigon examples** are included in the source distribution in the ``tigon-examples`` directory;
-  **example applications** are online in the `tigon-apps repository <https://github.com/caskdata/tigon-apps>`__.
+  **reference applications** are online in the `tigon-apps repository <https://github.com/caskdata/tigon-apps>`__.
 
 
 .. |apis| replace:: **APIs:**

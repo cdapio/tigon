@@ -3,7 +3,7 @@
    :copyright: Copyright © 2014 Cask Data, Inc.
 
 ============================================
-Tigon Examples and Applications
+Tigon Examples and Reference Applications
 ============================================
 
 .. toctree::
@@ -39,10 +39,10 @@ in the ``tigon-examples`` directory.
      :start-line: 5
      :end-before: Flow Runtime Arguments
 
-Applications
-============
+Reference Applications
+======================
 
-Applications built with Tigon are included in the 
+Reference applications built with Tigon are included in the 
 `tigon-apps repository <https://github.com/caskdata/tigon-apps>`__ at 
 `GitHub: <https://github.com/caskdata>`__
 
