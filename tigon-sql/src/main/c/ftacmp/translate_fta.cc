@@ -205,7 +205,7 @@ int main(int argc, char **argv){
 		"\t[-P] : link with PADS\n"
 		"\t[-h] : override host name.\n"
 		"\t[-c] : clean out Makefile and hfta_*.cc first.\n"
-		"\t[-R] : path to root of STREAMING\n"
+		"\t[-R] : path to root of tigon\n"
 ;
 
 //		parameters gathered from command line processing

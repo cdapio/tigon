@@ -662,7 +662,7 @@ public:
 	std::string to_string(){
 		std::string retval;
 
-		if(machine != "")
+		if(machine != "" && !iface_is_query)
 			retval += "'"+machine+"'.";
 		if(interface != ""){
 			if(iface_is_query){
