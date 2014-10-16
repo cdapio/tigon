@@ -36,6 +36,7 @@ import co.cask.tigon.metrics.NoOpMetricsCollectionService;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.io.Closeables;
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.Service;
 import com.google.inject.AbstractModule;
@@ -155,12 +156,13 @@ public class DistributedMain {
   public void startUp(PrintStream out) throws Exception {
     registerShutDownHook();
     Properties properties = new Properties();
+    InputStream in = DistributedMain.class.getResourceAsStream("/build.properties");
     try {
-      InputStream in = getClass().getResourceAsStream("/build.properties");
       properties.load(in);
-      in.close();
     } catch (IOException ex) {
-      LOG.error("Failed to Properties", ex);
+      LOG.error("Failed to load Properties", ex);
+    } finally {
+      Closeables.closeQuietly(in);
     }
 
     flowOperations.startAndWait();
