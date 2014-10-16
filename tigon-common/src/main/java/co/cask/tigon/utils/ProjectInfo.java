@@ -150,6 +150,13 @@ public final class ProjectInfo {
       return buildTime;
     }
 
+    public String getBuildVersion() {
+      if (isSnapshot()) {
+        return String.format("%d.%d.%d-SNAPSHOT", major, minor, fix);
+      }
+      return String.format("%d.%d.%d", major, minor, fix);
+    }
+
     @Override
     public String toString() {
       if (isSnapshot()) {
