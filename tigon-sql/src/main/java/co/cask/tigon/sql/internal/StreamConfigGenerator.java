@@ -82,12 +82,21 @@ public class StreamConfigGenerator {
   /**
    * This function generates the content for *.ifq file. It generates one interface for each schema.
    * The interface name is auto-generated and is the same as the schema name.
+   * The ifq file data is of the format:
+   *
+   * [interface set name 1] : [predicate 1] ;
+   * [interface set name n-1] : [predicate n-1] ;
+   * [interface set name n] : [predicate n]
+   *
+   * Note : The last line must not end with a semi-colon
+   *
    * @param schemaMap Map containing input schemas
-   * @return
+   * @return String that contains the file content for *.ifq file
    */
   private String createLocalHostIfq(Map<String, Map.Entry<InputStreamFormat, StreamSchema>> schemaMap) {
     StringBuilder stringBuilder = new StringBuilder();
     for (String streamName : schemaMap.keySet()) {
+      // For now interface set names are same as the Schema names (one-to-one mapping)
       stringBuilder.append(streamName).append(" : ").append("Contains[Filename, ").append(streamName).append("];")
         .append(Constants.NEWLINE);
     }
