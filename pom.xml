@@ -662,6 +662,13 @@
         <scope>test</scope>
       </dependency>
       <dependency>
+        <groupId>co.cask.tephra</groupId>
+        <artifactId>tephra-core</artifactId>
+        <version>${tephra.version}</version>
+        <type>test-jar</type>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-minicluster</artifactId>
         <version>${hadoop.version}</version>
@@ -742,13 +749,6 @@
         <groupId>org.apache.hbase</groupId>
         <artifactId>hbase-testing-util</artifactId>
         <version>${hbase96.version}</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>co.cask.tephra</groupId>
-        <artifactId>tephra-core</artifactId>
-        <version>${tephra.version}</version>
-        <type>test-jar</type>
         <scope>test</scope>
       </dependency>
     </dependencies>
