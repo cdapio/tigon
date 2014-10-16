@@ -40,7 +40,6 @@ public class StreamConfigGenerator {
     "<Filename value='%s'/>" + Constants.NEWLINE +
     "<Gshub value='1'/>" + Constants.NEWLINE +
     "<Verbose value='TRUE'/>" + Constants.NEWLINE +
-    "<SubStream value='%ss'/>" + Constants.NEWLINE +
     "</Interface>" + Constants.NEWLINE;
   private final InputFlowletSpecification spec;
 
@@ -74,16 +73,22 @@ public class StreamConfigGenerator {
     stringBuilder.append("<Resources>").append(Constants.NEWLINE).append("<Host Name='").append(HOSTNAME).append("'>")
       .append(Constants.NEWLINE);
     for (String name : inputNames) {
-      stringBuilder.append(String.format(IFRESXML_CONTENT, name, name, name));
+      stringBuilder.append(String.format(IFRESXML_CONTENT, name, name));
     }
     stringBuilder.append("</Host>").append(Constants.NEWLINE).append("</Resources>").append(Constants.NEWLINE);
     return stringBuilder.toString();
   }
 
+  /**
+   * This function generates the content for *.ifq file. It generates one interface for each schema.
+   * The interface name is auto-generated and is the same as the schema name.
+   * @param schemaMap Map containing input schemas
+   * @return
+   */
   private String createLocalHostIfq(Map<String, Map.Entry<InputStreamFormat, StreamSchema>> schemaMap) {
     StringBuilder stringBuilder = new StringBuilder();
     for (String streamName : schemaMap.keySet()) {
-      stringBuilder.append(streamName).append("s : ").append("Contains[SubStream, ").append(streamName).append("s];")
+      stringBuilder.append(streamName).append(" : ").append("Contains[Filename, ").append(streamName).append("];")
         .append(Constants.NEWLINE);
     }
     return stringBuilder.toString().substring(0, stringBuilder.length() - 2);
@@ -127,9 +132,6 @@ public class StreamConfigGenerator {
     //have corresponding process methods for better performance.
     String header = String.format("DEFINE { query_name '%s'; visibility 'external'; }", name);
     //Use default interface set
-    for (String streamName : spec.getInputSchemas().keySet()) {
-      sql = sql.replace(" " + streamName + " ", " [" + streamName + "s]." + streamName + " ");
-    }
     stringBuilder.append(header).append(Constants.NEWLINE).append(sql).append(Constants.NEWLINE);
     return stringBuilder.toString();
   }

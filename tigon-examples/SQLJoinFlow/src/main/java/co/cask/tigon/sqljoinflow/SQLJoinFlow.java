@@ -73,7 +73,7 @@ public class SQLJoinFlow implements Flow {
       addJSONInput("ageInput", ageSchema);
 
       addQuery("userDetails", "SELECT nI.uid, nI.name, aI.age INNER_JOIN " +
-        "FROM nameInput nI, ageInput aI WHERE nI.uid = aI.uid AND aI.age > 40");
+        "FROM [nameInput].nameInput nI, [ageInput].ageInput aI WHERE nI.uid = aI.uid AND aI.age > 40");
     }
 
     @QueryOutput("userDetails")
