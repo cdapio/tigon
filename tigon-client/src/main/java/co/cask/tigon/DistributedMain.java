@@ -153,7 +153,6 @@ public class DistributedMain {
 
   public void startUp(PrintStream out) throws Exception {
     registerShutDownHook();
-
     flowOperations.startAndWait();
     List<String> commandList = Lists.newArrayList();
     for (CLICommands cliCommand : CLICommands.values()) {
