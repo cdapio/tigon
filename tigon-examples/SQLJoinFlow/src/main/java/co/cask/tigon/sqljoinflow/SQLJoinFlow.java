@@ -59,7 +59,7 @@ public class SQLJoinFlow implements Flow {
     @Override
     public void create() {
       setName("SQLinputFlowlet");
-      setDescription("blah blah");
+      setDescription("Executes an inner join of two streams <uid, name>, <uid, age> and emits <uid, name, age>");
       StreamSchema nameSchema = new StreamSchema.Builder()
         .addField("uid", GDATFieldType.INT, GDATSlidingWindowAttribute.INCREASING)
         .addField("name", GDATFieldType.STRING)
