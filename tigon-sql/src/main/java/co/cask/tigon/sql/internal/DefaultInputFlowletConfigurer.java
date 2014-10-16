@@ -74,8 +74,8 @@ public class DefaultInputFlowletConfigurer implements InputFlowletConfigurer {
   }
 
   public InputFlowletSpecification createInputFlowletSpec() {
-    Preconditions.checkArgument(sqlMap.size()>0, "Must define at least one query.");
-    Preconditions.checkArgument(inputStreamSchemas.size()>0, "Must define at least one stream schema.");
+    Preconditions.checkArgument(sqlMap.size() > 0, "Must define at least one query.");
+    Preconditions.checkArgument(inputStreamSchemas.size() > 0, "Must define at least one stream schema.");
     return new DefaultInputFlowletSpecification(name, description, inputStreamSchemas, sqlMap);
   }
 
