@@ -33,10 +33,10 @@ import co.cask.tigon.guice.TwillModule;
 import co.cask.tigon.guice.ZKClientModule;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import co.cask.tigon.metrics.NoOpMetricsCollectionService;
+import co.cask.tigon.utils.ProjectInfo;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.io.Closeables;
 import com.google.common.io.Files;
 import com.google.common.util.concurrent.Service;
 import com.google.inject.AbstractModule;
@@ -55,13 +55,11 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.InetSocketAddress;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
 
 /**
  * Tigon Distributed Main.
@@ -155,15 +153,6 @@ public class DistributedMain {
 
   public void startUp(PrintStream out) throws Exception {
     registerShutDownHook();
-    Properties properties = new Properties();
-    InputStream in = DistributedMain.class.getResourceAsStream("/build.properties");
-    try {
-      properties.load(in);
-    } catch (IOException ex) {
-      LOG.error("Failed to load build.properties", ex);
-    } finally {
-      Closeables.closeQuietly(in);
-    }
 
     flowOperations.startAndWait();
     List<String> commandList = Lists.newArrayList();
@@ -227,7 +216,7 @@ public class DistributedMain {
         } else if (cmd.equals(CLICommands.SERVICEINFO)) {
           out.println(StringUtils.join(flowOperations.getServices(args[1]), "\n"));
         } else if (cmd.equals(CLICommands.VERSION)) {
-          out.println(properties.getProperty("project.info.version"));
+          out.println(ProjectInfo.getVersion().getBuildVersion());
         } else if (cmd.equals(CLICommands.HELP)) {
           try {
             out.println(CLICommands.valueOf(args[1].toUpperCase()).printHelp());
