@@ -160,7 +160,7 @@ public class DistributedMain {
     try {
       properties.load(in);
     } catch (IOException ex) {
-      LOG.error("Failed to load Properties", ex);
+      LOG.error("Failed to load build.properties", ex);
     } finally {
       Closeables.closeQuietly(in);
     }
