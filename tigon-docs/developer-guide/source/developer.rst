@@ -589,13 +589,17 @@ the stream. Once the inputs streams have been added, one or more SQL queries can
 defined using an ``addQuery`` method. The ``addQuery`` method takes the name of the query
 and the SQL statement.
 
-Currently, TigonSQL creates one interface set for every input that is added, with the same name as the input.
-In other words, when an input is being referred to in the TigonSQL query, the user needs to use
-[<inputName>].inputName. In the example below, intInput is the input name and in the query,
-we refer to this source as [intInput].intInput. Interface sets are currently NOT exposed to TigonSQL
-users. This might change in the future releases to enable more powerful queries.
-Though it is not necessary to know about interface sets to use TigonSQL, you can refer to
-the `Tigon SQL User Manual <./_downloads/Tigon_SQL_User_Manual_2014_v4.pdf>`__ for more information on them.
+Currently, TigonSQL creates an interface set for every input that is added, using the same name
+as the input for the set. When an input is referenced in a TigonSQL query, the user needs to use the form
+``[<inputName>].inputName``.
+
+In the example below, ``intInput`` is both the input name and the interface set; in the query,
+we refer to this source as ``[intInput].intInput``.
+
+Interface sets are currently **not** exposed to TigonSQL users. This may change in a future release to
+enable more powerful queries. Though it is not necessary to know about them to use TigonSQL, you can refer to
+the :doc:`Tigon SQL User Manual </apis/index>` for more information about interface sets.
+
 
 The output of the SQL queries will be POJOs, whose output class you can define.
 The names of the members of the output class should match the names used in the SQL query
