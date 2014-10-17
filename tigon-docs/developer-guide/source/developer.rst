@@ -600,7 +600,6 @@ Interface sets are currently **not** exposed to TigonSQL users. This may change 
 enable more powerful queries. Though it is not necessary to know about them to use TigonSQL, you can refer to
 the :doc:`Tigon SQL User Manual </apis/index>` for more information about interface sets.
 
-
 The output of the SQL queries will be POJOs, whose output class you can define.
 The names of the members of the output class should match the names used in the SQL query
 statement. In the example given below, ``DataPacket`` is one such POJO class.
