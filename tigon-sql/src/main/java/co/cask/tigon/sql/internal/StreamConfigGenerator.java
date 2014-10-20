@@ -80,7 +80,7 @@ public class StreamConfigGenerator {
   }
 
   private String createLocalHostIfq() {
-      return "default : NOT Contains[InterfaceType, GDAT]";
+    return "default : NOT Contains[InterfaceType, GDAT]";
   }
 
   private String createOutputSpec(Map<String, String> sql) {
