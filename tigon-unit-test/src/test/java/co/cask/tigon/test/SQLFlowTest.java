@@ -98,7 +98,7 @@ public class SQLFlowTest extends TestBase {
     final int port = getRandomPort();
     int tcpPort = getRandomPort();
     runtimeArgs.put(Constants.HTTP_PORT, Integer.toString(port));
-    runtimeArgs.put(Constants.TCP_INGESTION_PORT_PREFIX + "intInput", Integer.toString(tcpPort));
+    runtimeArgs.put(Constants.TCP_INGESTION_PORT_PREFIX + "inputInterface", Integer.toString(tcpPort));
     flowManager = deployFlow(SQLFlow.class, runtimeArgs);
     TimeUnit.SECONDS.sleep(60);
     ingestData = new Thread(new Runnable() {
@@ -109,7 +109,7 @@ public class SQLFlowTest extends TestBase {
           for (int j = 1; j <= i; j++) {
             try {
               // TODO eliminate org.apache.http dependency TIGON-5
-              HttpPost httpPost = new HttpPost("http://localhost:" + port + "/v1/tigon/intInput");
+              HttpPost httpPost = new HttpPost("http://localhost:" + port + "/v1/tigon/inputInterface");
               JsonObject bodyJson = new JsonObject();
               JsonArray dataArray = new JsonArray();
               dataArray.add(new JsonPrimitive(Integer.toString(i)));
@@ -190,11 +190,12 @@ public class SQLFlowTest extends TestBase {
       setName("Summation");
       setDescription("sums up the input value over a timewindow");
       StreamSchema schema = new StreamSchema.Builder()
+        .setName("intInput")
         .addField("timestamp", GDATFieldType.LONG, GDATSlidingWindowAttribute.INCREASING)
         .addField("intStream", GDATFieldType.INT)
         .build();
-      addJSONInput("intInput", schema);
-      addQuery("sumOut", "SELECT timestamp, SUM(intStream) AS sumValue FROM [intInput].intInput GROUP BY timestamp");
+      addJSONInput("inputInterface", schema);
+      addQuery("sumOut","SELECT timestamp, SUM(intStream) AS sumValue FROM inputInterface.intInput GROUP BY timestamp");
     }
 
     @QueryOutput("sumOut")

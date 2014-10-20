@@ -60,7 +60,7 @@ public class StreamConfigGenerator {
   }
 
   public Map.Entry<String, String> generateHostIfq() {
-    String contents = createLocalHostIfq(spec.getInputSchemas());
+    String contents = createLocalHostIfq();
     return Maps.immutableEntry(HOSTNAME, contents);
   }
 
@@ -79,28 +79,8 @@ public class StreamConfigGenerator {
     return stringBuilder.toString();
   }
 
-  /**
-   * This function generates the content for *.ifq file. It generates one interface for each schema.
-   * The interface name is auto-generated and is the same as the schema name.
-   * The ifq file data is of the format:
-   *
-   * [interface set name 1] : [predicate 1] ;
-   * [interface set name n-1] : [predicate n-1] ;
-   * [interface set name n] : [predicate n]
-   *
-   * Note : The last line must not end with a semi-colon
-   *
-   * @param schemaMap Map containing input schemas
-   * @return String that contains the file content for *.ifq file
-   */
-  private String createLocalHostIfq(Map<String, Map.Entry<InputStreamFormat, StreamSchema>> schemaMap) {
-    StringBuilder stringBuilder = new StringBuilder();
-    for (String streamName : schemaMap.keySet()) {
-      // For now interface set names are same as the Schema names (one-to-one mapping)
-      stringBuilder.append(streamName).append(" : ").append("Contains[Filename, ").append(streamName).append("];")
-        .append(Constants.NEWLINE);
-    }
-    return stringBuilder.toString().substring(0, stringBuilder.length() - 2);
+  private String createLocalHostIfq() {
+      return "default : NOT Contains[InterfaceType, GDAT]";
   }
 
   private String createOutputSpec(Map<String, String> sql) {
@@ -113,8 +93,10 @@ public class StreamConfigGenerator {
 
   private String createPacketSchema(Map<String, Map.Entry<InputStreamFormat, StreamSchema>> schemaMap) {
     StringBuilder stringBuilder = new StringBuilder();
-    for (String streamName : schemaMap.keySet()) {
-      stringBuilder.append(createProtocol(streamName, schemaMap.get(streamName).getValue()));
+    for (Map.Entry<String, Map.Entry<InputStreamFormat, StreamSchema>> mapEntry : schemaMap.entrySet()) {
+      String interfaceName = mapEntry.getKey();
+      String schemaName = mapEntry.getValue().getValue().getName();
+      stringBuilder.append(createProtocol(schemaName, schemaMap.get(interfaceName).getValue()));
     }
     return stringBuilder.toString();
   }

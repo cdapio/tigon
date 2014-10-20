@@ -61,19 +61,21 @@ public class SQLJoinFlow implements Flow {
       setName("SQLinputFlowlet");
       setDescription("Executes an inner join of two streams <uid, name>, <uid, age> and emits <uid, name, age>");
       StreamSchema nameSchema = new StreamSchema.Builder()
+        .setName("nameDataStream")
         .addField("uid", GDATFieldType.INT, GDATSlidingWindowAttribute.INCREASING)
         .addField("name", GDATFieldType.STRING)
         .build();
       addJSONInput("nameInput", nameSchema);
 
       StreamSchema ageSchema = new StreamSchema.Builder()
+        .setName("ageDataStream")
         .addField("uid", GDATFieldType.INT, GDATSlidingWindowAttribute.INCREASING)
         .addField("age", GDATFieldType.INT)
         .build();
       addJSONInput("ageInput", ageSchema);
 
       addQuery("userDetails", "SELECT nI.uid, nI.name, aI.age INNER_JOIN " +
-        "FROM [nameInput].nameInput nI, [ageInput].ageInput aI WHERE nI.uid = aI.uid AND aI.age > 40");
+        "FROM nameInput.nameDataStream nI, ageInput.ageDataStream aI WHERE nI.uid = aI.uid AND aI.age > 40");
     }
 
     @QueryOutput("userDetails")
