@@ -195,7 +195,7 @@ public class SQLFlowTest extends TestBase {
         .addField("intStream", GDATFieldType.INT)
         .build();
       addJSONInput("inputInterface", schema);
-      addQuery("sumOut","SELECT timestamp, SUM(intStream) AS sumValue FROM inputInterface.intInput GROUP BY timestamp");
+      addQuery("sumOut", "SELECT timestamp, SUM(intStream) AS sumValue FROM inputInterface.intInput GROUP BY timestamp");
     }
 
     @QueryOutput("sumOut")
