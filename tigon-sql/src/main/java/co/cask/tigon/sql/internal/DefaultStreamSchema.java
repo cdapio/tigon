@@ -26,8 +26,10 @@ import java.util.List;
  */
 public class DefaultStreamSchema implements StreamSchema {
   private List<GDATField> fields;
+  private String name;
 
-  public DefaultStreamSchema(List<GDATField> fields) {
+  public DefaultStreamSchema(String name, List<GDATField> fields) {
+    this.name = name;
     this.fields = fields;
   }
 
@@ -36,4 +38,8 @@ public class DefaultStreamSchema implements StreamSchema {
     return fields;
   }
 
+  @Override
+  public String getName() {
+    return name;
+  }
 }

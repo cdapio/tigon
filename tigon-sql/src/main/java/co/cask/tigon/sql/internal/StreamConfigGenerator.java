@@ -60,7 +60,7 @@ public class StreamConfigGenerator {
   }
 
   public Map.Entry<String, String> generateHostIfq() {
-    String contents = createLocalHostIfq(HOSTNAME);
+    String contents = createLocalHostIfq();
     return Maps.immutableEntry(HOSTNAME, contents);
   }
 
@@ -79,8 +79,8 @@ public class StreamConfigGenerator {
     return stringBuilder.toString();
   }
 
-  private String createLocalHostIfq(String hostname) {
-    return "default : Contains[InterfaceType, GDAT]";
+  private String createLocalHostIfq() {
+    return "default : NOT Contains[InterfaceType, GDAT]";
   }
 
   private String createOutputSpec(Map<String, String> sql) {
@@ -93,8 +93,10 @@ public class StreamConfigGenerator {
 
   private String createPacketSchema(Map<String, Map.Entry<InputStreamFormat, StreamSchema>> schemaMap) {
     StringBuilder stringBuilder = new StringBuilder();
-    for (String streamName : schemaMap.keySet()) {
-      stringBuilder.append(createProtocol(streamName, schemaMap.get(streamName).getValue()));
+    for (Map.Entry<String, Map.Entry<InputStreamFormat, StreamSchema>> mapEntry : schemaMap.entrySet()) {
+      String interfaceName = mapEntry.getKey();
+      String schemaName = mapEntry.getValue().getValue().getName();
+      stringBuilder.append(createProtocol(schemaName, schemaMap.get(interfaceName).getValue()));
     }
     return stringBuilder.toString();
   }

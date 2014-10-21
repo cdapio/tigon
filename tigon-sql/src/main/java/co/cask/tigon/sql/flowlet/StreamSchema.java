@@ -32,6 +32,8 @@ public interface StreamSchema {
 
   List<GDATField> getFields();
 
+  String getName();
+
   /**
    * Builder for creating instance of {@link StreamSchema}.
    */
@@ -39,6 +41,7 @@ public interface StreamSchema {
 
     private Set<String> fieldNames = Sets.newHashSet();
     private List<GDATField> fields = Lists.newArrayList();
+    private String name;
 
     private void fieldCheck(String name) {
       Preconditions.checkArgument(name != null, "Field name cannot be null.");
@@ -59,8 +62,13 @@ public interface StreamSchema {
       return this;
     }
 
+    public Builder setName(String name) {
+      this.name = name;
+      return this;
+    }
+
     public StreamSchema build() {
-      return new DefaultStreamSchema(fields);
+      return new DefaultStreamSchema(name, fields);
     }
   }
 }
