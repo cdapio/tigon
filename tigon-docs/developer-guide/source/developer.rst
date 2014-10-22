@@ -591,8 +591,8 @@ takes the name of the query and the SQL statement.
 
 Conceptually, an interface represents the TCP end-point at which the data stream is
 ingested and this data is interpreted by all the schemas associated with this
-end-point.Currently, Tigon supports only one schema per interface. This restriction
-may be removed in a subsequent Tigon release 
+end-point. Currently, Tigon supports only one schema per interface. This restriction
+may be removed in a subsequent Tigon release.
 
 The ``FROM`` clause in Tigon SQL queries should be followed by a data source name that
 follows the format of *interfaceName.schemaName*. In the example below ``intInput`` is
