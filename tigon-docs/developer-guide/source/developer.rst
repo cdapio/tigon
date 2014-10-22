@@ -584,17 +584,20 @@ increasing or decreasing might be required for certain SQL queries; for example,
 *increasingField*".
 
 Once one or more ``StreamSchemas`` are created, they are added as an input using the
-``addJSONInput`` method. This method takes the name of the input stream (interface) and
-the associated schema object. Once the inputs streams have been added, one
+``addJSONInput`` method. This method takes the name of an input stream (an interface) and
+the associated schema object. Once all the input streams have been added, one
 or more SQL queries can be defined using an ``addQuery`` method. The ``addQuery`` method
 takes the name of the query and the SQL statement.
 
-An interface represents the end-point at which the data stream is ingested and this data
-will be interpreted by all the schemas associated with it. The ``FROM`` clause in
-Tigon SQL queries should be followed by a data source name that prescribes to the
-format *interfaceName.schemaName*. In the example below ``intInput`` is the schema name
-and ``inputStream`` is the interface name. To access ``intInput`` the data source is
-referenced as ``inputStream.intInput``.
+Conceptually, an interface represents the TCP end-point at which the data stream is
+ingested and this data is interpreted by all the schemas associated with this
+end-point. Please note, for now Tigon only supports one schema per interface. This
+restriction may be removed in subsequent Tigon releases.
+
+The ``FROM`` clause in Tigon SQL queries should be followed by a data source name that
+follows the format of *interfaceName.schemaName*. In the example below ``intInput`` is
+the schema name and ``inputStream`` is the interface name. To access ``intInput`` the
+data source is referenced as ``inputStream.intInput``.
 
 For more information about interface and interface sets please refer to the Tigon SQL
 User Manual.
