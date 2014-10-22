@@ -600,7 +600,7 @@ the schema name and ``inputStream`` is the interface name. To access ``intInput`
 data source is referenced as ``inputStream.intInput``.
 
 For more information on interface and interface sets, please refer to the :doc:`Tigon SQL
-+User Manual. <apis/index>`
+User Manual. <apis/index>`
 
 The output of the SQL queries will be POJOs, whose output class you can define.
 The names of the members of the output class should match the names used in the SQL query
