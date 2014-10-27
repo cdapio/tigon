@@ -93,6 +93,7 @@ public class SQLTest extends SQLFlowTestBase {
       Assert.assertEquals(evalSum(dataPacket.timestamp), dataPacket.sumValue);
       dataPacketCounter = dataPacketCounter - 1;
     }
+    // Expected output count is MAX - 1 as the last timestamp value is not processed
     Assert.assertEquals(1, dataPacketCounter);
   }
 

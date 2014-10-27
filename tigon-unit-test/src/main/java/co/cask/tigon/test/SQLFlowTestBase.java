@@ -22,6 +22,7 @@ import co.cask.http.HttpResponder;
 import co.cask.http.NettyHttpService;
 import co.cask.tigon.api.flow.Flow;
 import co.cask.tigon.sql.conf.Constants;
+import co.cask.tigon.utils.Networks;
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
@@ -44,12 +45,12 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -66,7 +67,7 @@ public class SQLFlowTestBase extends TestBase {
   private static TestHandler handler;
   private static NettyHttpService service;
   private static String serviceURL;
-  private static final int port = getRandomPort();
+  private static final int httpPort = Networks.getRandomPort();
   private static final Gson GSON = new Gson();
 
   /**
@@ -77,31 +78,25 @@ public class SQLFlowTestBase extends TestBase {
    */
   public static void setupFlow(Class<? extends Flow> flowClass) throws Exception {
     Map<String, String> runtimeArgs = Maps.newHashMap();
-    //Identifying free port
     handler = new TestHandler();
     service = NettyHttpService.builder()
       .addHttpHandlers(ImmutableList.of(handler))
-      .setPort(getRandomPort())
+      .setPort(Networks.getRandomPort())
       .build();
     service.startAndWait();
     InetSocketAddress address = service.getBindAddress();
-    serviceURL = "http://" + address.getHostName() + ":" + address.getPort() + "/ping";
+    serviceURL = "http://" + address.getHostName() + ":" + address.getPort() + "/queue";
     runtimeArgs.put("baseURL", serviceURL);
-    runtimeArgs.put(Constants.HTTP_PORT, Integer.toString(port));
+    runtimeArgs.put(Constants.HTTP_PORT, Integer.toString(httpPort));
     flowManager = deployFlow(flowClass, runtimeArgs);
-    TimeUnit.SECONDS.sleep(60);
-  }
-
-  private static int getRandomPort() {
-    try {
-      ServerSocket socket = new ServerSocket(0);
-      try {
-        return socket.getLocalPort();
-      } finally {
-        socket.close();
-      }
-    } catch (IOException e) {
-      return -1;
+    int max_wait = 100;
+    // Waiting for the Tigon SQL Flow initialization
+    while ((!flowManager.discover(Constants.HTTP_PORT).iterator().hasNext()) && (max_wait > 0)) {
+      TimeUnit.SECONDS.sleep(1);
+      max_wait = max_wait - 1;
+    }
+    if (max_wait <= 0) {
+      throw new TimeoutException("Timeout Error, Tigon SQL flow took too long to initiate");
     }
   }
 
@@ -145,7 +140,7 @@ public class SQLFlowTestBase extends TestBase {
           for (String dataPacket : dataStreamEntry.getValue()) {
             try {
               // TODO eliminate org.apache.http dependency TIGON-5
-              HttpPost httpPost = new HttpPost("http://localhost:" + port + "/v1/tigon/" + dataStreamEntry.getKey());
+              HttpPost httpPost = new HttpPost("http://localhost:" + httpPort + "/v1/tigon/" + dataStreamEntry.getKey());
               httpPost.addHeader("Content-Type", "application/json");
               httpPost.setEntity(new StringEntity(dataPacket, Charsets.UTF_8));
               EntityUtils.consumeQuietly(httpClient.execute(httpPost).getEntity());
@@ -182,7 +177,7 @@ public class SQLFlowTestBase extends TestBase {
   public static final class TestHandler extends AbstractHttpHandler {
     private static final Logger LOG = LoggerFactory.getLogger(TestHandler.class);
     private static Queue<String> queue = Queues.newConcurrentLinkedQueue();
-    @Path("/poll-data")
+    @Path("/queue/poll")
     @GET
     public void pollData(HttpRequest request, HttpResponder responder) {
       if (queue.size() == 0) {
@@ -192,7 +187,7 @@ public class SQLFlowTestBase extends TestBase {
       String dataPacket = queue.poll();
       responder.sendString(HttpResponseStatus.OK, dataPacket);
     }
-    @Path("/ping")
+    @Path("/queue")
     @POST
     public void getPing(HttpRequest request, HttpResponder responder) {
       String dataPacket = request.getContent().toString(Charsets.UTF_8);
@@ -212,7 +207,7 @@ public class SQLFlowTestBase extends TestBase {
    */
   public static <T> T getDataPacket(Class<T> outputClass) throws IOException {
     HttpClient httpClient = new DefaultHttpClient();
-    HttpGet httpGet = new HttpGet(serviceURL + "/poll-data");
+    HttpGet httpGet = new HttpGet(serviceURL + "/poll");
     HttpResponse response = httpClient.execute(httpGet);
     if (response.getStatusLine().getStatusCode() != 200) {
       return null;
