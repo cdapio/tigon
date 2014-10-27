@@ -16,6 +16,7 @@
 
 package co.cask.tigon.sql.io;
 
+import co.cask.tigon.utils.Networks;
 import com.google.common.collect.Maps;
 import org.apache.http.HttpHost;
 import org.apache.http.client.methods.HttpPost;
@@ -38,7 +39,6 @@ import org.junit.Test;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
 import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -87,13 +87,7 @@ public class DataRouterTest {
 
   @Test
   public void testDataRouter() throws Exception {
-    ServerSocket socket = new ServerSocket(0);
-    int port = -1;
-    try {
-      port = socket.getLocalPort();
-    } finally {
-      socket.close();
-    }
+    int port = Networks.getRandomPort();
     DataIngestionRouter router = new DataIngestionRouter(serverMap, port);
     try {
       router.startAndWait();
@@ -111,7 +105,6 @@ public class DataRouterTest {
       Assert.assertEquals(1, testMap.get("stream3").intValue());
       Assert.assertTrue(!testMap.containsKey("stream4"));
     } finally {
-      socket.close();
       router.stopAndWait();
     }
   }

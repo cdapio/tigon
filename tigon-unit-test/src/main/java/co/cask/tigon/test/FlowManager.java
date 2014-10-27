@@ -37,7 +37,7 @@ public interface FlowManager {
   void stop();
 
   /**
-   * Discover a service announced by the Program.
+   * Discover a service announced by the Flow.
    * @param service Name of the Service.
    * @return A {@link ServiceDiscovered}
    */
