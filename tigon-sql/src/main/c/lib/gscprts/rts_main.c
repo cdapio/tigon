@@ -146,7 +146,10 @@ int main (int argc, char* argv[]) {
             lmap[lmapcnt]=device[x];
             lmapcnt++;
             
-            interfacetype=get_iface_properties(device[x],"interfacetype");
+            if ((interfacetype=get_iface_properties(device[x],"interfacetype"))==0) {
+                gslog(LOG_EMERG,"Interface Type not configured but required");
+                exit(1);
+            }
             
             if (strncmp(interfacetype,"CSV",3)==0) {
                 main_csv(x,device[x],lmapcnt,lmap);
