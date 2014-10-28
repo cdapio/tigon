@@ -89,13 +89,13 @@ public class SQLFlowTestBase extends TestBase {
     runtimeArgs.put("baseURL", serviceURL);
     runtimeArgs.put(Constants.HTTP_PORT, Integer.toString(httpPort));
     flowManager = deployFlow(flowClass, runtimeArgs);
-    int max_wait = 100;
+    int maxWait = 100;
     // Waiting for the Tigon SQL Flow initialization
-    while ((!flowManager.discover(Constants.HTTP_PORT).iterator().hasNext()) && (max_wait > 0)) {
+    while ((!flowManager.discover(Constants.HTTP_PORT).iterator().hasNext()) && (maxWait > 0)) {
       TimeUnit.SECONDS.sleep(1);
-      max_wait = max_wait - 1;
+      maxWait = maxWait - 1;
     }
-    if (max_wait <= 0) {
+    if (maxWait <= 0) {
       throw new TimeoutException("Timeout Error, Tigon SQL flow took too long to initiate");
     }
   }
@@ -131,16 +131,17 @@ public class SQLFlowTestBase extends TestBase {
     } else if (service == null) {
       throw new RuntimeException("Flow not setup. Use setupFlow()");
     }
-    final List<Map.Entry<String, List<String>>> final_inputDataStreams = inputDataStreams;
+    final List<Map.Entry<String, List<String>>> finalInputDataStreams = inputDataStreams;
     Thread ingestData = new Thread(new Runnable() {
       @Override
       public void run() {
         HttpClient httpClient = new DefaultHttpClient();
-        for (Map.Entry<String, List<String>> dataStreamEntry : final_inputDataStreams) {
+        for (Map.Entry<String, List<String>> dataStreamEntry : finalInputDataStreams) {
           for (String dataPacket : dataStreamEntry.getValue()) {
             try {
               // TODO eliminate org.apache.http dependency TIGON-5
-              HttpPost httpPost = new HttpPost("http://localhost:" + httpPort + "/v1/tigon/" + dataStreamEntry.getKey());
+              HttpPost httpPost =
+                new HttpPost("http://localhost:" + httpPort + "/v1/tigon/" + dataStreamEntry.getKey());
               httpPost.addHeader("Content-Type", "application/json");
               httpPost.setEntity(new StringEntity(dataPacket, Charsets.UTF_8));
               EntityUtils.consumeQuietly(httpClient.execute(httpPost).getEntity());
@@ -174,6 +175,9 @@ public class SQLFlowTestBase extends TestBase {
     ingestData(inputData);
   }
 
+  /**
+   * A HTTP handler that maintains a queue of the generated output objects
+   */
   public static final class TestHandler extends AbstractHttpHandler {
     private static final Logger LOG = LoggerFactory.getLogger(TestHandler.class);
     private static Queue<String> queue = Queues.newConcurrentLinkedQueue();
