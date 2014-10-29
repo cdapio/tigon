@@ -316,6 +316,10 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
   @Override
   public void announceReady() {
     FlowletContext ctx = getContext();
+    if (portsAnnouncementList.size() > 0) {
+      // Ingestion end-points have already been announced
+      return;
+    }
     for (String key : dataIngestionPortsMap.keySet()) {
       portsAnnouncementList.add(ctx.announce(key, inputFlowletService.getDataPort(key)));
       LOG.info("Announced Data Port {} - {}", key, inputFlowletService.getDataPort(key));
