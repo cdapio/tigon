@@ -66,7 +66,7 @@ public class SQLJoinTest extends SQLFlowTestBase {
   @BeforeClass
   public static void beforeClass() throws Exception {
     setupFlow(SQLFlow.class);
-    latch = setExpectedOutputCount(MAX - 1);
+    latch = setExpectedOutputCount(MAX);
   }
 
   /**
@@ -75,6 +75,7 @@ public class SQLJoinTest extends SQLFlowTestBase {
    */
   @Test
   public void testSQLFlow() throws Exception {
+    //Generating input data packets
     List<String> nameData = Lists.newArrayList();
     for (int i = 1; i <= MAX; i++) {
       JsonObject bodyJson = new JsonObject();
