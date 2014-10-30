@@ -49,6 +49,10 @@ Reference applications built with Tigon are included in the
 - `AdNetworkFlow: <https://github.com/caskdata/tigon-apps/tree/develop/AdNetworkFlow>`__
   Demonstrates using Tigon to write a realtime bidding (RTB) advertisement framework.
 
+- `ClickStream: <https://github.com/caskdata/tigon-apps/tree/develop/ClickStream>`__
+  Demonstrates using Tigon SQL to join 2 data streams. In this example, a view event data
+  stream and a click event data stream are joined to generate meta information for each
+  click event. Click events are filtered on the basis of conditions specified in an SQL query.
 
 Where to Go Next
 ================

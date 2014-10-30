@@ -11,7 +11,7 @@ We recommend you follow these steps to get started with Tigon:
 1. Check that you have the `prerequisites`_ and install if necessary.
 #. `Download`_ the pre-compiled sources and related files.
 #. `Configure`_ your system, if necessary.
-#. Run the `examples`_ to test your installation and learn about Tigon.
+#. Run the :doc:`/examples/index` to test your installation and learn about Tigon.
 
 .. _getting-started-prerequisites:
 
@@ -122,29 +122,30 @@ If you face problems using TigonSQL, you can build the TigonSQL Streaming librar
 The TigonSQL jar will be installed locally and will be used by maven to create Tigon
 applications when they are created on the same machine.
 
-Examples
-========
 
-Examples of using Tigon are described in the `Tigon Examples Guide: <examples/index.html>`__
+Examples and Applications
+=========================
 
-- `Hello World Example <examples/hello-world.html>`__
+Examples of using Tigon are described in :doc:`/examples/index`, such as:
+
+- :doc:`/examples/hello-world`
 
   .. include:: examples/hello-world.rst
      :start-line: 5
      :end-before: Building the JAR
 
-- `Twitter Analytics Example <examples/twitter-analytics.html>`__
+-  :doc:`/examples/twitter-analytics`
 
   .. include:: examples/twitter-analytics.rst
      :start-line: 5
      :end-before: Twitter Configuration
 
-- `SQL Join Flow Example <examples/sql-join-flow.html>`__
+-  :doc:`/examples/sql-join-flow`
 
   .. include:: examples/sql-join-flow.rst
      :start-line: 5
      :end-before: Flow Runtime Arguments
-
+     
 
 Where to Go Next
 ================
