@@ -54,12 +54,12 @@ import java.util.concurrent.TimeUnit;
 /**
  * SQLTest
  */
-public class SQLTest extends SQLFlowTestBase {
+public class SQLGroupByTest extends SQLFlowTestBase {
   private static final int MAX = 10;
   private static CountDownLatch latch;
 
   /**
-   * Setup and deploy {@link co.cask.tigon.test.SQLTest.SQLFlow}
+   * Setup and deploy {@link SQLGroupByTest.SQLFlow}
    * @throws Exception
    */
   @BeforeClass

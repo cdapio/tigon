@@ -60,7 +60,7 @@ public class SQLJoinTest extends SQLFlowTestBase {
   private static CountDownLatch latch;
 
   /**
-   * Setup and deploy {@link co.cask.tigon.test.SQLTest.SQLFlow}
+   * Setup and deploy {@link SQLGroupByTest.SQLFlow}
    * @throws Exception
    */
   @BeforeClass
