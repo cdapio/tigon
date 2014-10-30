@@ -766,6 +766,6 @@ Where to Go Next
 
 Now that you're familiar with the components and concepts of Tigon, take a look at:
 
-- `Examples <examples/index.html>`__, with a series of examples demonstrating Tigon.
+- :doc:`/examples/index`, with a series of examples demonstrating Tigon.
 
 

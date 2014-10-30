@@ -55,4 +55,4 @@ Where to Go Next
 
 Now that you're seen an example demonstrating Tigon, take a look at:
 
-- `APIs <../apis/index.html>`__, which includes the Java and TigonSQL APIs of Tigon.
+- :doc:`/apis/index`, which includes the Java and TigonSQL APIs of Tigon.
