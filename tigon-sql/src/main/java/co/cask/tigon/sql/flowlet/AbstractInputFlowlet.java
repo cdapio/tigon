@@ -302,7 +302,11 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
    */
   @Override
   public void notifyFailure(Set<String> errorProcessNames) {
-    LOG.info("Missing Pings From : " + errorProcessNames.toString());
+    if (errorProcessNames != null) {
+      LOG.warn("Missing pings from : " + errorProcessNames.toString());
+    } else {
+      LOG.warn("No heartbeats registered");
+    }
     healthInspector.stopAndWait();
     healthInspector = new HealthInspector(this);
     inputFlowletService.restartService(healthInspector);
@@ -312,6 +316,10 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
   @Override
   public void announceReady() {
     FlowletContext ctx = getContext();
+    if (portsAnnouncementList.size() > 0) {
+      // Ingestion end-points have already been announced
+      return;
+    }
     for (String key : dataIngestionPortsMap.keySet()) {
       portsAnnouncementList.add(ctx.announce(key, inputFlowletService.getDataPort(key)));
       LOG.info("Announced Data Port {} - {}", key, inputFlowletService.getDataPort(key));

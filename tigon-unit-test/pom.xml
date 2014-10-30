@@ -5,7 +5,7 @@
   <parent>
     <artifactId>tigon</artifactId>
     <groupId>co.cask.tigon</groupId>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -23,7 +23,6 @@
       <groupId>co.cask.tigon</groupId>
       <artifactId>tigon-sql</artifactId>
       <version>${project.version}</version>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
@@ -38,7 +37,6 @@
     <dependency>
       <groupId>co.cask.http</groupId>
       <artifactId>netty-http</artifactId>
-      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.hadoop</groupId>

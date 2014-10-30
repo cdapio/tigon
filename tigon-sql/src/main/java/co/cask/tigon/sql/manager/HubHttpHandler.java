@@ -192,8 +192,6 @@ public class HubHttpHandler extends AbstractHttpHandler {
         current = hubDataStoreReference.get();
         hds = new HubDataStore.Builder(current).outputReady().build();
       } while (!hubDataStoreReference.compareAndSet(current, hds));
-      // Invokes Event Listener. All GSEXIT processes have completed /announce-stream-processing
-      listener.announceReady();
     }
     responder.sendStatus(HttpResponseStatus.OK);
   }
@@ -310,6 +308,8 @@ public class HubHttpHandler extends AbstractHttpHandler {
     if ((hubDataStoreReference.get().isOutputReady()) &&
       (hubDataStoreReference.get().getInstanceName().equals(instance))) {
       responder.sendJson(HttpResponseStatus.OK, new JsonObject());
+      // Invokes Event Listener. All GSEXIT processes have completed /announce-stream-processing
+      listener.announceReady();
       return;
     }
     //Instance name does not match

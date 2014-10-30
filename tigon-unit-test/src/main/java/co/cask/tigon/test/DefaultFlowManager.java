@@ -19,6 +19,7 @@ package co.cask.tigon.test;
 import co.cask.tigon.internal.app.runtime.ProgramController;
 import co.cask.tigon.internal.app.runtime.ProgramOptionConstants;
 import com.google.common.collect.Maps;
+import org.apache.twill.discovery.ServiceDiscovered;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,5 +51,10 @@ public class DefaultFlowManager implements FlowManager {
     } catch (Exception e) {
       LOG.warn(e.getMessage(), e);
     }
+  }
+
+  @Override
+  public ServiceDiscovered discover(String service) {
+    return controller.discover(service);
   }
 }
