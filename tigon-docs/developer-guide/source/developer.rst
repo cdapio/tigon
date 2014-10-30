@@ -578,16 +578,29 @@ schema:
 - STRING
 
 The Builder’s ``addField`` method takes the name of the field, the field type and the
-``SlidingWindowAttribute``. The sliding window attribute is used to annotate that a field is
-monotonically increasing or decreasing. A field with this attribute set to
+``SlidingWindowAttribute``. The sliding window attribute is used to annotate that a field
+is monotonically increasing or decreasing. A field with this attribute set to
 increasing or decreasing might be required for certain SQL queries; for example, "GROUP BY
 *increasingField*".
 
 Once one or more ``StreamSchemas`` are created, they are added as an input using the
-``addJSONInput`` method. This method takes the name of the input stream and the schema of
-the stream. Once the inputs streams have been added, one or more SQL queries can be
-defined using an ``addQuery`` method. The ``addQuery`` method takes the name of the query
-and the SQL statement.
+``addJSONInput`` method. This method takes the name of an input stream (an interface) and
+the associated schema object. Once all the input streams have been added, one
+or more SQL queries can be defined using an ``addQuery`` method. The ``addQuery`` method
+takes the name of the query and the SQL statement.
+
+Conceptually, an interface represents the TCP end-point at which the data stream is
+ingested and this data is interpreted by all the schemas associated with this
+end-point. Currently, Tigon supports only one schema per interface. This restriction
+may be removed in a subsequent Tigon release.
+
+The ``FROM`` clause in Tigon SQL queries should be followed by a data source name that
+follows the format of *interfaceName.schemaName*. In the example below ``intInput`` is
+the schema name and ``inputStream`` is the interface name. To access ``intInput`` the
+data source is referenced as ``inputStream.intInput``.
+
+For more information on interface and interface sets, please refer to the :doc:`Tigon SQL
+User Manual. <apis/index>`
 
 The output of the SQL queries will be POJOs, whose output class you can define.
 The names of the members of the output class should match the names used in the SQL query
@@ -608,11 +621,12 @@ that method or emit the object to a subsequent Flowlet. In the example given bel
         setName("Summation");
         setDescription("Sums up the input value over a timewindow");
         StreamSchema schema = new StreamSchema.Builder()
+          .setName("intInput")
           .addField("timestamp", GDATFieldType.LONG, GDATSlidingWindowAttribute.INCREASING)
           .addField("intStream", GDATFieldType.INT)
           .build();
-        addJSONInput("intInput", schema);
-        addQuery("sumOut", "SELECT timestamp, SUM(intStream) AS sumValue FROM intInput GROUP BY timestamp");
+        addJSONInput("inputStream", schema);
+        addQuery("sumOut", "SELECT timestamp, SUM(intStream) AS sumValue FROM inputStream.intInput GROUP BY timestamp");
       }
 
       @QueryOutput("sumOut")

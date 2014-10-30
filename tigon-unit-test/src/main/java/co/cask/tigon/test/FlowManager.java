@@ -16,6 +16,8 @@
 
 package co.cask.tigon.test;
 
+import org.apache.twill.discovery.ServiceDiscovered;
+
 /**
  * Instance for this class is for managing a running {@link co.cask.tigon.api.flow.Flow}.
  */
@@ -33,4 +35,11 @@ public interface FlowManager {
    * Stops the running flow.
    */
   void stop();
+
+  /**
+   * Discover a service announced by the Flow.
+   * @param service Name of the Service.
+   * @return A {@link ServiceDiscovered}
+   */
+  ServiceDiscovered discover(String service);
 }

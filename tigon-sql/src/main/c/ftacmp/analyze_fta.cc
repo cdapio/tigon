@@ -4063,7 +4063,11 @@ query_summary_class *analyze_fta(table_exp_t *fta_tree, table_list *schema,
 			if(tbl_vec[i]->get_ifq()){
 				ifstr = "["+tbl_vec[i]->get_interface()+"]";
 			}else{
-				ifstr = "''"+tbl_vec[i]->get_machine()+"''."+tbl_vec[i]->get_interface();
+				if(tbl_vec[i]->get_machine() != "localhost"){
+					ifstr = "&apos;"+tbl_vec[i]->get_machine()+"&apos;."+tbl_vec[i]->get_interface();
+				}else{
+					ifstr = tbl_vec[i]->get_interface();
+				}
 			}
 //printf("ifstr is %s, i=%d, machine=%s, interface=%s\n",ifstr.c_str(),i,tbl_vec[i]->get_machine().c_str(),tbl_vec[i]->get_interface().c_str());
 			if(qs->definitions.count("_referenced_ifaces")){
