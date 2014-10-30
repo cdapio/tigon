@@ -60,7 +60,7 @@ public class SQLJoinTest extends SQLFlowTestBase {
   private static CountDownLatch latch;
 
   /**
-   * Setup and deploy {@link SQLGroupByTest.SQLFlow}
+   * Setup and deploy {@link SQLJoinTest.SQLFlow}
    * @throws Exception
    */
   @BeforeClass
