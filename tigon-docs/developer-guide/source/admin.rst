@@ -68,4 +68,4 @@ Where to Go Next
 
 Now that you're familiar with how to run Tigon, take a look at:
 
-- `Licenses and Copyrights <licenses.html>`__, which covers how Tigon has been released.
+- :doc:`licenses`, which covers how Tigon has been released.

@@ -29,6 +29,7 @@ SCRIPT=`basename $0`
 SOURCE="source"
 BUILD="build"
 BUILD_PDF="build-pdf"
+BUILD_TEMP="build-temp"
 HTML="html"
 INCLUDES="_includes"
 
@@ -96,6 +97,7 @@ function usage() {
   echo "Usage: $SCRIPT < option > [source]"
   echo ""
   echo "  Options (select one)"
+  echo "    all            Clean build of everything: HTML docs and Javadocs, GitHub and Web versions"
   echo "    build          Clean build of javadocs and HTML docs, copy javadocs into place, zip results"
   echo "    build-includes Clean conversion of example/README.md to _includes directory reST files"
   echo "    build-quick    Clean build of HTML docs, copy existing javadocs into place"
@@ -186,6 +188,20 @@ function make_zip_localized() {
   zip -r $ZIP_DIR_NAME.zip $PROJECT_VERSION/*
 }
 
+function build_all() {
+  echo "Building GitHub Docs."
+  ./build.sh build-github
+  echo "Stashing GitHub Docs."
+  cd $SCRIPT_PATH
+  mkdir -p $SCRIPT_PATH/$BUILD_TEMP
+  mv $SCRIPT_PATH/$BUILD/*.zip $SCRIPT_PATH/$BUILD_TEMP
+  echo "Building Web Docs."
+  ./build.sh build-web
+  echo "Moving GitHub Docs."
+  mv $SCRIPT_PATH/$BUILD_TEMP/*.zip $SCRIPT_PATH/$BUILD
+  rm -rf $SCRIPT_PATH/$BUILD_TEMP
+}
+
 function build() {
   build_docs
   build_javadocs
@@ -242,6 +258,21 @@ function pandoc_includes() {
   pandoc -t rst $PROJECT_PATH/$TIGON_EXAMPLES/SQLJoinFlow/README.md -o $INCLUDES_DIR/sql-join-flow.rst
   pandoc -t rst $PROJECT_PATH/$TIGON_EXAMPLES/tigon-sql/README.md -o $INCLUDES_DIR/tigon-sql.rst
   pandoc -t rst $PROJECT_PATH/$TIGON_EXAMPLES/TwitterAnalytics/README.md -o $INCLUDES_DIR/twitter-analytics.rst
+
+  # Fix version
+  version_rewrite $SCRIPT_PATH/$SOURCE/getting-started.txt $INCLUDES_DIR/getting-started-versioned.rst
+
+}
+
+function version_rewrite() {
+  version
+  cd $SCRIPT_PATH
+  echo "Re-writing $1 to $2"
+  # Re-writes the version in an RST-snippet file to have the current version.
+  REWRITE_SOURCE=$1
+  REWRITE_TARGET=$2
+  
+  sed -e "s|<version>|$PROJECT_VERSION|g" $REWRITE_SOURCE > $REWRITE_TARGET
 }
 
 function build_quick() {
@@ -311,6 +342,7 @@ if [ $# -lt 1 ]; then
 fi
 
 case "$1" in
+  all )                build_all; exit 1;;
   build )              build; exit 1;;
   build-includes )     build_includes; exit 1;;
   build-quick )        build_quick; exit 1;;

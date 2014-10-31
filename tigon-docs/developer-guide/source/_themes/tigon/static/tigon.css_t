@@ -255,6 +255,16 @@ p.admonition-title:after {
     content: ":";
 }
 
+p.rubric {
+    background-color: #E0E0E0;
+    font-size: 120%;
+    font-weight: normal;
+    color: #111;
+    margin: 30px 0px 10px -15px;
+    padding: 5px 0 5px 15px;
+    text-shadow: 0px 1px 0 white
+}
+
 em {
     font-style: italic;
 }

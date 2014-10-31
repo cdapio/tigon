@@ -6,6 +6,18 @@
 Tigon Release Notes
 ============================================
 
+Release 0.2.1
+=============
+
+Bug Fix
+---------
+
+- Fixed a problem in TigonSQL which mapped all schemas to a default interface set,
+  resulting in incorrect outputs. Instead, we now have a single interface per input schema
+  with no default interface set. Modified Flows that use TigonSQL to adhere to this
+  approach.
+
+
 Release 0.2.0
 =============
 

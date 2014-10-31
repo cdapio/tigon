@@ -61,4 +61,4 @@ Where to Go Next
 
 Now that you're familiar with the basic concept and architecture of Tigon, take a look at:
 
-- `Developer <developer.html>`__, which covers writing applications using Tigon.
+- :doc:`developer`, which covers writing applications using Tigon.
