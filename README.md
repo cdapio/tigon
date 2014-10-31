@@ -110,7 +110,7 @@ Now that you've had a look at the Tigon SDK, take a look at:
   - [AdNetworkFlow:](https://github.com/caskdata/tigon-apps/tree/develop/AdNetworkFlow)
     Demonstrates using Tigon to write a realtime bidding (RTB) advertisement framework
   - [ClickStreamFlow:](https://github.com/caskdata/tigon-apps/tree/develop/ClickStreamFlow)
-    Application that matches Webpage click stream events with view stream events.
+    Demonstrates using TigonSQL to write a webpage click stream data processing application.
 - Developer Guides, located in the source distribution in `/tigon-docs/developer-guide/source`
   or [online](http://docs.cask.co/tigon/current/en/developer.html)
 
