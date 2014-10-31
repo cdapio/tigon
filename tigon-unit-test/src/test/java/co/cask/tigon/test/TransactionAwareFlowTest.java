@@ -23,41 +23,42 @@ import co.cask.tephra.inmemory.DetachedTxSystemClient;
 import co.cask.tigon.api.annotation.HashPartition;
 import co.cask.tigon.api.annotation.ProcessInput;
 import co.cask.tigon.api.annotation.Tick;
+import co.cask.tigon.api.common.Bytes;
 import co.cask.tigon.api.flow.Flow;
 import co.cask.tigon.api.flow.FlowSpecification;
 import co.cask.tigon.api.flow.flowlet.AbstractFlowlet;
 import co.cask.tigon.api.flow.flowlet.FlowletContext;
 import co.cask.tigon.api.flow.flowlet.OutputEmitter;
 import com.google.common.base.Throwables;
-import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
+import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseTestingUtility;
 import org.apache.hadoop.hbase.client.Get;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
-import org.apache.hadoop.hbase.util.Bytes;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
  * Test adding and using {@link TransactionAware}s via {@link FlowletContext}s.
  */
-@Ignore
 public class TransactionAwareFlowTest extends TestBase {
   private static HBaseTestingUtility testUtil;
   private static HBaseAdmin hBaseAdmin;
-  private static HTable hTable;
-  private static TransactionAwareHTable transactionAwareHTable;
-  private static TransactionContext transactionContext;
+  private static String confFilePath;
+  private HTable hTable;
 
   private static final class TestBytes {
     private static final byte[] table = Bytes.toBytes("testTable");
@@ -74,6 +75,15 @@ public class TransactionAwareFlowTest extends TestBase {
     testUtil = new HBaseTestingUtility();
     testUtil.startMiniCluster();
     hBaseAdmin = testUtil.getHBaseAdmin();
+
+    File confFile = tmpFolder.newFile("config.xml");
+    FileOutputStream fos = new FileOutputStream(confFile);
+    try {
+      hBaseAdmin.getConfiguration().writeXml(fos);
+    } finally {
+      fos.close();
+    }
+    confFilePath = confFile.getAbsolutePath();
   }
 
   @AfterClass
@@ -85,8 +95,6 @@ public class TransactionAwareFlowTest extends TestBase {
   @Before
   public void setupBeforeTest() throws IOException {
     hTable = testUtil.createTable(TestBytes.table, TestBytes.family);
-    transactionAwareHTable = new TransactionAwareHTable(hTable);
-    transactionContext = new TransactionContext(new DetachedTxSystemClient(), transactionAwareHTable);
   }
 
   @After
@@ -97,7 +105,12 @@ public class TransactionAwareFlowTest extends TestBase {
 
   @Test
   public void testAddTransactionAware() throws Exception {
-    FlowManager flowManager = deployFlow(TestFlow.class, ImmutableMap.<String, String>of());
+    TransactionAwareHTable txAwareHTable = new TransactionAwareHTable(hTable);
+    TransactionContext transactionContext = new TransactionContext(new DetachedTxSystemClient(), txAwareHTable);
+
+    Map<String, String> runtimeArgs = Maps.newHashMap();
+    runtimeArgs.put("conf.path", confFilePath);
+    FlowManager flowManager = deployFlow(TestFlow.class, runtimeArgs);
 
     TimeUnit.SECONDS.sleep(5);
 
@@ -106,7 +119,7 @@ public class TransactionAwareFlowTest extends TestBase {
     TimeUnit.SECONDS.sleep(5);
 
     transactionContext.start();
-    Result result = transactionAwareHTable.get(new Get(TestBytes.row));
+    Result result = txAwareHTable.get(new Get(TestBytes.row));
     transactionContext.finish();
 
     // Test that values are written correctly from init, process and destroy.
@@ -143,21 +156,27 @@ public class TransactionAwareFlowTest extends TestBase {
 
     private OutputEmitter<Integer> intEmitter;
     private int i = 0;
+    private TransactionAwareHTable txAwareHTable;
 
     @Override
     public void initialize(FlowletContext context) throws Exception {
-      context.addTransactionAware(transactionAwareHTable);
+      File confFile = new File(context.getRuntimeArguments().get("conf.path"));
+      Configuration configuration = new Configuration(true);
+      configuration.addResource(confFile.toURI().toURL());
+
+      txAwareHTable = new TransactionAwareHTable(new HTable(configuration, TestBytes.table));
+      context.addTransactionAware(txAwareHTable);
 
       Put put = new Put(TestBytes.row);
       put.add(TestBytes.family, TestBytes.initQualifier, TestBytes.value);
-      transactionAwareHTable.put(put);
+      txAwareHTable.put(put);
     }
 
     @Tick(delay = 1L, unit = TimeUnit.SECONDS)
     public void process() throws Exception {
       Put put = new Put(TestBytes.row);
       put.add(TestBytes.family, TestBytes.processQualifier, TestBytes.value);
-      transactionAwareHTable.put(put);
+      txAwareHTable.put(put);
 
       Integer value = ++i;
       intEmitter.emit(value, "integer", value.hashCode());
@@ -168,7 +187,7 @@ public class TransactionAwareFlowTest extends TestBase {
       Put put = new Put(TestBytes.row);
       put.add(TestBytes.family, TestBytes.destroyQualifier, TestBytes.value);
       try {
-        transactionAwareHTable.put(put);
+        txAwareHTable.put(put);
       } catch (IOException e) {
         throw Throwables.propagate(e);
       }

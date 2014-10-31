@@ -20,9 +20,6 @@ package co.cask.tigon.conf;
  * Constants used by different systems are all defined here.
  */
 public final class Constants {
-
-  public static final String VERSION = "0.1.0";
-
   /**
    * HDFS Namespaces used in Distributed Mode.
    */

@@ -17,8 +17,8 @@
 package co.cask.tigon.sql.manager;
 
 import com.google.common.collect.ImmutableList;
-import org.apache.twill.filesystem.Location;
 
+import java.io.File;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,7 +37,7 @@ public class HubDataStore {
   private final int hftaCount;
   private final InetSocketAddress hubAddress;
   private final InetSocketAddress clearingHouseAddress;
-  private final Location binaryLocation;
+  private final File binaryLocation;
 
   private HubDataStore(Builder builder) {
     this.instanceName = builder.instanceName;
@@ -121,7 +121,7 @@ public class HubDataStore {
    *
    * @return location of the binary files as a string.
    */
-  public Location getBinaryLocation() {
+  public File getBinaryLocation() {
     return binaryLocation;
   }
 
@@ -137,7 +137,7 @@ public class HubDataStore {
     private int hftaCount;
     private InetSocketAddress hubAddress;
     private InetSocketAddress clearingHouseAddress;
-    private Location binaryLocation;
+    private File binaryLocation;
 
     public Builder setInstanceName(String name) {
       this.instanceName = name;
@@ -174,7 +174,7 @@ public class HubDataStore {
       return this;
     }
 
-    public Builder setBinaryLocation(Location path) {
+    public Builder setBinaryLocation(File path) {
       this.binaryLocation = path;
       return this;
     }

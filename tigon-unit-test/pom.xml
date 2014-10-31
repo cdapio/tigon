@@ -5,7 +5,7 @@
   <parent>
     <artifactId>tigon</artifactId>
     <groupId>co.cask.tigon</groupId>
-    <version>0.1.0</version>
+    <version>0.2.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -14,21 +14,6 @@
   <packaging>jar</packaging>
 
   <dependencies>
-    <!-- Need to make it first to override hive-exec -->
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>co.cask.tigon</groupId>
-      <artifactId>tigon-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>co.cask.tigon</groupId>
-      <artifactId>tigon-common</artifactId>
-      <version>${project.version}</version>
-    </dependency>
     <dependency>
       <groupId>co.cask.tigon</groupId>
       <artifactId>tigon-flow</artifactId>
@@ -50,16 +35,16 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>co.cask.tephra</groupId>
-      <artifactId>tephra-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.twill</groupId>
-      <artifactId>twill-api</artifactId>
-    </dependency>
-    <dependency>
       <groupId>co.cask.http</groupId>
       <artifactId>netty-http</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-minicluster</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hbase</groupId>
+      <artifactId>hbase-testing-util</artifactId>
     </dependency>
   </dependencies>
 

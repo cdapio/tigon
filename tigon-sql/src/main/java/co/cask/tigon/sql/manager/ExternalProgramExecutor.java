@@ -16,14 +16,12 @@
 
 package co.cask.tigon.sql.manager;
 
-import co.cask.tigon.io.Locations;
 import com.google.common.base.Charsets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Closeables;
 import com.google.common.util.concurrent.AbstractExecutionThreadService;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import org.apache.twill.filesystem.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,8 +44,8 @@ public final class ExternalProgramExecutor extends AbstractExecutionThreadServic
   private static final long SHUTDOWN_TIMEOUT_SECONDS = 5;
 
   private final String name;
-  private final Location executable;
-  private final Location workingDir;
+  private final File executable;
+  private final File workingDir;
   private final String[] args;
   private ExecutorService executor;
   private Process process;
@@ -56,16 +54,16 @@ public final class ExternalProgramExecutor extends AbstractExecutionThreadServic
   private String pid;
 
 
-  public ExternalProgramExecutor(String name, Location cwd, Location executable, String...args) {
+  public ExternalProgramExecutor(String name, File cwd, File executable, String...args) {
     this.name = name;
     this.workingDir = cwd;
     this.executable = executable;
     this.args = args;
   }
 
-  public ExternalProgramExecutor(String name, Location executable, String...args) {
+  public ExternalProgramExecutor(String name, File executable, String...args) {
     this.name = name;
-    this.workingDir = Locations.getParent(executable);
+    this.workingDir = executable.getParentFile();
     this.executable = executable;
     this.args = args;
   }
@@ -139,7 +137,7 @@ public final class ExternalProgramExecutor extends AbstractExecutionThreadServic
     }
 
     List<String> cmd = ImmutableList.<String>builder().add(executable.toURI().getPath()).add(args).build();
-    process = new ProcessBuilder(cmd).directory(new File(workingDir.toURI().getPath())).start();
+    process = new ProcessBuilder(cmd).directory(workingDir).start();
     executor.execute(createProcessRunnable(process));
     executor.execute(createLogRunnable(process));
 

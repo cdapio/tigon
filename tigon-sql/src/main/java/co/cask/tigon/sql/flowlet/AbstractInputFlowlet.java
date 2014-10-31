@@ -42,9 +42,6 @@ import com.google.common.io.Files;
 import org.apache.commons.io.FileUtils;
 import org.apache.twill.common.Cancellable;
 import org.apache.twill.common.Services;
-import org.apache.twill.filesystem.LocalLocationFactory;
-import org.apache.twill.filesystem.Location;
-import org.apache.twill.filesystem.LocationFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -208,13 +205,11 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
 
     // Setup temporary directory structure
     tmpFolder = Files.createTempDir();
-    LocationFactory locationFactory = new LocalLocationFactory(tmpFolder);
-
-    Location baseDir = locationFactory.create("baseDir");
+    File baseDir = new File(tmpFolder, "baseDir");
     baseDir.mkdirs();
 
     InputFlowletConfiguration inputFlowletConfiguration = new LocalInputFlowletConfiguration(baseDir, spec);
-    Location binDir = inputFlowletConfiguration.createStreamEngineProcesses();
+    File binDir = inputFlowletConfiguration.createStreamEngineProcesses();
 
     healthInspector = new HealthInspector(this);
     metricsRecorder = new MetricsRecorder(metrics);
@@ -307,7 +302,11 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
    */
   @Override
   public void notifyFailure(Set<String> errorProcessNames) {
-    LOG.info("Missing Pings From : " + errorProcessNames.toString());
+    if (errorProcessNames != null) {
+      LOG.warn("Missing pings from : " + errorProcessNames.toString());
+    } else {
+      LOG.warn("No heartbeats registered");
+    }
     healthInspector.stopAndWait();
     healthInspector = new HealthInspector(this);
     inputFlowletService.restartService(healthInspector);
@@ -317,6 +316,10 @@ public abstract class AbstractInputFlowlet extends AbstractFlowlet implements Pr
   @Override
   public void announceReady() {
     FlowletContext ctx = getContext();
+    if (portsAnnouncementList.size() > 0) {
+      // Ingestion end-points have already been announced
+      return;
+    }
     for (String key : dataIngestionPortsMap.keySet()) {
       portsAnnouncementList.add(ctx.announce(key, inputFlowletService.getDataPort(key)));
       LOG.info("Announced Data Port {} - {}", key, inputFlowletService.getDataPort(key));

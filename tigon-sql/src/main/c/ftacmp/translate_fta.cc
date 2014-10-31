@@ -205,7 +205,7 @@ int main(int argc, char **argv){
 		"\t[-P] : link with PADS\n"
 		"\t[-h] : override host name.\n"
 		"\t[-c] : clean out Makefile and hfta_*.cc first.\n"
-		"\t[-R] : path to root of STREAMING\n"
+		"\t[-R] : path to root of tigon\n"
 ;
 
 //		parameters gathered from command line processing
@@ -1846,6 +1846,8 @@ for(q=0;q<hfta_sets.size();++q){
 	  	vector<tablevar_t *> tvec =  split_queries[l]->query_plan[0]->get_input_tbls();
 		string liface = tvec[0]->get_interface();
 		string lmach = tvec[0]->get_machine();
+		if (lmach == "")
+			lmach = hostname;
 	  	interface_names.push_back(liface);
 	  	machine_names.push_back(lmach);
 //printf("Machine is %s\n",lmach.c_str());
@@ -2390,6 +2392,10 @@ for(ssi_el=extra_external_libs.begin();ssi_el!=extra_external_libs.end();++ssi_e
 
 	  	// iterate through interface properties
 		vector<string> iface_properties = ifaces_db->get_iface_properties(lmach,*sir,erri,err_str);
+		if (erri) {
+			fprintf(stderr,"ERROR cannot retrieve interface properties for %s.%s, %s\n",lmach.c_str(), sir->c_str(), err_str.c_str());
+			exit(1);
+		}
 		if (iface_properties.empty())
 			lfta_val[lmach] += "\t\treturn NULL;\n";
 		else {
@@ -2668,7 +2674,7 @@ void generate_makefile(vector<string> &input_file_names, int nfiles,
 		fprintf(outfl,"-last ");
 	if(use_pads)
 		fprintf(outfl, "-ldll -ldl ");
-	fprintf(outfl," -lgscpaux -lcurl");
+	fprintf(outfl," -lgscpaux");
 #ifdef GCOV
 	fprintf(outfl," -fprofile-arcs");
 #endif
@@ -2693,7 +2699,7 @@ void generate_makefile(vector<string> &input_file_names, int nfiles,
 	for(i=0;i<hfta_names.size();++i)
 		fprintf(outfl,
 ("%s: %s.o\n"
-"\t$(CPP) -o %s %s.o -L"+root_path+"/lib -lgscpapp -lgscphostaux -lgscphost -lgscpinterface -lgscphftaaux -lgscphostaux -lm -lgscpaux -lclearinghouse -lresolv -lpthread -lgscpaux -lcurl -lgscphftaaux -lgscpaux %s\n"
+"\t$(CPP) -o %s %s.o -L"+root_path+"/lib -lgscpapp -lgscphostaux -lgscphost -lgscpinterface -lgscphftaaux -lgscphostaux -lm -lgscpaux -lclearinghouse -lresolv -lpthread -lgscpaux -lgscphftaaux -lgscpaux %s\n"
 "\n"
 "%s.o: %s.cc\n"
 "\t$(CPP) -o %s.o -c %s.cc\n"

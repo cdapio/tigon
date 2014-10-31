@@ -19,7 +19,6 @@ package co.cask.tigon.sql.manager;
 import co.cask.tigon.sql.util.MetaInformationParser;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.AbstractIdleService;
-import org.apache.twill.filesystem.Location;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +38,7 @@ public class ProcessInitiator extends AbstractIdleService {
   private final List<ExternalProgramExecutor> rtsExecutor;
   private final List<ExternalProgramExecutor> hftaExecutor;
   private final List<ExternalProgramExecutor> gsExitExecutor;
-  private final Location binLocation;
+  private final File binLocation;
 
   /**
    * Constructs ProcessInitiator object for the specified HubDataStore.
@@ -102,7 +101,7 @@ public class ProcessInitiator extends AbstractIdleService {
       com.add(source.getName());
     }
     ExternalProgramExecutor executorService = new ExternalProgramExecutor(
-      "RTS", binLocation.append("rts"), com.toArray(new String[com.size()]));
+      "RTS", new File(binLocation, "rts"), com.toArray(new String[com.size()]));
     rtsExecutor.add(executorService);
     LOG.info("Starting RTS : {}", executorService);
     executorService.startAndWait();
@@ -119,7 +118,7 @@ public class ProcessInitiator extends AbstractIdleService {
       com.add(getHostPort(hubDataStore.getHubAddress()));
       com.add(hubDataStore.getInstanceName());
       ExternalProgramExecutor executorService = new ExternalProgramExecutor(
-        "HFTA-" + i, binLocation.append("hfta_" + i), com.toArray(new String[com.size()]));
+        "HFTA-" + i, new File(binLocation, "hfta_" + i), com.toArray(new String[com.size()]));
       hftaExecutor.add(executorService);
       LOG.info("Starting HFTA : {}", executorService);
       executorService.startAndWait();
@@ -139,7 +138,7 @@ public class ProcessInitiator extends AbstractIdleService {
       com.add(hubDataSink.getFTAName());
       com.add(hubDataSink.getName());
       ExternalProgramExecutor executorService = new ExternalProgramExecutor(
-        "GSEXIT", binLocation.append("GSEXIT"), com.toArray(new String[com.size()]));
+        "GSEXIT", new File(binLocation, "GSEXIT"), com.toArray(new String[com.size()]));
       gsExitExecutor.add(executorService);
       LOG.info("Starting GSEXIT : {}", executorService);
       executorService.startAndWait();

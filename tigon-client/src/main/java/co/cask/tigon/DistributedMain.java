@@ -33,6 +33,7 @@ import co.cask.tigon.guice.TwillModule;
 import co.cask.tigon.guice.ZKClientModule;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import co.cask.tigon.metrics.NoOpMetricsCollectionService;
+import co.cask.tigon.utils.ProjectInfo;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -209,10 +210,12 @@ public class DistributedMain {
           for (InetSocketAddress socketAddress : flowOperations.discover(args[1], args[2])) {
             out.println(String.format("%s:%s", socketAddress.getHostName(), socketAddress.getPort()));
           }
+        } else if (cmd.equals(CLICommands.SHOWLOGS)) {
+          flowOperations.addLogHandler(args[1], System.out);
         } else if (cmd.equals(CLICommands.SERVICEINFO)) {
           out.println(StringUtils.join(flowOperations.getServices(args[1]), "\n"));
         } else if (cmd.equals(CLICommands.VERSION)) {
-          out.println(Constants.VERSION);
+          out.println(ProjectInfo.getVersion().getBuildVersion());
         } else if (cmd.equals(CLICommands.HELP)) {
           try {
             out.println(CLICommands.valueOf(args[1].toUpperCase()).printHelp());

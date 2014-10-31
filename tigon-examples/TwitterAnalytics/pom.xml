@@ -21,7 +21,7 @@
   <parent>
     <artifactId>tigon-examples</artifactId>
     <groupId>co.cask.tigon</groupId>
-    <version>0.1.0</version>
+    <version>0.2.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
@@ -32,23 +32,6 @@
   </properties>
 
   <dependencies>
-    <dependency>
-      <groupId>co.cask.tigon</groupId>
-      <artifactId>tigon-api</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.google.code.gson</groupId>
-      <artifactId>gson</artifactId>
-    </dependency>
     <dependency>
       <groupId>org.twitter4j</groupId>
       <artifactId>twitter4j-core</artifactId>

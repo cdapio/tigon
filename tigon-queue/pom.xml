@@ -20,25 +20,23 @@
   <parent>
     <groupId>co.cask.tigon</groupId>
     <artifactId>tigon</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.1</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
 
   <artifactId>tigon-queue</artifactId>
+  <name>Tigon Queue</name>
+  <packaging>jar</packaging>
 
   <dependencies>
     <dependency>
       <groupId>co.cask.tigon</groupId>
-      <artifactId>tigon-common</artifactId>
+      <artifactId>tigon-yarn</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>co.cask.tephra</groupId>
       <artifactId>tephra-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.hadoop</groupId>
-      <artifactId>hadoop-common</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.hbase</groupId>
@@ -47,14 +45,6 @@
     <dependency>
       <groupId>org.apache.hadoop</groupId>
       <artifactId>hadoop-mapreduce-client-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.twill</groupId>
-      <artifactId>twill-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.twill</groupId>
-      <artifactId>twill-core</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.hadoop</groupId>

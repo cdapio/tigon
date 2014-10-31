@@ -54,7 +54,7 @@ import java.util.Map;
  *    </code>
  *  </pre>
  *
- * See the <i>Cask DAP Developer Guide</i> and the CDAP instance example applications.
+ * See the <i>Tigon Developer Guide</i> and Tigon example applications.
  *
  * @see co.cask.tigon.api.flow.flowlet.Flowlet Flowlet
  *
@@ -219,6 +219,14 @@ public interface FlowSpecification extends ProgramSpecification {
         flowlets.put(flowletName, flowletDef);
 
         return this;
+      }
+
+      /**
+       * Constructs a {@link FlowSpecification}.
+       * @return An instance of {@link FlowSpecification}
+       */
+      public FlowSpecification build() {
+        return new DefaultFlowSpecification(name, description, flowlets, connections);
       }
 
       /**
