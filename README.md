@@ -63,7 +63,7 @@ Note: To run the TigonSQL Stream Engine outside of Tigon, libz, Perl 5.x, and Py
 ### Download
 
 Pre-compiled sources and related files can be downloaded in a zip file: 
-[tigon-developer-release-0.2.0.zip.](http://repository.cask.co/downloads/co/cask/tigon/tigon-developer-release/0.2.0/tigon-developer-release-0.2.0.zip)
+[tigon-developer-release-0.2.1.zip.](http://repository.cask.co/downloads/co/cask/tigon/tigon-developer-release/0.2.1/tigon-developer-release-0.2.1.zip)
 
 ### Install 
 
@@ -109,6 +109,8 @@ Now that you've had a look at the Tigon SDK, take a look at:
 - [Reference Applications:](https://github.com/caskdata/tigon-apps)
   - [AdNetworkFlow:](https://github.com/caskdata/tigon-apps/tree/develop/AdNetworkFlow)
     Demonstrates using Tigon to write a realtime bidding (RTB) advertisement framework
+  - [ClickStreamFlow:](https://github.com/caskdata/tigon-apps/tree/develop/ClickStreamFlow)
+    Application that matches Webpage click stream events with view stream events.
 - Developer Guides, located in the source distribution in `/tigon-docs/developer-guide/source`
   or [online](http://docs.cask.co/tigon/current/en/developer.html)
 
