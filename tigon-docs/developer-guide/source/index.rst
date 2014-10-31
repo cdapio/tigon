@@ -94,7 +94,7 @@ Where to Go Next
 
 .. |remaining| replace:: **Remaining Sections:**
 
-- |remaining| the final documentation sections cover the :doc:`Licenses and Copyrights,
+- |remaining| the final sections cover the :doc:`Licenses and Copyrights,
   <licenses>` :doc:`Releases Notes, <release-notes>` and a :doc:`FAQ. <faq>`
 
 
