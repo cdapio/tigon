@@ -1,35 +1,35 @@
-RRunning and developing test suites.
+Running and developing test suites.
 
-To run the test suite, cd to Streaming/test and execute run_test.pl
-The result will be placed in a file
-	test_results_<yyyy>_<mm>_<dd>.txt
-
+To run the test suite, cd to tigon/tigon-sql/src/test/scripts and execute run_tests.py
+The results will be placed in a files
+	tigon/tigon-sql/target/SQL-test-reports/[TEST_NAME]_test_results_<yyyy>_<mm>_<dd>.txt	
+	
 The test suite contains a collection of tests; each test can contain a
 collection of subtests; subtests may contain subsubtests and so on.
 A test is places in a directory the same name, subtests are placed in
 subdirectories with corresponding names, and so on.
 
-For example, at the time of this writing the STREAMING/test directory
+For example, at the time of this writing the tigon/tigon-sql/src/test/scripts directory
 contains two tests, TestJoins and TestTypes, in directories
-STREAMING/test/TestJoins and STREAMING/test/TestTypes respectively.  The
+tigon/tigon-sql/src/test/TestJoins and tigon/tigon-sql/src/test/TestTypes respectively.  The
 TestJoins test contains subtests inner_join, ..., right_outer_join in
-subdirectories STREAMING/test/TestJoins/inner_join through
-STREAMING/test/TestJoins/right_outer_join respectively.
+subdirectories tigon/tigon-sql/src/test/TestJoins/inner_join through
+tigon/tigon-sql/src/test/TestJoins/right_outer_join respectively.
 
-To create a new test, create a subdirectory off of STREAMING/test ith the
-test's name.  Put a file run_test.pl in the sibdirectory.  The script
-STREAMING/test/run_test.pl will discover all subdirectories and invoke
-run_test.pl to eecute each test.
+To create a new test, create a subdirectory off of tigon/tigon-sql/src/test in the
+test's name.  Put a file run_test.sh in the subdirectory.  The script
+tigon/tigon-sql/src/test/run_tests.py will discover all subdirectories and invoke
+run_test.sh to execute each test.
 
 You may structure subtests, subsubtests, and so on in the manner of your
 choosing, and you make execute them in the manner of your choosing.  However
-we recommend using a separate run_test.pl script in each subdirectory.
+we recommend using a separate run_test.sh script in each subdirectory.
 
 A test or test suite may need to make use of a specific set of schemas.
 Please copy the schema file into
-	STREAMING/cfg/packet_schema_test.txt
+	tigon/tigon-sql/cfg/packet_schema_test.txt
 to build a test, run
-	STREAMING/bin/buildit_test.pl
+	tigon/tigon-sql/bin/buildit_test.pl
 in the test or subtest directory.  This buildit script will use
 packet_schema_test.txt as the schema file.
 
@@ -38,7 +38,7 @@ readily composed and their results readily parsed.
 
 Output:
 Each test, subtest, etc., should emit results to stdout.  This output will be
-captured by the parent run_test in STREAMING/test
+captured by the parent run_tests.py in tigon/tigon-sql/src/test
 
 1) The output of each test, subtest, etc. should start with the line
 
