@@ -13,7 +13,7 @@
 // -------------------------------------------
 
 DEFINE {
-query_name 'type_IPV6';
+query_name 'test_query';
 }
-select timestamp, IPV6Key, IPV6Value
-from [csv].CSV_TIMESTAMP_IPV6
+select IPV6Key, IPV6Value
+from [csvtest].CSV_EXAMPLE_IPV6

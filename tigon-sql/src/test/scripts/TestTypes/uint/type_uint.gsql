@@ -13,7 +13,7 @@
 // -------------------------------------------
 
 DEFINE {
-query_name 'type_uint';
+query_name 'test_query';
 }
-select timestamp, uintKey, uintValue
-from [csv].CSV_TIMESTAMP_uint
+select uintKey, uintValue
+from [csvtest].CSV_EXAMPLE_uint

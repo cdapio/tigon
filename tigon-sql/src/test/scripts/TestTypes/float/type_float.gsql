@@ -13,7 +13,7 @@
 // -------------------------------------------
 
 DEFINE {
-query_name 'type_float';
+query_name 'test_query';
 }
-select timestamp, floatKey, floatValue
-from [csv].CSV_TIMESTAMP_float
+select floatKey, floatValue
+from [csvtest].CSV_EXAMPLE_float

@@ -19,5 +19,12 @@
 	    <StartUpDelay value='10'/>
 	    <Verbose value='TRUE'/>
 	  </Interface>
+          <Interface Name='CSV0_SINGLE'>
+            <InterfaceType value='CSV'/>
+            <CSVSeparator value='|'/>
+            <Filename value='Input.txt'/>
+            <Verbose value='TRUE'/>
+	    <Singlefile value='TRUE'/>
+          </Interface>
 	 </Host>
 </Resources>

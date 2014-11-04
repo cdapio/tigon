@@ -13,7 +13,7 @@
 // -------------------------------------------
 
 DEFINE {
-query_name 'type_string';
+query_name 'test_query';
 }
-select timestamp, stringKey, stringValue
-from [csv].CSV_TIMESTAMP_string
+select stringKey, stringValue
+from [csvtest].CSV_EXAMPLE_string

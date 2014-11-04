@@ -13,7 +13,7 @@
 // -------------------------------------------
 
 DEFINE {
-query_name 'type_ullong';
+query_name 'test_query';
 }
-select timestamp, ullongKey, ullongValue
-from [csv].CSV_TIMESTAMP_ullong
+select ullongKey, ullongValue
+from [csvtest].CSV_EXAMPLE_ullong
