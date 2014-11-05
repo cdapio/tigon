@@ -19,6 +19,7 @@ package co.cask.tigon.cli.commands;
 import co.cask.common.cli.CLI;
 import co.cask.common.cli.Command;
 import co.cask.common.cli.completers.StringsCompleter;
+import co.cask.common.cli.exception.InvalidCommandException;
 import co.cask.tigon.cli.FlowOperations;
 import com.google.common.base.Supplier;
 import com.google.common.base.Suppliers;
@@ -42,12 +43,11 @@ import java.util.Map;
  */
 public class TigonCLI {
   private final List<Command> commands;
-  private final Map<String, Completer> completerMap;
   private final FlowOperations operations;
-  private final HelpCommand helpCommand;
+  private final CLI<Command> cli;
 
   @Inject
-  public TigonCLI(Injector injector) {
+  public TigonCLI(Injector injector) throws IOException {
     operations = injector.getInstance(FlowOperations.class);
     commands = ImmutableList.of(
       injector.getInstance(DebugInfoCommand.class),
@@ -65,14 +65,14 @@ public class TigonCLI {
       injector.getInstance(StopCommand.class),
       injector.getInstance(VersionCommand.class));
 
-    helpCommand = new HelpCommand(new Supplier<Iterable<Command>>() {
+    HelpCommand helpCommand = new HelpCommand(new Supplier<Iterable<Command>>() {
       @Override
       public Iterable<Command> get() {
         return commands;
       }
     });
 
-    completerMap = ImmutableMap.of(
+    Map<String, Completer> completerMap = ImmutableMap.of(
       "flow-name", new StringsCompleter() {
         @Override
         protected Supplier<Collection<String>> getStringsSupplier() {
@@ -105,11 +105,16 @@ public class TigonCLI {
         }
       }
     );
+
+    cli = new CLI<Command>(Iterables.concat(commands, ImmutableList.<Command>of(helpCommand)), completerMap);
+    cli.getReader().setPrompt("tigon> ");
   }
 
   public void start(PrintStream out) throws IOException {
-    CLI cli = new CLI<Command>(Iterables.concat(commands, ImmutableList.<Command>of(helpCommand)), completerMap);
-    cli.getReader().setPrompt("tigon> ");
     cli.startInteractiveMode(out);
+  }
+
+  public void execute(String command, PrintStream out) throws IOException, InvalidCommandException {
+    cli.execute(command, out);
   }
 }
