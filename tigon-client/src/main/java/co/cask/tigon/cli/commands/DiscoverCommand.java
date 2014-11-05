@@ -19,10 +19,13 @@ package co.cask.tigon.cli.commands;
 import co.cask.common.cli.Arguments;
 import co.cask.common.cli.Command;
 import co.cask.tigon.cli.FlowOperations;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 import java.io.PrintStream;
 import java.net.InetSocketAddress;
+import java.util.List;
 
 /**
  * Command to discover the endpoint of a Service announced in a Flow.
@@ -37,16 +40,16 @@ public class DiscoverCommand implements Command {
 
   @Override
   public void execute(Arguments arguments, PrintStream printStream) throws Exception {
-    String flowName = arguments.get("flow-name");
     String serviceName = arguments.get("service-name");
-    for (InetSocketAddress socketAddress : operations.discover(flowName, serviceName)) {
+    List<String> nameParts = Lists.newArrayList(Splitter.on(".").trimResults().split(serviceName));
+    for (InetSocketAddress socketAddress : operations.discover(nameParts.get(0), nameParts.get(1))) {
       printStream.println(String.format("%s:%s", socketAddress.getHostName(), socketAddress.getPort()));
     }
   }
 
   @Override
   public String getPattern() {
-    return "discover <flow-name> <service-name>";
+    return "discover <service-name>";
   }
 
   @Override

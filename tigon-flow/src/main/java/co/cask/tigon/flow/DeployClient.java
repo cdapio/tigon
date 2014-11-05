@@ -148,9 +148,9 @@ public class DeployClient {
     }
   }
 
-  public ProgramController startFlow(Program program, Map<String, String> userArgs) throws Exception {
+  public ProgramController startFlow(Program program, Map<String, String> userArgs, boolean debug) throws Exception {
     return programRunnerFactory.create(ProgramRunnerFactory.Type.FLOW).run(
-      program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments(userArgs)));
+      program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments(userArgs), debug));
   }
 
   public ProgramController startFlow(File jarPath, String classToLoad, File jarUnpackDir, Map<String, String> userArgs)

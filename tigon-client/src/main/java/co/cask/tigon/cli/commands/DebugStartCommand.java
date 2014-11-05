@@ -17,41 +17,34 @@
 package co.cask.tigon.cli.commands;
 
 import co.cask.common.cli.Arguments;
-import co.cask.common.cli.Command;
 import co.cask.tigon.cli.FlowOperations;
-import com.google.common.base.Splitter;
-import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 
 import java.io.PrintStream;
-import java.util.List;
 
 /**
- * Command to set the instance count of a Flowlet in a Flow.
+ * Command to start a Flow in debug mode.
  */
-public class SetCommand implements Command {
-  private final FlowOperations operations;
+public class DebugStartCommand extends StartCommand {
 
   @Inject
-  public SetCommand(FlowOperations operations) {
-    this.operations = operations;
+  public DebugStartCommand(FlowOperations operations) {
+    super(operations);
   }
 
   @Override
-  public void execute(Arguments arguments, PrintStream printStream) throws Exception {
-    String flowletName = arguments.get("flowlet-name");
-    List<String> nameParts = Lists.newArrayList(Splitter.on(".").trimResults().split(flowletName));
-    String instanceCount = arguments.get("instance-count");
-    operations.setInstances(nameParts.get(0), nameParts.get(1), Integer.valueOf(instanceCount));
+  public void execute(Arguments arguments, PrintStream output) throws Exception {
+    startFlow(arguments, output, true);
   }
 
   @Override
   public String getPattern() {
-    return "set <flowlet-name> <instance-count>";
+    return "debug " + basePattern();
   }
 
   @Override
   public String getDescription() {
-    return "Set the number of Flowlet Instances for a Flow";
+    return "Starts a Flow with optional Runtime Args in debug mode." +
+      " Runtime Args are specified as : '--key1=v1, --key2=v2'";
   }
 }

@@ -20,8 +20,10 @@ import co.cask.common.cli.Arguments;
 import co.cask.common.cli.Command;
 import co.cask.tigon.cli.FlowOperations;
 import com.google.inject.Inject;
+import org.apache.twill.api.TwillRunResources;
 
 import java.io.PrintStream;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -39,9 +41,9 @@ public class FlowletInfoCommand implements Command {
   public void execute(Arguments arguments, PrintStream printStream) throws Exception {
     String flowName = arguments.get("flow-name");
     printStream.println(String.format("%-20s %s", "Flowlet Name", "Instance Count"));
-    Map<String, Integer> flowletInfoMap = operations.getFlowInfo(flowName);
-    for (Map.Entry<String, Integer> flowletInfo : flowletInfoMap.entrySet()) {
-      printStream.println(String.format("%-20s %s", flowletInfo.getKey(), flowletInfo.getValue()));
+    Map<String, Collection<TwillRunResources>> flowletInfoMap = operations.getFlowInfo(flowName);
+    for (String flowletName : flowletInfoMap.keySet()) {
+      printStream.println(String.format("%-20s %s", flowletName, flowletInfoMap.get(flowletName).size()));
     }
   }
 

@@ -25,6 +25,7 @@ import com.google.common.base.Suppliers;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.inject.Inject;
 import com.google.inject.Injector;
 import jline.console.completer.Completer;
@@ -49,6 +50,8 @@ public class TigonCLI {
   public TigonCLI(Injector injector) {
     operations = injector.getInstance(FlowOperations.class);
     commands = ImmutableList.of(
+      injector.getInstance(DebugInfoCommand.class),
+      injector.getInstance(DebugStartCommand.class),
       injector.getInstance(DeleteCommand.class),
       injector.getInstance(DiscoverCommand.class),
       injector.getInstance(FlowletInfoCommand.class),
@@ -76,7 +79,31 @@ public class TigonCLI {
           return Suppliers.<Collection<String>>ofInstance(operations.listAllFlows());
         }
       },
-      "path-to-jar", new FileNameCompleter()
+      "path-to-jar", new FileNameCompleter(),
+      "flowlet-name", new StringsCompleter() {
+        @Override
+        protected Supplier<Collection<String>> getStringsSupplier() {
+          List<String> flowletNames = Lists.newArrayList();
+          for (String flowName : operations.listAllFlows()) {
+            for (String flowletName : operations.getFlowInfo(flowName).keySet()) {
+              flowletNames.add(String.format("%s.%s", flowName, flowletName));
+            }
+          }
+          return Suppliers.<Collection<String>>ofInstance(flowletNames);
+        }
+      },
+      "service-name", new StringsCompleter() {
+        @Override
+        protected Supplier<Collection<String>> getStringsSupplier() {
+          List<String> serviceNames = Lists.newArrayList();
+          for (String flowName : operations.listAllFlows()) {
+            for (String serviceName : operations.getServices(flowName)) {
+              serviceNames.add(String.format("%s.%s", flowName, serviceName));
+            }
+          }
+          return Suppliers.<Collection<String>>ofInstance(serviceNames);
+        }
+      }
     );
   }
 

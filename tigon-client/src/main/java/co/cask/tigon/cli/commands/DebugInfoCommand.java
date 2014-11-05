@@ -19,56 +19,44 @@ package co.cask.tigon.cli.commands;
 import co.cask.common.cli.Arguments;
 import co.cask.common.cli.Command;
 import co.cask.tigon.cli.FlowOperations;
-import co.cask.tigon.flow.DeployClient;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.inject.Inject;
+import org.apache.twill.api.TwillRunResources;
 
-import java.io.File;
 import java.io.PrintStream;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
 /**
- * Command to start a Flow.
+ * Command to retrieve remote debug hostname and port.
  */
-public class StartCommand implements Command {
+public class DebugInfoCommand implements Command {
   private final FlowOperations operations;
 
   @Inject
-  public StartCommand(FlowOperations operations) {
+  public DebugInfoCommand(FlowOperations operations) {
     this.operations = operations;
   }
 
   @Override
   public void execute(Arguments arguments, PrintStream output) throws Exception {
-    startFlow(arguments, output, false);
-  }
-
-  protected void startFlow(Arguments arguments, PrintStream output, boolean debug) throws Exception {
-    String jarPath = arguments.get("path-to-jar");
-    String className = arguments.get("flow-classname");
-    Map<String, String> runtimeArgs = Maps.newHashMap();
-    if (arguments.hasArgument("runtime-args")) {
-      String args = arguments.get("runtime-args");
-      List<String> argList = Lists.newArrayList(Splitter.on(',').omitEmptyStrings().split(args));
-      runtimeArgs = DeployClient.fromPosixArray(argList);
+    String flowletName = arguments.get("flowlet-name");
+    List<String> nameParts = Lists.newArrayList(Splitter.on(".").trimResults().split(flowletName));
+    Map<String, Collection<TwillRunResources>> flowletInfoMap = operations.getFlowInfo(nameParts.get(0));
+    for (TwillRunResources resources : flowletInfoMap.get(nameParts.get(1))) {
+      output.println(String.format("%s:%s", resources.getHost(), resources.getDebugPort()));
     }
-    operations.startFlow(new File(jarPath), className, runtimeArgs, debug);
-  }
-
-  protected String basePattern() {
-    return "<path-to-jar> <flow-classname> [<runtime-args>]";
   }
 
   @Override
   public String getPattern() {
-    return "start " + basePattern();
+    return "debuginfo <flowlet-name>";
   }
 
   @Override
   public String getDescription() {
-    return "Starts a Flow with optional Runtime Args. Runtime Args are specified as : '--key1=v1, --key2=v2' ";
+    return "Prints the debug hostname and port for the Flowlet. Flow should have been started in debug mode.";
   }
 }
