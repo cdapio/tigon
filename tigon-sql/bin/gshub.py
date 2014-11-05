@@ -123,6 +123,10 @@ def extract_instance_name(data) :
 # handler for HTTP requests. We will override do_PORT and do_GET of BaseHTTPRequestHandler
 class HTTPRequestHandler(BaseHTTPRequestHandler):
 
+	# silence log messages
+	def log_message(self, format, *args):
+		return
+
 	def do_POST(self):
 		if re.search(ANNOUNCE_INSTANCE_URL, self.path) != None:		
 			if self.headers.get_content_type() == 'application/json' :

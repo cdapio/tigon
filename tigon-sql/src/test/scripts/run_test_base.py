@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3.4
+#!/usr/local/bin/python3.4 -u
 
 # ------------------------------------------------
 #   Copyright 2014 AT&T Intellectual Property
@@ -28,16 +28,13 @@ import difflib
 
 
 TIGON_ROOT_STR = 'tigon'
-TIGON_LOG_ROOT_STR = 'tigon-sql/target/SQL-test-reports'
-TIGON_TEST_SCRIPT = 'run_test.pl'
+
+# return codes for test results
+TEST_SUCCESS = 0
+TEST_FAILURE = 1
+TEST_SYSERROR = 2
 
 tigon_root_dir = ''
-
-# name of the test
-test_name = ''
-
-# log file into test resuts
-log_file = None
 
 def run_test(test_dir, subtest_name) :
 	test_status = 'Success'
@@ -50,7 +47,7 @@ def run_test(test_dir, subtest_name) :
 	err_code = os.system('cp -p packet_schema_test.txt ' + tigon_root_dir + 'tigon-sql/cfg')
 	if err_code != 0 :
 		test_status = 'SystemError'
-		log_file.write('Unable to copy packet_schema_test.txt to ' + tigon_root_dir + 'tigon-sql/cfg\n')
+		print('Unable to copy packet_schema_test.txt to ' + tigon_root_dir + 'tigon-sql/cfg')
 		return test_status
 	
 	# create output_spec.cfg file
@@ -64,25 +61,22 @@ def run_test(test_dir, subtest_name) :
 		if name.isdigit() :
 			os.unlink(fname)
 		
-
-		
 	# build a query set
-	log_file.write('Building a query set\n')
+	print('Building a query set')
 	buildit_script = tigon_root_dir + 'tigon-sql/bin/buildit_test.pl'
 	try:
 		output = subprocess.check_output(buildit_script, stderr=subprocess.STDOUT)
-		log_file.write(str(output, 'utf-8'))		
+		print(str(output, 'utf-8'))		
 	except subprocess.CalledProcessError as err:
 		test_status = 'SystemError'
-		log_file.write(str(err.output, 'utf-8'))
-		log_file.write('Build returned error code ' + str(err.returncode ) + '\n')	
+		print(str(err.output, 'utf-8'))
+		print('Build returned error code ' + str(err.returncode ))	
 		return test_status		
-	log_file.write('Build succeded\n')	
+	print('Build succeded')	
 	
 	# execute runit script
-	log_file.write('Executing runit script\n')
-	log_file.flush()	
-	runit_pid = subprocess.Popen('./runit', stdout=log_file, stderr=log_file, preexec_fn=os.setsid).pid
+	print('Executing runit script')
+	runit_pid = subprocess.Popen('./runit', stderr=subprocess.STDOUT, preexec_fn=os.setsid).pid
 	
 	# sleep a bit to let the runtime complete initialization
 	time.sleep(10)
@@ -90,7 +84,7 @@ def run_test(test_dir, subtest_name) :
 	# open gshub.log to find out endpoint for gshub
 	if os.path.exists('gshub.log') == False:
 		test_status = 'SystemError'	
-		log_file.write('Error - runit did not generate gshub.log\n')
+		print('Error - runit did not generate gshub.log')
 		return test_status		
 			
 	gshub_file = open('gshub.log')
@@ -98,22 +92,22 @@ def run_test(test_dir, subtest_name) :
 	gshub_file.close()
 	
 	# start gsgdatprint application to subscribe to the output of test_query
-	log_file.write('Executing ' +  tigon_root_dir + 'tigon-sql/bin/gsgdatprint ' + endpoint + ' default test_query\n')
-	app = subprocess.Popen([tigon_root_dir + 'tigon-sql/bin/gsgdatprint', endpoint, 'default', 'test_query'], stdout=log_file, stderr=log_file)
+	print('Executing ' +  tigon_root_dir + 'tigon-sql/bin/gsgdatprint ' + endpoint + ' default test_query')
+	app = subprocess.Popen([tigon_root_dir + 'tigon-sql/bin/gsgdatprint', endpoint, 'default', 'test_query'], stderr=subprocess.STDOUT)
 	
 	# give an applicatino a chance to start
 	time.sleep(5)
 	
 	# execute start_processing script
 	start_script = tigon_root_dir + 'tigon-sql/bin/start_processing'
-	log_file.write('Executing ' +  start_script + '\n')	
+	print('Executing ' +  start_script)	
 	try:
 		output = subprocess.check_output(start_script, stderr=subprocess.STDOUT, shell=True)
-		log_file.write(str(output, 'utf-8'))		
+		print(str(output, 'utf-8'))		
 	except subprocess.CalledProcessError as err:
 		test_status = 'SystemError'
-		log_file.write(str(err.output, 'utf-8'))
-		log_file.write('Error executing start_processing script, error code ' + str(err.returncode ) + '\n')	
+		print(str(err.output, 'utf-8'))
+		print('Error executing start_processing script, error code ' + str(err.returncode ))	
 		
 	# now wait for gsgdatprint to terminate
 	if test_status == 'Success' : 
@@ -123,18 +117,17 @@ def run_test(test_dir, subtest_name) :
 			app.kill()					
 		elif ret != 0 :
 			test_status = 'SystemError'
-			log_file.flush()		
-			log_file.write('Error - error executing ' + tigon_root_dir + 'tigon-sql/bin/gsgdatprint ' + endpoint + ' default test_query\n')	
+			print('Error - error executing ' + tigon_root_dir + 'tigon-sql/bin/gsgdatprint ' + endpoint + ' default test_query')	
 			
 	# execute stopit script
-	log_file.write('Executing stopit script\n')
+	print('Executing stopit script')
 	try:
 		output = subprocess.check_output('./stopit', stderr=subprocess.STDOUT)
-		log_file.write(str(output, 'utf-8'))			
+		print(str(output, 'utf-8'))			
 	except subprocess.CalledProcessError as err:
 		test_status = 'SystemError'
-		log_file.write(str(err.output, 'utf-8'))
-		log_file.write('stopit returned error code ' + str(err.returncode ) + '\n')	
+		print(str(err.output, 'utf-8'))
+		print('stopit returned error code ' + str(err.returncode))	
 		return test_status
 		
 	if test_status != 'Success' : 
@@ -147,21 +140,21 @@ def run_test(test_dir, subtest_name) :
 		if name.isdigit() :
 			output_file = fname
 			
-	log_file.write('Discovered output file ' + output_file + '\n')
+	print('Discovered output file ' + output_file)
 	
 	# convert output file to CSV format
 	os.system(tigon_root_dir + 'tigon-sql/bin/gdat2ascii ' + output_file + ' > Output.txt')	
-	log_file.write('Converted output file to CSV formatted Output.txt\n')			
+	print('Converted output file to CSV formatted Output.txt')			
 	
 	# compare obtained and expected output files
 	
-	log_file.write('Comparing query output with expected output\n')
+	print('Comparing query output with expected output')
 	file1 = open('Output.txt')
 	file2 = open('Expected_Output.txt')
 	
 	matcher = difflib.SequenceMatcher(None, file1.readlines(), file2.readlines())
 	if matcher.real_quick_ratio() < 1.0 :
-		log_file.write('Query did not produce expected output\n')
+		print('Query did not produce expected output')
 		test_status = 'Failure'		
 		
 	file1.close()
@@ -173,9 +166,6 @@ def run_test(test_dir, subtest_name) :
 	
 	return test_status
 	
-# print usage instructions
-def usage():
-	print ('Usage: ./run_test.py -t test_name')
 	
 # check if directory has tigon test in in
 def is_test_dir (dir) :
@@ -206,21 +196,23 @@ def find_test_dirs (dir) :
 				if subdirs :
 					test_dirs.extend(subdirs)
 	return test_dirs
+	
+# print usage instructions
+def usage():
+	print ('Usage: ./run_test_base.py -t test_name')	
 
 def main():
-
-	global test_name, tigon_root_dir, log_file
+	global tigon_root_dir
 	
 	# list of directories for individual test
-	test_dirs = []	
-
+	test_dirs = []
+	
 	# process command-line arguments
 	try:
 		opts, args = getopt.getopt(sys.argv[1:], "ht:v", ["help", "test="])
 	except getopt.GetoptError as err:
 		# print help information and exit:
 		print(str(err))	
-
 
 	for o, a in opts:
 		if o in ("-h", "--help"):
@@ -243,43 +235,33 @@ def main():
 		tigon_root_dir = m.group(1)
 	else :
 		print ('Error - test directory is not under ' + TIGON_ROOT_STR)
-	
-	# open log file
-	log_file_name = tigon_root_dir + TIGON_LOG_ROOT_STR + '/' + test_name + '_test_results_' + time.strftime("%Y_%m_%d", time.localtime()) + '.txt'
-	
-	log_file = open(log_file_name, "a") 
-	if log_file == None :
-		print ('Unable to open log file ' + log_file_name)
-    	
+	    	
 	# find all the subdirectories with individual tests and add them to the test list
 	test_dirs = find_test_dirs(cwd)
 
 	# go through the list of test and run them
-	log_file.write('Starting: ' + test_name + '\n')
+	print('Starting: ' + test_name)
 	
 	test_status = 'Success'
 	for test_dir in test_dirs :
 		subtest_name = test_dir[len(cwd)+1:]
-		log_file.write('Starting: ' + test_name + '/' + subtest_name + '\n')		
+		print('Starting: ' + test_name + '/' + subtest_name)		
 		status = run_test(test_dir, subtest_name)
-		log_file.write('Ending: ' + test_name + '/' + subtest_name + ' ' + status + '\n')
+		print('Ending: ' + test_name + '/' + subtest_name + ' ' + status)
 		
 		if status == 'Failure' or status == 'SystemError' :
 			test_status = status	
-	log_file.write('Ending: ' + test_name + ' ' + test_status + '\n')				
-		
-	# close the log file
-	log_file.close()
+	print('Ending: ' + test_name + ' ' + test_status)				
 	
 	# change back to working directory we started in
 	os.chdir(cwd)
 	
 	if test_status == 'Success' :
-		sys.exit(0)
+		sys.exit(TEST_SUCCESS)
 	elif test_status == 'Failure' :
-		sys.exit(1)
+		sys.exit(TEST_FAILURE)
 	else :
-		sys.exit(2)
+		sys.exit(TEST_SYSERROR)
 
 
 if __name__ == "__main__":
