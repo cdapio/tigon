@@ -34,7 +34,7 @@ To stop the Flow prior to shutting down distributed mode, use::
 
   tigon > delete <flow-name>
 
-You can then exit the command-line interface either with ``quit`` or ``Control-C``.
+You can then exit the command-line interface either with ``quit``.
 
 Available Commands
 ------------------
@@ -46,21 +46,21 @@ These are the available commands:
    :widths: 50, 50
 
    **General**
-   ``help <command>``,Shows the usage for a given *command*
+   ``help``,Shows the usage for all the CLI commands
    ``version``,Prints the version of Tigon
    ``status <flow-name>``,Prints the status of the Flow *flow-name*
    ``quit``,Quits the shell
 
    **Starting Elements**
-   ``start <path-to-jar> <flow-classname> [ --key1=v1 --key2=v2 ]``,Starts a Flow with Runtime Arguments
+   ``start <path-to-jar> <flow-classname> '--key1=v1, --key2=v2'``,Starts a Flow with Runtime Arguments
    ``stop <flow-name>``,Stops the Flow *flow-name*
    ``delete <flow-name>``,Stops and Deletes the Queues for the Flow *flow-name*
-   ``set <flow-name> <flowlet-name> <instances>``,Set the number of instance of a Flowlet *flowlet-name* for the Flow *flow-name*
+   ``set <flow-name>.<flowlet-name> <instances>``,Set the number of instance of a Flowlet *flowlet-name* for the Flow *flow-name*
 
    **Listing Elements**
    ``list``,Lists all Flows which are currently running
    ``serviceinfo <flow-name>``,Prints all Services announced in the Flow *flow-name*
-   ``discover <flow-name> <service-name>``,Discovers a service endpoint of a Service *service-name* for the Flow *flow-name*
+   ``discover <flow-name>.<service-name>``,Discovers a service endpoint of a Service *service-name* for the Flow *flow-name*
    ``flowletinfo <flow-name>``,Prints Flowlet Names and corresponding Instances for the Flow *flow-name*
    ``showlogs <flow-name>``,Shows live logs of the Flow *flow-name*
 
