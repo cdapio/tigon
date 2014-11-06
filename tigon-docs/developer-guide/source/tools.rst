@@ -56,15 +56,15 @@ These are the available commands:
    ``debug <path-to-jar> <flow-classname> ['--key1=v1, --key2=v2']``,Starts a Flow in Debug mode with Runtime Arguments
    ``stop <flow-name>``,Stops the Flow *flow-name*
    ``delete <flow-name>``,Stops and Deletes the Queues for the Flow *flow-name*
-   ``set <flow-name>.<flowlet-name> <instances>``,Set the number of instance of a Flowlet *flowlet-name* for the Flow *flow-name*
+   ``set <flow-name>.<flowlet-name> <instances>``,Set the number of instances of the Flowlet *flowlet-name* for the Flow *flow-name*
 
    **Listing Elements**
    ``list``,Lists all Flows which are currently running
    ``serviceinfo <flow-name>``,Prints all Services announced in the Flow *flow-name*
-   ``discover <flow-name>.<service-name>``,Discovers the service endpoint(s) of a Service *service-name* for the Flow *flow-name*
+   ``discover <flow-name>.<service-name>``,Discovers the service endpoint(s) of the Service *service-name* for the Flow *flow-name*
    ``flowletinfo <flow-name>``,Prints Flowlet Names and corresponding Instances for the Flow *flow-name*
    ``showlogs <flow-name>``,Shows live logs of the Flow *flow-name*
-   ``debuginfo <flow-name>.<flowlet-name>``,Prints the host and debug port of the Flowlet instance(s) [Flow should have been started in debug mode].
+   ``debuginfo <flow-name>.<flowlet-name>``,Prints the host and debug port of the Flowlet *flowlet-name* for the Flow *flow-name* (Flow should have been started in debug mode).
 
 
 Where to Go Next
