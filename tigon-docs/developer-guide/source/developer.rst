@@ -426,6 +426,21 @@ Partitioning can be combined with batch execution::
   public void process(Iterator<String> words) {
      ...
 
+Fault Tolerance
+===============
+
+In a distributed environment, a Flow runs as a YARN application and the Flowlets run in YARN containers.
+Each Flow running on YARN has an Application Master (AM) which is responsible for negotiating the resources
+needed for the Flow and then coordinating the execution of them on the cluster of nodes.
+
+In case of any failure (Flowlet not responding, the dying of the node on which the Flowlet is running,
+the Flowlet itself dying), the Flow's Application Master will attempt to restart the Flowlet.
+If the Flow’s Application Master dies, the YARN Resource Manager will shutdown all of the Flowlets.
+
+During the period of restart, no data loss or data inconsistency will occur, as all data operations are wrapped
+in transactions. The transactions are aborted or timed out and the operations will be reattempted with
+new transactions when the Flowlets are restarted. Hence, no partial writes will be visible after a failure.
+
 Queues
 ======
 
