@@ -100,7 +100,7 @@ public class DeployClient {
    * @param args Array of Strings where each element is a POSIX compliant program argument (Ex: "--os=Linux" ).
    * @return Map of argument Keys and Values (Ex: Key = "os" and Value = "Linux").
    */
-  public static Map<String, String> fromPosixArray(String[] args) {
+  public static Map<String, String> fromPosixArray(Iterable<String> args) {
     Map<String, String> kvMap = Maps.newHashMap();
     for (String arg : args) {
       kvMap.putAll(Splitter.on("--").omitEmptyStrings().trimResults().withKeyValueSeparator("=").split(arg));
@@ -148,9 +148,9 @@ public class DeployClient {
     }
   }
 
-  public ProgramController startFlow(Program program, Map<String, String> userArgs) throws Exception {
+  public ProgramController startFlow(Program program, Map<String, String> userArgs, boolean debug) throws Exception {
     return programRunnerFactory.create(ProgramRunnerFactory.Type.FLOW).run(
-      program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments(userArgs)));
+      program, new SimpleProgramOptions(program.getName(), new BasicArguments(), new BasicArguments(userArgs), debug));
   }
 
   public ProgramController startFlow(File jarPath, String classToLoad, File jarUnpackDir, Map<String, String> userArgs)

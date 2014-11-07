@@ -17,10 +17,12 @@
 package co.cask.tigon.cli;
 
 import com.google.common.util.concurrent.Service;
+import org.apache.twill.api.TwillRunResources;
 
 import java.io.File;
 import java.io.PrintStream;
 import java.net.InetSocketAddress;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -34,8 +36,9 @@ public interface FlowOperations extends Service {
    * @param jarPath Path to the Flow Jar.
    * @param className Flow ClassName that needs to be started.
    * @param userArgs Map of User Runtime Arguments that can be accessed in the Flow.
+   * @param debug Indicates if the Flow needs to be started in debug mode.
    */
-  void startFlow(File jarPath, String className, Map<String, String> userArgs);
+  void startFlow(File jarPath, String className, Map<String, String> userArgs, boolean debug);
 
   /**
    * Get the status of a Flow.
@@ -86,11 +89,11 @@ public interface FlowOperations extends Service {
   void setInstances(String flowName, String flowletName, int instanceCount);
 
   /**
-   * Returns the Flowlets in the Flow and the number of instances of each Flowlet.
+   * Returns the Flowlets in the Flow and the {@link TwillRunResources} of each Flowlet.
    * @param flowName Name of the Flow.
-   * @return Map of Flowlet Names and the number of instances of each Flowlet.
+   * @return Map of Flowlet Names and {@link TwillRunResources} of each Flowlet.
    */
-  Map<String, Integer> getFlowInfo(String flowName);
+  Map<String, Collection<TwillRunResources>> getFlowInfo(String flowName);
 
   /**
    * Adds a Log Handler to the PrintStream for receiving live logs from the Flow.

@@ -35,6 +35,10 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>co.cask.common</groupId>
+      <artifactId>common-cli</artifactId>
+    </dependency>
+    <dependency>
       <groupId>jline</groupId>
       <artifactId>jline</artifactId>
     </dependency>

@@ -14,13 +14,31 @@
  * the License.
  */
 
-package co.cask.tigon.cli;
+package co.cask.tigon.cli.commands;
+
+import co.cask.common.cli.Arguments;
+import co.cask.common.cli.Command;
+import co.cask.tigon.utils.ProjectInfo;
+
+import java.io.PrintStream;
 
 /**
- * Captures Invalid CLI command Arguments case.
+ * Command to get the version of Tigon.
  */
-public class InvalidCLIArgumentException extends Exception {
-  public InvalidCLIArgumentException(String message) {
-    super(message);
+public class VersionCommand implements Command {
+
+  @Override
+  public void execute(Arguments arguments, PrintStream printStream) throws Exception {
+    printStream.println(ProjectInfo.getVersion().getBuildVersion());
+  }
+
+  @Override
+  public String getPattern() {
+    return "version";
+  }
+
+  @Override
+  public String getDescription() {
+    return "Shows the Version of Tigon";
   }
 }
