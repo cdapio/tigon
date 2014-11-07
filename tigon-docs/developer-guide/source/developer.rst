@@ -429,16 +429,17 @@ Partitioning can be combined with batch execution::
 Fault Tolerance
 ===============
 
-In a distributed environment, a Flow runs as a YARN application and the Flowlets
-run in YARN containers. Each Flow running on YARN has a Application Master (AM) which
-is responsible for negotiating resources needed for the Flow and then coordinating to execute
-them on the cluster of nodes. In case of any failure (Flowlet not responding, the node on which the
-Flowlet is running on dies, Flowlet itself dies), the Flow's Application Master
-will attempt to restart the Flowlet. In case the Flow Application Master dies, the YARN Resource
-Manager will shutdown all the Flowlets. During the period of restart, no data lose or data
-inconsistency will occur as all the data operations are wrapped in a transaction.
-The transactions are aborted or timed out and the operations will be reattempted with a new transaction
-when the Flowlet is restarted. Hence, no partial writes will be visible during failure.
+In a distributed environment, a Flow runs as a YARN application and the Flowlets run in YARN containers.
+Each Flow running on YARN has an Application Master (AM) which is responsible for negotiating the resources
+needed for the Flow and then coordinating the execution of them on the cluster of nodes.
+
+In case of any failure (Flowlet not responding, the dying of the node on which the Flowlet is running,
+the Flowlet itself dying), the Flow's Application Master will attempt to restart the Flowlet.
+If the Flow’s Application Master dies, the YARN Resource Manager will shutdown all of the Flowlets.
+
+During the period of restart, no data loss or data inconsistency will occur, as all data operations are wrapped
+in transactions. The transactions are aborted or timed out and the operations will be reattempted with
+new transactions when the Flowlets are restarted. Hence, no partial writes will be visible after a failure.
 
 Queues
 ======
