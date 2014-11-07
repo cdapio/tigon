@@ -86,7 +86,7 @@ public class DistributedFlowOperations extends AbstractIdleService implements Fl
   }
 
   @Override
-  public void startFlow(File jarPath, String className, Map<String, String> userArgs) {
+  public void startFlow(File jarPath, String className, Map<String, String> userArgs, boolean debug) {
     try {
       Program program = deployClient.createProgram(jarPath, className, jarUnpackDir);
       String flowName = program.getSpecification().getName();
@@ -102,7 +102,7 @@ public class DistributedFlowOperations extends AbstractIdleService implements Fl
       //Copy the JAR to HDFS.
       ByteStreams.copy(Locations.newInputSupplier(program.getJarLocation()), Locations.newOutputSupplier(jarInHDFS));
       //Start the Flow.
-      deployClient.startFlow(program, userArgs);
+      deployClient.startFlow(program, userArgs, debug);
     } catch (Exception e) {
       LOG.error(e.getMessage(), e);
     }
@@ -226,16 +226,14 @@ public class DistributedFlowOperations extends AbstractIdleService implements Fl
   }
 
   @Override
-  public Map<String, Integer> getFlowInfo(String flowName) {
-    Map<String, Integer> flowletInfo = Maps.newHashMap();
+  public Map<String, Collection<TwillRunResources>> getFlowInfo(String flowName) {
+    Map<String, Collection<TwillRunResources>> flowletInfo = Maps.newHashMap();
     try {
       Iterable<TwillController> controllers = lookupFlow(flowName);
       for (TwillController controller : controllers) {
         ResourceReport report = controller.getResourceReport();
         sleepForZK(report);
-        for (Map.Entry<String, Collection<TwillRunResources>> entry : report.getResources().entrySet()) {
-          flowletInfo.put(entry.getKey(), entry.getValue().size());
-        }
+        flowletInfo = report.getResources();
       }
     } catch (Exception e) {
       LOG.warn(e.getMessage(), e);

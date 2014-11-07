@@ -30,6 +30,7 @@ import co.cask.tigon.internal.app.runtime.ProgramController;
 import co.cask.tigon.metrics.MetricsCollectionService;
 import co.cask.tigon.metrics.NoOpMetricsCollectionService;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.google.common.io.Files;
 import com.google.inject.AbstractModule;
 import com.google.inject.Guice;
@@ -108,7 +109,7 @@ public class StandaloneMain {
 
       Map<String, String> runtimeArgs = null;
       try {
-         runtimeArgs = DeployClient.fromPosixArray(Arrays.copyOfRange(args, 2, args.length));
+         runtimeArgs = DeployClient.fromPosixArray(Lists.newArrayList(Arrays.copyOfRange(args, 2, args.length)));
       } catch (IllegalArgumentException e) {
         usage(true);
       }
