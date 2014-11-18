@@ -40,7 +40,7 @@ For more information, see our collection of
 
 Builds                                                            
 ------------------------------------------------------------------
-[Bamboo Build](https://builds.cask.co/browse/TIGON)                 
+[Bamboo Build](https://builds.cask.co/browse/TIG)                 
 [GitHub Version](https://github.com/caskdata/tigon/releases/latest) 
 
 
