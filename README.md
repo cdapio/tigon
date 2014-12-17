@@ -114,6 +114,14 @@ Now that you've had a look at the Tigon SDK, take a look at:
 - Developer Guides, located in the source distribution in `/tigon-docs/developer-guide/source`
   or [online](http://docs.cask.co/tigon/current/en/developer.html)
 
+## CDAP
+
+Tigon is the realtime stream processing framework used in the Cask Data Application Platform ([CDAP](http://cdap.io)).
+CDAP provides a high-level [Dataset](http://docs.cask.co/cdap/current/en/developers-manual/building-blocks/datasets/index.html) abstraction for User Data Stores 
+and allows developers to interact with them in their flowlets. In addition to the Dataset abstraction, CDAP integrates Batch Processing with
+MapReduce and Spark support. By combining these with security, metrics, and an intuitive GUI, CDAP greatly simplifies Big Data application development. 
+If you like the features and architecture of Tigon, we recommend that you take a look
+at [CDAP](http://github.com/caskdata/cdap).
 
 ## How to Contribute
 
