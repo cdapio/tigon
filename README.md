@@ -131,7 +131,7 @@ assisting others on the mailing list.
 
 ### Bug Reports & Feature Requests
 
-Bugs and tasks are tracked in a public JIRA issue tracker. Details on access will be forthcoming.
+Bugs and suggestions should be made by [filing an Issue](https://issues.cask.co/browse/tigon).
 
 ### Pull Requests
 
