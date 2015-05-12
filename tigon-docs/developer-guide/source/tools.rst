@@ -45,20 +45,20 @@ These are the available commands:
    :header: Command,Description
    :widths: 50, 50
 
-   **General**
+   **General**,
    ``help``,Shows the usage for all CLI commands
    ``version``,Prints the version of Tigon
    ``status <flow-name>``,Prints the status of the Flow *flow-name*
    ``quit``,Quits the shell
 
-   **Starting Elements**
-   ``start <path-to-jar> <flow-classname> ['--key1=v1, --key2=v2']``,Starts a Flow with Runtime Arguments
-   ``debug <path-to-jar> <flow-classname> ['--key1=v1, --key2=v2']``,Starts a Flow in Debug mode with Runtime Arguments
+   **Starting Elements**,
+   "``start <path-to-jar> <flow-classname> ['--key1=v1, --key2=v2']``",Starts a Flow with Runtime Arguments
+   "``debug <path-to-jar> <flow-classname> ['--key1=v1, --key2=v2']``",Starts a Flow in Debug mode with Runtime Arguments
    ``stop <flow-name>``,Stops the Flow *flow-name*
    ``delete <flow-name>``,Stops and Deletes the Queues for the Flow *flow-name*
    ``set <flow-name>.<flowlet-name> <instances>``,Set the number of instances of the Flowlet *flowlet-name* for the Flow *flow-name*
 
-   **Listing Elements**
+   **Listing Elements**,
    ``list``,Lists all Flows which are currently running
    ``serviceinfo <flow-name>``,Prints all Services announced in the Flow *flow-name*
    ``discover <flow-name>.<service-name>``,Discovers the service endpoint(s) of the Service *service-name* for the Flow *flow-name*

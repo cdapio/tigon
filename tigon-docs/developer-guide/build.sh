@@ -30,7 +30,10 @@ SOURCE="source"
 BUILD="build"
 BUILD_PDF="build-pdf"
 BUILD_TEMP="build-temp"
+TEMPLATE_SOURCE="_source"
+HTACCESS="htaccess"
 HTML="html"
+HTML_404="404.html"
 INCLUDES="_includes"
 
 API="tigon-api"
@@ -156,12 +159,12 @@ function build_javadocs_selected() {
   mvn clean package javadoc:javadoc -pl tigon-api -pl tigon-flow -pl tigon-sql -am -DskipTests -P release
 }
 
-function make_zip_html() {
-  version
-  ZIP_FILE_NAME="$PROJECT-docs-$PROJECT_VERSION.zip"
-  cd $SCRIPT_PATH/$BUILD
-  zip -r $ZIP_FILE_NAME $HTML/*
-}
+# function make_zip_html() {
+#   version
+#   ZIP_FILE_NAME="$PROJECT-docs-$PROJECT_VERSION.zip"
+#   cd $SCRIPT_PATH/$BUILD
+#   zip -r $ZIP_FILE_NAME $HTML/*
+# }
 
 function make_zip() {
 # This creates a zip that unpacks to the same name
@@ -172,21 +175,39 @@ function make_zip() {
     ZIP_DIR_NAME="$PROJECT-docs-$PROJECT_VERSION-$1"
   fi  
   cd $SCRIPT_PATH/$BUILD
-  mv $HTML $ZIP_DIR_NAME
-  zip -r $ZIP_DIR_NAME.zip $ZIP_DIR_NAME/*
+  mkdir ${PROJECT_VERSION}
+  mv ${HTML} ${PROJECT_VERSION}/en
+  # Add a redirect index.html file
+  echo "${REDIRECT_EN_HTML}" > ${PROJECT_VERSION}/index.html
+  # Zip everything
+  zip -qr ${ZIP_DIR_NAME}.zip ${PROJECT_VERSION}/* --exclude .DS_Store
+  
+#   zip -r $ZIP_DIR_NAME.zip $ZIP_DIR_NAME/*
+  # Add JSON file
+  cd ${SCRIPT_PATH}/${SOURCE}
+  local json_file=`python -c 'import conf; conf.print_json_versions_file();'`
+  local json_file_path=${SCRIPT_PATH}/${BUILD}/${ZIP_DIR_NAME}/${json_file}
+  echo `python -c 'import conf; conf.print_json_versions();'` > ${json_file_path}
+  # Add .htaccess file (redirects to the 404 file)
+  cd ${SCRIPT_PATH}
+  rewrite ${SOURCE}/${TEMPLATE_SOURCE}/${HTACCESS} ${BUILD}/${ZIP_DIR_NAME}/.${HTACCESS} "<version>" "${PROJECT_VERSION}"
+  cd ${SCRIPT_PATH}/${BUILD}
+  # Add JSON and 404 files to Zip
+  zip -qr ${ZIP_DIR_NAME}.zip ${ZIP_DIR_NAME}/${json_file} ${ZIP_DIR_NAME}/.${HTACCESS}
+ 
 }
 
-function make_zip_localized() {
-# This creates a named zip that unpacks to the Project Version, localized to english
-  version
-  ZIP_DIR_NAME="$PROJECT-docs-$PROJECT_VERSION-$1"
-  cd $SCRIPT_PATH/$BUILD
-  mkdir $PROJECT_VERSION
-  mv $HTML $PROJECT_VERSION/en
-  # Add a redirect index.html file
-  echo "$REDIRECT_EN_HTML" > $PROJECT_VERSION/index.html
-  zip -r $ZIP_DIR_NAME.zip $PROJECT_VERSION/*
-}
+# function make_zip_localized() {
+# # This creates a named zip that unpacks to the Project Version, localized to english
+#   version
+#   ZIP_DIR_NAME="$PROJECT-docs-$PROJECT_VERSION-$1"
+#   cd $SCRIPT_PATH/$BUILD
+#   mkdir $PROJECT_VERSION
+#   mv $HTML $PROJECT_VERSION/en
+#   # Add a redirect index.html file
+#   echo "$REDIRECT_EN_HTML" > $PROJECT_VERSION/index.html
+#   zip -r $ZIP_DIR_NAME.zip $PROJECT_VERSION/*
+# }
 
 function build_all() {
   echo "Building GitHub Docs."
@@ -206,8 +227,24 @@ function build() {
   build_docs
   build_javadocs
   copy_javadocs
+  build_404_html
   make_zip
 }
+
+function build_404_html() {
+  local project_dir
+  # Rewrite 404 file, using branch if not a release
+  if [ "x${GIT_BRANCH_TYPE}" == "xfeature" ]; then
+    project_dir=${PROJECT_VERSION}-${GIT_BRANCH}
+  else
+    project_dir=${PROJECT_VERSION}
+  fi
+  rewrite ${BUILD}/${HTML}/${HTML_404} "src=\"_static"  "src=\"/${PROJECT}/${project_dir}/en/_static"
+  rewrite ${BUILD}/${HTML}/${HTML_404} "src=\"_images"  "src=\"/${PROJECT}/${project_dir}/en/_images"
+  rewrite ${BUILD}/${HTML}/${HTML_404} "/href=\"http/!s|href=\"|href=\"/${PROJECT}/${project_dir}/en/|g"
+  rewrite ${BUILD}/${HTML}/${HTML_404} "action=\"search.html"  "action=\"/${PROJECT}/${project_dir}/en/search.html"
+}
+
 
 function check_includes() {
   if hash pandoc 2>/dev/null; then
@@ -284,14 +321,18 @@ function build_web() {
   build_docs_google $GOOGLE_ANALYTICS_WEB
   build_javadocs
   copy_javadocs
-  make_zip_localized $WEB
+#   make_zip_localized $WEB
+  build_404_html
+  make_zip $WEB
 }
 
 function build_github() {
   build_docs_google $GOOGLE_ANALYTICS_GITHUB
   build_javadocs
   copy_javadocs
-  make_zip_localized $GITHUB
+#   make_zip_localized $GITHUB
+  build_404_html
+  make_zip $GITHUB
 }
 
 function build_standalone() {
@@ -309,20 +350,79 @@ function build_dependencies() {
 }
 
 function version() {
-  cd $PROJECT_PATH
-#   PROJECT_VERSION=`mvn help:evaluate -o -Dexpression=project.version | grep -v '^\['`
+  local current_directory=`pwd`
+  cd ${PROJECT_PATH}
   PROJECT_VERSION=`grep "<version>" pom.xml`
   PROJECT_VERSION=${PROJECT_VERSION#*<version>}
   PROJECT_VERSION=${PROJECT_VERSION%%</version>*}
+  PROJECT_LONG_VERSION=`expr "${PROJECT_VERSION}" : '\([0-9]*\.[0-9]*\.[0-9]*\)'`
+  PROJECT_SHORT_VERSION=`expr "${PROJECT_VERSION}" : '\([0-9]*\.[0-9]*\)'`
   IFS=/ read -a branch <<< "`git rev-parse --abbrev-ref HEAD`"
+  # Determine branch and branch type: one of develop, master, release, develop-feature, release-feature
   GIT_BRANCH="${branch[1]}"
+  if [ "x${GIT_BRANCH}" == "xdevelop" -o  "x${GIT_BRANCH}" == "xmaster" ]; then
+    GIT_BRANCH_TYPE=${GIT_BRANCH}
+  elif [ "x${GIT_BRANCH:0:7}" == "xrelease" ]; then
+    GIT_BRANCH_TYPE="release"
+  else
+    local parent_branch=`git show-branch | grep '*' | grep -v "$(git rev-parse --abbrev-ref HEAD)" | head -n1 | sed 's/.*\[\(.*\)\].*/\1/' | sed 's/[\^~].*//'`
+    if [ "x${parent_branch}" == "xdevelop" ]; then
+      GIT_BRANCH_TYPE="develop-feature"
+    else
+      GIT_BRANCH_TYPE="release-feature"
+    fi
+  fi
+  cd $current_directory
 }
 
 function print_version() {
   version
-  echo "PROJECT_PATH: $PROJECT_PATH"
-  echo "PROJECT_VERSION: $PROJECT_VERSION"
-  echo "GIT_BRANCH: $GIT_BRANCH"
+  echo ""
+  echo "PROJECT_PATH: ${PROJECT_PATH}"
+  echo "PROJECT_VERSION: ${PROJECT_VERSION}"
+  echo "PROJECT_LONG_VERSION: ${PROJECT_LONG_VERSION}"
+  echo "PROJECT_SHORT_VERSION: ${PROJECT_SHORT_VERSION}"
+  echo "GIT_BRANCH: ${GIT_BRANCH}"
+  echo "GIT_BRANCH_TYPE: ${GIT_BRANCH_TYPE}"
+  echo ""
+}
+
+function rewrite() {
+  # Substitutes text in file $1 and outputting to file $2, replacing text $3 with text $4
+  # or if $4=="", substitutes text in-place in file $1, replacing text $2 with text $3
+  # or if $3 & $4=="", substitutes text in-place in file $1, using sed command $2
+  cd ${SCRIPT_PATH}
+  local rewrite_source=${1}
+  echo "Re-writing"
+  echo "    $rewrite_source"
+  if [ "x${3}" == "x" ]; then
+    local sub_string=${2}
+    echo "  $sub_string"
+    if [ "$(uname)" == "Darwin" ]; then
+      sed -i '.bak' "${sub_string}" ${rewrite_source}
+      rm ${rewrite_source}.bak
+    else
+      sed -i "${sub_string}" ${rewrite_source}
+    fi
+  elif [ "x${4}" == "x" ]; then
+    local sub_string=${2}
+    local new_sub_string=${3}
+    echo "  ${sub_string} -> ${new_sub_string} "
+    if [ "$(uname)" == "Darwin" ]; then
+      sed -i '.bak' "s|${sub_string}|${new_sub_string}|g" ${rewrite_source}
+      rm ${rewrite_source}.bak
+    else
+      sed -i "s|${sub_string}|${new_sub_string}|g" ${rewrite_source}
+    fi
+  else
+    local rewrite_target=${2}
+    local sub_string=${3}
+    local new_sub_string=${4}
+    echo "  to"
+    echo "    ${rewrite_target}"
+    echo "  ${sub_string} -> ${new_sub_string} "
+    sed -e "s|${sub_string}|${new_sub_string}|g" ${rewrite_source} > ${rewrite_target}
+  fi
 }
 
 function test() {
